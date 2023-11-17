@@ -37,5 +37,5 @@ For any questions about this Privacy Policy, please contact:
 
 **Keep Alive Developer**
 
-_Email:_ keepalivedev@gmail.com
+_Email:_ dev@keep-alive.io
 

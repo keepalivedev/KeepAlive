@@ -1,11 +1,9 @@
 # Keep Alive
-Android app to notify others if you haven't used your device in a given period of time.
-
-[![Google Play](http://developer.android.com/images/brand/en_generic_rgb_wo_45.png)](https://play.google.com/store/apps/details?id=io.keepalive.android)
-
 Keep Alive will send a custom message via SMS to one or more people if you haven't used your device in a given period of time. 
 Intended to be used as a failsafe for those living alone in case of an accident or other emergency.
 Once the settings are configured, no further interaction is required.
+
+[![Google Play](http://developer.android.com/images/brand/en_generic_rgb_wo_45.png)](https://play.google.com/store/apps/details?id=io.keepalive.android) 
 
 ## How it Works
   Keep Alive uses your device's lock screen to detect activity.
@@ -19,7 +17,7 @@ Once the settings are configured, no further interaction is required.
 - Free with no ads or trackers
 - Minimal Battery Usage
 - Multiple SMS Recipients
-- Custom Messages
+- Custom Alert Messages
 - Optional: Include Location Information in SMS
 - Optional: Place a phone call with speakerphone enabled
 
@@ -44,7 +42,7 @@ Once the settings are configured, no further interaction is required.
   - **Alert Message**: the message that will be sent when an Alert is triggered
   - **Include Location**: if enabled, your location will be included in a second SMS
 - **Phone Call (Optional)**: 
-  - Phone Number (Optional): when an Alert is triggered a phone call will be placed to this number with speakerphone enabled
+  - **Phone Number**: when an Alert is triggered a phone call will be placed to this number with speakerphone enabled
 
 ## Permissions
 
