@@ -77,7 +77,7 @@ Keep Alive was created after separate incidents with colleagues who lived alone 
 One was found within 24 hours by a concerned friend doing a welfare check and was saved, 
 albeit not unscathed. The other was not discovered for more than 36 hours and sadly succumbed to his 
 injuries after several days in the ICU. If they had been found even a few hours sooner, 
-things may have turned out differently.
+things may have turned out differently. I am hoping that this app can help prevent similar tragedies in the future.
 
 ## Disclaimer
 - Not responsible for SMS or phone call charges incurred by the use of the Keep Alive app

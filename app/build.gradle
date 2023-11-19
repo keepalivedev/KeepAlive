@@ -5,17 +5,13 @@ plugins {
 
 android {
     compileSdk 33
-    testOptions {
-        unitTests {
-            includeAndroidResources = true
-        }
-    }
+
     defaultConfig {
         applicationId "io.keepalive.android"
         minSdk 28
         targetSdk 33
-        versionCode 102
-        versionName "1.0.2"
+        versionCode 103
+        versionName "1.0.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
