@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/customDialogTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/customDialogEditText"
+        android:text="@string/placeholder" />
+
+    <!-- input type and other stuff configured in code
+    based on which setting is being edited -->
+    <EditText
+        android:id="@+id/customDialogEditText"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_view_height"
+        android:singleLine="true"
+        android:autofillHints="none"
+        android:textColorHint="@color/dialogHintTextColor" />
+
+
+</LinearLayout>

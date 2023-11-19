@@ -1,0 +1,11 @@
+<resources>
+    <dimen name="default_text_size">16sp</dimen>
+
+    <!-- size set to 18 for some things so that the contrast requirement is lower when
+          google play store does accessibility checks -->
+    <dimen name="header_text_size">18sp</dimen>
+
+    <!-- height set to 48 for accessibility reasons -->
+    <dimen name="default_view_height">48dp</dimen>
+
+</resources>

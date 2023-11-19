@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="red">#FF0000</color>
+
+    <!-- primary color for the app and the upper part of the logo -->
+    <color name="primary">#FF5733</color>
+
+    <!-- secondary color for the logo -->
+    <color name="logoSecondaryColor">#06495B</color>
+
+    <!-- almost black background for dialog so the contrast ratio is high enough -->
+    <color name="dialogBackground">#262626</color>
+
+    <!-- specific color for the dialog hint so the contrast ratio is high enough -->
+    <color name="dialogHintTextColor">#6c6a6a</color>
+
+    <!-- colors for the monitoring status text view -->
+    <color name="monitoringActive">#00FF00</color>
+    <color name="monitoringInActive">#FF0000</color>
+    <color name="monitoringImpaired">#F57C00</color>
+
+    <color name="textColor">#000000</color>
+
+    <!-- background color for the icon -->
+    <color name="ic_launcher_background">@color/white</color>
+
+    <!-- the text color for the toolbar -->
+    <color name="toolbarTitleTextColor">@color/white</color>
+</resources>

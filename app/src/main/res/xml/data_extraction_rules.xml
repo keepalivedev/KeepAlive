@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- this is the backup rules file for android API 31+ -->
+<data-extraction-rules>
+
+    <!-- backup the shared preferences -->
+    <cloud-backup>
+        <include domain="sharedpref" path="."/>
+    </cloud-backup>
+
+</data-extraction-rules>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/phoneNumberDialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_weight="1"
+        android:text="@string/phone_number_title"
+        android:textColor="@color/primary"
+        android:textSize="@dimen/header_text_size" />
+
+    <EditText
+        android:id="@+id/phoneNumberInput"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_view_height"
+        android:hint="@string/phone_number_hint"
+        android:inputType="phone"
+        android:autofillHints="none"
+        android:textColorHint="@color/dialogHintTextColor" />
+
+    <TextView
+        android:id="@+id/alertMessageDialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:text="@string/alert_message_title"
+        android:textColor="@color/primary"
+        android:textSize="@dimen/header_text_size" />
+
+    <EditText
+        android:id="@+id/alertMessageInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:autofillHints="none"
+        android:hint="@string/alert_message_hint"
+        android:inputType="textMultiLine"
+        android:maxLines="4"
+        android:minHeight="@dimen/default_view_height"
+        android:textColorHint="@color/dialogHintTextColor" />
+
+    <!-- Switch is disabled in this dialog -->
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/dialogEnabledSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/enabled"
+        android:visibility="gone" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/dialogLocationSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/include_location_information" />
+</LinearLayout>

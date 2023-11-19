@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- this is the backup rules file for android API <31 -->
+<full-backup-content>
+
+    <!-- backup the shared preferences -->
+    <include domain="sharedpref" path="."/>
+
+</full-backup-content>

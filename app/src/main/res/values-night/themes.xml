@@ -1,0 +1,51 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="Theme.KeepAlive" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary color. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/black</item>
+
+        <!-- Secondary color. -->
+        <item name="colorSecondary">@color/primary</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <!-- Status bar color (the part above the app itself) -->
+        <item name="android:statusBarColor">@color/black</item>
+
+        <!-- default text color for text views -->
+        <item name="android:textColor">@color/textColor</item>
+
+        <!-- this just controls the color of the line used under edit texts? -->
+        <item name="android:textColorSecondary">@color/primary</item>
+    </style>
+
+    <!-- set a custom theme for the alert dialogs -->
+    <style name="AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+
+        <!-- need to increase the contrast against our primary text color so make the
+                dialog background darker -->
+        <item name="android:background">@color/dialogBackground</item>
+        <item name="android:textColorHint">@color/dialogHintTextColor</item>
+
+        <item name="buttonBarPositiveButtonStyle">@style/AlertDialogButtonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/AlertDialogButtonStyle</item>
+        <item name="buttonBarNeutralButtonStyle">@style/AlertDialogButtonStyle</item>
+    </style>
+
+    <style name="AlertDialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textSize">@dimen/header_text_size</item>
+        <item name="android:textColor">@color/primary</item>
+    </style>
+
+    <style name="Theme.KeepAlive.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- this is just used to set the color of the 3-dot settings menu icon... -->
+    <style name="OverflowMenuIconTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorControlNormal">@color/toolbarTitleTextColor</item>
+    </style>
+
+</resources>

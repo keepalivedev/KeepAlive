@@ -1,0 +1,157 @@
+<resources>
+    <string name="app_name">Keep Alive</string>
+
+    <!-- Common strings -->
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ok">OK</string>
+    <string name="save">Save</string>
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
+    <string name="close">Close</string>
+    <string name="cancel">Cancel</string>
+    <string name="go_to_settings">Go to Settings</string>
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
+    <string name="placeholder">PLACEHOLDER TEXT</string>
+
+    <!-- action settings -->
+    <string name="action_settings">Settings</string>
+    <string name="action_about">About</string>
+    <string name="about_dialog_title">About Keep Alive</string>
+
+    <!-- wrap in CDATA so that it doesn't get interpreted as XML? -->
+    <string name="about_message_content"><![CDATA[
+    <br /><b>Version:</b><br />%1$s<br /><br />
+    <b>Contact:</b><br />dev@keep-alive.io<br /><br />
+    <b>Privacy Policy:</b><br /><a href="https://keep-alive.io/privacy">keep-alive.io/privacy</a><br /><br />
+    <b>Github:</b><br /><a href="https://github.com/keepalivedev/KeepAlive">github.com/keepalivedev/KeepAlive</a><br /><br />
+]]></string>
+
+    <!-- item_phone_number content descriptions that are set based on the item position -->
+    <string name="enable_switch_enabled_content_desc">Entry %1$s Enabled</string>
+    <string name="location_switch_enabled_content_desc">Entry %1$s Location Enabled</string>
+
+    <string name="main_scroll_view_content_description">Scrollable Main Page</string>
+
+    <!-- abb hibernation/restriction stuff -->
+    <string name="hibernation_dialog_title">Disable App Restriction</string>
+    <string name="hibernation_dialog_message">Android now automatically removes permissions for apps that have not been used recently.  Keep Alive, once the settings are configured, does not need any further interaction and may have its permissions revoked.\n\nTo ensure that Keep Alive is able to operate are not revoked, please disable the \'Pause app activity if unused\' option for the Keep Alive app.</string>
+    <string name="hibernation_dialog_message_api30">Android now automatically removes permissions for Apps that have not been used recently.  Keep Alive, once the settings are configured, does not need any further interaction unless an Alert is triggered.\n\nTo ensure that permissions are not revoked, please navigate to the Permissions section for Keep Alive and disable the  \'Remove permissions if app isn\'t used\' option.</string>
+    <string name="hibernation_dialog_message_api31">Android now automatically removes permissions for Apps that have not been used recently.  Keep Alive, once the settings are configured, does not need any further interaction unless an Alert is triggered.\n\nTo ensure that permissions are not revoked, please disable the \'Remove permissions and free up space\' option for the Keep Alive app.</string>
+    <string name="hibernation_dialog_message_api_backport">Android now automatically removes permissions for Apps that have not been used recently.  Keep Alive, once the settings are configured, does not need any further interaction unless an Alert is triggered.\n\nTo ensure that permissions are not revoked, please disable the \'Remove permissions if app isn\'t used\' option.</string>
+
+    <!-- MainActivity textview and button messages -->
+    <string name="monitoring_active_message">Last activity detected at: %1$s\nNext activity check in: %2$s hours and %3$s minutes</string>
+    <string name="monitoring_active_title">Monitoring Active</string>
+    <string name="monitoring_impaired_title">Monitoring Active\nBut May Be Impaired</string>
+    <string name="monitoring_inactive_message">Monitoring is not active.\nClick the button to restart it.</string>
+    <string name="monitoring_disabled_title">Monitoring Disabled</string>
+    <string name="monitoring_disabled_message">Use the Settings to Enable</string>
+    <string name="monitoring_no_activity_detected_title">Monitoring Not Possible</string>
+    <string name="monitoring_permissions_required_title">Permissions Required</string>
+    <string name="monitoring_no_activity_detected_message">Monitoring is enabled but no activity has been detected in the last %1$s hours. Please ensure you have a lock screen enabled and have granted Usage access permissions.</string>
+    <string name="monitoring_permissions_required_message">Monitoring is enabled but not all permissions have been granted. Please click the "Grant Permissions" button below.</string>
+    <string name="alarm_message_too_long_message">The message cannot be more than 160 characters.</string>
+    <string name="phone_number_invalid_message">Please enter a valid phone number.</string>
+    <string name="time_period_too_short_message">Interval must be at least 10 minutes.</string>
+    <string name="test_phone_call_message">A phone call will be made to: %1$s</string>
+    <string name="test_sms_message">SMS message(s) will be sent to:\n%1$s</string>
+    <string name="unable_to_send_sms_message">Unable to send SMS\nPlease verify you have an active SIM</string>
+    <string name="no_configured_contacts_message">No Emergency Contacts have been configured</string>
+    <string name="permissions_button_text">Grant Permissions</string>
+    <string name="restart_monitoring_button_text">Restart Monitoring</string>
+    <string name="check_app_restrictions_button_text">Disable App Restrictions</string>
+
+    <string name="test_sms_alert_button_text">Test Alert SMS</string>
+    <string name="test_phone_alert_button_text">Test Alert Call</string>
+
+    <string name="delete_phone_number_dialog_title">Delete Emergency Contact</string>
+    <string name="delete_phone_number_dialog_description">Are you sure you want to delete this entry?</string>
+
+    <!-- notification strings -->
+    <string name="default_notification_channel_title">Alert Notifications</string>
+    <string name="sms_sent_notification_channel_title">SMS Sent Notifications</string>
+    <string name="call_sent_notification_channel_title">Call Sent Notifications</string>
+    <string name="default_notification_channel_description">Are you there? Prompts</string>
+    <string name="sms_sent_notification_channel_description">Sent when an SMS alert is triggered</string>
+    <string name="call_sent_notification_channel_description">Sent when an Phone Call alert is triggered</string>
+    <string name="activity_notification_message">Glad to see you are still alive! Cancelling Alert.</string>
+    <string name="initial_check_notification_title">Are you still there?</string>
+    <string name="initial_check_notification_text">Click here if you are still alive! Otherwise an alert will be sent in %1$s minutes.</string>
+    <string name="alert_notification_title">Keep Alive Alert triggered!</string>
+    <string name="call_alert_notification_text">A phone call has been placed your emergency contact: %1$s</string>
+    <string name="sms_alert_notification_text">An SMS has been sent to your emergency contact(s): %1$s</string>
+    <string name="sms_alert_failure_notification_title">Failed to send SMS Alert</string>
+    <string name="sms_alert_failure_notification_text">Error occurred while attempting to send Alert SMS</string>
+    <string name="sms_service_failure_notification_title">Unable to send Alert SMS</string>
+    <string name="sms_service_failure_notification_text">Error occurred while attempting to send Alert SMS, please verify you have an active SIM</string>
+    <string name="sms_sent_toast_text">Keep Alive Alert SMS sent!</string>
+    <string name="sms_failure_toast_text">Failed to send Keep Alive Alert SMS?!</string>
+
+    <!-- alert location strings -->
+    <string name="location_invalid_message">Unable to determine location.</string>
+    <string name="geocode_invalid_message">Unable to geocode location. GPS coordinates are (%1$s, %2$s). Accuracy (m): %3$s.</string>
+    <string name="geocode_valid_message">GPS Coordinates: (%1$s, %2$s). Accuracy (m): %3$s. Possible address: %4$s</string>
+
+    <!-- Preference Titles -->
+    <string name="main_header">Main Settings</string>
+    <string name="contact_header">Emergency Contact Numbers</string>
+
+    <!-- SMS settings layout text view strings, some are just placeholders -->
+    <string name="phone_number_title">Phone Number</string>
+    <string name="alert_message_title">Alert Message</string>
+    <string name="include_location_title">Include Location</string>
+    <string name="sample_alert_message">Sample Alert Message</string>
+    <string name="include_location_information">Include Location Information</string>
+    <string name="phone_number_hint">Enter Phone Number</string>
+    <string name="alert_message_hint">Enter Alert Message</string>
+
+
+    <!-- Main Settings -->
+    <string name="enabled_title">Monitoring Enabled</string>
+    <string name="disabled_title">Monitoring Disabled</string>
+    <string name="time_period_title">Hours of Inactivity Before Prompt</string>
+    <string name="time_period_description">The # of hours of inactivity before you will be prompted with an \'Are you there?\' notification.</string>
+    <string name="followup_time_period_title">Minutes to Wait for Confirmation</string>
+    <string name="followup_time_period_description">The # of minutes to wait after sending a \'Are you there?\' notification before an Alert will be sent to your Emergency Contact(s)</string>
+    <string name="contact_sms_phone_title">SMS Phone Number</string>
+    <string name="contact_phone_title">Call Phone Number (Optional)</string>
+    <string name="add_sms_contact_button_text">Add SMS Emergency Contact</string>
+    <string name="contact_phone_description">When an Alert is triggered, a phone call will be placed to this phone number with speakerphone enabled.\n\nPlease note that this requires additional permissions so that phone calls can be placed from the background.</string>
+    <string name="default_alert_message">Hello! I have not used my phone in a while and may be in need of assistance. Please send help!</string>
+    <string name="add_emergency_contact_title">Add Emergency Contact</string>
+    <string name="edit_emergency_contact_title">Edit Emergency Contact</string>
+
+    <!-- SEND_SMS Permission -->
+    <string name="permission_send_sms_title">Permission Required: Send SMS Messages</string>
+    <string name="permission_send_sms_description">SMS is used as the primary notification method when an Alert is triggered.</string>
+
+    <!-- CALL_PHONE Permission -->
+    <string name="permission_call_phone_title">Permission Required: Make Phone Calls</string>
+    <string name="permission_call_phone_description">An Emergency Contact Call Phone Number has been provided, which requires the ability to place a phone call.</string>
+
+    <!-- USAGE_ACCESS_SETTINGS Permission -->
+    <string name="permission_usage_access_title">Permission Required: Usage Access Stats</string>
+    <string name="permission_usage_access_description">In order to determine when your device was last used, a special permission called Usage Access Stats is required.\n\nPlease enable this permission for the Keep Alive app.</string>
+
+    <!-- MANAGE_OVERLAY_PERMISSION Permission -->
+    <string name="permission_manage_overlay_title">Permission Required: Manage Overlay</string>
+    <string name="permission_manage_overlay_description">An Emergency Contact Call Phone Number has been provided, which requires the ability to place a phone call from the background.\n\nPlease enable the Manage Overlay permission for the Keep Alive app in your device settings.</string>
+
+    <!-- ACCESS_FINE_LOCATION Permission -->
+    <string name="permission_access_fine_location_title">Permission Required: Access Precise Location</string>
+    <string name="permission_access_fine_location_description">\'Include Location Information\' is enabled, which requires the ability to obtain precise location information so that it is as accurate as possible, which can assist your emergency contact in locating you.</string>
+
+    <!-- POST_NOTIFICATIONS Permission (For TIRAMISU and above) -->
+    <string name="permission_post_notifications_title">Permission Required: Send Notifications</string>
+    <string name="permission_post_notifications_description">Notifications are only sent when an Alert is triggered</string>
+
+    <!-- ACCESS_BACKGROUND_LOCATION Permission (For Q and above) -->
+    <string name="permission_access_background_location_title">Permission Required: Access Background Location</string>
+     <string name="permission_access_background_location_description">\'Include Location Information\' is enabled, which requires the ability to obtain location information while running in the background.  Location is only obtained when an Alert is triggered, the conditions of which should only occur when the app is in the background and the device is idle.  Please enable this permission for the Keep Alive app in your device settings by selecting \'Allow all the time\'.</string>
+
+    <!-- REQUEST_SCHEDULE_EXACT_ALARM Permission (For S and above) -->
+    <string name="permission_schedule_alarms_title">Permission Required: Schedule Alarms</string>
+    <string name="permission_schedule_alarms_description">Scheduling alarms is required so that the Alert can trigger even when your device is sleeping or in Do Not Disturb mode.\n\nPlease enable this permission for the KeepAlive app in your device settings.</string>
+</resources>

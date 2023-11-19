@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--   these are the only color we need to make different in dark mode -->
+    <color name="dialogHintTextColor">#a6a6a6</color>
+    <color name="toolbarTitleTextColor">@color/black</color>
+    <color name="textColor">#FFFFFF</color>
+</resources>

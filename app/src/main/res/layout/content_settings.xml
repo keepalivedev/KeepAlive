@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/customPreferencesLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingTop="8dp"
+    android:paddingRight="16dp">
+
+    <!-- Main Header Section -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:text="@string/main_header"
+        android:textColor="@color/primary"
+        android:textSize="@dimen/header_text_size"
+        android:textStyle="bold" />
+
+
+    <!-- Switch for 'enabled' -->
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/monitoringEnabledSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="8dp"
+        android:text="@string/enabled_title"
+        android:textSize="@dimen/default_text_size" />
+
+
+    <!-- Layout for 'time_period_hours' -->
+    <LinearLayout
+        android:id="@+id/timePeriodRow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_view_height"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="@string/time_period_title"
+            android:textSize="@dimen/default_text_size" />
+
+        <TextView
+            android:id="@+id/edit_time_period_hours"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.2"
+            android:gravity="end"
+            android:text="" />
+    </LinearLayout>
+
+    <!-- Layout for 'followup_time_period_minutes' -->
+    <LinearLayout
+        android:id="@+id/followupPeriodRow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_view_height"
+        android:layout_gravity="center"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="@string/followup_time_period_title"
+            android:textSize="@dimen/default_text_size" />
+
+        <TextView
+            android:id="@+id/edit_followup_time_period_minutes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.2"
+            android:gravity="end"
+            android:text="" />
+    </LinearLayout>
+
+    <!-- Contact Header Section -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp"
+        android:text="@string/contact_header"
+        android:textColor="@color/primary"
+        android:textSize="@dimen/header_text_size"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/callPhoneRow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_view_height"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="@string/contact_phone_title"
+            android:textSize="@dimen/default_text_size" />
+
+        <TextView
+            android:id="@+id/edit_contact_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="end"
+            android:text="" />
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/addButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:text="@string/add_sms_contact_button_text" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
+

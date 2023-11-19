@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/item_row_border"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <!-- its still selectable even without this?
+        android:background="?android:attr/selectableItemBackground" -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <!-- Left side: Phone Number Title and Value -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/phoneNumberTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/phone_number_title"
+                android:textColor="@color/primary"
+                android:textSize="@dimen/header_text_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/phoneNumberText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingTop="4dp"
+                android:text=""
+                android:textSize="@dimen/default_text_size" />
+        </LinearLayout>
+
+        <!-- Right side: Enabled Switch -->
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/enabledSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/enabled"
+            android:textSize="@dimen/default_text_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_view_height"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/alertMessageTitle"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/default_view_height"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/alert_message_title"
+            android:textColor="@color/primary"
+            android:textSize="@dimen/header_text_size"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/locationSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/default_view_height"
+            android:contentDescription="@string/location_switch_enabled_content_desc"
+            android:text="@string/include_location_title"
+            android:textSize="@dimen/default_text_size" />
+    </LinearLayout>
+
+    <!-- Alert Message Label, Value, and Include Location Switch -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/alertMessageText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="4"
+            android:minHeight="@dimen/default_view_height"
+            android:text="@string/sample_alert_message"
+            android:textSize="@dimen/default_text_size" />
+    </LinearLayout>
+
+</LinearLayout>
