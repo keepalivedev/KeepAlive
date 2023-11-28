@@ -75,6 +75,11 @@ fun sendAlertMessages(context: Context, locationStr: String) {
     // iterate through the contacts and send 1 or 2 SMS messages to each
     for (contact in smsContacts) {
 
+        // if the contact is disabled then skip it
+        if (!contact.isEnabled) {
+            continue
+        }
+
         Log.d(
             "sendAlertMessage", "Alert message is ${contact.alertMessage}, " +
                     "SMS contact number is ${contact.phoneNumber}"
