@@ -1,1 +1,2 @@
 * Make compatible with F-Droid and add build metadata
+* Fix issue with SMS being sent to disabled contacts
