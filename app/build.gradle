@@ -34,6 +34,13 @@ android {
         viewBinding true
     }
     namespace 'io.keepalive.android'
+
+    flavorDimensions += "platform"
+    productFlavors {
+        // we don't need to define anything else
+        create("googlePlay") {}
+        create("fDroid") {}
+    }
 }
 
 dependencies {
@@ -43,12 +50,11 @@ dependencies {
     implementation "androidx.activity:activity-ktx:1.7.2"
     implementation 'androidx.navigation:navigation-ui-ktx:2.6.0'
 
-    implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'androidx.preference:preference-ktx:1.2.1'
 
-    // for encrypted shared preferences
+    // for encrypted shared preferences, no longer used
     // implementation 'androidx.security:security-crypto:1.1.0-alpha06'
 
     // work manager stuff, but also gives us ListenableFuture...
@@ -58,6 +64,10 @@ dependencies {
     //  there was so much extra code...
     //implementation 'com.google.guava:guava:31.0.1-android'
 
+    // if this is google play, and not f-droid, then use the google play location library
+    googlePlayImplementation 'com.google.android.gms:play-services-location:21.0.1'
+
+    // test stuff
     testImplementation 'org.mockito:mockito-core:5.7.0'
     testImplementation 'junit:junit:4.13.2'
 

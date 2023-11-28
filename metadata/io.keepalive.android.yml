@@ -1,0 +1,22 @@
+Categories:
+  - Sports & Health
+  - Phone & SMS
+License: Apache-2.0
+SourceCode: https://github.com/keepalivedev/KeepAlive
+IssueTracker: https://github.com/keepalivedev/KeepAlive/issues
+AutoName: Keep Alive
+Description: |-
+  Notify others if you haven't used your device in a given period of time.
+RepoType: git
+Repo: https://github.com/keepalivedev/KeepAlive
+Builds:
+  - versionName: 1.0.4
+    versionCode: 104
+    commit: 1.0.4
+    subdir: app
+    gradle: fDroid
+AuthorEmail: dev@keep-alive.io
+AutoUpdateMode: Version %v
+UpdateCheckMode: Tags
+CurrentVersion: 1.0.4
+CurrentVersionCode: 104
