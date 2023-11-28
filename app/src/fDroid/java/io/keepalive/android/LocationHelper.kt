@@ -31,14 +31,17 @@ class LocationHelper(
 
         try {
 
+            // attempt to get the most accurate last known location from the available providers
             val lastLocation: Location? = getBestLastKnownLocation()
 
             if (lastLocation != null) {
-                Log.d("getLastLocation", "best lastKnownLocation is from provider " +
-                        "${lastLocation.provider} with accuracy ${lastLocation.accuracy}")
+                Log.d(
+                    "getLastLocation", "best lastKnownLocation is from provider " +
+                            "${lastLocation.provider} with accuracy ${lastLocation.accuracy}"
+                )
 
                 // attempt to geocode the location and then execute the callback
-                GeocodingHelper(context, myCallback).geocodeLocation(lastLocation)
+                GeocodingHelper().geocodeLocationAndExecute(lastLocation)
                 return
 
             } else {
@@ -49,43 +52,42 @@ class LocationHelper(
             Log.e("getLastLocation", "Failed while getting last location:", e)
         }
 
-        // if we failed to get the last location then just use an error message
-        myCallback(context, context.getString(R.string.location_invalid_message))
+        // if the location was null or there was an error then execute the callback
+        //  with an error message
+        executeCallback(context.getString(R.string.location_invalid_message))
     }
 
+    // check all available providers to try to get the best last known location
     @SuppressLint("MissingPermission")
     private fun getBestLastKnownLocation(): Location? {
-
-        // the currently enabled providers
-        val enabledProviders = locationManager.getProviders(true)
-
-        Log.d("getBestLastKnownLocation", "enabledProviders: $enabledProviders")
 
         var bestLocation: Location? = null
 
         // iterate through the enabled providers and try to get the last
         //  known location from each
-        for (provider in enabledProviders) {
+        for (provider in availableProviders) {
 
             try {
-                val lastKnownLocation = locationManager.getLastKnownLocation(provider)
+                val providerLocation = locationManager.getLastKnownLocation(provider)
 
                 Log.d(
                     "getBestLastKnownLocation",
-                    "lastKnownLocation with provider $provider is $lastKnownLocation"
+                    "lastKnownLocation with provider $provider is $providerLocation"
                 )
 
-                // if the last known location isn't null and is better than the current one
-                //  smaller accuracy values are better
-                if (lastKnownLocation != null &&
-                    (bestLocation == null || lastKnownLocation.accuracy > bestLocation.accuracy)
+                // if the location isn't null and is better than the current one
+                //  (smaller accuracy values are better)
+                if (providerLocation != null &&
+                    (bestLocation == null || providerLocation.accuracy < bestLocation.accuracy)
                 ) {
-                    bestLocation = lastKnownLocation
+                    bestLocation = providerLocation
                 }
 
             } catch (e: Exception) {
-                Log.e("getBestLastKnownLocation",
-                    "Failed getting lastKnownLocation with provider $provider", e)
+                Log.e(
+                    "getBestLastKnownLocation",
+                    "Failed getting lastKnownLocation with provider $provider", e
+                )
             }
         }
         return bestLocation
@@ -96,7 +98,6 @@ class LocationHelper(
         private val locations = ConcurrentHashMap<String, Location>()
         private val timeoutHandler = Handler(context.mainLooper)
         private val cancellationSignal = CancellationSignal()
-        private val availableProviders = locationManager.getProviders(true)
         private val receivedProviders = CopyOnWriteArraySet<String>()
 
         @SuppressLint("MissingPermission")
@@ -120,19 +121,20 @@ class LocationHelper(
 
                     // if this is API 29 or lower then we need to use the deprecated
                     //  requestSingleUpdate method
-                    locationManager.requestSingleUpdate(provider, locationListener, context.mainLooper)
+                    locationManager.requestSingleUpdate(
+                        provider,
+                        locationListener,
+                        context.mainLooper
+                    )
                 }
             }
         }
 
         // listener to be used with the deprecated locationManager.requestSingleUpdate
         private val locationListener = LocationListener { location ->
-            try {
-                Log.d("LocationComparator", "LocationListener received location: $location")
-                processProviderLocationResult(location)
-            } catch (e: Exception) {
-                Log.e("LocationComparator", "Error processing location update", e)
-            }
+
+            Log.d("locationListener", "Received location: $location")
+            processProviderLocationResult(location)
         }
 
         // both the deprecated and new methods will pass their results to this function
@@ -145,8 +147,10 @@ class LocationHelper(
                 // Use provider as key if not null, else return
                 val providerKey = loc.provider ?: return
 
-                Log.d("processProviderLocationResult", "Location from provider $providerKey at " +
-                        "${getDateTimeStrFromTimestamp(loc.time)} with acc ${loc.accuracy}: $loc")
+                Log.d(
+                    "processProviderLocationResult", "Location from provider $providerKey at " +
+                            "${getDateTimeStrFromTimestamp(loc.time)} with acc ${loc.accuracy}: $loc"
+                )
 
                 // if this is a new location that we don't already have
                 if (receivedProviders.add(providerKey)) {
@@ -188,12 +192,13 @@ class LocationHelper(
         // called either when we have all locations or when we time out
         // this is equivalent to the processLocationResult() in the google play LocationHelper
         private fun processCurrentLocationResults() {
-            Log.d("processCurrentLocationResults", "Processing locations: $locations ${locations.size} ${locations.values}")
+            Log.d("processCurrentLocationResults", "Processing ${locations.size} locations")
 
             // get the location with the best accuracy and most recent timestamp
             // docs say not to compare time between location providers because they aren't
             //  guaranteed to be using the same clock?!
-            val bestLoc = locations.values.minWithOrNull(compareBy<Location> { it.accuracy }.thenByDescending { it.time })
+            val bestLoc =
+                locations.values.minWithOrNull(compareBy<Location> { it.accuracy }.thenByDescending { it.time })
             Log.d("processCurrentLocationResults", "Best location: $bestLoc")
 
             // This block will be executed whether the task was successful or not
@@ -208,7 +213,7 @@ class LocationHelper(
                 )
 
                 // try to geocode the location and then execute the callback
-                GeocodingHelper(context, myCallback).geocodeLocation(bestLoc)
+                GeocodingHelper().geocodeLocationAndExecute(bestLoc)
 
             } else {
 

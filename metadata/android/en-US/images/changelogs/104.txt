@@ -1,1 +1,1 @@
-* Make compatible with F-Droid
+* Make compatible with F-Droid and add build metadata

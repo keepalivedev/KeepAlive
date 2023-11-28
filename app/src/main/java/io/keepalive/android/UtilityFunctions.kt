@@ -32,7 +32,6 @@ fun loadSMSEmergencyContactSettings(sharedPrefs: SharedPreferences): MutableList
     // the SMS contact settings are stored as a json string
     val jsonString = sharedPrefs.getString("PHONE_NUMBER_SETTINGS", null) ?: return mutableListOf()
     Log.d("loadSettings", "SMS Emergency Contact Settings: $jsonString")
-    println("SMS Emergency Contact Settings: $jsonString")
 
     val gson = Gson()
 

@@ -8,9 +8,7 @@ import com.google.android.gms.location.CurrentLocationRequest
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
-import com.google.android.gms.tasks.OnTokenCanceledListener
 import com.google.android.gms.tasks.Task
 
 
@@ -23,15 +21,22 @@ class LocationHelper(
     private val fusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)
 
-    // this would just let us cancel the request later if necessary...?
-    private val cancellationToken = object : CancellationToken() {
-        override fun onCanceledRequested(p0: OnTokenCanceledListener) =
-            CancellationTokenSource().token
+    // cancellation token for use with fusedLocationClient.getCurrentLocation()
+    private val cancellationTokenSource = CancellationTokenSource()
 
-        override fun isCancellationRequested() = false
+    // override the global timeout function so we can cancel the cancellationTokenSource
+    override val globalTimeoutRunnable = Runnable {
+
+        // cancel the token, may or may not still be in use
+        cancellationTokenSource.cancel()
+
+        Log.d("globalTimeoutRunnable", "Timeout reached while getting " +
+                "location from google play?!")
+
+        myCallback(context, context.getString(R.string.location_invalid_message))
     }
 
-    // when using the Google Play Services location API
+    // get the current location the Google Play Services location API
     @SuppressLint("MissingPermission")
     override fun getCurrentLocation() {
 
@@ -47,13 +52,12 @@ class LocationHelper(
             .build()
 
         // this is more accurate and up to date than .lastLocation
-        fusedLocationClient.getCurrentLocation(currentLocReq, cancellationToken)
+        fusedLocationClient.getCurrentLocation(currentLocReq, cancellationTokenSource.token)
             .addOnCompleteListener { task ->
                 processLocationResult(task, "current")
             }
     }
 
-    // yes mom we checked if we have permissions...
     @SuppressLint("MissingPermission")
     override fun getLastLocation() {
 
@@ -69,7 +73,7 @@ class LocationHelper(
             Log.e("getLastLocation", "Failed while getting last location:", e)
 
             // if we failed to get the last location then just send the error message
-            myCallback(context, context.getString(R.string.location_invalid_message))
+            executeCallback(context.getString(R.string.location_invalid_message))
         }
     }
 
@@ -84,12 +88,12 @@ class LocationHelper(
             //  geocode it and send it to the callback
             Log.d(
                 "processLocationResult",
-                " $locationSource Location from ${location.provider} is " +
+                "$locationSource Location from ${location.provider} is " +
                         "(${location.latitude}, ${location.longitude}) ${location.accuracy}acc"
             )
 
             // try to geocode the location and then execute the callback
-            GeocodingHelper(context, myCallback).geocodeLocation(location)
+            GeocodingHelper().geocodeLocationAndExecute(location)
 
         } else {
 
@@ -106,7 +110,7 @@ class LocationHelper(
                 // otherwise if we fail to get the last location then just send the error message
             } else {
                 Log.d("processLocationResult", "Unable to determine location, executing callback")
-                myCallback(context, context.getString(R.string.location_invalid_message))
+                executeCallback(context.getString(R.string.location_invalid_message))
             }
         }
     }
