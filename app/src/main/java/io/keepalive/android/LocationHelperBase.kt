@@ -203,7 +203,7 @@ open class LocationHelperBase(
                 //  the raw GPS coordinates
                 locationString = String.format(
                     context.getString(R.string.geocode_invalid_message),
-                    loc.latitude, loc.longitude, loc.accuracy, getDateTimeStrFromTimestamp(loc.time)
+                    loc.latitude, loc.longitude, loc.accuracy
                 )
 
                 // start a timeout handler in case the geocoder hangs
@@ -291,7 +291,7 @@ open class LocationHelperBase(
             return if (addressStr == "") {
                 String.format(
                     context.getString(R.string.geocode_invalid_message),
-                    loc.latitude, loc.longitude, loc.accuracy, getDateTimeStrFromTimestamp(loc.time)
+                    loc.latitude, loc.longitude, loc.accuracy
                 )
             } else {
                 String.format(

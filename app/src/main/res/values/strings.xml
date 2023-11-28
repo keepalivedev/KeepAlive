@@ -91,7 +91,7 @@
 
     <!-- alert location strings -->
     <string name="location_invalid_message">Unable to determine location.</string>
-    <string name="geocode_invalid_message">Unable to geocode location. GPS coordinates are (%1$s, %2$s). Accuracy (m): %3$s. Location obtained at %4$s</string>
+    <string name="geocode_invalid_message">Unable to geocode location. GPS coordinates are (%1$s, %2$s). Accuracy (m): %3$s.</string>
     <string name="geocode_valid_message">GPS Coordinates: (%1$s, %2$s). Accuracy (m): %3$s. Possible address: %4$s</string>
 
     <!-- Preference Titles -->
