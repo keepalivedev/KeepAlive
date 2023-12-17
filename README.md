@@ -3,7 +3,12 @@ Keep Alive will send a custom message via SMS to one or more people if you haven
 Intended to be used as a failsafe for those living alone in case of an accident or other emergency.
 Once the settings are configured, no further interaction is required.
 
-[![Google Play](http://developer.android.com/images/brand/en_generic_rgb_wo_45.png)](https://play.google.com/store/apps/details?id=io.keepalive.android) 
+[<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+alt="Get it on Google Play"
+height="80">](https://play.google.com/store/apps/details?id=io.keepalive.android)
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+     alt="Get it on F-Droid"
+     height="80">](https://f-droid.org/packages/io.keepalive.android/)
 
 ## How it Works
   Keep Alive uses your device's lock screen to detect activity.
