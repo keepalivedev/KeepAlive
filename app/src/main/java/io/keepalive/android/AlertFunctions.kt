@@ -1,20 +1,54 @@
 package io.keepalive.android
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.telecom.TelecomManager
 import android.telephony.PhoneNumberUtils
 import android.telephony.SmsManager
+import android.telephony.SubscriptionManager
+import android.telephony.TelephonyManager
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import java.util.Locale
 
+@SuppressLint("MissingPermission")
+fun getDefaultSmsSubscriptionId(context: Context): Int {
+    val subscriptionManager =
+        context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
+    val defaultSmsSubscriptionId = SubscriptionManager.getDefaultSmsSubscriptionId()
+
+    // Check if the default SMS subscription ID is valid
+    if (defaultSmsSubscriptionId != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
+
+        Log.d("getDefaultSmsSubscriptionId","The default sms subscription id is not valid?!")
+
+        subscriptionManager.activeSubscriptionInfoList?.let { activeSubscriptionInfoList ->
+            Log.d(
+                "getDefaultSmsSubscriptionId",
+                "activeSubscriptionInfoList: $activeSubscriptionInfoList"
+            )
+
+            // look through the active subscriptions and see if the default is in the list
+            for (subscriptionInfo in activeSubscriptionInfoList) {
+                if (subscriptionInfo.subscriptionId == defaultSmsSubscriptionId) {
+                    return defaultSmsSubscriptionId
+                }
+            }
+        }
+    }
+
+    // Fallback to the first active subscription if the default is not valid
+    return subscriptionManager.activeSubscriptionInfoList?.firstOrNull()?.subscriptionId
+        ?: SubscriptionManager.INVALID_SUBSCRIPTION_ID
+}
 
 fun sendAlertMessages(context: Context, locationStr: String) {
     Log.d("sendAlertMessage", "Sending alert SMS!")
@@ -55,7 +89,57 @@ fun sendAlertMessages(context: Context, locationStr: String) {
     */
 
     // get the SMS manager
-    val smsManager = context.getSystemService(SmsManager::class.java)
+    //val smsManager = context.getSystemService(SmsManager::class.java)
+
+    val smsManager: SmsManager? = try {
+
+        Log.d("sendAlertMessage", "Trying to get SMS manager using subscription id")
+
+        val subscriptionId = getDefaultSmsSubscriptionId(context)
+
+        Log.d("sendAlertMessage", "Got default subscription id: $subscriptionId")
+
+        // it seems that non-standard android phones that are on SDK < 31
+        //  cannot use context.getSystemService(SmsManager::class.java) at all?? seems to
+        //  throw errors on Xiaomi and OnePlus devices...
+        // https://issuetracker.google.com/issues/242889550
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (subscriptionId == SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
+
+                Log.d("sendAlertMessage", "Getting SMS manager with context.getSystemService")
+                context.getSystemService(SmsManager::class.java)
+            } else {
+
+                Log.d("sendAlertMessage", "Getting SMS manager with context.getSystemService " +
+                        "and subscription id $subscriptionId")
+                context.getSystemService(SmsManager::class.java).createForSubscriptionId(subscriptionId)
+            }
+
+        } else {
+            if (subscriptionId == SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
+                Log.d("sendAlertMessage", "Getting default SMS manager")
+
+                // the deprecation details here have good info on the single vs multi-sim situations
+                SmsManager.getDefault()
+
+            } else {
+                Log.d("sendAlertMessage", "Getting default SMS manager for " +
+                        "subscription id $subscriptionId")
+
+                // this actually still seemed to work when passing -1 as the subscription id...
+                SmsManager.getSmsManagerForSubscriptionId(subscriptionId)
+            }
+        }
+    } catch (e: Exception) {
+        Log.d("sendAlertMessage", "Failed getting SMS manager using subscription id?!", e)
+
+        // if the above fails default to the normal method of getting the SMS manager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            context.getSystemService(SmsManager::class.java)
+        } else {
+            SmsManager.getDefault()
+        }
+    }
 
     // if this is an emulator or if the device doesn't have an active SIM plan this can be null
     if (smsManager == null) {
@@ -71,6 +155,8 @@ fun sendAlertMessages(context: Context, locationStr: String) {
         // there is nothing more we can do so return
         return
     }
+
+    Log.d("sendAlertMessage", "Got SMS manager: $smsManager. subscriptionId is ${smsManager.subscriptionId}")
 
     // iterate through the contacts and send 1 or 2 SMS messages to each
     for (contact in smsContacts) {

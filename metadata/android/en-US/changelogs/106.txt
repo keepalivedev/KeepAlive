@@ -1,0 +1,1 @@
+* Fix issues with sending SMS on non-Google devices
