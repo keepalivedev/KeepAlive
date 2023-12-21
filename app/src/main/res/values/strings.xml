@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Keep Alive</string>
+    <string name="app_name" translatable="false">Keep Alive</string>
 
     <!-- Common strings -->
     <string name="yes">Yes</string>
