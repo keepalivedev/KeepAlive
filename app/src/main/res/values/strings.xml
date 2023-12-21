@@ -13,7 +13,7 @@
     <string name="go_to_settings">Go to Settings</string>
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
-    <string name="placeholder">PLACEHOLDER TEXT</string>
+    <string name="placeholder" translatable="false">PLACEHOLDER TEXT</string>
 
     <!-- action settings -->
     <string name="action_settings">Settings</string>
@@ -21,7 +21,7 @@
     <string name="about_dialog_title">About Keep Alive</string>
 
     <!-- wrap in CDATA so that it doesn't get interpreted as XML? -->
-    <string name="about_message_content"><![CDATA[
+    <string name="about_message_content" translatable="false"><![CDATA[
     <br /><b>Version:</b><br />%1$s<br /><br />
     <b>Contact:</b><br />dev@keep-alive.io<br /><br />
     <b>Privacy Policy:</b><br /><a href="https://keep-alive.io/privacy">keep-alive.io/privacy</a><br /><br />
