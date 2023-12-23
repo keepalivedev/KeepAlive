@@ -1,1 +1,1 @@
-Notify others if you haven't used your device in a given period of time
+Avertissez les autres si vous n'avez pas utilisé votre appareil récemment
