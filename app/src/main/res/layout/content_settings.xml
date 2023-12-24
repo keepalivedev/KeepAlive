@@ -34,7 +34,8 @@
     <LinearLayout
         android:id="@+id/timePeriodRow"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_view_height"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/default_view_height"
         android:background="?android:attr/selectableItemBackground"
         android:padding="8dp">
 
@@ -60,7 +61,8 @@
     <LinearLayout
         android:id="@+id/followupPeriodRow"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_view_height"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/default_view_height"
         android:layout_gravity="center"
         android:background="?android:attr/selectableItemBackground"
         android:padding="8dp">
@@ -97,7 +99,8 @@
     <LinearLayout
         android:id="@+id/callPhoneRow"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_view_height"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/default_view_height"
         android:background="?android:attr/selectableItemBackground"
         android:padding="8dp">
 
