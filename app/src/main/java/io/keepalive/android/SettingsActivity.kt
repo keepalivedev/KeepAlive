@@ -309,6 +309,15 @@ class SettingsActivity : AppCompatActivity() {
             .setView(dialogView)
             .setPositiveButton(getString(R.string.save)) { _, _ ->
 
+                // if the start and end times are the same then this is not a valid time range so
+                //  show a toast and don't save the rest period
+                if (dialogStartTimePicker.hour == dialogEndTimePicker.hour &&
+                    dialogStartTimePicker.minute == dialogEndTimePicker.minute) {
+
+                    showToast(getString(R.string.rest_period_invalid_range_message))
+                    return@setPositiveButton
+                }
+
                 with(sharedPrefs!!.edit()) {
 
                     // create a new list of rest periods with just this one
