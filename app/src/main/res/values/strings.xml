@@ -107,6 +107,16 @@
     <string name="phone_number_hint">Enter Phone Number</string>
     <string name="alert_message_hint">Enter Alert Message</string>
 
+    <!-- rest period dialog strings -->
+    <string name="rest_period_dialog_title">Configure Rest Period</string>
+    <string name="rest_period_dialog_message">Set a range of time during which inactivity will not be counted. For example, with \'Hours of Inactivity\' set at 6 hours and a Rest Period of 22:00 – 6:00, if the device is last used at 18:00, the \'Are you there?\' check would not be sent until 8:00.\n\nNOTE: An alert can still be sent during a rest period if the \'Are you there?\' check was sent BEFORE the start of a rest period.</string>
+    <string name="rest_period_dialog_time_zone_message"><![CDATA[
+   Times use the system default timezone: <b>%1$s</b>
+]]></string>
+    <string name="rest_period_not_set_message">Not Set</string>
+    <string name="rest_period_start_time">Start Time</string>
+    <string name="rest_period_end_time">End Time</string>
+    <string name="rest_period_invalid_range_message">Start and End times cannot be the same</string>
 
     <!-- Main Settings -->
     <string name="enabled_title">Monitoring Enabled</string>
@@ -114,6 +124,7 @@
     <string name="time_period_title">Hours of Inactivity Before Prompt</string>
     <string name="time_period_description">The # of hours of inactivity before you will be prompted with an \'Are you there?\' notification.</string>
     <string name="followup_time_period_title">Minutes to Wait for Confirmation</string>
+    <string name="rest_period_title">Rest Period Time Range</string>
     <string name="followup_time_period_description">The # of minutes to wait after sending a \'Are you there?\' notification before an Alert will be sent to your Emergency Contact(s)</string>
     <string name="contact_sms_phone_title">SMS Phone Number</string>
     <string name="contact_phone_title">Call Phone Number (Optional)</string>
