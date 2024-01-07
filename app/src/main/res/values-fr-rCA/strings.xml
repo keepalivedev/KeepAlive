@@ -97,12 +97,24 @@
     <string name="alert_message_hint">Entrer un message d\'alerte</string>
 
 
+    <!-- rest period dialog strings -->
+    <string name="rest_period_dialog_title">Configurer la période de repos</string>
+    <string name="rest_period_dialog_message">Définissez une plage de temps pendant laquelle l\'inactivité ne sera pas comptée. Par exemple, avec des « Heures d\'inactivité » définies sur 6 heures et une Période de repos de 22h00 à 6h00, si l\'appareil est utilisé pour la dernière fois à 18h00, la vérification «Êtes-vous là?» ne sera envoyé qu\'à 8h00.\n\nREMARQUE : Une alerte peut toujours être envoyée pendant une période de repos si le chèque «Êtes-vous là?» a été envoyé AVANT le début d\'une période de repos.</string>
+    <string name="rest_period_dialog_time_zone_message"><![CDATA[
+   Les heures utilisent le fuseau horaire par défaut du système: <b>%1$s</b>
+]]></string>
+    <string name="rest_period_not_set_message">Pas encore défini</string>
+    <string name="rest_period_start_time">Heure de début</string>
+    <string name="rest_period_end_time">Heure de fin</string>
+    <string name="rest_period_invalid_range_message">Les heures de début et de fin ne peuvent pas être les mêmes</string>
+
     <!-- Main Settings -->
     <string name="enabled_title">Surveillance activée</string>
     <string name="disabled_title">Surveillance désactivée</string>
     <string name="time_period_title">Heures d\'inactivité avant la notification</string>
     <string name="time_period_description">Le nombre d\'heures d\'inactivité avant de recevoir une notification «Êtes-vous là?».</string>
     <string name="followup_time_period_title">Minutes d\'attente pour confirmation</string>
+    <string name="rest_period_title">Plage de temps de la période de repos</string>
     <string name="followup_time_period_description">Le nombre de minutes à attendre après l\'envoi d\'une notification «Êtes-vous là?» avant qu\'une alerte ne soit envoyée à vos contacts d\'urgence</string>
     <string name="contact_sms_phone_title">Numéro de téléphone SMS</string>
     <string name="contact_phone_title">Numéro de téléphone à appeler (facultatif)</string>

@@ -222,7 +222,8 @@ class MainActivity : AppCompatActivity() {
 
             // set the alarm
             val timePeriodHours = sharedPrefs.getString("time_period_hours", "12")!!.toFloat()
-            setAlarm(this, (timePeriodHours * 60 * 60 * 1000).toLong(), "periodic")
+            val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(sharedPrefs,"REST_PERIODS")
+            setAlarm(this, (timePeriodHours * 60 * 60 * 1000).toLong(), "periodic", restPeriods)
 
             // wait a second for the alarm to be set and then update the text views
             Handler(Looper.getMainLooper()).postDelayed({
@@ -230,10 +231,8 @@ class MainActivity : AppCompatActivity() {
                 // assume we don't need any perms here, if the button to restart monitoring is
                 //  visible then that means we have all permissions?
                 updateStatusTextViews(false)
-            }, 1000) //millis
-
+            }, 1000)
         }
-
     }
 
     // show or hide the 'Grant Permissions' button depending
@@ -295,7 +294,7 @@ class MainActivity : AppCompatActivity() {
             val alarmDtStr =
                 getDateTimeStrFromTimestamp(alarmTimestamp, timeZone = ZoneId.systemDefault())
 
-            Log.d(tag, "alarmDtStr is $alarmDtStr")
+            Log.d(tag, "alarmDtStr is $alarmDtStr local time")
 
             // if the time is positive then there is an active alarm so let
             //  the user know that the monitoring is enabled
@@ -311,7 +310,8 @@ class MainActivity : AppCompatActivity() {
 
                 // as a sanity check, look back either 48 hours or, if the user has set a
                 //  longer time period, use that instead
-                val lastInteractiveEvent = getLastPhoneActivity(this, checkPeriodHours)
+                val lastInteractiveEvent = getLastPhoneActivity(this,
+                    (System.currentTimeMillis() - (checkPeriodHours * 1000 * 60 * 60)).toLong())
 
                 // if we haven't found any events then the user probably doesn't have a lock screen
                 //  and the app isn't going to work
@@ -453,7 +453,8 @@ class MainActivity : AppCompatActivity() {
         // next configure the SMS phone number text view and button
 
         // load SMS contacts
-        val smsContacts = loadSMSEmergencyContactSettings(sharedPrefs)
+        val smsContacts: MutableList<SMSEmergencyContactSetting> = loadJSONSharedPreference(sharedPrefs,
+            "PHONE_NUMBER_SETTINGS")
 
         var smsPhoneNumbers = ""
 
@@ -532,7 +533,7 @@ class MainActivity : AppCompatActivity() {
 
             Log.d(tag, "AlertCheck extra is $alertCheck")
 
-            // if the AlertCheck is true, meaning the user clicked on the 'Are you alive?'
+            // if the AlertCheck is true, meaning the user clicked on the 'Are you there?'
             // notification. since we cancel this notification when sending an alert,
             //  this should only ever be hit BEFORE an alert is sent so we can assume that
             //  it hasn't been sent yet and just re-set it and let the user know that
@@ -542,10 +543,11 @@ class MainActivity : AppCompatActivity() {
                 Log.d(tag, "Alert notification was clicked on!")
 
                 val checkPeriodHours = sharedPrefs.getString("time_period_hours", "12")!!.toFloat()
+                val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(sharedPrefs,"REST_PERIODS")
 
                 // if the user clicked on the notification we can assume they are active so
-                //  regardless of re-set the alarm
-                setAlarm(this, (checkPeriodHours * 60 * 60 * 1000).toLong(), "periodic")
+                //  regardless of the last activity, just re-set the alarm
+                setAlarm(this, (checkPeriodHours * 60 * 60 * 1000).toLong(), "periodic", restPeriods)
 
                 // let the user know that the alert was cancelled
                 binding.root.findViewById<TextView>(R.id.textviewMonitoringMessage).text =

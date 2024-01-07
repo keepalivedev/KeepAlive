@@ -6,6 +6,7 @@ import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -13,10 +14,10 @@ import android.telecom.TelecomManager
 import android.telephony.PhoneNumberUtils
 import android.telephony.SmsManager
 import android.telephony.SubscriptionManager
-import android.telephony.TelephonyManager
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import java.time.LocalDateTime
 import java.util.Locale
 
 @SuppressLint("MissingPermission")
@@ -55,7 +56,8 @@ fun sendAlertMessages(context: Context, locationStr: String) {
 
     // get the preferences and load the SMS contacts
     val prefs = getEncryptedSharedPreferences(context)
-    val smsContacts = loadSMSEmergencyContactSettings(prefs)
+    val smsContacts: MutableList<SMSEmergencyContactSetting> = loadJSONSharedPreference(prefs,
+        "PHONE_NUMBER_SETTINGS")
 
     Log.d("sendAlertMessage", "Loaded ${smsContacts.size} SMS contacts")
 
@@ -294,22 +296,21 @@ fun makeAlertCall(context: Context) {
 }
 
 // trying to find when the phone was last locked or unlocked
-fun getLastPhoneActivity(context: Context, maxHours: Float): UsageEvents.Event? {
+fun getLastPhoneActivity(context: Context, startTimestamp: Long): UsageEvents.Event? {
     var lastInteractiveEvent: UsageEvents.Event? = null
 
     // todo check for permissions usage stats permissions? this will fail silently and not
     //  return any events if we don't have permissions
     try {
-        val end = System.currentTimeMillis()
-        val start = (end - 1000 * 60 * 60 * maxHours).toLong()
 
-        Log.d("getLastPhoneActivity", "checking usage stats for the last $maxHours hours")
+        Log.d("getLastPhoneActivity", "checking usage stats starting at" +
+                " ${getDateTimeStrFromTimestamp(startTimestamp)}")
 
         val usageStatsManager =
             context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
 
-        // get all events in the time range
-        val events = usageStatsManager.queryEvents(start, end)
+        // get all events between the starting timestamp and now
+        val events = usageStatsManager.queryEvents(startTimestamp, System.currentTimeMillis())
 
         // while there are still more events
         while (events.hasNextEvent()) {
@@ -347,7 +348,7 @@ fun getLastPhoneActivity(context: Context, maxHours: Float): UsageEvents.Event? 
         } else {
             Log.d(
                 "getLastPhoneActivity",
-                "No usage events found in the last $maxHours hours"
+                "No usage events found since ${getDateTimeStrFromTimestamp(startTimestamp)}"
             )
         }
 
@@ -358,11 +359,19 @@ fun getLastPhoneActivity(context: Context, maxHours: Float): UsageEvents.Event? 
 }
 
 
-fun doPeriodicCheck(context: Context) {
+fun doAlertCheck(context: Context, alarmStage: String) {
     val prefs = getEncryptedSharedPreferences(context)
 
+    // get the necessary preferences
     val checkPeriodHours = prefs.getString("time_period_hours", "12")!!.toFloat()
     val followupPeriodMinutes = prefs.getString("followup_time_period_minutes", "60")!!.toLong()
+    val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(prefs,"REST_PERIODS")
+
+    // time in the system default timezone, which is what the rest period will be in
+    val nowLocalDateTime = LocalDateTime.now()
+
+    // time in milliseconds since epoch, store this so we use the same time for everything
+    val nowTimestamp = System.currentTimeMillis()
 
     Log.d(
         "doPeriodicCheck",
@@ -370,12 +379,50 @@ fun doPeriodicCheck(context: Context) {
                 "followup period is $followupPeriodMinutes minutes."
     )
 
-    // check for usage events in the last x hours as defined by the user. if no events are found
-    //  in that time range it means that the phone has been idle for at least that long
-    val lastInteractiveEvent = getLastPhoneActivity(context, checkPeriodHours)
+    // assume no rest periods and default to searching for activity starting at
+    //  the beginning of the check period
+    var activitySearchStartTimestamp = (nowTimestamp - (checkPeriodHours * 1000 * 60 * 60)).toLong()
+    var isInRestPeriod = false
 
-    // if no events were found then we need to send the alert
-    if (lastInteractiveEvent == null) {
+    Log.d("doPeriodicCheck", "activity search start timestamp is " +
+            getDateTimeStrFromTimestamp(activitySearchStartTimestamp)
+    )
+
+    // if there is a rest period set, determine whether we are currently in a rest period and
+    //  adjust the activity search start time accordingly
+    if (restPeriods.isNotEmpty()) {
+
+        // get whether we are currently in a rest period
+        isInRestPeriod = isWithinRestPeriod(nowLocalDateTime.toLocalTime(), restPeriods[0])
+
+        // get a date in the past that is checkPeriodHours ago while excluding any rest periods
+        //  and then convert it to a timestamp
+        activitySearchStartTimestamp = calculatePastDateTimeExcludingRestPeriod(
+            nowLocalDateTime, checkPeriodHours, restPeriods[0]
+        ).toInstant().toEpochMilli()
+
+        Log.d("doPeriodicCheck", "updating activity search start timestamp to " +
+                getDateTimeStrFromTimestamp(activitySearchStartTimestamp))
+    }
+
+    // double check that there is still no recent user activity
+    val lastInteractiveEvent = getLastPhoneActivity(
+        context, activitySearchStartTimestamp
+    )
+
+    // if this is the final alarm and there is no recent activity then we need to send the alert
+    // DO NOT CHECK FOR REST PERIOD HERE; final alarms should never be set during
+    //  a rest period so we can assume that the 'are you there?' check was done
+    //  outside of a rest period and so we should still send the alert
+    if (alarmStage == "final" && lastInteractiveEvent == null) {
+        sendAlert(context, prefs)
+        return
+    }
+
+    // if no events were found then we need to send the followup notification and set a final alarm
+    // make sure we aren't in a rest period though because we should never initiate the
+    //  'are you there?' check during a rest period
+    if (lastInteractiveEvent == null && !isInRestPeriod) {
         Log.d(
             "doPeriodicCheck",
             "no events found in the last $checkPeriodHours hours?!"
@@ -392,22 +439,74 @@ fun doPeriodicCheck(context: Context) {
         )
 
         // if no events are found then set the alarm so we follow up
-        setAlarm(context, (followupPeriodMinutes * 60 * 1000), "final")
+        // do not adjust the followup time based on the rest periods
+        setAlarm(context, (followupPeriodMinutes * 60 * 1000), "final", null)
 
     } else {
+        // use the last event timestamp if we found one, otherwise it means we are in a rest period
+        //  so assume that the last activity was checkPeriodHours ago so that the new alarm
+        //  gets set for the end of the current rest period
+        val lastInteractiveEventTimestamp = lastInteractiveEvent?.timeStamp ?: (nowTimestamp - (checkPeriodHours * 60 * 60 * 1000)).toLong()
 
         // this just here for informational purposes
-        val lastEventMsAgo = System.currentTimeMillis() - lastInteractiveEvent.timeStamp
+        val lastEventMsAgo = nowTimestamp - lastInteractiveEventTimestamp
         Log.d("doPeriodicCheck", "last event was ${lastEventMsAgo / 1000} seconds ago")
 
-        // since now know when the last activity was we can set our next alarm for to the
+        // since now know when the last activity was we can set our next alarm for the
         //  exact time we need to check again
-        val newAlarmTimestamp = lastInteractiveEvent.timeStamp + (checkPeriodHours * 60 * 60 * 1000)
+        val newAlarmTimestamp = lastInteractiveEventTimestamp + (checkPeriodHours * 60 * 60 * 1000)
 
         // the milliseconds until our alarm would fire
-        val newAlarmInMs = (newAlarmTimestamp - System.currentTimeMillis()).toLong()
+        val newAlarmInMs = (newAlarmTimestamp - nowTimestamp).toLong()
 
         // set a new alarm so we can check again in the future
-        setAlarm(context, newAlarmInMs, "periodic")
+        setAlarm(context, newAlarmInMs, "periodic", restPeriods)
+    }
+}
+
+fun sendAlert(context: Context, prefs: SharedPreferences) {
+    Log.d(
+        "sendAlert",
+        "This is the final stage alarm and still no activity! Sending alert!!!"
+    )
+
+    // cancel the 'Are you there?' notification
+    AlertNotificationHelper(context).cancelNotification(
+        AppController.ARE_YOU_THERE_NOTIFICATION_ID
+    )
+
+    // only get the location if the user has enabled it for at least one
+    if (prefs.getBoolean("location_enabled", false)) {
+
+        // just add an extra layer try/catch in case anything unexpected
+        //  happens when trying to get the location
+        try {
+
+            // attempt to get the location and pass it to sendAlertMessages
+            val locationHelper = LocationHelper(context, ::sendAlertMessages)
+            locationHelper.getLocationAndExecute()
+
+        } catch (e: Exception) {
+
+            // if we fail for any reason then send the alert messages
+            Log.e("sendAlert", "Failed to get location:", e)
+            sendAlertMessages(
+                context,
+                context.getString(R.string.location_invalid_message)
+            )
+        }
+    } else {
+
+        // if location isn't enabled then just send the alert
+        sendAlertMessages(context, "")
+    }
+
+    // also make the phone call (if enabled)
+    makeAlertCall(context)
+
+    // update prefs to include when the alert was sent
+    with(prefs.edit()) {
+        putLong("LastAlertAt", System.currentTimeMillis())
+        apply()
     }
 }
