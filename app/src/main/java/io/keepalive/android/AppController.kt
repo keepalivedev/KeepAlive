@@ -40,7 +40,7 @@ class AppController : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        Log.d(TAG, "KeepAlive starting up...")
+        DebugLogger.d(TAG, "KeepAlive starting up!")
 
         // alternative is to check BuildConfig.DEBUG?
         if ((this.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0) {

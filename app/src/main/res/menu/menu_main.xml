@@ -14,4 +14,10 @@
         android:title="@string/action_about"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_logdisplay"
+        android:orderInCategory="102"
+        android:title="@string/action_logdisplay"
+        app:showAsAction="never" />
+
 </menu>

@@ -22,6 +22,10 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            // Append an identifier to the applicationId when debugging
+            applicationIdSuffix ".debug"
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -59,6 +63,8 @@ dependencies {
 
     // work manager stuff, but also gives us ListenableFuture...
     implementation 'androidx.work:work-runtime-ktx:2.8.1'
+
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     // this is what the docs say to use for ListenableFuture but
     //  there was so much extra code...

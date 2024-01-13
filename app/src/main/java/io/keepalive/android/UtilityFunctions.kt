@@ -19,6 +19,7 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Collections
 import java.util.Date
 
 
@@ -188,7 +189,7 @@ fun setAlarm(
     // these alarms are not super time sensitive so as long as they happen eventually it's fine?
     if (alarmStage == "periodic") {
 
-        Log.d("setAlarm", "Setting new periodic alarm for approximately $alarmDtStr")
+        DebugLogger.d("setAlarm", "Setting new periodic alarm for approximately $alarmDtStr")
 
         // we are not using setExactAndAllowWhileIdle() because it could lead to more
         //  battery usage but can ultimately still get delayed or ignored by the OS?
@@ -221,7 +222,7 @@ fun setAlarm(
         }
 
         if (useExact) {
-            Log.d("setAlarm", "Setting final exact alarm to go off at $alarmDtStr")
+            DebugLogger.d("setAlarm", "Setting final exact alarm to go off at $alarmDtStr")
 
             // according to the docs, this is the only thing that won't get delayed by the OS?
             // random note, this shows up on the lock screen as a pending alarm
@@ -235,7 +236,7 @@ fun setAlarm(
             // if for some reason we can't use exact alarms, try setting a normal one
         } else {
 
-            Log.d(
+            DebugLogger.d(
                 "setAlarm", "Unable to set exact alarm?!  " +
                         "Setting normal final alarm to go off at $alarmDtStr"
             )
@@ -259,7 +260,7 @@ fun setAlarm(
 
     // track when the next alarm is set to go off in our preferences
     with(prefs.edit()) {
-        putLong("NextAlarmTimestamp", System.currentTimeMillis() + alarmInMs)
+        putLong("NextAlarmTimestamp", alarmTimestamp)
         apply()
     }
 }
@@ -389,3 +390,27 @@ fun isWithinRestPeriod(time: LocalTime, restPeriod: RestPeriod): Boolean {
     }
 }
 
+// this will just be kept in memory and if we close the app the logs are lost
+object DebugLogger {
+    private val logBuffer = Collections.synchronizedList(mutableListOf<String>())
+    private const val MAX_BUFFER_SIZE = 100
+
+    fun d(tag: String, message: String, ex: Exception? = null) {
+        Log.d(tag, message, ex)
+        val logMessage = "${getDateTimeStrFromTimestamp(System.currentTimeMillis())}: $message"
+        addLog(logMessage)
+    }
+
+    private fun addLog(log: String) {
+        synchronized(logBuffer) {
+            logBuffer.add(0, log) // Add new log at the beginning
+            if (logBuffer.size > MAX_BUFFER_SIZE) {
+                logBuffer.removeAt(logBuffer.size - 1) // Remove oldest log
+            }
+        }
+    }
+
+    fun getLogs(): List<String> {
+        return logBuffer.toList() // Return a copy of the logs
+    }
+}

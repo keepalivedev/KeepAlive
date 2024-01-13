@@ -14,7 +14,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         try {
-            Log.d(tag, "Alarm just fired!")
+            DebugLogger.d(tag, "Alarm just fired!")
 
             // shouldn't need to check whether the app is still enabled here because
             //  we will cancel the alarm when the setting is changed
@@ -43,10 +43,9 @@ class AlarmReceiver : BroadcastReceiver() {
         intent.extras?.let {
 
             alarmStage = it.getString("AlarmStage", "periodic")
+            DebugLogger.d(tag, "Alarm stage is $alarmStage")
 
-            Log.d(tag, "Alarm stage is $alarmStage")
-
-            // check when the alarm was supposed to go off and compare to
+            // also check when the alarm was supposed to go off and compare to
             //   when it actually did go off
             val alarmTimestamp = it.getLong("AlarmTimestamp", 0)
 
@@ -56,12 +55,10 @@ class AlarmReceiver : BroadcastReceiver() {
 
                 val alarmDtStr = getDateTimeStrFromTimestamp(alarmTimestamp)
                 val currentDtStr = getDateTimeStrFromTimestamp(System.currentTimeMillis())
-
-                Log.d(tag, "Time is $currentDtStr, alarm was supposed to go off at $alarmDtStr")
-
                 val timeAgo = (System.currentTimeMillis() - alarmTimestamp) / 1000
 
-                Log.d(tag, "Alarm was supposed to go off $timeAgo seconds ago?!")
+                DebugLogger.d(tag, "Time is $currentDtStr, alarm was supposed to go off at $alarmDtStr, " +
+                        "which was $timeAgo seconds ago")
             }
         }
         return alarmStage

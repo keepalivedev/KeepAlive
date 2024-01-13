@@ -51,8 +51,60 @@ fun getDefaultSmsSubscriptionId(context: Context): Int {
         ?: SubscriptionManager.INVALID_SUBSCRIPTION_ID
 }
 
+fun getSMSManager(context: Context): SmsManager? {
+    return try {
+
+        Log.d("sendAlertMessage", "Trying to get SMS manager using sub id")
+
+        val subscriptionId = getDefaultSmsSubscriptionId(context)
+
+        Log.d("sendAlertMessage", "Got default sub id: $subscriptionId")
+
+        // it seems that non-standard android phones that are on SDK < 31
+        //  cannot use context.getSystemService(SmsManager::class.java) at all?? seems to
+        //  throw errors on Xiaomi and OnePlus devices...
+        // https://issuetracker.google.com/issues/242889550
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (subscriptionId == SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
+
+                DebugLogger.d("sendAlertMessage", "Getting SMS manager with context.getSystemService")
+                context.getSystemService(SmsManager::class.java)
+            } else {
+
+                DebugLogger.d("sendAlertMessage", "Getting SMS manager with context.getSystemService " +
+                        "and sub id $subscriptionId")
+                context.getSystemService(SmsManager::class.java).createForSubscriptionId(subscriptionId)
+            }
+
+        } else {
+            if (subscriptionId == SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
+                DebugLogger.d("sendAlertMessage", "Getting default SMS manager")
+
+                // the deprecation details here have good info on the single vs multi-sim situations
+                SmsManager.getDefault()
+
+            } else {
+                DebugLogger.d("sendAlertMessage", "Getting default SMS manager for " +
+                        "sub id $subscriptionId")
+
+                // this actually still seemed to work when passing -1 as the subscription id...
+                SmsManager.getSmsManagerForSubscriptionId(subscriptionId)
+            }
+        }
+    } catch (e: Exception) {
+        DebugLogger.d("sendAlertMessage", "Exception while getting SMS manager: ${e.message}", e)
+
+        // if the above fails default to the normal method of getting the SMS manager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            context.getSystemService(SmsManager::class.java)
+        } else {
+            SmsManager.getDefault()
+        }
+    }
+}
+
 fun sendAlertMessages(context: Context, locationStr: String) {
-    Log.d("sendAlertMessage", "Sending alert SMS!")
+    DebugLogger.d("sendAlertMessage", "Sending alert SMS!")
 
     // get the preferences and load the SMS contacts
     val prefs = getEncryptedSharedPreferences(context)
@@ -93,59 +145,11 @@ fun sendAlertMessages(context: Context, locationStr: String) {
     // get the SMS manager
     //val smsManager = context.getSystemService(SmsManager::class.java)
 
-    val smsManager: SmsManager? = try {
-
-        Log.d("sendAlertMessage", "Trying to get SMS manager using subscription id")
-
-        val subscriptionId = getDefaultSmsSubscriptionId(context)
-
-        Log.d("sendAlertMessage", "Got default subscription id: $subscriptionId")
-
-        // it seems that non-standard android phones that are on SDK < 31
-        //  cannot use context.getSystemService(SmsManager::class.java) at all?? seems to
-        //  throw errors on Xiaomi and OnePlus devices...
-        // https://issuetracker.google.com/issues/242889550
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (subscriptionId == SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
-
-                Log.d("sendAlertMessage", "Getting SMS manager with context.getSystemService")
-                context.getSystemService(SmsManager::class.java)
-            } else {
-
-                Log.d("sendAlertMessage", "Getting SMS manager with context.getSystemService " +
-                        "and subscription id $subscriptionId")
-                context.getSystemService(SmsManager::class.java).createForSubscriptionId(subscriptionId)
-            }
-
-        } else {
-            if (subscriptionId == SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
-                Log.d("sendAlertMessage", "Getting default SMS manager")
-
-                // the deprecation details here have good info on the single vs multi-sim situations
-                SmsManager.getDefault()
-
-            } else {
-                Log.d("sendAlertMessage", "Getting default SMS manager for " +
-                        "subscription id $subscriptionId")
-
-                // this actually still seemed to work when passing -1 as the subscription id...
-                SmsManager.getSmsManagerForSubscriptionId(subscriptionId)
-            }
-        }
-    } catch (e: Exception) {
-        Log.d("sendAlertMessage", "Failed getting SMS manager using subscription id?!", e)
-
-        // if the above fails default to the normal method of getting the SMS manager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            context.getSystemService(SmsManager::class.java)
-        } else {
-            SmsManager.getDefault()
-        }
-    }
+    val smsManager = getSMSManager(context)
 
     // if this is an emulator or if the device doesn't have an active SIM plan this can be null
     if (smsManager == null) {
-        Log.e("sendAlertMessage", "Failed getting SMS manager?!")
+        DebugLogger.d("sendAlertMessage", "Failed getting SMS manager?!")
 
         // if smsManager is null we can't send SMS so send a notification to let the user know
         AlertNotificationHelper(context).sendNotification(
@@ -176,7 +180,7 @@ fun sendAlertMessages(context: Context, locationStr: String) {
         // this shouldn't ever happen but just in case...
         if (contact.phoneNumber != "") {
 
-            Log.d("sendAlertMessage", "Sending text message to ${contact.phoneNumber}!")
+            DebugLogger.d("sendAlertMessage", "Sending text message to: ${contact.phoneNumber}")
 
             try {
                 // send the initial alert message defined by the user
@@ -187,7 +191,7 @@ fun sendAlertMessages(context: Context, locationStr: String) {
                 // if enabled, send the location details in a second SMS
                 if (contact.includeLocation) {
 
-                    Log.d(
+                    DebugLogger.d(
                         "sendAlertMessage",
                         "Sending location message, string is $locationStr"
                     )
@@ -205,7 +209,7 @@ fun sendAlertMessages(context: Context, locationStr: String) {
                     )
                 )
             } catch (e: Exception) {
-                Log.e("sendAlertMessage", "Failed sending SMS message?!", e)
+                DebugLogger.d("sendAlertMessage", "Failed sending SMS message?!", e)
 
                 // if we failed while sending the SMS then send a notification
                 //  to let the user know
@@ -220,7 +224,7 @@ fun sendAlertMessages(context: Context, locationStr: String) {
             }
 
         } else {
-            Log.d("sendAlertMessage", "SMS phone # was blank?!")
+            DebugLogger.d("sendAlertMessage", "SMS phone # was blank?!")
         }
     }
     Log.d(
@@ -229,7 +233,7 @@ fun sendAlertMessages(context: Context, locationStr: String) {
     )
 
     if (contactNumberList.size == 0) {
-        Log.d("sendAlertMessage", "Did not send any SMS messages?!")
+        DebugLogger.d("sendAlertMessage", "Did not send any SMS messages?!")
         return
     }
 
@@ -254,19 +258,19 @@ fun makeAlertCall(context: Context) {
     // if we have a phone number
     if (phoneContactNumber != null && phoneContactNumber != "") {
 
-        Log.d("makeAlarmCall", "starting call intent")
-
-        // build the call intent
-        val callIntent = Intent(Intent.ACTION_CALL)
-        callIntent.data = Uri.parse("tel:$phoneContactNumber")
-        callIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-
         // double check that we have permissions
         if (ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.CALL_PHONE
             ) == PackageManager.PERMISSION_GRANTED
         ) {
+
+            DebugLogger.d("makeAlarmCall", "Placing Alert phone call to $phoneContactNumber")
+
+            // build the call intent
+            val callIntent = Intent(Intent.ACTION_CALL)
+            callIntent.data = Uri.parse("tel:$phoneContactNumber")
+            callIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
             // enable speakerphone on the call
             callIntent.putExtra(TelecomManager.EXTRA_START_CALL_WITH_SPEAKERPHONE, true)
@@ -287,8 +291,7 @@ fun makeAlertCall(context: Context) {
             )
 
         } else {
-            Log.d("makeAlarmCall", "don't have call phone permissions?!")
-            Toast.makeText(context, "Alert phone call sent!", Toast.LENGTH_SHORT).show()
+            DebugLogger.d("makeAlarmCall", "Unable to place call, don't have permissions?!")
         }
     } else {
         Log.d("makeAlarmCall", "Phone # was null?!")
@@ -303,7 +306,7 @@ fun getLastPhoneActivity(context: Context, startTimestamp: Long): UsageEvents.Ev
     //  return any events if we don't have permissions
     try {
 
-        Log.d("getLastPhoneActivity", "checking usage stats starting at" +
+        DebugLogger.d("getLastPhoneActivity", "checking for activity starting at" +
                 " ${getDateTimeStrFromTimestamp(startTimestamp)}")
 
         val usageStatsManager =
@@ -353,7 +356,7 @@ fun getLastPhoneActivity(context: Context, startTimestamp: Long): UsageEvents.Ev
         }
 
     } catch (e: Exception) {
-        Log.e("getLastPhoneActivity", "Failed getting last phone activity?!", e)
+        DebugLogger.d("getLastPhoneActivity", "Failed getting last phone activity?!", e)
     }
     return lastInteractiveEvent
 }
@@ -423,9 +426,9 @@ fun doAlertCheck(context: Context, alarmStage: String) {
     // make sure we aren't in a rest period though because we should never initiate the
     //  'are you there?' check during a rest period
     if (lastInteractiveEvent == null && !isInRestPeriod) {
-        Log.d(
+        DebugLogger.d(
             "doPeriodicCheck",
-            "no events found in the last $checkPeriodHours hours?!"
+            "no events found in the last $checkPeriodHours hours, sending Are you there? notification"
         )
 
         // send the 'Are you there?' notification
@@ -465,10 +468,7 @@ fun doAlertCheck(context: Context, alarmStage: String) {
 }
 
 fun sendAlert(context: Context, prefs: SharedPreferences) {
-    Log.d(
-        "sendAlert",
-        "This is the final stage alarm and still no activity! Sending alert!!!"
-    )
+    DebugLogger.d("sendAlert","Sending alert!")
 
     // cancel the 'Are you there?' notification
     AlertNotificationHelper(context).cancelNotification(

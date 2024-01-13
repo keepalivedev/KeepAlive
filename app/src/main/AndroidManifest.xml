@@ -52,6 +52,14 @@
                 android:value="io.keepalive.android.MainActivity" />
         </activity>
 
+        <activity
+            android:name="io.keepalive.android.LogDisplayActivity"
+            android:parentActivityName="io.keepalive.android.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="io.keepalive.android.MainActivity" />
+        </activity>
+
         <receiver
             android:name="io.keepalive.android.receivers.AlarmReceiver"
             android:directBootAware="true"
