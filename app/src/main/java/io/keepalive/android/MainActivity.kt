@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.telephony.PhoneNumberUtils
-import android.telephony.SmsManager
 import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.util.Log
@@ -51,8 +50,7 @@ class MainActivity : AppCompatActivity() {
 
         Log.d(tag, "KeepAlive onCreate")
 
-        // update the main page content
-        updateMainContent()
+        // don't need to do anything else here, onResume also gets called...
     }
 
     override fun onResume() {
@@ -60,7 +58,8 @@ class MainActivity : AppCompatActivity() {
 
         Log.d(tag, "onResume, updating text views and checking permissions")
 
-        updateMainContent()
+        val needPermissions = PermissionManager(this, this).checkNeedAnyPermissions()
+        updateMainContent(needPermissions)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -77,8 +76,14 @@ class MainActivity : AppCompatActivity() {
 
             // launch the settings activity
             R.id.action_settings -> {
-                //val i = Intent(this, SettingsActivity::class.java)
                 val i = Intent(this, SettingsActivity::class.java)
+                this.startActivity(i)
+                return true
+            }
+
+            // launch the log display activity
+            R.id.action_logdisplay -> {
+                val i = Intent(this, LogDisplayActivity::class.java)
                 this.startActivity(i)
                 return true
             }
@@ -132,9 +137,7 @@ class MainActivity : AppCompatActivity() {
         adjustPermissionsComponents(PermissionManager(this, this).checkNeedAnyPermissions())
     }
 
-    private fun updateMainContent() {
-
-        val needPermissions = PermissionManager(this, this).checkNeedAnyPermissions()
+    private fun updateMainContent(needPermissions: Boolean) {
 
         // check whether we have any permissions left to request and, if not, hide
         //  the permissions button and set a message
@@ -276,7 +279,7 @@ class MainActivity : AppCompatActivity() {
 
         // this should only happen the first time the app is run or if the user has disabled it
         if (alarmTimestamp == -1L || !isEnabled) {
-            Log.d(tag, "No alarm found, monitoring is disabled")
+            DebugLogger.d(tag, "No alarm found, monitoring is disabled")
 
             // set a big red message indicating that monitoring is not active
             monitoringStatusTextView.text = getString(R.string.monitoring_disabled_title)
@@ -294,7 +297,7 @@ class MainActivity : AppCompatActivity() {
             val alarmDtStr =
                 getDateTimeStrFromTimestamp(alarmTimestamp, timeZone = ZoneId.systemDefault())
 
-            Log.d(tag, "alarmDtStr is $alarmDtStr local time")
+            DebugLogger.d(tag, "Current alarm set for $alarmDtStr local time")
 
             // if the time is positive then there is an active alarm so let
             //  the user know that the monitoring is enabled
@@ -316,7 +319,7 @@ class MainActivity : AppCompatActivity() {
                 // if we haven't found any events then the user probably doesn't have a lock screen
                 //  and the app isn't going to work
                 if (lastInteractiveEvent == null) {
-                    Log.d(tag, "No events found, maybe the user doesn't have a lock screen?")
+                    DebugLogger.d(tag, "No events found, may not have lock screen?")
 
                     // set a big red message indicating that we can't enable monitoring
                     monitoringStatusTextView.text =
@@ -392,7 +395,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                Log.d(tag, "No active alarm found, showing button to restart")
+                DebugLogger.d(tag, "No active alarm found, showing button to restart")
 
                 monitoringMessageTextView.text = getString(R.string.monitoring_inactive_message)
 
@@ -479,10 +482,10 @@ class MainActivity : AppCompatActivity() {
         } else {
 
             // first see if we can even send SMS
-            val smsManager = getSystemService(SmsManager::class.java)
+            val smsManager = getSMSManager(this)
             if (smsManager == null) {
 
-                Log.e(tag, "Failed to get SMS manager")
+                DebugLogger.d(tag, "Failed to get SMS manager? Disabling SMS test button")
 
                 // make the test alert button visible but disabled
                 smsPhoneTextView.visibility = View.VISIBLE
