@@ -13,6 +13,7 @@
     <string name="disabled">Désactivé</string>
     <string name="action_settings">Paramètres</string>
     <string name="action_about">À propos</string>
+    <string name="action_logdisplay">Journaux de débogage</string>
     <string name="about_dialog_title">À propos de Keep Alive</string>
 
     <string name="sms_service_failure_notification_title">Impossible de transmettre l\'alerte SMS</string>
