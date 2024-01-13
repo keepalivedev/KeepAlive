@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import io.keepalive.android.doPeriodicCheck
+import io.keepalive.android.doAlertCheck
 import io.keepalive.android.getEncryptedSharedPreferences
 
 
@@ -33,9 +33,13 @@ class BootBroadcastReceiver : BroadcastReceiver() {
 
                 if (enabled) {
 
+                    // todo if phone reboots between the 'are you there' check and the final alarm
+                    //  check, we may miss it?
+
                     // since we can't assume that the user initiated the reboot, set the alarm
                     //  based on the last detected activity
-                    doPeriodicCheck(context)
+                    // assume a periodic alarm here since we don't know what the last alarm stage was
+                    doAlertCheck(context, "periodic")
 
                 } else {
                     Log.d(tag, "App is disabled?!")

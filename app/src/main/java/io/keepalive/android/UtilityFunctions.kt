@@ -12,8 +12,12 @@ import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.keepalive.android.receivers.AlarmReceiver
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Date
 
@@ -26,19 +30,27 @@ data class SMSEmergencyContactSetting(
     var includeLocation: Boolean
 )
 
-// load the SMS emergency contact settings from shared preferences
-fun loadSMSEmergencyContactSettings(sharedPrefs: SharedPreferences): MutableList<SMSEmergencyContactSetting> {
+// data class used to represent a rest period
+data class RestPeriod(
+    var startHour: Int,
+    var startMinute: Int,
+    var endHour: Int,
+    var endMinute: Int
+)
 
-    // the SMS contact settings are stored as a json string
-    val jsonString = sharedPrefs.getString("PHONE_NUMBER_SETTINGS", null) ?: return mutableListOf()
-    Log.d("loadSettings", "SMS Emergency Contact Settings: $jsonString")
+// load a JSON string from shared preferences and convert it to a list of objects
+// used with the SMSEmergencyContactSetting and RestPeriods
+inline fun <reified T> loadJSONSharedPreference(
+    sharedPrefs: SharedPreferences,
+    preferenceKey: String
+): MutableList<T> {
+    val jsonString = sharedPrefs.getString(preferenceKey, null) ?: return mutableListOf()
+    Log.d("loadJSONSharedPreference", "Loading $preferenceKey: $jsonString")
 
     val gson = Gson()
-
-    // turn the json into a list of SMSEmergencyContactSetting objects
     return gson.fromJson(
         jsonString,
-        object : TypeToken<List<SMSEmergencyContactSetting>>() {}.type
+        object : TypeToken<List<T>>() {}.type
     )
 }
 
@@ -117,10 +129,37 @@ fun getDateTimeStrFromTimestamp(timestamp: Long, timeZone: ZoneId = ZoneOffset.U
 
 
 // set an alarm so that we can check up on the user in the future
-fun setAlarm(context: Context, alarmInMs: Long, alarmStage: String = "initial") {
+fun setAlarm(
+    context: Context,
+    alarmInMs: Long,
+    alarmStage: String,
+    restPeriods: MutableList<RestPeriod>? = null
+) {
 
     // when the alarm is supposed to go off
-    val alarmTimestamp = System.currentTimeMillis() + alarmInMs
+    var alarmTimestamp = System.currentTimeMillis() + alarmInMs
+
+    // if we have any rest periods; this will be null for final stage alarms
+    //  so that it ignores rest periods
+    if (!restPeriods.isNullOrEmpty()) {
+
+        // if the future alert time would be during a rest period then delay it
+        //  until the end of the rest period
+        val adjustedAlarmTimestamp = adjustTimestampIfInRestPeriod(alarmTimestamp, restPeriods[0])
+
+        // informational check so we know if the timestamp was adjusted
+        if (adjustedAlarmTimestamp != alarmTimestamp) {
+
+            Log.d(
+                "setAlarm", "Original alarm set for " +
+                        "${getDateTimeStrFromTimestamp(alarmTimestamp)} which would " +
+                        "be during rest period ${restPeriods[0]}, adjusting to " +
+                        getDateTimeStrFromTimestamp(adjustedAlarmTimestamp)
+            )
+
+            alarmTimestamp = adjustedAlarmTimestamp
+        }
+    }
 
     // convert the timestamp to a string for use in logging
     val alarmDtStr = getDateTimeStrFromTimestamp(alarmTimestamp)
@@ -158,6 +197,11 @@ fun setAlarm(context: Context, alarmInMs: Long, alarmStage: String = "initial") 
         // from the docs: To perform work while the device is in Doze, create an inexact alarm
         //                 using setAndAllowWhileIdle(), and start a job from the alarm.
         // will never go off before, but may be delayed up to an hour??
+        // also, if viewing the alarms in the Background Task Inspector, the 'Trigger time'
+        //  that is displayed is based on SystemClock.elapsedRealtime() so can be misleading...
+        // furthermore, emulators can exhibit weird behavior when using ELAPSED_REALTIME_WAKEUP
+        //  alarms because their internal time is off, potentially causing an alarm to go off
+        //  and be re-set continuously because the emulator's time is in the future...
         alarmManager?.setAndAllowWhileIdle(
             AlarmManager.ELAPSED_REALTIME_WAKEUP,
 
@@ -177,7 +221,7 @@ fun setAlarm(context: Context, alarmInMs: Long, alarmStage: String = "initial") 
         }
 
         if (useExact) {
-            Log.d("setAlarm", "Setting new exact alarm to go off at $alarmDtStr")
+            Log.d("setAlarm", "Setting final exact alarm to go off at $alarmDtStr")
 
             // according to the docs, this is the only thing that won't get delayed by the OS?
             // random note, this shows up on the lock screen as a pending alarm
@@ -193,7 +237,7 @@ fun setAlarm(context: Context, alarmInMs: Long, alarmStage: String = "initial") 
 
             Log.d(
                 "setAlarm", "Unable to set exact alarm?!  " +
-                        "Setting normal alarm to go off at $alarmDtStr"
+                        "Setting normal final alarm to go off at $alarmDtStr"
             )
             alarmManager?.setAndAllowWhileIdle(
                 AlarmManager.ELAPSED_REALTIME_WAKEUP,
@@ -207,6 +251,7 @@ fun setAlarm(context: Context, alarmInMs: Long, alarmStage: String = "initial") 
 
     // previous alarm may not actually be active anymore but no way to know for sure
     val previousAlarmTimestamp = prefs.getLong("NextAlarmTimestamp", 0)
+
     Log.d(
         "setAlarm", "Previous alarm was set to" +
                 " ${getDateTimeStrFromTimestamp(previousAlarmTimestamp)}"
@@ -230,3 +275,117 @@ fun cancelAlarm(context: Context) {
     )
     alarmManager.cancel(pendingIntent)
 }
+
+// adjust a timestamp to the end of a rest period if it is within the rest period
+fun adjustTimestampIfInRestPeriod(
+    utcTimestampMillis: Long,
+    restPeriod: RestPeriod,
+    localZoneId: ZoneId = ZoneId.systemDefault() // Default to system's time zone
+): Long {
+
+    // Convert the UTC timestamp to LocalDateTime in the local time zone
+    val localDateTime = Instant.ofEpochMilli(utcTimestampMillis)
+        .atZone(ZoneOffset.UTC)
+        .withZoneSameInstant(localZoneId)
+        .toLocalDateTime()
+
+    // Create LocalTime objects for the start and end times
+    val startTime = LocalTime.of(restPeriod.startHour, restPeriod.startMinute, 0, 0)
+    val endTime = LocalTime.of(restPeriod.endHour, restPeriod.endMinute, 0, 0)
+
+    // Extract the time from the local timestamp
+    val localTime = localDateTime.toLocalTime()
+
+    // this
+    val isInRange = isWithinRestPeriod(localTime, restPeriod)
+
+    return if (isInRange) {
+        // Adjust the timestamp to have the rest period's end time, and adjust the date if necessary
+        val adjustedDateTime = if (endTime.isBefore(startTime) && localTime.isAfter(startTime)) {
+            localDateTime.plusDays(1).withHour(restPeriod.endHour).withMinute(restPeriod.endMinute)
+                .withSecond(0).withNano(0)
+        } else {
+            localDateTime.withHour(restPeriod.endHour).withMinute(restPeriod.endMinute)
+                .withSecond(0).withNano(0)
+        }
+        adjustedDateTime.atZone(localZoneId).toInstant().toEpochMilli()
+    } else {
+        // Return the original timestamp if not in range
+        utcTimestampMillis
+    }
+}
+
+// we need to look for activity over a certain time range while making sure to exclude rest periods
+fun calculatePastDateTimeExcludingRestPeriod(
+    targetDateTime: LocalDateTime, checkPeriodHours: Float, restPeriod: RestPeriod
+): ZonedDateTime {
+
+    var thisTargetDateTime = targetDateTime
+
+    // at a minimum, the amount of time that needs to be subtracted based on the check period
+    var minutesToSubtract = (checkPeriodHours * 60).toLong()
+
+    // track how many minutes were skipped for informational purposes, should either be 0 or
+    //  equal to the # of minutes in the rest period?
+    var skippedMinutes = 0
+
+    // special case to check if the rest period start and end times are the same to prevent
+    //  an infinite loop in the code below; assume we have no rest period in this case
+    // the user shouldn't be allowed to save a rest period with the same start and end times but
+    //  leave this check here just in case...
+    if (restPeriod.startHour == restPeriod.endHour && restPeriod.startMinute == restPeriod.endMinute) {
+
+        Log.d("calculatePastDateTimeExcludingRestPeriod", "Invalid rest period? $restPeriod")
+
+        // assume there is no rest period and just subtract the check period
+        thisTargetDateTime = thisTargetDateTime.minusMinutes(minutesToSubtract)
+
+    } else {
+
+        while (minutesToSubtract > 0) {
+
+            // every minute, check whether the current time is within the rest period and, if not,
+            //  subtract another minute until we get to 0 minutes, i.e. the end of the check period
+
+            thisTargetDateTime = thisTargetDateTime.minusMinutes(1)
+
+            if (!isWithinRestPeriod(thisTargetDateTime.toLocalTime(), restPeriod)) {
+                minutesToSubtract--
+            } else {
+                skippedMinutes++
+            }
+        }
+    }
+
+    // Convert the local datetime to UTC
+    val targetDateTimeUTC =
+        thisTargetDateTime.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC"))
+
+    Log.d(
+        "calculatePastDateTimeExcludingRestPeriod", "Returning local DT $thisTargetDateTime, " +
+                "$targetDateTimeUTC UTC, skipped $skippedMinutes minutes, " +
+                "check period hours was $checkPeriodHours"
+    )
+
+    return targetDateTimeUTC
+}
+
+// function that returns whether the given time is within the given rest period
+// note that
+fun isWithinRestPeriod(time: LocalTime, restPeriod: RestPeriod): Boolean {
+
+    val startTime = LocalTime.of(restPeriod.startHour, restPeriod.startMinute)
+    val endTime = LocalTime.of(restPeriod.endHour, restPeriod.endMinute)
+
+    // if this rest period crosses midnight
+    return if (startTime.isBefore(endTime)) {
+
+        // if its not before the start time and is before the end time
+        !time.isBefore(startTime) && time.isBefore(endTime)
+    } else {
+
+        // if its not before the start time or is before the end time
+        !time.isBefore(startTime) || time.isBefore(endTime)
+    }
+}
+

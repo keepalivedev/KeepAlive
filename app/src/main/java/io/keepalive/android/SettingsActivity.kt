@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.telephony.PhoneNumberUtils
 import android.text.Editable
+import android.text.Html
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +23,8 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 
 
@@ -43,7 +47,7 @@ class SettingsActivity : AppCompatActivity() {
         // load settings and initialize the adapter that will be used to store and interact with
         //  the SMS contact number settings
         sharedPrefs = getEncryptedSharedPreferences(this)
-        phoneNumberList.addAll(loadSMSEmergencyContactSettings(sharedPrefs!!))
+        phoneNumberList.addAll(loadJSONSharedPreference(sharedPrefs!!,"PHONE_NUMBER_SETTINGS"))
         phoneNumberAdapter = PhoneNumberAdapter(phoneNumberList, sharedPrefs!!, ::editPhoneNumber)
 
         // initialize the recycler view and link it to the adapter
@@ -98,6 +102,11 @@ class SettingsActivity : AppCompatActivity() {
         callPhoneRowLayout.setOnClickListener {
             showEditSettingDialog("contact_phone")
         }
+
+        val restPeriodRowLayout: LinearLayout = findViewById(R.id.restPeriodRow)
+        restPeriodRowLayout.setOnClickListener {
+            showEditRestPeriodDialog()
+        }
     }
 
     private fun updateTextViewsFromPreferences() {
@@ -121,6 +130,27 @@ class SettingsActivity : AppCompatActivity() {
             sharedPrefs!!.getString("contact_phone", ""),
             Locale.getDefault().country
         )
+
+        // format the rest period for display
+        val restPeriodValueTextView: TextView = findViewById(R.id.edit_rest_period)
+
+        val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(sharedPrefs!!,
+            "REST_PERIODS")
+
+        if (restPeriods.isNotEmpty()) {
+            restPeriodValueTextView.text = String.format(
+                Locale.getDefault(),
+                "%02d:%02d - %02d:%02d %s",
+                restPeriods[0].startHour,
+                restPeriods[0].startMinute,
+                restPeriods[0].endHour,
+                restPeriods[0].endMinute,
+                SimpleDateFormat("z", Locale.getDefault()).format(Calendar.getInstance().time)
+            )
+
+        } else {
+            restPeriodValueTextView.text = getString(R.string.rest_period_not_set_message)
+        }
     }
 
     private fun processSettingChange(preferenceKey: String) {
@@ -144,7 +174,7 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
         // if we change the time period hours then we need to update the alarm
-        else if (preferenceKey == "time_period_hours") {
+        else if (preferenceKey == "time_period_hours" || preferenceKey == "REST_PERIODS") {
             updateAlarm = true
         }
 
@@ -157,8 +187,10 @@ class SettingsActivity : AppCompatActivity() {
                 "Check period updated, need to re-set alarm to $newValue hours"
             )
 
+            val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(sharedPrefs!!,"REST_PERIODS")
+
             // don't need to cancel the existing alarm, just set a new one
-            setAlarm(this, (newValue * 60 * 60 * 1000).toLong(), "periodic")
+            setAlarm(this, (newValue * 60 * 60 * 1000).toLong(), "periodic", restPeriods)
         }
     }
 
@@ -237,6 +269,93 @@ class SettingsActivity : AppCompatActivity() {
         // add a text watcher to the edit text so that we can enable/disable the submit button
         val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
         dialogEditText.addTextChangedListener(InputTextWatcher(positiveButton, this, preferenceKey))
+    }
+
+    private fun showEditRestPeriodDialog() {
+        val dialogView =
+            LayoutInflater.from(this).inflate(R.layout.dialog_edit_rest_period, null)
+        val dialogStartTimePicker: TimePicker = dialogView.findViewById(R.id.startTimePicker)
+        val dialogEndTimePicker: TimePicker = dialogView.findViewById(R.id.endTimePicker)
+        val restPeriodTimeZoneMessageTextView: TextView = dialogView.findViewById(R.id.restPeriodTimeZoneMessageTextView)
+
+        restPeriodTimeZoneMessageTextView.text = Html.fromHtml(
+            String.format(
+                getString(R.string.rest_period_dialog_time_zone_message),
+
+                // this should show up like 'CST' or 'PST'
+                SimpleDateFormat("z", Locale.getDefault()).format(Calendar.getInstance().time)
+            ),
+            Html.FROM_HTML_MODE_LEGACY
+        )
+
+        // set the time pickers to 24 hour mode
+        dialogStartTimePicker.setIs24HourView(true)
+        dialogEndTimePicker.setIs24HourView(true)
+
+        val currentRestPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(sharedPrefs!!,
+            "REST_PERIODS")
+
+        // if there is a rest period then set the time pickers to the current values
+        if (currentRestPeriods.isNotEmpty()) {
+            Log.d("showEditRestPeriodDialog", "currentRestPeriods: $currentRestPeriods")
+            dialogStartTimePicker.hour = currentRestPeriods[0].startHour
+            dialogStartTimePicker.minute = currentRestPeriods[0].startMinute
+            dialogEndTimePicker.hour = currentRestPeriods[0].endHour
+            dialogEndTimePicker.minute = currentRestPeriods[0].endMinute
+        }
+
+        AlertDialog.Builder(this, R.style.AlertDialogTheme)
+            .setTitle(getString(R.string.rest_period_dialog_title))
+            .setView(dialogView)
+            .setPositiveButton(getString(R.string.save)) { _, _ ->
+
+                // if the start and end times are the same then this is not a valid time range so
+                //  show a toast and don't save the rest period
+                if (dialogStartTimePicker.hour == dialogEndTimePicker.hour &&
+                    dialogStartTimePicker.minute == dialogEndTimePicker.minute) {
+
+                    showToast(getString(R.string.rest_period_invalid_range_message))
+                    return@setPositiveButton
+                }
+
+                with(sharedPrefs!!.edit()) {
+
+                    // create a new list of rest periods with just this one
+                    val restPeriods = mutableListOf<RestPeriod>()
+                    restPeriods.add(
+                        RestPeriod(
+                            dialogStartTimePicker.hour,
+                            dialogStartTimePicker.minute,
+                            dialogEndTimePicker.hour,
+                            dialogEndTimePicker.minute
+                        )
+                    )
+
+                    // convert the list to json and save it to shared prefs
+                    val jsonString = gson.toJson(restPeriods)
+                    putString("REST_PERIODS", jsonString)
+                    apply()
+                }
+
+                // take action depending on what preference is changing
+                processSettingChange("REST_PERIODS")
+
+                // update the text views to reflect the new values
+                updateTextViewsFromPreferences()
+            }
+            .setNeutralButton(getString(R.string.delete)) { _, _ ->
+
+                // if the user deletes the rest period then remove it from shared prefs
+                with(sharedPrefs!!.edit()) {
+                    remove("REST_PERIODS")
+                    apply()
+                }
+
+                processSettingChange("REST_PERIODS")
+                updateTextViewsFromPreferences()
+            }
+            .setNegativeButton(getString(R.string.cancel), null)
+            .show()
     }
 
     private fun showAddOrEditSMSContactDialog(
