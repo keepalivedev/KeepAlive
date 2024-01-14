@@ -1,0 +1,5 @@
+* Nouvelle fonctionnalité: périodes de repos
+* Nouvelle fonctionnalité: surveillance du redémarrage automatique
+* Correction d'un problème d'affichage avec le bouton Test Alert SMS
+* Ajouter un écran pour afficher les journaux de débogage
+* Ajouter une traduction en français (Canada)
