@@ -112,6 +112,15 @@
             android:text="" />
     </LinearLayout>
 
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/restartMonitoringSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="8dp"
+        android:text="@string/auto_restart_title"
+        android:textSize="@dimen/default_text_size" />
+
     <!-- Contact Header Section -->
     <TextView
         android:layout_width="wrap_content"
