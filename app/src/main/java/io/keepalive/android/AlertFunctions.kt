@@ -419,6 +419,15 @@ fun doAlertCheck(context: Context, alarmStage: String) {
     //  outside of a rest period and so we should still send the alert
     if (alarmStage == "final" && lastInteractiveEvent == null) {
         sendAlert(context, prefs)
+
+        // if auto restart is enabled
+        if (prefs.getBoolean("auto_restart_monitoring", false)) {
+
+            // we can't set the alarm using last activity otherwise it would immediately fire an
+            //  'are you there?' check so just base it on the checkPeriodHours and the rest periods
+            setAlarm(context, (checkPeriodHours * 60 * 60 * 1000).toLong(), "periodic", restPeriods)
+        }
+
         return
     }
 
