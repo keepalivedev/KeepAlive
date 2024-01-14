@@ -112,6 +112,7 @@
     <!-- Main Settings -->
     <string name="enabled_title">Surveillance activée</string>
     <string name="disabled_title">Surveillance désactivée</string>
+    <string name="auto_restart_title">Surveillance de redémarrage automatique après alerte</string>
     <string name="time_period_title">Heures d\'inactivité avant la notification</string>
     <string name="time_period_description">Le nombre d\'heures d\'inactivité avant de recevoir une notification «Êtes-vous là?».</string>
     <string name="followup_time_period_title">Minutes d\'attente pour confirmation</string>

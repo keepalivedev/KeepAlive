@@ -85,6 +85,17 @@ class SettingsActivity : AppCompatActivity() {
             processSettingChange("enabled")
         }
 
+        // listener for the auto restart monitoring switch
+        val restartMonitoringSwitch: SwitchCompat = findViewById(R.id.restartMonitoringSwitch)
+        restartMonitoringSwitch.setOnCheckedChangeListener { _, isChecked ->
+
+            // no dialog for the switch, just save the new value
+            with(sharedPrefs!!.edit()) {
+                putBoolean("auto_restart_monitoring", isChecked)
+                apply()
+            }
+        }
+
         // set up listeners for each setting row so that the user can click
         //  anywhere on the row itself to bring up the edit dialog
 
@@ -115,6 +126,9 @@ class SettingsActivity : AppCompatActivity() {
 
         val monitoringEnabledSwitch: SwitchCompat = findViewById(R.id.monitoringEnabledSwitch)
         monitoringEnabledSwitch.isChecked = sharedPrefs!!.getBoolean("enabled", false)
+
+        val restartMonitoringSwitch: SwitchCompat = findViewById(R.id.restartMonitoringSwitch)
+        restartMonitoringSwitch.isChecked = sharedPrefs!!.getBoolean("auto_restart_monitoring", false)
 
         val timePeriodValueTextView: TextView = findViewById(R.id.edit_time_period_hours)
         timePeriodValueTextView.text = sharedPrefs!!.getString("time_period_hours", "12")

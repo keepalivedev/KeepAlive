@@ -122,6 +122,7 @@
     <!-- Main Settings -->
     <string name="enabled_title">Monitoring Enabled</string>
     <string name="disabled_title">Monitoring Disabled</string>
+    <string name="auto_restart_title">Auto-Restart Monitoring After Alert</string>
     <string name="time_period_title">Hours of Inactivity Before Prompt</string>
     <string name="time_period_description">The # of hours of inactivity before you will be prompted with an \'Are you there?\' notification.</string>
     <string name="followup_time_period_title">Minutes to Wait for Confirmation</string>
