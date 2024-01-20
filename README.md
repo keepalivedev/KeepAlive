@@ -40,6 +40,12 @@ height="80">](https://play.google.com/store/apps/details?id=io.keepalive.android
   - If the 'Are you there?' prompt is not acknowledged within this time, an Alert will be sent
   - Will not be delayed
   - Default is 60 minutes
+- **Rest Period Time Range**
+  - A range of time during which inactivity will not be counted
+  - For example, with 'Hours of Inactivity' set at 6 hours and a Rest Period of 22:00 – 6:00, if the device is last used at 18:00, the 'Are you there?' check would not be sent until 8:00  
+  - Note that an alert can still be sent during a rest period if the 'Are you there?' check was sent BEFORE the start of a rest period
+- **Auto-Restart Monitoring After Alert**
+  - If enabled, monitoring will be automatically restarted after an Alert is sent
 
 ## Emergency Contact Settings
 - **SMS Contact(s)**:
