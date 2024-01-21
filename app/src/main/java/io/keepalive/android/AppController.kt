@@ -18,6 +18,7 @@ class AppController : Application() {
         const val ARE_YOU_THERE_NOTIFICATION_ID = 1
         const val SMS_ALERT_SENT_NOTIFICATION_ID = 2
         const val CALL_ALERT_SENT_NOTIFICATION_ID = 3
+        const val SMS_ALERT_FAILURE_NOTIFICATION_ID = 4
 
         // when doing a sanity check to see if we can see ANY events, this is the # of hours
         //  to use with getLastPhoneActivity().  if the user has a higher value set it
