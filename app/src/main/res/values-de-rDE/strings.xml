@@ -70,9 +70,10 @@
     <string name="initial_check_notification_text">Klicken Sie hier, wenn Sie noch am Leben sind! Andernfalls wird in %1$s Minuten ein Alarm gesendet.</string>
     <string name="alert_notification_title">Keep Alive Alarm ausgelöst!</string>
     <string name="call_alert_notification_text">Ihr Notfallkontakt wurde angerufen: %1$s</string>
-    <string name="sms_alert_notification_text">Eine SMS wurde an Ihre(n) Notfallkontakt(e) gesendet: %1$s</string>
+    <string name="sms_alert_notification_text">Eine SMS wurde an Ihre(n) Notfallkontakt(e) gesendet!</string>
     <string name="sms_alert_failure_notification_title">Alarm-SMS konnte nicht gesendet werden</string>
     <string name="sms_alert_failure_notification_text">Beim Versuch, eine Alarm-SMS zu senden, ist ein Fehler aufgetreten</string>
+    <string name="sms_alert_failure_notification_text_with_error">Beim Versuch, eine Alarm-SMS zu senden, ist ein Fehler aufgetreten: %1$s</string>
     <string name="sms_service_failure_notification_title">Alarm-SMS kann nicht gesendet werden</string>
     <string name="sms_service_failure_notification_text">Beim Versuch, eine Alarm-SMS zu senden, ist ein Fehler aufgetreten.  Bitte überprüfen Sie, ob Sie eine aktive SIM-Karte haben.</string>
     <string name="sms_sent_toast_text">Keep Alive Alarm-SMS gesendet!</string>

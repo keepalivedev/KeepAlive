@@ -72,9 +72,10 @@
     <string name="initial_check_notification_text">Cliquez ici si vous êtes toujours en vie! Sinon, une alerte sera envoyée dans %1$s minutes.</string>
     <string name="alert_notification_title">Alerte Keep Alive enclenché!</string>
     <string name="call_alert_notification_text">Un appel téléphonique a été passé à votre contact d\'urgence: %1$s</string>
-    <string name="sms_alert_notification_text">Un SMS a été envoyé à votre(vos) contact(s) d\'urgence: %1$s</string>
+    <string name="sms_alert_notification_text">Un SMS a été envoyé à votre(vos) contact(s) d\'urgence!</string>
     <string name="sms_alert_failure_notification_title">Échec de l\'envoi de l\'alerte SMS</string>
     <string name="sms_alert_failure_notification_text">Une erreur s\'est produite lors de la tentative d\'envoi d\'un SMS d\'alerte</string>
+    <string name="sms_alert_failure_notification_text_with_error">Une erreur s\'est produite lors de la tentative d\'envoi d\'un SMS d\'alerte: %1$s</string>
     <string name="sms_service_failure_notification_text">Une erreur s\'est produite lors de la tentative d\'envoi d\'un SMS d\'alerte, veuillez vérifier que vous disposez d\'une carte SIM active</string>
     <string name="sms_failure_toast_text">Échec de l\'envoi du SMS d\'alerte Keep Alive?!</string>
 	

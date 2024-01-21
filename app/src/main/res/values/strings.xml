@@ -82,9 +82,10 @@
     <string name="initial_check_notification_text">Click here if you are still alive! Otherwise an alert will be sent in %1$s minutes.</string>
     <string name="alert_notification_title">Keep Alive Alert triggered!</string>
     <string name="call_alert_notification_text">A phone call has been placed to your emergency contact: %1$s</string>
-    <string name="sms_alert_notification_text">An SMS has been sent to your emergency contact(s): %1$s</string>
+    <string name="sms_alert_notification_text">An SMS has been sent to your emergency contact(s)!</string>
     <string name="sms_alert_failure_notification_title">Failed to send SMS Alert</string>
     <string name="sms_alert_failure_notification_text">Error occurred while attempting to send Alert SMS</string>
+    <string name="sms_alert_failure_notification_text_with_error">Error occurred while attempting to send Alert SMS: %1$s</string>
     <string name="sms_service_failure_notification_title">Unable to send Alert SMS</string>
     <string name="sms_service_failure_notification_text">Error occurred while attempting to send Alert SMS, please verify you have an active SIM</string>
     <string name="sms_sent_toast_text">Keep Alive Alert SMS sent!</string>
