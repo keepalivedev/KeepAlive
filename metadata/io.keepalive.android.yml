@@ -13,9 +13,9 @@ RepoType: git
 Repo: https://github.com/keepalivedev/KeepAlive
 
 Builds:
-  - versionName: 1.0.4
-    versionCode: 104
-    commit: 1.0.4
+  - versionName: 1.1.1
+    versionCode: 111
+    commit: 1.1.1
     subdir: app
     sudo:
       - apt-get update || apt-get update
@@ -26,5 +26,5 @@ Builds:
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: 1.0.5
-CurrentVersionCode: 105
+CurrentVersion: 1.1.1
+CurrentVersionCode: 111
