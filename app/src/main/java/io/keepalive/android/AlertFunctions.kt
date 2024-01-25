@@ -2,10 +2,12 @@ package io.keepalive.android
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.PendingIntent
 import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -15,8 +17,8 @@ import android.telephony.PhoneNumberUtils
 import android.telephony.SmsManager
 import android.telephony.SubscriptionManager
 import android.util.Log
-import android.widget.Toast
 import androidx.core.content.ContextCompat
+import io.keepalive.android.receivers.SMSSentReceiver
 import java.time.LocalDateTime
 import java.util.Locale
 
@@ -103,149 +105,199 @@ fun getSMSManager(context: Context): SmsManager? {
     }
 }
 
-fun sendAlertMessages(context: Context, locationStr: String) {
-    DebugLogger.d("sendAlertMessage", "Sending alert SMS!")
 
-    // get the preferences and load the SMS contacts
-    val prefs = getEncryptedSharedPreferences(context)
-    val smsContacts: MutableList<SMSEmergencyContactSetting> = loadJSONSharedPreference(prefs,
+class AlertMessageSender(private val context: Context) {
+    private val smsManager = getSMSManager(context)
+    private val prefs = getEncryptedSharedPreferences(context)
+    private val smsContacts: MutableList<SMSEmergencyContactSetting> = loadJSONSharedPreference(prefs,
         "PHONE_NUMBER_SETTINGS")
 
-    Log.d("sendAlertMessage", "Loaded ${smsContacts.size} SMS contacts")
+    init {
 
-    // a list to track which phone numbers we have sent SMS to so we can include
-    //  them in the notification
-    val contactNumberList = arrayListOf<String>()
+        // if this is an emulator or if the device doesn't have an active SIM plan this can be null
+        if (smsManager == null) {
+            DebugLogger.d("AlertMessageSender", "Failed getting SMS manager?!")
 
-    // other stuff we could check but as long as the smsManager isn't null then we should
-    //  still try to send the SMS to reduce the chances of mistakenly preventing an alert
-    //  from being sent
-    /*
-    val telephonyManager = getSystemService(TELEPHONY_SERVICE) as TelephonyManager
-
-    // returns false on a phone without a SIM
-    val isSimReady = telephonyManager.simState == TelephonyManager.SIM_STATE_READY
-
-    // this is just whether the phone has a modem?
-    val hasTelephony = packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
-
-    // anything other than 0 means there is a cell network available?
-    val networkType = if (ActivityCompat.checkSelfPermission(
-            this,
-            Manifest.permission.READ_PHONE_STATE
-        ) == PackageManager.PERMISSION_GRANTED
-    ) {
-        telephonyManager.networkType
-    } else {
-        -1
-    }
-    Log.d(tag, "isSimReady: $isSimReady, hasTelephony: $hasTelephony, networkType: $networkType")
-    */
-
-    // get the SMS manager
-    //val smsManager = context.getSystemService(SmsManager::class.java)
-
-    val smsManager = getSMSManager(context)
-
-    // if this is an emulator or if the device doesn't have an active SIM plan this can be null
-    if (smsManager == null) {
-        DebugLogger.d("sendAlertMessage", "Failed getting SMS manager?!")
-
-        // if smsManager is null we can't send SMS so send a notification to let the user know
-        AlertNotificationHelper(context).sendNotification(
-            context.getString(R.string.sms_service_failure_notification_title),
-            context.getString(R.string.sms_service_failure_notification_text),
-            AppController.SMS_ALERT_SENT_NOTIFICATION_ID
-        )
-
-        // there is nothing more we can do so return
-        return
-    }
-
-    Log.d("sendAlertMessage", "Got SMS manager: $smsManager. subscriptionId is ${smsManager.subscriptionId}")
-
-    // iterate through the contacts and send 1 or 2 SMS messages to each
-    for (contact in smsContacts) {
-
-        // if the contact is disabled then skip it
-        if (!contact.isEnabled) {
-            continue
-        }
-
-        Log.d(
-            "sendAlertMessage", "Alert message is ${contact.alertMessage}, " +
-                    "SMS contact number is ${contact.phoneNumber}"
-        )
-
-        // this shouldn't ever happen but just in case...
-        if (contact.phoneNumber != "") {
-
-            DebugLogger.d("sendAlertMessage", "Sending text message to: ${contact.phoneNumber}")
-
-            try {
-                // send the initial alert message defined by the user
-                smsManager.sendTextMessage(
-                    contact.phoneNumber, null, contact.alertMessage, null, null
-                )
-
-                // if enabled, send the location details in a second SMS
-                if (contact.includeLocation) {
-
-                    DebugLogger.d(
-                        "sendAlertMessage",
-                        "Sending location message, string is $locationStr"
-                    )
-
-                    smsManager.sendTextMessage(
-                        contact.phoneNumber, null, locationStr, null, null
-                    )
-                }
-
-                // format the phone number to make it more readable and add it to the list
-                contactNumberList.add(
-                    PhoneNumberUtils.formatNumber(
-                        contact.phoneNumber,
-                        Locale.getDefault().country
-                    )
-                )
-            } catch (e: Exception) {
-                DebugLogger.d("sendAlertMessage", "Failed sending SMS message?!", e)
-
-                // if we failed while sending the SMS then send a notification
-                //  to let the user know
-                AlertNotificationHelper(context).sendNotification(
-                    context.getString(R.string.sms_alert_failure_notification_title),
-                    context.getString(R.string.sms_alert_failure_notification_text),
-                    AppController.SMS_ALERT_SENT_NOTIFICATION_ID
-                )
-
-                // there is nothing more we can do so return
-                return
-            }
+            // if smsManager is null we can't send SMS so send a notification to let the user know
+            AlertNotificationHelper(context).sendNotification(
+                context.getString(R.string.sms_service_failure_notification_title),
+                context.getString(R.string.sms_service_failure_notification_text),
+                AppController.SMS_ALERT_SENT_NOTIFICATION_ID
+            )
 
         } else {
-            DebugLogger.d("sendAlertMessage", "SMS phone # was blank?!")
+            Log.d("AlertMessageSender", "Got SMS manager: $smsManager. " +
+                    "subscriptionId is ${smsManager.subscriptionId}")
+
+            Log.d("AlertMessageSender", "Loaded ${smsContacts.size} SMS contacts")
+
+            // other stuff we could check but as long as the smsManager isn't null then we should
+            //  still try to send the SMS to reduce the chances of mistakenly preventing an alert
+            //  from being sent
+            /*
+            val telephonyManager = getSystemService(TELEPHONY_SERVICE) as TelephonyManager
+
+            // returns false on a phone without a SIM
+            val isSimReady = telephonyManager.simState == TelephonyManager.SIM_STATE_READY
+
+            // this is just whether the phone has a modem?
+            val hasTelephony = packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
+
+            // anything other than 0 means there is a cell network available?
+            val networkType = if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_PHONE_STATE
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                telephonyManager.networkType
+            } else {
+                -1
+            }
+            Log.d(tag, "isSimReady: $isSimReady, hasTelephony: $hasTelephony, networkType: $networkType")
+            */
         }
     }
-    Log.d(
-        "sendAlertMessage", "Done sending alert messages, " +
-                "there were ${contactNumberList.size}"
-    )
 
-    if (contactNumberList.size == 0) {
-        DebugLogger.d("sendAlertMessage", "Did not send any SMS messages?!")
-        return
+    fun sendAlertMessage() {
+
+        if (smsManager == null) {
+            // there is nothing more we can do so return
+            return
+        }
+
+        DebugLogger.d("sendAlertMessage", "Sending alert SMS!")
+
+        // create a pending intent for the SMS sent intent to use when sending the SMS
+        val sentPI = PendingIntent.getBroadcast(
+            context, 0, Intent("SMS_SENT"),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        // iterate through the contacts and send an SMS message to each
+        for (contact in smsContacts) {
+
+            // if the contact is disabled then skip it
+            if (!contact.isEnabled) {
+                continue
+            }
+
+            Log.d(
+                "sendAlertMessage", "Alert message is ${contact.alertMessage}, " +
+                        "SMS contact number is ${contact.phoneNumber}"
+            )
+
+            // this shouldn't ever happen but just in case...
+            if (contact.phoneNumber != "") {
+
+                DebugLogger.d("sendAlertMessage", "Sending text message to: ${contact.phoneNumber}")
+
+                try {
+
+                    // do this for each contact instead of once at the beginning because
+                    //  the SMSSentReceiver will unregister it when it gets called
+                    // add a receiver for the SMS sent intent so we will get notified of the result
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        context.registerReceiver(
+                            SMSSentReceiver(),
+                            IntentFilter("SMS_SENT"),
+                            Context.RECEIVER_NOT_EXPORTED
+                        )
+                    } else {
+                        ContextCompat.registerReceiver(
+                            context,
+                            SMSSentReceiver(),
+                            IntentFilter("SMS_SENT"),
+                            ContextCompat.RECEIVER_NOT_EXPORTED
+                        )
+                    }
+
+                    // divide the message into parts based on how long it is
+                    // messages with unicode characters have a shorter max length
+                    val messageParts = smsManager.divideMessage(contact.alertMessage)
+                    Log.d("sendAlertMessage", "Message parts: $messageParts")
+
+                    // only use sendMultipartTextMessage if there is more than 1 part
+                    if (messageParts.size > 1) {
+                        DebugLogger.d("sendAlertMessage", "Sending multipart SMS message with ${messageParts.size} parts")
+
+                        // create an array with the same pending intent for each part
+                        val sentPIList = ArrayList<PendingIntent>()
+                        for (i in messageParts.indices) {
+                            sentPIList.add(sentPI)
+                        }
+
+                        // send the multipart SMS message
+                        smsManager.sendMultipartTextMessage(contact.phoneNumber, null,
+                            messageParts, sentPIList, null)
+                    } else {
+
+                        DebugLogger.d("sendAlertMessage", "Sending single SMS message")
+
+                        // send a single part SMS message
+                        smsManager.sendTextMessage(contact.phoneNumber, null,
+                            contact.alertMessage, sentPI, null)
+                    }
+
+                } catch (e: Exception) {
+                    DebugLogger.d("sendAlertMessage", "Failed sending SMS message to ${contact.phoneNumber}!? ${e.message}", e)
+
+                    // if we failed while sending the SMS then send a notification
+                    //  to let the user know
+                    AlertNotificationHelper(context).sendNotification(
+                        context.getString(R.string.sms_alert_failure_notification_title),
+                        context.getString(R.string.sms_alert_failure_notification_text),
+                        AppController.SMS_ALERT_SENT_NOTIFICATION_ID
+                    )
+                }
+            } else {
+                DebugLogger.d("sendAlertMessage", "SMS phone # was blank?!")
+            }
+        }
     }
 
-    // send a notification to make sure the user knows an SMS was sent
-    AlertNotificationHelper(context).sendNotification(
-        context.getString(R.string.alert_notification_title),
-        String.format(
-            context.getString(R.string.sms_alert_notification_text),
-            contactNumberList.joinToString(",")
-        ),
-        AppController.SMS_ALERT_SENT_NOTIFICATION_ID
-    )
+    fun sendLocationAlertMessage(locationStr: String) {
+        if (smsManager == null) {
+            return
+        }
+        Log.d("sendLocationAlertMessage", "Sending location alert SMS! loc string is $locationStr")
+
+        // iterate through the contacts and send 1 or 2 SMS messages to each
+        for (contact in smsContacts) {
+
+            // if the contact is disabled then skip it
+            if (!contact.isEnabled) {
+                continue
+            }
+
+            // this shouldn't ever happen but just in case...
+            if (contact.phoneNumber != "") {
+
+                try {
+
+                    // if enabled, send the location details
+                    if (contact.includeLocation) {
+
+                        DebugLogger.d(
+                            "sendLocationAlertMessage",
+                            "Sending location message to: ${contact.phoneNumber}"
+                        )
+
+                        // send the location message
+                        smsManager.sendTextMessage(
+                            contact.phoneNumber, null, locationStr, null, null
+                        )
+                    }
+
+                } catch (e: Exception) {
+                    DebugLogger.d("sendLocationAlertMessage", "Failed sending location SMS message to ${contact.phoneNumber}!?", e)
+                }
+
+            } else {
+                DebugLogger.d("sendLocationAlertMessage", "SMS phone # was blank?!")
+            }
+        }
+        Log.d( "sendLocationAlertMessage", "Done sending location alert messages")
+    }
 }
 
 
@@ -484,6 +536,10 @@ fun sendAlert(context: Context, prefs: SharedPreferences) {
         AppController.ARE_YOU_THERE_NOTIFICATION_ID
     )
 
+    // send the alert messages
+    val alertSender = AlertMessageSender(context)
+    alertSender.sendAlertMessage()
+
     // only get the location if the user has enabled it for at least one
     if (prefs.getBoolean("location_enabled", false)) {
 
@@ -491,23 +547,17 @@ fun sendAlert(context: Context, prefs: SharedPreferences) {
         //  happens when trying to get the location
         try {
 
-            // attempt to get the location and pass it to sendAlertMessages
-            val locationHelper = LocationHelper(context, ::sendAlertMessages)
+            // attempt to get the location and then execute sendLocationAlertMessage
+            val locationHelper = LocationHelper(context) { _, locationStr ->
+                alertSender.sendLocationAlertMessage(locationStr)
+            }
             locationHelper.getLocationAndExecute()
 
         } catch (e: Exception) {
 
             // if we fail for any reason then send the alert messages
-            Log.e("sendAlert", "Failed to get location:", e)
-            sendAlertMessages(
-                context,
-                context.getString(R.string.location_invalid_message)
-            )
+            DebugLogger.d("sendAlert", "Failed while attempting to get and send location alert", e)
         }
-    } else {
-
-        // if location isn't enabled then just send the alert
-        sendAlertMessages(context, "")
     }
 
     // also make the phone call (if enabled)

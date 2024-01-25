@@ -194,15 +194,17 @@ class MainActivity : AppCompatActivity() {
             // make it unclickable so we don't fire this more than once at a time
             testAlertSmsButton.isClickable = false
 
+            // send the alert message
+            val alertSender = AlertMessageSender(this)
+            alertSender.sendAlertMessage()
+
             // if location is enabled, try to get that and then send the message
             if (sharedPrefs.getBoolean("location_enabled", false)) {
 
-                val locationHelper = LocationHelper(this, ::sendAlertMessages)
+                val locationHelper = LocationHelper(this) { _, locationStr ->
+                    alertSender.sendLocationAlertMessage(locationStr)
+                }
                 locationHelper.getLocationAndExecute()
-
-                // if location isn't enabled then just send the alert
-            } else {
-                sendAlertMessages(this, "")
             }
         }
 
