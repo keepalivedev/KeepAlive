@@ -30,7 +30,7 @@ class LocationHelper(
         // cancel the token, may or may not still be in use
         cancellationTokenSource.cancel()
 
-        Log.d("globalTimeoutRunnable", "Timeout reached while getting " +
+        DebugLogger.d("globalTimeoutRunnable", "Timeout reached while getting " +
                 "location from google play?!")
 
         myCallback(context, context.getString(R.string.location_invalid_message))
@@ -61,7 +61,7 @@ class LocationHelper(
     @SuppressLint("MissingPermission")
     override fun getLastLocation() {
 
-        Log.d("getLastLocation", "Attempting to get lastLocation...")
+        DebugLogger.d("getLastLocation", "Attempting to get lastLocation...")
 
         try {
 
@@ -70,7 +70,7 @@ class LocationHelper(
             }
 
         } catch (e: Exception) {
-            Log.e("getLastLocation", "Failed while getting last location:", e)
+            DebugLogger.d("getLastLocation", "Failed while getting last location:", e)
 
             // if we failed to get the last location then just send the error message
             executeCallback(context.getString(R.string.location_invalid_message))
@@ -97,7 +97,7 @@ class LocationHelper(
 
         } else {
 
-            Log.e(
+            DebugLogger.d(
                 "processLocationResult",
                 "Failed while trying to get the $locationSource location",
                 task.exception

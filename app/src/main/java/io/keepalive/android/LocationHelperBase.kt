@@ -81,7 +81,7 @@ open class LocationHelperBase(
 
     open val globalTimeoutRunnable = Runnable {
 
-        Log.d("globalTimeoutRunnable", "Timeout reached while getting location?!")
+        DebugLogger.d("globalTimeoutRunnable", "Timeout reached while getting location?!")
 
         myCallback(context, context.getString(R.string.location_invalid_message))
     }
@@ -108,7 +108,7 @@ open class LocationHelperBase(
 
         startGlobalTimeoutHandler()
 
-        Log.d("getLocationAndExecute", "Attempting to get location...")
+        DebugLogger.d("getLocationAndExecute", "Attempting to get location...")
         try {
             if (ContextCompat.checkSelfPermission(
                     context,
@@ -136,7 +136,7 @@ open class LocationHelperBase(
 
                 } else {
 
-                    Log.d(
+                    DebugLogger.d(
                         "getLocationAndExecute",
                         "Device is in idle mode, not getting current location"
                     )
@@ -147,7 +147,7 @@ open class LocationHelperBase(
             } else {
 
                 // if we don't have location permissions then just execute the callback
-                Log.d("getLocationAndExecute", "Don't have location permission, executing callback")
+                DebugLogger.d("getLocationAndExecute", "Don't have location permission, executing callback")
                 stopGlobalTimeoutHandler()
                 myCallback(context, context.getString(R.string.location_invalid_message))
             }
@@ -155,7 +155,7 @@ open class LocationHelperBase(
 
             // if we for some reason fail while building the request then try
             //   to get the last location
-            Log.e("getLocationAndExecute", "Failed getting current location?!", e)
+            DebugLogger.d("getLocationAndExecute", "Failed getting current location?!", e)
             getLastLocation()
         }
     }
@@ -170,7 +170,7 @@ open class LocationHelperBase(
         //  because the old geocoding method is synchronous
         private val geocodingTimeoutRunnable = Runnable {
 
-            Log.d("geocodingTimeoutRunnable", "Timeout reached, locationString is $locationString")
+            DebugLogger.d("geocodingTimeoutRunnable", "Timeout reached, locationString is $locationString")
 
             // the global timeout handler should still be running so need to stop it
             stopGlobalTimeoutHandler()
@@ -243,7 +243,7 @@ open class LocationHelperBase(
                 }
 
             } catch (e: Exception) {
-                Log.e("geocodeLocationAndExecute", "Failed geocoding GPS coordinates?!", e)
+                DebugLogger.d("geocodeLocationAndExecute", "Failed geocoding GPS coordinates?!", e)
             }
 
             // if we aren't using geocode listener or if there was an error
@@ -281,7 +281,7 @@ open class LocationHelperBase(
                 }
 
             } else {
-                Log.d("processGeocodeResult", "No address results")
+                DebugLogger.d("processGeocodeResult", "No address results")
             }
             return addressString
         }

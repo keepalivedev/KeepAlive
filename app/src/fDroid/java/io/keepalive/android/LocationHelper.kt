@@ -27,7 +27,7 @@ class LocationHelper(
     // override the function to get the last location
     override fun getLastLocation() {
 
-        Log.d("getLastLocation", "Attempting to get lastLocation...")
+        DebugLogger.d("getLastLocation", "Attempting to get lastLocation...")
 
         try {
 
@@ -35,7 +35,7 @@ class LocationHelper(
             val lastLocation: Location? = getBestLastKnownLocation()
 
             if (lastLocation != null) {
-                Log.d(
+                DebugLogger.d(
                     "getLastLocation", "best lastKnownLocation is from provider " +
                             "${lastLocation.provider} with accuracy ${lastLocation.accuracy}"
                 )
@@ -45,11 +45,11 @@ class LocationHelper(
                 return
 
             } else {
-                Log.d("getLastLocation", "Unable to determine location")
+                DebugLogger.d("getLastLocation", "Unable to determine location")
             }
 
         } catch (e: Exception) {
-            Log.e("getLastLocation", "Failed while getting last location:", e)
+            DebugLogger.d("getLastLocation", "Failed while getting last location:", e)
         }
 
         // if the location was null or there was an error then execute the callback
@@ -218,7 +218,7 @@ class LocationHelper(
             } else {
 
                 // if the current location is null then try to get the last location
-                Log.d("processCurrentLocationResult", "Unable to get current location")
+                DebugLogger.d("processCurrentLocationResult", "Unable to get current location")
                 getLastLocation()
             }
         }
@@ -226,7 +226,7 @@ class LocationHelper(
         // this will get called if we time out while trying to get the location(s) from each provider
         private val timeoutRunnable = Runnable {
 
-            Log.d("LocationComparator", "Timeout reached")
+            DebugLogger.d("LocationComparator", "Timeout reached")
 
             // this is only used with requestLocationUpdates but we can cancel it anyway?
             cancellationSignal.cancel()
