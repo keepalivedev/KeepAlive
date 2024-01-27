@@ -56,7 +56,7 @@
     <string name="alarm_message_too_long_message">The message cannot be more than 160 characters.</string>
     <string name="phone_number_invalid_message">Please enter a valid phone number.</string>
     <string name="time_period_too_short_message">Interval must be at least 10 minutes.</string>
-    <string name="test_phone_call_message">A phone call will be made to: %1$s</string>
+    <string name="test_phone_call_message">A phone call will be made to:\n%1$s</string>
     <string name="test_sms_message">SMS message(s) will be sent to:\n%1$s</string>
     <string name="unable_to_send_sms_message">Unable to send SMS\nPlease verify you have an active SIM</string>
     <string name="no_configured_contacts_message">No Emergency Contacts have been configured</string>
