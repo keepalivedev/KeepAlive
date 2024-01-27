@@ -134,6 +134,7 @@
     <string name="add_sms_contact_button_text">Add SMS Emergency Contact</string>
     <string name="contact_phone_description">When an Alert is triggered, a phone call will be placed to this phone number with speakerphone enabled.\n\nPlease note that this requires additional permissions so that phone calls can be placed from the background.</string>
     <string name="default_alert_message">Hello! I have not used my phone in a while and may be in need of assistance. Please send help!</string>
+    <string name="default_alert_message_alt">Hey I may be dead, if I do not contact you in the next 24 hours, you know what to do...</string>
     <string name="add_emergency_contact_title">Add Emergency Contact</string>
     <string name="edit_emergency_contact_title">Edit Emergency Contact</string>
 

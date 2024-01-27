@@ -124,6 +124,7 @@
     <string name="add_sms_contact_button_text">Ajouter un contact d\'urgence SMS</string>
     <string name="contact_phone_description">Lorsqu\'une alerte est déclenchée, un appel téléphonique sera passé vers ce numéro de téléphone avec le haut-parleur activé.\n\nVeuillez noter que cela nécessite des autorisations supplémentaires afin que les appels téléphoniques puissent être passés en arrière-plan.</string>
     <string name="default_alert_message">Bonjour! Je n\'ai pas utilisé mon téléphone depuis un certain temps et j\'ai peut-être besoin d\'aide. S\'il vous plaît envoyez de l\'aide!</string>
+    <string name="default_alert_message_alt">Hé, je suis peut-être mort, si je ne te contacte pas dans les prochaines 24 heures, tu sais quoi faire...</string>
     <string name="add_emergency_contact_title">Ajouter un contact d\'urgence</string>
 	<string name="edit_emergency_contact_title">Modifier un contact d\'urgence</string>
 	 
