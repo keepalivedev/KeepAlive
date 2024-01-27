@@ -13,9 +13,9 @@ RepoType: git
 Repo: https://github.com/keepalivedev/KeepAlive
 
 Builds:
-  - versionName: 1.0.4
-    versionCode: 104
-    commit: 1.0.4
+  - versionName: 1.0.6
+    versionCode: 106
+    commit: 1.0.6
     subdir: app
     sudo:
       - apt-get update || apt-get update
@@ -24,7 +24,9 @@ Builds:
     gradle:
       - fDroid
 
+
+
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: 1.0.5
-CurrentVersionCode: 105
+CurrentVersion: 1.0.6
+CurrentVersionCode: 106
