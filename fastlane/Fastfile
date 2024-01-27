@@ -1,0 +1,91 @@
+
+# Helper method for capturing screenshots based on the device type (phone, sevenInch, tenInch)
+def capture_screenshots_for_device_type(device_type:, locales:)
+
+    # https://docs.fastlane.tools/actions/capture_android_screenshots/
+    capture_android_screenshots(
+        locales: locales,
+
+        # clear existing screenshots from the metadata folder
+        clear_previous_screenshots: true,
+
+        # the device type we want to test
+        device_type: device_type,
+
+        # specify exactly what we want to test
+        app_package_name: "io.keepalive.android.debug",
+        tests_package_name: "io.keepalive.android.debug.test",
+        use_tests_in_classes: "io.keepalive.android.AppScreenshotsInstrumentedTest",
+
+        # shouldn't matter but use the googlePlay variant for the screenshots
+        app_apk_path: "app/build/outputs/apk/googlePlay/debug/app-googlePlay-debug.apk",
+        tests_apk_path: "app/build/outputs/apk/androidTest/googlePlay/debug/app-googlePlay-debug-androidTest.apk"
+    )
+
+    # process the screenshots for each locale; removes the status bar and runs optipng
+    for locale in locales do
+        sh("python3 ../process_screenshots.py --device_type=#{device_type} --screenshot_path=metadata/android/#{locale}/images/#{device_type}Screenshots")
+    end
+end
+
+# build apks and take screenshots for a specific device type and locale(s)
+lane :screenshot do |options|
+    device_type = options[:device_type]
+
+    # accept multiple locales as a CSV string
+    locales = options[:locales] ? options[:locales].split(',') : nil
+
+    # throw an error if no device type or locale was passed
+    if device_type.nil? || locales.nil?
+        UI.user_error!("No device_type or locale(s) passed. Usage: 'fastlane screenshot device_type:[device_type] locales:[locales]'")
+    end
+
+    # clean build artifacts and uninstall any existing app versions
+    gradle(task: 'clean')
+    gradle(task: 'uninstallAll')
+
+    # the name build_android_app isn't important? it all gets passed to gradle...
+
+    # build all debug variants
+    build_android_app(
+        task: 'assemble',
+        build_type: 'Debug'
+    )
+
+    # build all test apks
+    build_android_app(
+        task: 'assemble',
+        build_type: 'AndroidTest'
+    )
+
+    # take the screenshots
+    capture_screenshots_for_device_type(device_type: device_type, locales: locales)
+end
+
+
+lane :upload_screenshots do
+
+    # upload the screenshots to the play store
+    upload_to_play_store(
+
+        package_name: "io.keepalive.android",
+
+        # upload everything in the metadata folder except changelogs
+        skip_upload_metadata: false,
+        skip_upload_images: false,
+        skip_upload_screenshots: false,
+        skip_upload_changelogs: false,
+
+        # don't upload the app itself
+        skip_upload_apk: true,
+        skip_upload_aab: true,
+
+        # don't auto-submit the changes
+        changes_not_sent_for_review: true,
+
+        # only upload if the image has changed
+        sync_image_upload: true,
+
+        # validate_only: true,
+    )
+end

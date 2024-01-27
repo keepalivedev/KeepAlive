@@ -1,5 +1,0 @@
-* New Feature: Rest Periods
-* New Feature: Auto-Restart Monitoring
-* Fix display issue with Test Alert SMS button
-* Add screen to view Debug Logs
-* Add French (Canada) translation

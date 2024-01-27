@@ -1,0 +1,2 @@
+json_key_file("KeepAlive_FastLane_ServiceAccount.json")
+package_name("io.keepalive.android")

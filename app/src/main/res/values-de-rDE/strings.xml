@@ -27,16 +27,16 @@
 
     <!-- app hibernation/restriction stuff -->
     <string name="hibernation_dialog_title">App-Beschränkung deaktivieren</string>
-    <string name="hibernation_dialog_message">Android entfernt jetzt automatisch die Berechtigungen für Apps, die in letzter Zeit nicht verwendet wurden.  Da Keep Alive nach der Konfiguration keine weitere Interaktion benötigt, können ihr dadurch versehentlich die Berechtigungen entzogen werden.  Um sicherzustellen, dass die Berechtigungen für Keep Alive nicht entzogen werden, deaktivieren Sie bitte die Option \"App-Aktivität bei Nichtbenutzung stoppen\" für die App Keep Alive.</string>
-    <string name="hibernation_dialog_message_api30">Android entfernt jetzt automatisch die Berechtigungen für Apps, die in letzter Zeit nicht verwendet wurden.  Sobald die Einstellungen konfiguriert sind, benötigt Keep Alive keine weitere Interaktion, es sei denn, ein Alarm wird ausgelöst.  Um sicherzustellen, dass die Berechtigungen nicht entzogen werden, navigieren Sie bitte zum Abschnitt \"Berechtigungen\" für Keep Alive und deaktivieren Sie die Option \"Berechtigungen für ungenutzte App entfernen\".</string>
-    <string name="hibernation_dialog_message_api31">Android entfernt nun automatisch die Berechtigungen für Apps, die in letzter Zeit nicht genutzt wurden.  Sobald die Einstellungen konfiguriert sind, benötigt Keep Alive keine weitere Interaktion, es sei denn, ein Alarm wird ausgelöst.  Um sicherzustellen, dass die Berechtigungen nicht entzogen werden, deaktivieren Sie bitte die Option \"Berechtigungen entfernen und Speicherplatz freigeben\" für die Keep Alive-App.</string>
-    <string name="hibernation_dialog_message_api_backport">Android entfernt jetzt automatisch die Berechtigungen für Apps, die in letzter Zeit nicht verwendet wurden.  Sobald die Einstellungen konfiguriert sind, benötigt Keep Alive keine weitere Interaktion, es sei denn, ein Alarm wird ausgelöst.  Um sicherzustellen, dass die Berechtigungen nicht entzogen werden, deaktivieren Sie bitte die Option \"Berechtigungen entfernen, wenn die App nicht verwendet wird\".</string>
+    <string name="hibernation_dialog_message">Android entfernt jetzt automatisch die Berechtigungen für Apps, die in letzter Zeit nicht verwendet wurden.  Da Keep Alive nach der Konfiguration keine weitere Interaktion benötigt, können ihr dadurch versehentlich die Berechtigungen entzogen werden.\n\nUm sicherzustellen, dass die Berechtigungen für Keep Alive nicht entzogen werden, deaktivieren Sie bitte die Option \"App-Aktivität bei Nichtbenutzung stoppen\" für die App Keep Alive.</string>
+    <string name="hibernation_dialog_message_api30">Android entfernt jetzt automatisch die Berechtigungen für Apps, die in letzter Zeit nicht verwendet wurden.  Sobald die Einstellungen konfiguriert sind, benötigt Keep Alive keine weitere Interaktion, es sei denn, ein Alarm wird ausgelöst.\n\nUm sicherzustellen, dass die Berechtigungen nicht entzogen werden, navigieren Sie bitte zum Abschnitt \"Berechtigungen\" für Keep Alive und deaktivieren Sie die Option \"Berechtigungen für ungenutzte App entfernen\".</string>
+    <string name="hibernation_dialog_message_api31">Android entfernt nun automatisch die Berechtigungen für Apps, die in letzter Zeit nicht genutzt wurden.  Sobald die Einstellungen konfiguriert sind, benötigt Keep Alive keine weitere Interaktion, es sei denn, ein Alarm wird ausgelöst.\n\nUm sicherzustellen, dass die Berechtigungen nicht entzogen werden, deaktivieren Sie bitte die Option \"Berechtigungen entfernen und Speicherplatz freigeben\" für die Keep Alive-App.</string>
+    <string name="hibernation_dialog_message_api_backport">Android entfernt jetzt automatisch die Berechtigungen für Apps, die in letzter Zeit nicht verwendet wurden.  Sobald die Einstellungen konfiguriert sind, benötigt Keep Alive keine weitere Interaktion, es sei denn, ein Alarm wird ausgelöst.\n\nUm sicherzustellen, dass die Berechtigungen nicht entzogen werden, deaktivieren Sie bitte die Option \"Berechtigungen entfernen, wenn die App nicht verwendet wird\".</string>
 
     <!-- MainActivity textview and button messages -->
-    <string name="monitoring_active_message">Letzte Aktivität erkannt um: %1$s Nächster Aktivitäts-Check in: %2$s Stunden und %3$s Minuten</string>
+    <string name="monitoring_active_message">Letzte Aktivität erkannt um: %1$s\nNächster Aktivitäts-Check in: %2$s Stunden und %3$s Minuten</string>
     <string name="monitoring_active_title">Überwachung aktiv</string>
-    <string name="monitoring_impaired_title">Überwachung aktiv,  aber evtl. beeinträchtigt</string>
-    <string name="monitoring_inactive_message">Überwachung ist nicht aktiv. Schaltfläche drücken, um sie wieder zu starten.</string>
+    <string name="monitoring_impaired_title">Überwachung aktiv,\n aber evtl. beeinträchtigt</string>
+    <string name="monitoring_inactive_message">Überwachung ist nicht aktiv.\nSchaltfläche drücken, um sie wieder zu starten.</string>
     <string name="monitoring_disabled_title">Überwachung deaktiviert</string>
     <string name="monitoring_disabled_message">Aktivieren in den Einstellungen</string>
     <string name="monitoring_no_activity_detected_title">Überwachung nicht möglich</string>
@@ -48,7 +48,7 @@
     <string name="time_period_too_short_message">Das Intervall muss mindestens 10 Minuten betragen.</string>
     <string name="test_phone_call_message">Es wird ein Anruf getätigt an:\n%1$s</string>
     <string name="test_sms_message">SMS-Nachricht(en) werden gesendet an:\n%1$s</string>
-    <string name="unable_to_send_sms_message">SMS-Versand nicht möglich Bitte überprüfen Sie, ob Sie eine aktive SIM-Karte haben</string>
+    <string name="unable_to_send_sms_message">SMS-Versand nicht möglich Bitte überprüfen Sie,\n ob Sie eine aktive SIM-Karte haben</string>
     <string name="no_configured_contacts_message">Es wurden keine Notfallkontakte konfiguriert</string>
     <string name="permissions_button_text">Berechtigungen erteilen</string>
     <string name="restart_monitoring_button_text">Überwachung neu starten</string>
@@ -99,7 +99,7 @@
 
     <!-- rest period dialog strings -->
     <string name="rest_period_dialog_title">Ruhezeit-Einstellungen</string>
-    <string name="rest_period_dialog_message">Zeitspanne, in der Inaktivität nicht gezählt wird. Wenn zum Beispiel \"Stunden Inaktivität\" auf 6 Stunden und eine Ruhezeit von 22:00 – 6:00 Uhr eingestellt ist und das Gerät zum letzten Mal um 18:00 Uhr verwendet wurde, wird die Meldung \"Sind Sie da?\" erst um 8:00 Uhr erscheinen.  HINWEIS: Ein Alarm kann auch während einer Ruhezeit gesendet werden, wenn die Meldung \"Sind Sie da?\" VOR Beginn der Ruhezeit angezeigt wurde.</string>
+    <string name="rest_period_dialog_message">Zeitspanne, in der Inaktivität nicht gezählt wird. Wenn zum Beispiel \"Stunden Inaktivität\" auf 6 Stunden und eine Ruhezeit von 22:00 – 6:00 Uhr eingestellt ist und das Gerät zum letzten Mal um 18:00 Uhr verwendet wurde, wird die Meldung \"Sind Sie da?\" erst um 8:00 Uhr erscheinen.\n\nHINWEIS: Ein Alarm kann auch während einer Ruhezeit gesendet werden, wenn die Meldung \"Sind Sie da?\" VOR Beginn der Ruhezeit angezeigt wurde.</string>
     <string name="rest_period_dialog_time_zone_message"><![CDATA[
    Zeiten verwenden die Standardzeitzone des Systems: <b>%1$s</b>
 ]]></string>
@@ -120,8 +120,9 @@
     <string name="contact_sms_phone_title">SMS-Telefonnummer</string>
     <string name="contact_phone_title">Telefonnummer anrufen (optional)</string>
     <string name="add_sms_contact_button_text">SMS-Notfallkontakt hinzufügen</string>
-    <string name="contact_phone_description">Wenn ein Alarm ausgelöst wird, wird diese Telefonnummer mit aktivierter Freisprecheinrichtung angerufen.  Bitte beachten Sie, dass hierfür zusätzliche Berechtigungen erforderlich sind, damit Telefonanrufe im Hintergrund getätigt werden können.</string>
+    <string name="contact_phone_description">Wenn ein Alarm ausgelöst wird, wird diese Telefonnummer mit aktivierter Freisprecheinrichtung angerufen.\n\nBitte beachten Sie, dass hierfür zusätzliche Berechtigungen erforderlich sind, damit Telefonanrufe im Hintergrund getätigt werden können.</string>
     <string name="default_alert_message">Hallo! Ich habe mein Telefon seit einiger Zeit nicht mehr benutzt und benötige vielleicht Unterstützung.  Bitte Hilfe schicken!</string>
+    <string name="default_alert_message_alt">Hey, ich bin vielleicht tot. Wenn ich dich in den nächsten 24 Stunden nicht melde, weißt du, was zu tun ist...</string>
     <string name="add_emergency_contact_title">Notfallkontakt hinzufügen</string>
     <string name="edit_emergency_contact_title">Notfallkontakt bearbeiten</string>
 
@@ -135,11 +136,11 @@
 
     <!-- USAGE_ACCESS_SETTINGS Permission -->
     <string name="permission_usage_access_title">Berechtigung erforderlich: Zugriff auf Nutzungsdaten</string>
-    <string name="permission_usage_access_description">Um festzustellen, wann Ihr Gerät zuletzt benutzt wurde, ist eine spezielle Berechtigung namens \"Zugriff auf Nutzungsdaten\" erforderlich.  Bitte aktivieren Sie diese Berechtigung für die Keep Alive-App.</string>
+    <string name="permission_usage_access_description">Um festzustellen, wann Ihr Gerät zuletzt benutzt wurde, ist eine spezielle Berechtigung namens \"Zugriff auf Nutzungsdaten\" erforderlich.\n\nBitte aktivieren Sie diese Berechtigung für die Keep Alive-App.</string>
 
     <!-- MANAGE_OVERLAY_PERMISSION Permission -->
     <string name="permission_manage_overlay_title">Erlaubnis erforderlich: Am Anfang anzeigen (Manage Overlay)</string>
-    <string name="permission_manage_overlay_description" tools:ignore="Typos">Es wurde eine Telefonnummer für den Notruf eingerichtet, die die Möglichkeit eines Anrufs voraussetzt.  Bitte aktivieren Sie die Berechtigung \"Am Anfang anzeigen\" (Manage Overlay) für die Keep Alive-App in Ihren Geräteeinstellungen.</string>
+    <string name="permission_manage_overlay_description" tools:ignore="Typos">Es wurde eine Telefonnummer für den Notruf eingerichtet, die die Möglichkeit eines Anrufs voraussetzt.\n\nBitte aktivieren Sie die Berechtigung \"Am Anfang anzeigen\" (Manage Overlay) für die Keep Alive-App in Ihren Geräteeinstellungen.</string>
 
     <!-- ACCESS_FINE_LOCATION Permission -->
     <string name="permission_access_fine_location_title">Erlaubnis erforderlich: Genauer Standort</string>
@@ -155,5 +156,5 @@
 
     <!-- REQUEST_SCHEDULE_EXACT_ALARM Permission (For S and above) -->
     <string name="permission_schedule_alarms_title">Erlaubnis erforderlich: Wecker und Erinnerungen</string>
-    <string name="permission_schedule_alarms_description">Erinnerungen sind erforderlich, damit der Alarm auch dann ausgelöst werden kann, wenn Ihr Gerät schläft oder sich im Modus \"Nicht stören\" befindet.  Bitte aktivieren Sie diese Berechtigung für die KeepAlive-App in Ihren Geräteeinstellungen.</string>
+    <string name="permission_schedule_alarms_description">Erinnerungen sind erforderlich, damit der Alarm auch dann ausgelöst werden kann, wenn Ihr Gerät schläft oder sich im Modus \"Nicht stören\" befindet.\n\nBitte aktivieren Sie diese Berechtigung für die KeepAlive-App in Ihren Geräteeinstellungen.</string>
 </resources>
