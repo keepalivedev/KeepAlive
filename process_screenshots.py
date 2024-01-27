@@ -33,7 +33,7 @@ def main():
     elif args.device_type == 'sevenInch':
         top_pct, bottom_pct = 0.03, 0.92
     elif args.device_type == 'tenInch':
-        top_pct, bottom_pct = 0.025, 0.925
+        top_pct, bottom_pct = 0.03, 0.925
 
     # sort based on the filename so that they show up in order
     for image_filename in sorted(os.listdir(args.screenshot_path)):
