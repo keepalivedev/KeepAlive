@@ -1,0 +1,1 @@
+* Fix issue with unicode in the alert SMS

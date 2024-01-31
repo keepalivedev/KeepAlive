@@ -1,0 +1,1 @@
+* Problem mit Unicode in der Alarm-SMS behoben

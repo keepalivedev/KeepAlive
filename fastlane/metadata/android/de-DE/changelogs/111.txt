@@ -1,0 +1,5 @@
+* Neue Funktion: Ruhezeiten
+* Neue Funktion: Überwachung des automatischen Neustarts
+* Anzeigeproblem mit der Schaltfläche „Testalarm-SMS“ behoben
+* Bildschirm hinzufügen, um Debug-Protokolle anzuzeigen
+* Französische (Kanada) Übersetzung hinzufügen
