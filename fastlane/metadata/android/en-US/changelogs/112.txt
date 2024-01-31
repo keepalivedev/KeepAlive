@@ -1,0 +1,2 @@
+* Fix issue with unicode in the alert SMS
+* Add German translation

@@ -1,0 +1,2 @@
+* Correction d'un problème avec Unicode dans le SMS d'alerte
+* Ajouter une traduction allemande
