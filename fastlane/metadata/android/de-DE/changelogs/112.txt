@@ -1,1 +1,2 @@
 * Problem mit Unicode in der Alarm-SMS behoben
+* Fügen Sie eine deutsche Übersetzung hinzu
