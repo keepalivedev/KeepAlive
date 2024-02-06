@@ -189,7 +189,11 @@ class SettingsActivity : AppCompatActivity() {
         }
         // if we change the time period hours then we need to update the alarm
         else if (preferenceKey == "time_period_hours" || preferenceKey == "REST_PERIODS") {
-            updateAlarm = true
+
+            // make sure the app is actually enabled
+            if (sharedPrefs!!.getBoolean("enabled", false)) {
+                updateAlarm = true
+            }
         }
 
         // if we need to update the alarm
