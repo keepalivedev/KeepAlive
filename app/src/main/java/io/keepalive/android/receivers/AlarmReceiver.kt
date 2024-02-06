@@ -18,6 +18,14 @@ class AlarmReceiver : BroadcastReceiver() {
 
             // shouldn't need to check whether the app is still enabled here because
             //  we will cancel the alarm when the setting is changed
+            // but just in case...
+            val prefs = getEncryptedSharedPreferences(context)
+            val appEnabled = prefs.getBoolean("enabled", false)
+
+            if (!appEnabled) {
+                DebugLogger.d(tag, "App is not enabled, why did the alarm go off?!")
+                return
+            }
 
             /*
             if (!PermissionManager(context, null).checkHavePermissions()) {
@@ -32,7 +40,7 @@ class AlarmReceiver : BroadcastReceiver() {
             doAlertCheck(context, alarmStage)
 
         } catch (e: Exception) {
-            Log.e(tag, "Failed while processing alarm:", e)
+            DebugLogger.d(tag, "Failed while processing alarm:", e)
         }
     }
 
