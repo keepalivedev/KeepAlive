@@ -1,0 +1,3 @@
+* Correction d'un problème avec Unicode dans le SMS d'alerte
+* Correction d'un problème d'alerte envoyée lorsque la surveillance est désactivée
+* Ajouter une traduction allemande

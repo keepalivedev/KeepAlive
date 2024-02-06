@@ -1,0 +1,3 @@
+* Fix issue with unicode in the alert SMS
+* Fix issue with alert being sent when monitoring is disabled
+* Add German translation
