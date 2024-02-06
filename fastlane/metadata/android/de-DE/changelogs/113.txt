@@ -1,0 +1,3 @@
+* Problem mit Unicode in der Alarm-SMS behoben
+* Problem behoben, bei dem eine Warnung gesendet wurde, wenn die Überwachung deaktiviert ist
+* Fügen Sie eine deutsche Übersetzung hinzu
