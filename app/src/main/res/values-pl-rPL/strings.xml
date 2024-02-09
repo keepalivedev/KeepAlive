@@ -1,0 +1,173 @@
+<resources>
+    <string name="app_name" translatable="false">Keep Alive</string>
+
+    <!-- Common strings -->
+    <string name="yes">Tak</string>
+    <string name="no">Nie</string>
+    <string name="ok">OK</string>
+    <string name="save">Zapisz</string>
+    <string name="add">Dodaj</string>
+    <string name="delete">Usuń</string>
+    <string name="close">Zamknij</string>
+    <string name="cancel">Anuluj</string>
+    <string name="go_to_settings">Przejdź do Ustawień</string>
+    <string name="enabled">Aktywny</string>
+    <string name="disabled">Nieaktywny</string>
+    <string name="placeholder" translatable="false">PLACEHOLDER TEXT</string>
+
+    <!-- action settings -->
+    <string name="action_settings">Ustawienia</string>
+    <string name="action_about">O</string>
+    <string name="action_logdisplay">Logi Debugowania</string>
+    <string name="about_dialog_title">O Keep Alive</string>
+
+    <!-- wrap in CDATA so that it doesn't get interpreted as XML? -->
+    <string name="about_message_content" translatable="false"><![CDATA[
+    <br /><b>Version:</b><br />%1$s<br /><br />
+    <b>Contact:</b><br />dev@keep-alive.io<br /><br />
+    <b>Privacy Policy:</b><br /><a href="https://keep-alive.io/privacy">keep-alive.io/privacy</a><br /><br />
+    <b>Github:</b><br /><a href="https://github.com/keepalivedev/KeepAlive">github.com/keepalivedev/KeepAlive</a><br /><br />
+]]></string>
+
+    <!-- item_phone_number content descriptions that are set based on the item position -->
+    <string name="enable_switch_enabled_content_desc">Pozycja %1$s Włączona</string>
+    <string name="location_switch_enabled_content_desc">Pozycja %1$s Lokalizacja Włączona</string>
+
+    <string name="main_scroll_view_content_description">Przewijalna Strona Główna</string>
+
+    <!-- abb hibernation/restriction stuff -->
+    <string name="hibernation_dialog_title">Wyłącz Ograniczenia Aplikacji</string>
+    <string name="hibernation_dialog_message">Android automatycznie usuwa uprawnienia aplikacji, które nie były ostatnio używane.  Aplikacja Keep Alive nie potrzebuje żadnej interakcji po jej pierwszej konfiguracji i może przez to stracić uprawnienia.\n\nŻeby mieć pewność, że Keep Alive może działać poprawnie wyłącz opcje \'Usuń uprawnienia jeśli aplikacja jest nieużywana\'.</string>
+    <string name="hibernation_dialog_message_api30">Android automatycznie usuwa uprawnienia aplikacji, które nie były ostatnio używane.  Aplikacja Keep Alive nie potrzebuje żadnej interakcji po jej pierwszej konfiguracji i może przez to stracić uprawnienia.\n\nŻeby mieć pewność, że Keep Alive może działać poprawnie wyłącz opcje \'Usuń uprawnienia jeśli aplikacja jest nieużywana\'.</string>
+    <string name="hibernation_dialog_message_api31">Android automatycznie usuwa uprawnienia aplikacji, które nie były ostatnio używane.  Aplikacja Keep Alive nie potrzebuje żadnej interakcji po jej pierwszej konfiguracji i może przez to stracić uprawnienia.\n\nŻeby mieć pewność, że Keep Alive może działać poprawnie wyłącz opcje \'Usuń uprawnienia i zwolnij miejsce\' dla aplikacji Keep Alive.</string>
+    <string name="hibernation_dialog_message_api_backport">Android automatycznie usuwa uprawnienia aplikacji, które nie były ostatnio używane.  Aplikacja Keep Alive nie potrzebuje żadnej interakcji po jej pierwszej konfiguracji i może przez to stracić uprawnienia.\n\nŻeby mieć pewność, że Keep Alive może działać poprawnie wyłącz opcje \'Usuń uprawnienia jeśli aplikacja jest nieużywana\'.</string>
+
+    <!-- MainActivity textview and button messages -->
+    <string name="monitoring_active_message">Ostatnia wykryta aktywność: %1$s\nNastępne sprawdzenie za: %2$s godzin %3$s minut</string>
+    <string name="monitoring_active_title">Monitorowanie Aktywne</string>
+    <string name="monitoring_impaired_title">Monitorowanie Aktywne\nAle może być zakłócone</string>
+    <string name="monitoring_inactive_message">Monitorowanie nie jest aktywne.\nKliknij przycisk aby je ponownie uruchomić.</string>
+    <string name="monitoring_disabled_title">Monitorowanie wyłączone</string>
+    <string name="monitoring_disabled_message">Aktywuj je w Ustawieniach</string>
+    <string name="monitoring_no_activity_detected_title">Monitorowanie nie jest możliwe</string>
+    <string name="monitoring_permissions_required_title">Potrzebuje Uprawnień</string>
+    <string name="monitoring_no_activity_detected_message">Monitorowanie jest włączone ale nie wykryto żadnej aktywności przez ostatnie %1$s godzin. Sprawdź czy masz skonfigurowany ekran blokady i czy aplikacja ma Dostęp do Informacji o Korzystaniu z Aplikacji.</string>
+    <string name="monitoring_permissions_required_message">Monitorowanie jest włączone lecz nie wszystkie uprawnienia zostały przyznane. Kliknij przycisk "Udziel Uprawnień" poniżej.</string>
+    <string name="alarm_message_too_long_message">Wiadomość nie może mieć więcej niż 160 znaków.</string>
+    <string name="phone_number_invalid_message">Wpisz poprawny numer telefonu.</string>
+    <string name="time_period_too_short_message">Na potwierdzenie musi być przynajmniej 10 minut.</string>
+    <string name="test_phone_call_message">Połączenie telefoniczne zostanie nawiązane z:\n%1$s</string>
+    <string name="test_sms_message">Wiadomości SMS zostaną wysłane do:\n%1$s</string>
+    <string name="unable_to_send_sms_message">Nie można wysłać SMS\nUpewnij się, że masz aktywną kartę SIM</string>
+    <string name="no_configured_contacts_message">Nie skonfigurowano numerów alarmowych</string>
+    <string name="permissions_button_text">Udziel Uprawnień</string>
+    <string name="restart_monitoring_button_text">Uruchom Ponownie Monitoring</string>
+    <string name="check_app_restrictions_button_text">Wyłącz Ograniczenia Aplikacji</string>
+
+    <string name="test_sms_alert_button_text">Test Alertu SMS</string>
+    <string name="test_phone_alert_button_text">Test Połączenia Telefonicznego</string>
+
+    <string name="delete_phone_number_dialog_title">Usuń Kontakt Alarmowy</string>
+    <string name="delete_phone_number_dialog_description">Czy jesteś pewien, że chcesz usunąć ten kontakt?</string>
+
+    <!-- notification strings -->
+    <string name="default_notification_channel_title">Alerty</string>
+    <string name="sms_sent_notification_channel_title">Powiadomienia o Wysłanych SMSach</string>
+    <string name="call_sent_notification_channel_title">Powiadomienia o Połączeniach Telefonicznych</string>
+    <string name="default_notification_channel_description">Pytania \'Jesteś tam?\'</string>
+    <string name="sms_sent_notification_channel_description">Wysyłane kiedy alert SMS zostanie aktywowany</string>
+    <string name="call_sent_notification_channel_description">Wysyłane kiedy alert z połączeniem telefonicznym zostanie aktywowany</string>
+    <string name="activity_notification_message">Cieszę się że żyjesz! Anuluję Alert.</string>
+    <string name="initial_check_notification_title">Jesteś tam?</string>
+    <string name="initial_check_notification_text">Kliknij tu jeśli wciąż żyjesz! W przeciwnym wypadku alert aktywuje się za %1$s minut.</string>
+    <string name="alert_notification_title">Keep Alive Alert aktywowany!</string>
+    <string name="call_alert_notification_text">Rozmowa telefoniczna została wykonana do Kontaktu Alarmowego: %1$s</string>
+    <string name="sms_alert_notification_text">SMS został wysłany do Twoich kontaktów alarmowych!</string>
+    <string name="sms_alert_failure_notification_title">Nie udało się wysłać Alertu SMS</string>
+    <string name="sms_alert_failure_notification_text">Wystąpił błąd podczas wysyłania Alertu SMS</string>
+    <string name="sms_alert_failure_notification_text_with_error">Wystąpił błąd podczas wysyłania Alertu SMS: %1$s</string>
+    <string name="sms_service_failure_notification_title">Nie udało się wysłać Alert SMS</string>
+    <string name="sms_service_failure_notification_text">Wystąpił błąd podczas wysyłania Alertu SMS, upewnij się, że masz aktywną kartę SIM</string>
+    <string name="sms_sent_toast_text">Keep Alive wysłał Alert SMS!</string>
+    <string name="sms_failure_toast_text">Keep Alive nie mógł wysłać Alertu SMS?!</string>
+
+    <!-- alert location strings -->
+    <string name="location_invalid_message">Nie udało się ustalić lokalizacji.</string>
+    <string name="geocode_invalid_message">Geocode nie ustalił lokalizacji. Koordynaty GPS to (%1$s, %2$s). Dokładność (m): %3$s.</string>
+    <string name="geocode_valid_message">Koordynaty GPS: (%1$s, %2$s). Dokładność (m): %3$s. Prawdopodobny adres: %4$s</string>
+
+    <!-- Preference Titles -->
+    <string name="main_header">Ustawienia Główne</string>
+    <string name="contact_header">Numery Alarmowe</string>
+
+    <!-- SMS settings layout text view strings, some are just placeholders -->
+    <string name="phone_number_title">Numer Telefonu</string>
+    <string name="alert_message_title">Treść Alertu</string>
+    <string name="include_location_title">Dodaj Lokalizację</string>
+    <string name="sample_alert_message">Przykładowa Treść Alertu</string>
+    <string name="include_location_information">Dodaj Informacje o Lokalizacji</string>
+    <string name="phone_number_hint">Wpisz Numer Telefonu</string>
+    <string name="alert_message_hint">Wpisz Treść Alertu</string>
+
+    <!-- rest period dialog strings -->
+    <string name="rest_period_dialog_title">Ustaw Czas Odpoczynku</string>
+    <string name="rest_period_dialog_message">Zakres czasu podczas którego nieaktywność urządzenia nie będzie liczona. Na przykład, przy 6 \'Godzinach Nieaktywności Przed Zapytaniem\' i Czasie Odpoczynku między 22:00 a 6:00, urządzenie użyte ostatnio o 18:00 wyśle Alertu aż do godziny 8:00.\n\nWarto zauważyć, że Alert może zadziałać podczas Czasu Odpoczynku jeśli wiadomość \'Jesteś tam?\' wysłana PRZED początkiem okresu odpoczynku.
+    </string>
+    <string name="rest_period_dialog_time_zone_message"><![CDATA[
+   Zegarek używa systemowej strefy czasowej: <b>%1$s</b>
+]]></string>
+    <string name="rest_period_not_set_message">Nie ustawiono</string>
+    <string name="rest_period_start_time">Początek</string>
+    <string name="rest_period_end_time">Koniec</string>
+    <string name="rest_period_invalid_range_message">Godzina początkowa i końcowa nie mogą być takie same</string>
+
+    <!-- Main Settings -->
+    <string name="enabled_title">Monitorowanie Aktywne</string>
+    <string name="disabled_title">Monitorowanie Wyłączone</string>
+    <string name="auto_restart_title">Auto-Restart Monitorowania Po Alercie</string>
+    <string name="time_period_title">Godziny Nieaktywności przed Zapytaniem</string>
+    <string name="time_period_description">Ile godzin nieaktywności musi minąć zanim aplikacja wyśle pytanie \'Jesteś tam?\'.</string>
+    <string name="followup_time_period_title">Ilość minut na Potwierdzenie Pytania</string>
+    <string name="rest_period_title">Zakres Czasu Odpoczynku</string>
+    <string name="followup_time_period_description">Ile minut należy poczekać na odpowiedź do pytania \'Jesteś tam?\' zanim Alert wysłany zostanie do Twoich Kontaktów Alarmowych.</string>
+    <string name="contact_sms_phone_title">Numer Alertów SMS</string>
+    <string name="contact_phone_title">Numer Połączenia Alarmowego (Opcjonalnie)</string>
+    <string name="add_sms_contact_button_text">Dodaj Numer Alerów SMS</string>
+    <string name="contact_phone_description">Kiedy Alert zostanie wywołany, telefon zadzwoni na ten numer telefonu z włączonym trybem głośnomówiącym.\n\nWymaga to dodatkowych uprawnień, żeby telefon mógł dzwonić w tle.</string>
+    <string name="default_alert_message">Hej! Nie używałem telefonu już od dłuższego czasu i mogę potrzebować wsparcia. Pomóż proszę!</string>
+    <string name="default_alert_message_alt">Hej mogę już nie żyć, jeśli nie skontaktuję się z Tobą przez 24 godziny to wiesz co robić...</string>
+    <string name="add_emergency_contact_title">Dodaj Kontakt Alarmowy</string>
+    <string name="edit_emergency_contact_title">Zmień Kontakt Alarmowy</string>
+
+    <!-- SEND_SMS Permission -->
+    <string name="permission_send_sms_title">Wymagane Uprawnienie: Wysyłanie Wiadomości SMS</string>
+    <string name="permission_send_sms_description">SMS używany jest jako główna metoda powiadomienia kontaktów kiedy Alert zostanie wywołany.</string>
+
+    <!-- CALL_PHONE Permission -->
+    <string name="permission_call_phone_title">Wymagane Uprawnienie: Wykonywanie Połączeń Telefonicznych</string>
+    <string name="permission_call_phone_description">Połączenie zostanie nawiązane z ustawionym numerem Kontaktu Alarmowego, wymaga to możliwości inicjowania rozmów telefonicznych.</string>
+
+    <!-- USAGE_ACCESS_SETTINGS Permission -->
+    <string name="permission_usage_access_title">Wymagane Uprawnienie: Dostęp do Informacji o Korzystaniu z Aplikacji</string>
+    <string name="permission_usage_access_description">Żeby ustalić czy urządzenie było niedawno używane, potrzebne jest specjalne uprawnienie nazwane Dostęp do Informacji o Korzystaniu z Aplikacji.\n\nProszę przyznać to uprawnienie aplikacji Keep Alive.</string>
+
+    <!-- MANAGE_OVERLAY_PERMISSION Permission -->
+    <string name="permission_manage_overlay_title">Wymagane Uprawnienie: Wyświetlaj Aplikacje nad Innymi</string>
+    <string name="permission_manage_overlay_description">Telefoniczne Połączenie Alarmowe zostało skonfigurowane, wymaga to możliwości rozpoczęcia rozmowy telefonicznej w tle.\n\nProszę przyznać uprawnienie Wyświetlaj Aplikacje nad Innymi dla aplikacji Keep Alive w ustawieniach urządzenia.</string>
+
+    <!-- ACCESS_FINE_LOCATION Permission -->
+    <string name="permission_access_fine_location_title">Wymagane Uprawnienie: Dokładna Lokalizacja</string>
+    <string name="permission_access_fine_location_description">Opcja \'Dodaj Informacje o Lokalizacji\' jest włączona, wymaga ona ustalenia możliwie precyzyjnej lokalizacji urządzenia. Może to pomóc Cię zlokalizować w razie wypadku.</string>
+
+    <!-- POST_NOTIFICATIONS Permission (For TIRAMISU and above) -->
+    <string name="permission_post_notifications_title">Wymagane Uprawnienie: Wysyłanie Powiadomień</string>
+    <string name="permission_post_notifications_description">Powiadomienia wysyłane są tylko w razie wywołania Alertu</string>
+
+    <!-- ACCESS_BACKGROUND_LOCATION Permission (For Q and above) -->
+    <string name="permission_access_background_location_title">Wymagane Uprawnienie: Dostęp do Lokalizacji w tle</string>
+     <string name="permission_access_background_location_description">Opcja \'Dodaj Informacje o Lokalizacji\' jest włączona, wymaga ona możliwości ustalenia lokalizacji urządzenia nawet kiedy aplikacja działa w tle.  Lokalizacja sprawdzana jest tylko w razie wywołania Alertu, który z założenia aktywowany jest tylko w tle jeśli urządzenie nie używane.  Proszę przyznać to uprawnienie dla aplikacji Keep Alive w ustawieniach urządzenia zaznaczając \'Zawsze zezwalaj\'.</string>
+
+    <!-- REQUEST_SCHEDULE_EXACT_ALARM Permission (For S and above) -->
+    <string name="permission_schedule_alarms_title">Wymagane Uprawnienie: Harmonogram Alarmów</string>
+    <string name="permission_schedule_alarms_description">Planowanie alarmów jest wymagane, aby Alert mógł być wywołany nawet gdy urządzenie jest uśpione albo w trybie Nie Przeszkadzać.\n\nProszę przyznać to uprawnienie aplikacji KeepAlive w ustawieniach urządzenia.</string>
+</resources>

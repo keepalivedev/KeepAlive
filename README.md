@@ -10,7 +10,7 @@ height="80">](https://play.google.com/store/apps/details?id=io.keepalive.android
      alt="Get it on F-Droid"
      height="80">](https://f-droid.org/packages/io.keepalive.android/)
 
-Available Translations: French (CA), German (DE) 
+Available Translations: French (CA), German (DE), Polish (PL) 
 
 ## How it Works
   Keep Alive uses your device's lock screen to detect activity.

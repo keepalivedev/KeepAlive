@@ -1,0 +1,5 @@
+* Nowa Funkcjonalność: Czas Odpoczynku
+* Nowa Funkcjonalność: Auto-Restart Monitorowania
+* Naprawiono problem wyświetlania przycisku Testu Alertu SMS
+* Dodano widok Logów Debugowania
+* Dodano tłumaczenia francuskie (Kanada)

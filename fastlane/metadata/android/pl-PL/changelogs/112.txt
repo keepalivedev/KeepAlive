@@ -1,0 +1,2 @@
+* Naprawiono błąd z unikodem w alertach SMS
+* Dodano tłumaczenia niemieckie

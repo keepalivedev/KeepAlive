@@ -1,0 +1,2 @@
+* Fix issues with sending SMS on non-Google devices
+* Naprawiono błędy z wysyłaniem SMSów na urządzeniach bez Google

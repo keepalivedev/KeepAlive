@@ -1,0 +1,2 @@
+* Kompatybilność z F-Droidem i dodanie metadanych budowy
+* Naprawiono błąd z SMSami wysyłanymi do wyłączonych kontaktów
