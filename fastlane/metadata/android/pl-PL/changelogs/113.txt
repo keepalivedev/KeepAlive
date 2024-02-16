@@ -1,0 +1,3 @@
+* Naprawiono błąd z unikodem w alertach SMS
+* Naprawiono błąd z alertem wysyłanym kiedy monitorowanie jest wyłączone
+* Dodano tłumaczenia niemieckie
