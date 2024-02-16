@@ -281,7 +281,7 @@ class MainActivity : AppCompatActivity() {
 
         // this should only happen the first time the app is run or if the user has disabled it
         if (alarmTimestamp == -1L || !isEnabled) {
-            DebugLogger.d(tag, "No alarm found, monitoring is disabled")
+            DebugLogger.d(tag, "No alarm found or monitoring is disabled")
 
             // set a big red message indicating that monitoring is not active
             monitoringStatusTextView.text = getString(R.string.monitoring_disabled_title)
@@ -423,29 +423,32 @@ class MainActivity : AppCompatActivity() {
         val smsPhoneTextView = binding.root.findViewById<TextView>(R.id.textviewSmsPhoneNumber)
         val testAlertSMSButton = binding.root.findViewById<TextView>(R.id.buttonTestAlertSms)
 
-        // if we still need any permissions then hide the test alert text views and buttons
+        // make everything visible by default
+        callPhoneTextView.visibility = View.VISIBLE
+        smsPhoneTextView.visibility = View.VISIBLE
+        testAlertCallButton.visibility = View.VISIBLE
+        testAlertSMSButton.visibility = View.VISIBLE
+
+        // if we still need any permissions then disable the buttons and hide the text views
         if (needPerms) {
-            callPhoneTextView.visibility = View.GONE
-            smsPhoneTextView.visibility = View.GONE
-            testAlertCallButton.visibility = View.GONE
-            testAlertSMSButton.visibility = View.GONE
+            testAlertCallButton.isEnabled = false
+            testAlertSMSButton.isEnabled = false
+            callPhoneTextView.visibility = View.INVISIBLE
+            smsPhoneTextView.visibility = View.INVISIBLE
+            Log.d(tag, "Still need some permissions, disabling test alert buttons")
             return
-        } else {
-            callPhoneTextView.visibility = View.VISIBLE
-            smsPhoneTextView.visibility = View.VISIBLE
-            testAlertCallButton.visibility = View.VISIBLE
-            testAlertSMSButton.visibility = View.VISIBLE
         }
 
         // default value is empty string in case the user later decides to remove the phone number
         var callPhoneNumber = sharedPrefs.getString("contact_phone", "")
 
-        // if nothing is configured then hide the text view and button
+        // if nothing is configured then disable the button and set a red message
         if (callPhoneNumber == "") {
-            callPhoneTextView.visibility = View.GONE
-            testAlertCallButton.visibility = View.GONE
+            testAlertCallButton.isEnabled = false
+            callPhoneTextView.text = getString(R.string.no_configured_contacts_message)
+            callPhoneTextView.setTextColor(resources.getColor(R.color.red, theme))
         } else {
-
+            testAlertCallButton.isEnabled = true
             // format the phone number and show the text view and button
             callPhoneNumber =
                 PhoneNumberUtils.formatNumber(callPhoneNumber, Locale.getDefault().country)
@@ -477,10 +480,11 @@ class MainActivity : AppCompatActivity() {
         // set the text color to the default, may change below
         smsPhoneTextView.setTextColor(resources.getColor(R.color.textColor, theme))
 
-        // if we don't have any SMS contacts then hide the text view and button
+        // if we don't have any SMS contacts then disable the button and set a red message
         if (smsPhoneNumbers == "") {
-            smsPhoneTextView.visibility = View.GONE
-            testAlertSMSButton.visibility = View.GONE
+            testAlertSMSButton.isEnabled = false
+            smsPhoneTextView.text = getString(R.string.no_configured_contacts_message)
+            smsPhoneTextView.setTextColor(resources.getColor(R.color.red, theme))
         } else {
 
             // first see if we can even send SMS
@@ -500,6 +504,7 @@ class MainActivity : AppCompatActivity() {
                 smsPhoneTextView.setTextColor(resources.getColor(R.color.red, theme))
 
             } else {
+                testAlertSMSButton.isEnabled = true
 
                 // drop the trailing comma and space
                 smsPhoneNumbers = smsPhoneNumbers.dropLast(2)
@@ -507,23 +512,6 @@ class MainActivity : AppCompatActivity() {
                 testAlertSMSButton.visibility = View.VISIBLE
                 smsPhoneTextView.text =
                     String.format(getString(R.string.test_sms_message), smsPhoneNumbers)
-            }
-        }
-
-        // if there are no configured numbers, show something to the user?
-        if (callPhoneNumber == "" && smsPhoneNumbers == "") {
-
-            // but only if monitoring is enabled
-            if (sharedPrefs.getBoolean("enabled", false)) {
-
-                // set this invisible instead of gone so that the layout doesn't change
-                testAlertSMSButton.visibility = View.INVISIBLE
-                smsPhoneTextView.visibility = View.VISIBLE
-
-                // show the user a message to indicate that they need to configure
-                //  an SMS contact or a phone number or there is nothing the app will do
-                smsPhoneTextView.text = getString(R.string.no_configured_contacts_message)
-                smsPhoneTextView.setTextColor(resources.getColor(R.color.red, theme))
             }
         }
     }
