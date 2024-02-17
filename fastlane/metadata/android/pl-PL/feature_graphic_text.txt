@@ -1,0 +1,3 @@
+Powiadom znajomych lub bliskich, jeśli nie korzystałeś z urządzenia w danym okresie za pomocą wiadomości SMS i/lub rozmowy telefonicznej
+
+Zaprojektowany, aby działać jako zabezpieczenie dla osób mieszkających samotnie w razie wypadku lub innej sytuacji awaryjnej
