@@ -1,0 +1,172 @@
+<resources>
+    <string name="app_name" translatable="false">Keep Alive</string>
+
+    <!-- Common strings -->
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="ok">OK</string>
+    <string name="save">Сохранить</string>
+    <string name="add">Добавить</string>
+    <string name="delete">Удалить</string>
+    <string name="close">Закрыть</string>
+    <string name="cancel">Отмена</string>
+    <string name="go_to_settings">В настройки</string>
+    <string name="enabled">Включено</string>
+    <string name="disabled">Выключено</string>
+    <string name="placeholder" translatable="false">PLACEHOLDER TEXT</string>
+
+    <!-- action settings -->
+    <string name="action_settings">Настройки</string>
+    <string name="action_about">О программе</string>
+    <string name="action_logdisplay">Логи</string>
+    <string name="about_dialog_title">О Keep Alive</string>
+
+    <!-- wrap in CDATA so that it doesn't get interpreted as XML? -->
+    <string name="about_message_content" translatable="false"><![CDATA[
+    <br /><b>Version:</b><br />%1$s<br /><br />
+    <b>Contact:</b><br />dev@keep-alive.io<br /><br />
+    <b>Privacy Policy:</b><br /><a href="https://keep-alive.io/privacy">keep-alive.io/privacy</a><br /><br />
+    <b>Github:</b><br /><a href="https://github.com/keepalivedev/KeepAlive">github.com/keepalivedev/KeepAlive</a><br /><br />
+]]></string>
+
+    <!-- item_phone_number content descriptions that are set based on the item position -->
+    <string name="enable_switch_enabled_content_desc">Пункт %1$s активирован</string>
+    <string name="location_switch_enabled_content_desc">Пункт %1$s местоположение активировано</string>
+
+    <string name="main_scroll_view_content_description">Scrollable Main Page</string>
+
+    <!-- abb hibernation/restriction stuff -->
+    <string name="hibernation_dialog_title">Выключить гибернацию приложения</string>
+    <string name="hibernation_dialog_message">Android теперь автоматически удаляет разрешения для приложений, которые в последнее время не использовались. Keep Alive после настройки параметров не требует какого-либо дальнейшего вмешательства, и его разрешения могут быть отозваны.\n\nЧтобы гарантировать, что Keep Alive может работать, не отменяется, отключите функцию \'Приостановить активность приложения, если она не используется'\. опция для приложения Keep Alive.</string>
+    <string name="hibernation_dialog_message_api30">Android теперь автоматически удаляет разрешения для приложений, которые в последнее время не использовались. Keep Alive после настройки параметров не требует какого-либо дальнейшего взаимодействия, пока не будет активировано оповещение.\n\nЧтобы убедиться, что разрешения не отозваны, перейдите в раздел \'Разрешения'\ для Keep Alive и отключите параметр \'Удалить разрешения, если приложение'\ опция не используется.</string>
+    <string name="hibernation_dialog_message_api31">Android теперь автоматически удаляет разрешения для приложений, которые в последнее время не использовались. Keep Alive после настройки параметров не требует какого-либо дальнейшего вмешательства, если только не сработает оповещение.\n\nЧтобы гарантировать, что разрешения не будут отозваны, отключите параметр \'Удалить разрешения и освободить место'\ для Keep Alive. приложение.</string>
+    <string name="hibernation_dialog_message_api_backport">Android теперь автоматически удаляет разрешения для приложений, которые в последнее время не использовались. Keep Alive после настройки параметров не требует какого-либо дальнейшего взаимодействия, если только не сработает оповещение.\n\nЧтобы гарантировать, что разрешения не будут отозваны, отключите опцию \'Удалить разрешения, если приложение не используется'\.</string>
+
+    <!-- MainActivity textview and button messages -->
+    <string name="monitoring_active_message">Последняя активность обнаружена: %1$s\nСледующая проверка активности: %2$s часов and %3$s минут</string>
+    <string name="monitoring_active_title">Мониторинг активен</string>
+    <string name="monitoring_impaired_title">Мониторинг активен\nНо может работать некорректно</string>
+    <string name="monitoring_inactive_message">Мониторинг неактивен.\nНажмите на кнопку для перезапуска.</string>
+    <string name="monitoring_disabled_title">Мониторинг выключен</string>
+    <string name="monitoring_disabled_message">Включите в настройках</string>
+    <string name="monitoring_no_activity_detected_title">Мониторинг невозможен</string>
+    <string name="monitoring_permissions_required_title">Предоставьте разрешения</string>
+    <string name="monitoring_no_activity_detected_message">Мониторинг включен, но за последние %1$s часов активности не обнаружено. Убедитесь, что у вас включен экран блокировки и предоставлены разрешения на использование.</string>
+    <string name="monitoring_permissions_required_message">Мониторинг включен, но предоставлены не все разрешения. Нажмите кнопку \'Предоставить разрешения'\ ниже.</string>
+    <string name="alarm_message_too_long_message">Сообщение не может содержать более 160 символов.</string>
+    <string name="phone_number_invalid_message">Введите корректный телефонный номер</string>
+    <string name="time_period_too_short_message">Интервал должен быть не менее 10 минут.</string>
+    <string name="test_phone_call_message">Будет совершен вызов на:\n%1$s</string>
+    <string name="test_sms_message">SMS сообщение будет отправлено на:\n%1$s</string>
+    <string name="unable_to_send_sms_message">Невозможно отправить SMS\nУбедитесь, что у вас активна SIM-карта.</string>
+    <string name="no_configured_contacts_message">Экстренные контакты не настроены</string>
+    <string name="permissions_button_text">Дать разрешение</string>
+    <string name="restart_monitoring_button_text">Перезапустить мониторинг</string>
+    <string name="check_app_restrictions_button_text">Отключить ограничения приложений</string>
+
+    <string name="test_sms_alert_button_text">Проверка СМС</string>
+    <string name="test_phone_alert_button_text">Проверка вызова</string>
+
+    <string name="delete_phone_number_dialog_title">Удалить экстренный контакт</string>
+    <string name="delete_phone_number_dialog_description">Вы уверены, что хотите удалить этот элемент?</string>
+
+    <!-- notification strings -->
+    <string name="default_notification_channel_title">Оповещения</string>
+    <string name="sms_sent_notification_channel_title">Уведомления об отправке СМС</string>
+    <string name="call_sent_notification_channel_title">Уведомления о совершенных вызовах</string>
+    <string name="default_notification_channel_description">Вы здесь? Подтверждение</string>
+    <string name="sms_sent_notification_channel_description">Отправляется при срабатывании SMS-оповещения</string>
+    <string name="call_sent_notification_channel_description">Отправляется при срабатывании оповещения о телефонном звонке</string>
+    <string name="activity_notification_message">Замечательно, что ты все еще здесь! Отмена оповещений</string>
+    <string name="initial_check_notification_title">Вы всё еще здесь?</string>
+    <string name="initial_check_notification_text">Нажмите здесь если вы тут! В противном случае оповещение будет отправлено через %1$s минут.</string>
+    <string name="alert_notification_title">Keep Alive Alert сработало!</string>
+    <string name="call_alert_notification_text">Звонок отправлен вашему контактному лицу: %1$s</string>
+    <string name="sms_alert_notification_text">SMS было отправлено вашим экстренным контактам!</string>
+    <string name="sms_alert_failure_notification_title">Ошибка отправка экстренного SMS</string>
+    <string name="sms_alert_failure_notification_text">Произошла ошибка при попытке отправить SMS-оповещение.</string>
+    <string name="sms_alert_failure_notification_text_with_error">Произошла ошибка при попытке отправить SMS-оповещение: %1$s</string>
+    <string name="sms_service_failure_notification_title">Невозможно отправить SMS-оповещение</string>
+    <string name="sms_service_failure_notification_text">Произошла ошибка при попытке отправить SMS-сообщение с оповещением. Убедитесь, что у вас активна SIM-карта.</string>
+    <string name="sms_sent_toast_text">Keep Alive Alert SMS отправлено!</string>
+    <string name="sms_failure_toast_text">Не удалось отправить SMS-сообщение с оповещением Keep Alive?!</string>
+
+    <!-- alert location strings -->
+    <string name="location_invalid_message">Невозможно определить местоположение</string>
+    <string name="geocode_invalid_message">Не удалось определить местоположение. GPS координаты (%1$s, %2$s). Точность (m): %3$s.</string>
+    <string name="geocode_valid_message">GPS координаты: (%1$s, %2$s). Точность (m): %3$s. Приблизительный адрес: %4$s</string>
+
+    <!-- Preference Titles -->
+    <string name="main_header">Основные настройки</string>
+    <string name="contact_header">Экстренные контакты</string>
+
+    <!-- SMS settings layout text view strings, some are just placeholders -->
+    <string name="phone_number_title">Номер телефона</string>
+    <string name="alert_message_title">Текст оповещения</string>
+    <string name="include_location_title">Включить местоположение</string>
+    <string name="sample_alert_message">Пример текста оповещения</string>
+    <string name="include_location_information">Включить информацию о местоположении</string>
+    <string name="phone_number_hint">Введите номер телефона</string>
+    <string name="alert_message_hint">Введите текст оповещения</string>
+
+    <!-- rest period dialog strings -->
+    <string name="rest_period_dialog_title">Настройка периода тишины</string>
+    <string name="rest_period_dialog_message">Установите диапазон времени, в течение которого неактивность не будет засчитываться. Например, если для параметра \'Часы бездействия'\ установлено значение 6 часов, а для периода отдыха 22:00–6:00, если устройство в последний раз использовалось в 18:00, проверка \'Вы здесь?'\ не будет отправляться до 8:00.\n\nПРИМЕЧАНИЕ. Оповещение по-прежнему можно отправлять во время периода отдыха, если проверка \'Вы здесь?'\ была отправлена ДО начала периода отдыха.</string>
+    <string name="rest_period_dialog_time_zone_message"><![CDATA[
+   Установлен часовой пояс системы: <b>%1$s</b>
+]]></string>
+    <string name="rest_period_not_set_message">Не установлен</string>
+    <string name="rest_period_start_time">Время начала</string>
+    <string name="rest_period_end_time">Время окончания</string>
+    <string name="rest_period_invalid_range_message">Время начала и время оконания не должны совпадать</string>
+
+    <!-- Main Settings -->
+    <string name="enabled_title">Мониторинг включен</string>
+    <string name="disabled_title">Мониторинг выключен</string>
+    <string name="auto_restart_title">Перезапускать мониторинг после срабатывания оповещения</string>
+    <string name="time_period_title">Часов неактивности до проверки</string>
+    <string name="time_period_description">Количество часов бездействия до того, как вам будет предложено уведомление \'Вы здесь?'\.</string>
+    <string name="followup_time_period_title">Сколько минут ожидать подтверждения</string>
+    <string name="rest_period_title">Период отдыха</string>
+    <string name="followup_time_period_description">Количество минут ожидания после отправки уведомления \'Вы здесь?'\, прежде чем оповещение будет отправлено вашим контактам для экстренных случаев.</string>
+    <string name="contact_sms_phone_title">Номер телефона для SMS</string>
+    <string name="contact_phone_title">Номер телефона для звонка (необязательно)</string>
+    <string name="add_sms_contact_button_text">Добавить экстренный контакт по SMS</string>
+    <string name="contact_phone_description">При срабатывании оповещения на этот номер телефона будет совершен телефонный звонок с включенной громкой связью.\n\nОбратите внимание, что для этого требуются дополнительные разрешения, чтобы телефонные звонки можно было совершать в фоновом режиме.</string>
+    <string name="default_alert_message">Привет! Я давно не пользовался телефоном и, возможно, мне нужна помощь. Пожалуйста, пришлите помощь!</string>
+    <string name="default_alert_message_alt">Эй, возможно, я мертв, если я не свяжусь с тобой в ближайшие 24 часа, ты знаешь, что делать...</string>
+    <string name="add_emergency_contact_title">Добавить экстренный контакт</string>
+    <string name="edit_emergency_contact_title">Редактировать экстренный контакт</string>
+
+    <!-- SEND_SMS Permission -->
+    <string name="permission_send_sms_title">Необходимо разрешение: Отправка SMS</string>
+    <string name="permission_send_sms_description">SMS используется в качестве основного метода уведомления при срабатывании оповещения.</string>
+
+    <!-- CALL_PHONE Permission -->
+    <string name="permission_call_phone_title">Требуется разрешение: Вызовы</string>
+    <string name="permission_call_phone_description">Был предоставлен номер телефона для экстренного вызова, для которого требуется возможность позвонить по телефону.</string>
+
+    <!-- USAGE_ACCESS_SETTINGS Permission -->
+    <string name="permission_usage_access_title">Требуется разрешение: статистика использования</string>
+    <string name="permission_usage_access_description">Чтобы определить, когда ваше устройство использовалось в последний раз, требуется специальное разрешение под названием Статистика использования.\n\nВключите это разрешение для приложения Keep Alive.</string>
+
+    <!-- MANAGE_OVERLAY_PERMISSION Permission -->
+    <string name="permission_manage_overlay_title">Требуется разрешение: Поверх других приложений</string>
+    <string name="permission_manage_overlay_description">Был предоставлен номер телефона для экстренного вызова, для которого требуется возможность совершить телефонный звонок в фоновом режиме.\n\nВключите разрешение Управление наложением для приложения Keep Alive в настройках вашего устройства.</string>
+
+    <!-- ACCESS_FINE_LOCATION Permission -->
+    <string name="permission_access_fine_location_title">Требуется разрешение: доступ к точному местоположению</string>
+    <string name="permission_access_fine_location_description">\'Включить информацию о местоположении\' включен, что требует возможности получения точной информации о местонахождении, чтобы она была максимально точной, что может помочь вашему контакту в экстренных случаях найти вас.</string>
+
+    <!-- POST_NOTIFICATIONS Permission (For TIRAMISU and above) -->
+    <string name="permission_post_notifications_title">Требуется разрешение: Отправка уведомлений</string>
+    <string name="permission_post_notifications_description">Уведомления отправляются только при срабатывании тревоги.</string>
+
+    <!-- ACCESS_BACKGROUND_LOCATION Permission (For Q and above) -->
+    <string name="permission_access_background_location_title">Требуется разрешение: фоновый доступ к местоположению</string>
+     <string name="permission_access_background_location_description">\'Включить информацию о местоположении\' включен, что требует возможности получать информацию о местоположении во время работы в фоновом режиме. Местоположение определяется только при срабатывании оповещения, условия которого должны возникать только тогда, когда приложение находится в фоновом режиме, а устройство находится в режиме ожидания. Включите это разрешение для приложения Keep Alive в настройках вашего устройства, выбрав \'Разрешить постоянно'\.</string>
+
+    <!-- REQUEST_SCHEDULE_EXACT_ALARM Permission (For S and above) -->
+    <string name="permission_schedule_alarms_title">Требуется разрешение: Отложенные уведомления</string>
+    <string name="permission_schedule_alarms_description">Планирование оповещений необходимо, чтобы оповещение могло срабатывать, даже когда ваше устройство находится в спящем режиме или в режиме \'Не беспокоить'\.\n\nВключите это разрешение для приложения KeepAlive в настройках вашего устройства.</string>
+</resources>
