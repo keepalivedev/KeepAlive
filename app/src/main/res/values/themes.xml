@@ -48,4 +48,8 @@
     <style name="Theme.KeepAlive.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="Theme.KeepAlive.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
     -->
+
+    <style name="TimePickerStyle">
+        <item name="android:textSize">@dimen/time_picker_number_size</item>
+    </style>
 </resources>

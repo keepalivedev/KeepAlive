@@ -28,6 +28,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:text="@string/rest_period_start_time"
+            android:textSize="@dimen/header_text_size"
            />
 
         <TextView
@@ -37,6 +38,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:text="@string/rest_period_end_time"
+            android:textSize="@dimen/header_text_size"
             />
     </LinearLayout>
 
@@ -48,6 +50,7 @@
 
         <TimePicker
             android:id="@+id/startTimePicker"
+            android:theme="@style/TimePickerStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
@@ -56,6 +59,7 @@
             />
         <TimePicker
             android:id="@+id/endTimePicker"
+            android:theme="@style/TimePickerStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.1"

@@ -8,4 +8,6 @@
     <!-- height set to 48 for accessibility reasons -->
     <dimen name="default_view_height">48dp</dimen>
 
+    <!-- make the values in the time picker numbers larger -->
+    <dimen name="time_picker_number_size">24sp</dimen>
 </resources>
