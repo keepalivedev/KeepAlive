@@ -1,0 +1,3 @@
+Notify friends or loved ones if you haven't used your device in a given period of time using SMS and/or a phone call
+
+Designed to act as a failsafe for those living alone in case of an accident or other emergency

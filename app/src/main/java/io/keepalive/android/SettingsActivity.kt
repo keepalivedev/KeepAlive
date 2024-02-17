@@ -286,7 +286,7 @@ class SettingsActivity : AppCompatActivity() {
 
         // add a text watcher to the edit text so that we can enable/disable the submit button
         val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-        dialogEditText.addTextChangedListener(InputTextWatcher(positiveButton, this, preferenceKey))
+        dialogEditText.addTextChangedListener(InputTextWatcher(positiveButton, this, preferenceKey, dialogEditText))
     }
 
     private fun showEditRestPeriodDialog() {
@@ -466,14 +466,16 @@ class SettingsActivity : AppCompatActivity() {
             InputTextWatcher(
                 positiveButton,
                 this,
-                "alert_message"
+                "alert_message",
+                alertMessageInput
             )
         )
         phoneNumberInput.addTextChangedListener(
             InputTextWatcher(
                 positiveButton,
                 this,
-                "contact_sms_phone"
+                "contact_sms_phone",
+                phoneNumberInput
             )
         )
     }
@@ -490,11 +492,12 @@ class SettingsActivity : AppCompatActivity() {
     // text watcher so we can validate the input and enable/disable the submit button
     inner class InputTextWatcher(
         private val submitButton: Button, private val context: Context,
-        private val preferenceKey: String
+        private val preferenceKey: String, private val editText: EditText
     ) : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        }
 
         override fun afterTextChanged(s: Editable?) {
 
@@ -532,12 +535,27 @@ class SettingsActivity : AppCompatActivity() {
                 //  enabling the submit button
                 else if (preferenceKey == "contact_phone" || preferenceKey == "contact_sms_phone") {
 
+                    // remove everything except numbers and the plus sign
+                    //  no reason to allow #, *, comma, or anything else right?
+                    val thisPhoneNumber = s.toString().filter { char ->
+                        char.isDigit() || char == '+'
+                    }
+
+                    // update EditText only if necessary to avoid infinite loop
+                    if (thisPhoneNumber != s.toString()) {
+
+                        // update the text and set cursor to the end
+                        editText.setText(thisPhoneNumber)
+                        editText.setSelection(thisPhoneNumber.length)
+                    }
+
                     // this just checks a regex of "[\\+]?[0-9.-]+"...
-                    val isPhoneNumber = PhoneNumberUtils.isGlobalPhoneNumber(s.toString())
+                    val isPhoneNumber = PhoneNumberUtils.isGlobalPhoneNumber(thisPhoneNumber)
 
                     // SMS contact can't be blank but phone contact can be
                     if (preferenceKey == "contact_sms_phone") {
-                        val shouldEnable = isPhoneNumber && s.isNotEmpty() && s.length > 1
+
+                        val shouldEnable = isPhoneNumber && thisPhoneNumber.isNotEmpty() && thisPhoneNumber.length > 1
 
                         // if the phone number is valid and the alert message is valid then
                         //  enable the button
@@ -559,14 +577,14 @@ class SettingsActivity : AppCompatActivity() {
                         // the phone contact number is simpler but make sure that it is at
                         //  least 2 characters otherwise the formatting won't work
                         // also let it be blank as a way for users to clear the setting
-                        submitButton.isEnabled = (isPhoneNumber && s.length > 1) || s.isEmpty()
+                        submitButton.isEnabled = (isPhoneNumber && thisPhoneNumber.length > 1) || thisPhoneNumber.isEmpty()
                     }
 
                     // if the submit button isn't enabled then show a toast to let the user know
                     //  that their input is invalid
                     if (!submitButton.isEnabled) {
 
-                        Log.d("InputTextWatcher", "$s is not a valid phone number?!")
+                        Log.d("InputTextWatcher", "$thisPhoneNumber is not a valid phone number?!")
 
                         // notify user that the phone number is invalid
                         showToast(context.getString(R.string.phone_number_invalid_message))
