@@ -62,15 +62,32 @@ lane :screenshot do |options|
     capture_screenshots_for_device_type(device_type: device_type, locales: locales)
 end
 
+# translate the changelogs from english to the specified locale(s)
+lane :translate_changelogs do |options|
 
-lane :upload_screenshots do
+    # accept multiple locales as a CSV string
+    locales = options[:locales] ? options[:locales].split(',') : nil
+
+    # throw an error if no device type or locale was passed
+    if locales.nil? || options[:version_code].nil?
+        UI.user_error!("No locale(s) or version code passed. Usage: 'fastlane translate_changelogs locales:[locales] version_code:[version_code]'")
+    end
+
+    # translate the changelogs for each locale
+    for locale in locales do
+        sh("python3 ../translate_changelogs.py --locale #{locale} --version_code #{options[:version_code]}")
+    end
+end
+
+# upload screenshots and metadata to the play store
+lane :upload_screenshots do |options|
 
     # upload the screenshots to the play store
     upload_to_play_store(
 
         package_name: "io.keepalive.android",
 
-        # upload everything in the metadata folder except changelogs
+        # upload everything in the metadata folder
         skip_upload_metadata: false,
         skip_upload_images: false,
         skip_upload_screenshots: false,
@@ -86,6 +103,7 @@ lane :upload_screenshots do
         # only upload if the image has changed
         sync_image_upload: true,
 
-        # validate_only: true,
+        version_code: 114,
+        validate_only: options[:validate_only],
     )
 end
