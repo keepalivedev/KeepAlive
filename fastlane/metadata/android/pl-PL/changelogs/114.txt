@@ -1,0 +1,5 @@
+* Dodaj polskie tłumaczenie
+* Dodaj tłumaczenie rosyjskie
+* Spraw, aby przyciski ostrzegawcze testowe były zawsze widoczne
+* Zwiększ rozmiar tekstu okresu odpoczynku i dodaj opisy treści
+* Automatycznie usuń nieprawidłowe wejście podczas kopiowania/wklejania numerów telefonów
