@@ -1,0 +1,5 @@
+* Add Polish translation
+* Add Russian translation
+* Make the Test Alert buttons always visible
+* Increase Rest Period number text size and add content descriptions
+* Automatically remove invalid input when copy/pasting phone numbers

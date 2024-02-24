@@ -1,0 +1,5 @@
+* Fügen Sie polnische Übersetzung hinzu
+* Russische Übersetzung hinzufügen
+* Machen Sie die Testwarntasten immer sichtbar
+* Erhöhen Sie die Textgröße der Ruhezeitraum und fügen Sie Inhaltsbeschreibungen hinzu
+* Entfernen Sie automatisch ungültige Eingaben beim Kopieren/Einfügen von Telefonnummern

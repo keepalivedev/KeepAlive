@@ -103,7 +103,7 @@ lane :upload_screenshots do |options|
         # only upload if the image has changed
         sync_image_upload: true,
 
-        version_code: 114,
+        version_code: options[:version_code],
         validate_only: options[:validate_only],
     )
 end

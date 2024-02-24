@@ -1,0 +1,5 @@
+* Ajouter la traduction polonaise
+* Ajouter la traduction russe
+* Rendre les boutons d'alerte de test toujours visibles
+* Augmenter la taille du texte du numéro de période de repos et ajouter des descriptions de contenu
+* Supprimer automatiquement les entrées non valides lors de la copie / coller des numéros de téléphone
