@@ -1,6 +1,7 @@
 package io.keepalive.android
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -9,6 +10,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.os.Build
 import android.util.Log
 import androidx.core.content.ContextCompat
 
@@ -21,27 +23,30 @@ class AlertNotificationHelper(private val context: Context) {
     init {
 
         // create a channel for each notification type
+        // notification channels are only available in API 26+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-        // the 'Are you there?' notification
-        createNotificationChannel(
-            AppController.ARE_YOU_THERE_NOTIFICATION_CHANNEL_ID,
-            context.getString(R.string.default_notification_channel_title),
-            context.getString(R.string.default_notification_channel_description)
-        )
+            // the 'Are you there?' notification
+            createNotificationChannel(
+                AppController.ARE_YOU_THERE_NOTIFICATION_CHANNEL_ID,
+                context.getString(R.string.default_notification_channel_title),
+                context.getString(R.string.default_notification_channel_description)
+            )
 
-        // notification sent when an SMS Alert is sent
-        createNotificationChannel(
-            AppController.SMS_SENT_NOTIFICATION_CHANNEL_ID,
-            context.getString(R.string.sms_sent_notification_channel_title),
-            context.getString(R.string.sms_sent_notification_channel_description)
-        )
+            // notification sent when an SMS Alert is sent
+            createNotificationChannel(
+                AppController.SMS_SENT_NOTIFICATION_CHANNEL_ID,
+                context.getString(R.string.sms_sent_notification_channel_title),
+                context.getString(R.string.sms_sent_notification_channel_description)
+            )
 
-        // notification sent when a Phone Call Alert is sent
-        createNotificationChannel(
-            AppController.CALL_SENT_NOTIFICATION_CHANNEL_ID,
-            context.getString(R.string.call_sent_notification_channel_title),
-            context.getString(R.string.call_sent_notification_channel_description)
-        )
+            // notification sent when a Phone Call Alert is sent
+            createNotificationChannel(
+                AppController.CALL_SENT_NOTIFICATION_CHANNEL_ID,
+                context.getString(R.string.call_sent_notification_channel_title),
+                context.getString(R.string.call_sent_notification_channel_description)
+            )
+        }
     }
 
     companion object {
@@ -50,6 +55,7 @@ class AlertNotificationHelper(private val context: Context) {
         }
     }
 
+    @SuppressLint("NewApi")
     private fun createNotificationChannel(
         channelId: String,
         channelTitle: String,
@@ -148,11 +154,19 @@ class AlertNotificationHelper(private val context: Context) {
                 else -> AppController.ARE_YOU_THERE_NOTIFICATION_CHANNEL_ID
             }
 
-            // since we are API 28+ we shouldn't need to set any of the settings here? should all
-            //  be done when creating the notification channel?
-            // https://developer.android.com/develop/ui/views/notifications/build-notification
-            val builder = Notification.Builder(context, notificationChannelId)
-                .setSmallIcon(R.drawable.ic_notification)
+            // notification channels were added in API 26
+            val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Notification.Builder(context, notificationChannelId)
+            } else {
+                // settings are normally controlled via the channels so without them we have to
+                //  set whatever we need to here
+                Notification.Builder(context)
+                    .setPriority(Notification.PRIORITY_HIGH)
+                    .setVibrate(longArrayOf(100, 200, 300, 400, 500))
+                    .setLights(Color.RED, 300, 100)
+            }
+
+            builder.setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle(title)
                 .setContentText(content)
 
