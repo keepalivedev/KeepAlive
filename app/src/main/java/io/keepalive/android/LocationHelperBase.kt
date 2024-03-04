@@ -48,7 +48,9 @@ open class LocationHelperBase(
             // check whether the GPS, network and location services are enabled
             locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-            locationEnabled = locationManager.isLocationEnabled
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                locationEnabled = locationManager.isLocationEnabled
+            }
 
             availableProviders = locationManager.getProviders(true)
 
@@ -61,8 +63,11 @@ open class LocationHelperBase(
 
             // check whether the device is in idle or power save mode
             val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-            isDeviceIdleMode = powerManager.isDeviceIdleMode
             isPowerSaveMode = powerManager.isPowerSaveMode
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                isDeviceIdleMode = powerManager.isDeviceIdleMode
+            }
 
         } catch (e: Exception) {
             Log.e("LocationHelperBase", "Error checking GPS or network provider", e)
@@ -195,7 +200,7 @@ open class LocationHelperBase(
 
             try {
                 Log.d(
-                    "geocodeLocationAndExecute",
+                    "geocodeLocAndExecute",
                     "Geocoding location: ${loc.latitude}, ${loc.longitude}, ${loc.accuracy}"
                 )
 
@@ -217,7 +222,7 @@ open class LocationHelperBase(
                     val geocodeListener = Geocoder.GeocodeListener { addresses ->
 
                         Log.d(
-                            "geocodeLocationAndExecute",
+                            "geocodeLocAndExecute",
                             "listener done, geocode result: $addresses"
                         )
                         val addressString = processGeocodeResult(addresses)
@@ -237,7 +242,7 @@ open class LocationHelperBase(
                     val addresses: List<Address> =
                         geocoder.getFromLocation(loc.latitude, loc.longitude, 1)!!
 
-                    Log.d("geocodeLocationAndExecute", "geocode result: $addresses")
+                    Log.d("geocodeLocAndExecute", "geocode result: $addresses")
                     val addressString = processGeocodeResult(addresses)
                     locationString = buildGeocodedLocationStr(addressString, loc)
                 }

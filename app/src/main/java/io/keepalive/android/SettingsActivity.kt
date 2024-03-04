@@ -2,6 +2,7 @@ package io.keepalive.android
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.telephony.PhoneNumberUtils
 import android.text.Editable
@@ -77,12 +78,36 @@ class SettingsActivity : AppCompatActivity() {
         val monitoringEnabledSwitch: SwitchCompat = findViewById(R.id.monitoringEnabledSwitch)
         monitoringEnabledSwitch.setOnCheckedChangeListener { _, isChecked ->
 
-            // no dialog for the switch, just save the new value and process the change
-            with(sharedPrefs!!.edit()) {
-                putBoolean("enabled", isChecked)
-                apply()
+            // if the device doesn't support device lock/unlock monitoring and hasn't configured
+            //  any apps to monitor and the user is trying to enable monitoring then show a dialog
+            //  to let them know that they need to configure the apps first
+            if (Build.VERSION.SDK_INT < AppController.MIN_API_LEVEL_FOR_DEVICE_LOCK_UNLOCK &&
+                sharedPrefs!!.getString("APPS_TO_MONITOR", "[]") == "[]" && isChecked) {
+
+                // force it back to false
+                monitoringEnabledSwitch.isChecked = false
+
+                Log.d(
+                    "processSettingChange", "API level is too low, monitored apps" +
+                            " must be configured before monitoring can be enabled"
+                )
+
+                // show a dialog to explain
+                AlertDialog.Builder(this, R.style.AlertDialogTheme)
+                    .setTitle(getString(R.string.monitored_apps_not_configured_title))
+                    .setMessage(getString(R.string.monitored_apps_not_configured_message))
+                    .setPositiveButton(getString(R.string.ok), null)
+                    .show()
+
+            } else {
+
+                // no dialog for the switch, just save the new value and process the change
+                with(sharedPrefs!!.edit()) {
+                    putBoolean("enabled", isChecked)
+                    apply()
+                }
+                processSettingChange("enabled")
             }
-            processSettingChange("enabled")
         }
 
         // listener for the auto restart monitoring switch
@@ -118,6 +143,62 @@ class SettingsActivity : AppCompatActivity() {
         restPeriodRowLayout.setOnClickListener {
             showEditRestPeriodDialog()
         }
+        val monitoredAppsRowLayout: LinearLayout = findViewById(R.id.monitoredAppsRow)
+        monitoredAppsRowLayout.setOnClickListener {
+
+            // we can't check the monitored apps if we don't have usage stats permissions yet
+            //  so make sure we have those and, if not, show a dialog to let the user know
+            val haveUsageStatsPerms = PermissionManager(this, this).checkUsageStatsPermissions(false)
+
+            if(!haveUsageStatsPerms) {
+                Log.d("monitoredAppsRowLayout", "No usage stats permissions, letting user know")
+
+                AlertDialog.Builder(this, R.style.AlertDialogTheme)
+                    .setTitle(getString(R.string.monitored_apps_no_usage_stats_permissions_dialog_title))
+                    .setMessage(getString(R.string.monitored_apps_no_usage_stats_permissions_dialog_message))
+                    .setPositiveButton(getString(R.string.ok), null)
+                    .show()
+
+                // stop processing
+                return@setOnClickListener
+            }
+
+            // if no apps are configured yet then show a warning dialog to explain that
+            //  this feature is still in beta testing
+            if (sharedPrefs!!.getString("APPS_TO_MONITOR", "[]") == "[]") {
+
+                var dialogMsg = getString(R.string.monitored_apps_warning_dialog_message)
+
+                val dialog = AlertDialog.Builder(this, R.style.AlertDialogTheme)
+                    .setTitle(getString(R.string.monitored_apps_warning_dialog_title))
+                    .setPositiveButton(getString(R.string.ok)) { _, _ ->
+
+                        // pass in the updateTextViews functions so we can call it after the dialog window is closed
+                        AppsSelectionDialogFragment(::updateTextViewsFromPreferences).show(
+                            supportFragmentManager,
+                            "appsSelectionDialog"
+                        )
+                    }
+
+                // if we are able to use device lock/unlock events then explain to the user that that
+                //  is the preferred method of monitoring and add a button to go back instead
+                //  of proceeding to the app selection dialog
+                if (Build.VERSION.SDK_INT >= AppController.MIN_API_LEVEL_FOR_DEVICE_LOCK_UNLOCK) {
+                    dialogMsg += getString(R.string.monitored_apps_warning_dialog_message_alt)
+                    dialog.setNeutralButton(getString(R.string.back), null)
+                }
+
+                dialog.setMessage(dialogMsg)
+                dialog.show()
+
+            } else {
+                // if the user has already configured apps then just show the app selection dialog
+                AppsSelectionDialogFragment(::updateTextViewsFromPreferences).show(
+                    supportFragmentManager,
+                    "appsSelectionDialog"
+                )
+            }
+        }
     }
 
     private fun updateTextViewsFromPreferences() {
@@ -132,6 +213,34 @@ class SettingsActivity : AppCompatActivity() {
 
         val timePeriodValueTextView: TextView = findViewById(R.id.edit_time_period_hours)
         timePeriodValueTextView.text = sharedPrefs!!.getString("time_period_hours", "12")
+
+        val monitoredAppsValueTextView: TextView = findViewById(R.id.edit_monitored_apps)
+        val appsToMonitor: MutableList<MonitoredAppInfo> = loadJSONSharedPreference(
+            sharedPrefs!!,"APPS_TO_MONITOR")
+
+        var monitoredAppsValueText: String
+
+        // if there are apps to monitor configured then display them, otherwise display the default message
+        if (appsToMonitor.isNotEmpty()) {
+
+            // only show the first 3 as there may not be a lot of space
+            monitoredAppsValueText = appsToMonitor.take(3).joinToString(", ") { it.appName }
+
+            // add an ellipse to indicate there is more that isn't displayed
+            if (appsToMonitor.size > 3) {
+                monitoredAppsValueText += "..."
+            }
+        } else {
+            // if this is API 29 or higher then this is the default behavior
+            monitoredAppsValueText = if (Build.VERSION.SDK_INT >= AppController.MIN_API_LEVEL_FOR_DEVICE_LOCK_UNLOCK) {
+                "Device Lock/Unlock"
+            } else {
+                // if nothing is configured and this is < API 29 then the user has to configure
+                //  them before the app will work
+                "Not Configured"
+            }
+        }
+        monitoredAppsValueTextView.text = monitoredAppsValueText
 
         val followupPeriodValueTextView: TextView =
             findViewById(R.id.edit_followup_time_period_minutes)
@@ -296,15 +405,22 @@ class SettingsActivity : AppCompatActivity() {
         val dialogEndTimePicker: TimePicker = dialogView.findViewById(R.id.endTimePicker)
         val restPeriodTimeZoneMessageTextView: TextView = dialogView.findViewById(R.id.restPeriodTimeZoneMessageTextView)
 
-        restPeriodTimeZoneMessageTextView.text = Html.fromHtml(
-            String.format(
-                getString(R.string.rest_period_dialog_time_zone_message),
+        val restPeriodTextStr = String.format(
+            getString(R.string.rest_period_dialog_time_zone_message),
 
-                // this should show up like 'CST' or 'PST'
-                SimpleDateFormat("z", Locale.getDefault()).format(Calendar.getInstance().time)
-            ),
-            Html.FROM_HTML_MODE_LEGACY
+            // this should show up like 'CST' or 'PST'
+            SimpleDateFormat("z", Locale.getDefault()).format(Calendar.getInstance().time)
         )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            restPeriodTimeZoneMessageTextView.text = Html.fromHtml(
+                restPeriodTextStr,
+                Html.FROM_HTML_MODE_LEGACY
+            )
+        } else {
+            @Suppress("DEPRECATION")
+            restPeriodTimeZoneMessageTextView.text = Html.fromHtml(restPeriodTextStr)
+        }
 
         // set the time pickers to 24 hour mode
         dialogStartTimePicker.setIs24HourView(true)
@@ -315,11 +431,22 @@ class SettingsActivity : AppCompatActivity() {
 
         // if there is a rest period then set the time pickers to the current values
         if (currentRestPeriods.isNotEmpty()) {
-            Log.d("showEditRestPeriodDialog", "currentRestPeriods: $currentRestPeriods")
-            dialogStartTimePicker.hour = currentRestPeriods[0].startHour
-            dialogStartTimePicker.minute = currentRestPeriods[0].startMinute
-            dialogEndTimePicker.hour = currentRestPeriods[0].endHour
-            dialogEndTimePicker.minute = currentRestPeriods[0].endMinute
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Log.d("showEditRestPeriodDlg", "currentRestPeriods: $currentRestPeriods")
+                dialogStartTimePicker.hour = currentRestPeriods[0].startHour
+                dialogStartTimePicker.minute = currentRestPeriods[0].startMinute
+                dialogEndTimePicker.hour = currentRestPeriods[0].endHour
+                dialogEndTimePicker.minute = currentRestPeriods[0].endMinute
+            } else {
+                @Suppress("DEPRECATION")
+                dialogStartTimePicker.currentHour = currentRestPeriods[0].startHour
+                @Suppress("DEPRECATION")
+                dialogStartTimePicker.currentMinute = currentRestPeriods[0].startMinute
+                @Suppress("DEPRECATION")
+                dialogEndTimePicker.currentHour = currentRestPeriods[0].endHour
+                @Suppress("DEPRECATION")
+                dialogEndTimePicker.currentMinute = currentRestPeriods[0].endMinute
+            }
         }
 
         AlertDialog.Builder(this, R.style.AlertDialogTheme)
@@ -327,11 +454,32 @@ class SettingsActivity : AppCompatActivity() {
             .setView(dialogView)
             .setPositiveButton(getString(R.string.save)) { _, _ ->
 
+                // Declare variables to hold the start and end times
+                val startHour: Int
+                val startMinute: Int
+                val endHour: Int
+                val endMinute: Int
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    startHour = dialogStartTimePicker.hour
+                    startMinute = dialogStartTimePicker.minute
+                    endHour = dialogEndTimePicker.hour
+                    endMinute = dialogEndTimePicker.minute
+                } else {
+                    @Suppress("DEPRECATION")
+                    startHour = dialogStartTimePicker.currentHour
+                    @Suppress("DEPRECATION")
+                    startMinute = dialogStartTimePicker.currentMinute
+                    @Suppress("DEPRECATION")
+                    endHour = dialogEndTimePicker.currentHour
+                    @Suppress("DEPRECATION")
+                    endMinute = dialogEndTimePicker.currentMinute
+                }
+
+
                 // if the start and end times are the same then this is not a valid time range so
                 //  show a toast and don't save the rest period
-                if (dialogStartTimePicker.hour == dialogEndTimePicker.hour &&
-                    dialogStartTimePicker.minute == dialogEndTimePicker.minute) {
-
+                if (startHour == endHour && startMinute == endMinute) {
                     showToast(getString(R.string.rest_period_invalid_range_message))
                     return@setPositiveButton
                 }
@@ -342,10 +490,10 @@ class SettingsActivity : AppCompatActivity() {
                     val restPeriods = mutableListOf<RestPeriod>()
                     restPeriods.add(
                         RestPeriod(
-                            dialogStartTimePicker.hour,
-                            dialogStartTimePicker.minute,
-                            dialogEndTimePicker.hour,
-                            dialogEndTimePicker.minute
+                            startHour,
+                            startMinute,
+                            endHour,
+                            endMinute
                         )
                     )
 
@@ -397,10 +545,6 @@ class SettingsActivity : AppCompatActivity() {
 
         // if there aren't any contacts yet, give the user a default alert message
         if (phoneNumberAdapter.itemCount == 0) {
-            Log.d(
-                "showAddOrEditSMSContactDialog",
-                "This is the first SMS contact, setting default alert message"
-            )
             alertMessageInput.setText(getString(R.string.default_alert_message))
         }
 

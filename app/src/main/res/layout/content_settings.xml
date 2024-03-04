@@ -29,6 +29,33 @@
         android:text="@string/enabled_title"
         android:textSize="@dimen/default_text_size" />
 
+    <!-- New LinearLayout for 'Apps To Monitor' setting -->
+    <LinearLayout
+        android:id="@+id/monitoredAppsRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/default_view_height"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="@string/monitored_apps_title"
+            android:textSize="@dimen/default_text_size" />
+
+        <TextView
+            android:id="@+id/edit_monitored_apps"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:text="" />
+
+    </LinearLayout>
 
     <!-- Layout for 'time_period_hours' -->
     <LinearLayout
