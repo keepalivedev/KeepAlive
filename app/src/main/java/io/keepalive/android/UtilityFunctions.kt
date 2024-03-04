@@ -38,7 +38,7 @@ data class RestPeriod(
 )
 
 // data class used to track data about a monitored app
-data class MonitoredAppInfo(
+data class MonitoredAppDetails(
     val packageName: String,
     val appName: String,
     val lastUsed: Long,
@@ -228,6 +228,9 @@ fun setAlarm(
 
             DebugLogger.d("setAlarm", "Setting new periodic alarm for exactly $alarmDtStr")
 
+            // on API 22 we have to use setAlarmClock because there isn't a setAndAllowWhileIdle()
+            //  and .set() wouldn't be guaranteed to fire?
+            // note that this will cause an alarm clock icon to show up on the status bar
             alarmManager.setAlarmClock(
                 AlarmManager.AlarmClockInfo(
                     alarmTimestamp,

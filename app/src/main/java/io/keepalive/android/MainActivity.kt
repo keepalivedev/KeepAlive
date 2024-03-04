@@ -313,7 +313,7 @@ class MainActivity : AppCompatActivity() {
                 checkPeriodHours =
                     maxOf(checkPeriodHours, AppController.LAST_ACTIVITY_MAX_PERIOD_CHECK_HOURS)
 
-                val appsToMonitor: MutableList<MonitoredAppInfo> = loadJSONSharedPreference(
+                val appsToMonitor: MutableList<MonitoredAppDetails> = loadJSONSharedPreference(
                     sharedPrefs,"APPS_TO_MONITOR")
 
                 // as a sanity check, look back either 48 hours or, if the user has set a

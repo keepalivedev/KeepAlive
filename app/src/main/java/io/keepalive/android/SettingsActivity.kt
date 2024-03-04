@@ -215,7 +215,7 @@ class SettingsActivity : AppCompatActivity() {
         timePeriodValueTextView.text = sharedPrefs!!.getString("time_period_hours", "12")
 
         val monitoredAppsValueTextView: TextView = findViewById(R.id.edit_monitored_apps)
-        val appsToMonitor: MutableList<MonitoredAppInfo> = loadJSONSharedPreference(
+        val appsToMonitor: MutableList<MonitoredAppDetails> = loadJSONSharedPreference(
             sharedPrefs!!,"APPS_TO_MONITOR")
 
         var monitoredAppsValueText: String

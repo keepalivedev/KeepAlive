@@ -449,7 +449,7 @@ fun doAlertCheck(context: Context, alarmStage: String) {
     val checkPeriodHours = prefs.getString("time_period_hours", "12")!!.toFloat()
     val followupPeriodMinutes = prefs.getString("followup_time_period_minutes", "60")!!.toLong()
     val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(prefs,"REST_PERIODS")
-    val appsToMonitor: MutableList<MonitoredAppInfo> = loadJSONSharedPreference(prefs,"APPS_TO_MONITOR")
+    val appsToMonitor: MutableList<MonitoredAppDetails> = loadJSONSharedPreference(prefs,"APPS_TO_MONITOR")
 
     // time in the system default timezone, which is what the rest period will be in
     val nowCalendar = Calendar.getInstance()
