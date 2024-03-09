@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat
 import io.keepalive.android.receivers.SMSSentReceiver
 import java.util.Calendar
 import java.util.Locale
+import java.util.TimeZone
 
 @SuppressLint("MissingPermission")
 fun getDefaultSmsSubscriptionId(context: Context): Int {
@@ -363,7 +364,7 @@ fun getLastPhoneActivity(context: Context, startTimestamp: Long, monitoredApps: 
     try {
 
         DebugLogger.d("getLastPhoneActivity", "checking for activity starting at" +
-                " ${getDateTimeStrFromTimestamp(startTimestamp)}")
+                " ${getDateTimeStrFromTimestamp(startTimestamp, TimeZone.getDefault().id)} local time")
 
         val usageStatsManager =
             context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager

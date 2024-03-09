@@ -13,12 +13,19 @@ import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.keepalive.android.receivers.AlarmReceiver
+import java.io.BufferedReader
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStreamReader
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Collections
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
+import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.Executors
+import kotlin.math.log
 
 
 // data class used to represent an SMS emergency contact setting
@@ -436,18 +443,83 @@ fun isWithinRestPeriod(
     }
 }
 
-// this will just be kept in memory and if we close the app the logs are lost
+// store logs in memory as well as on the device
 object DebugLogger {
     private val logBuffer = Collections.synchronizedList(mutableListOf<String>())
-    private const val MAX_BUFFER_SIZE = 100
 
-    fun d(tag: String, message: String, ex: Exception? = null) {
-        Log.d(tag, message, ex)
-        val logMessage = "${getDateTimeStrFromTimestamp(System.currentTimeMillis())}: $message"
-        addLog(logMessage)
+    // 1024 should be plenty right?
+    private const val MAX_BUFFER_SIZE = 1024
+    private const val MAX_LINES = 1024
+
+    private lateinit var appContext: Context
+
+    // gets stored in /data/data/io.keepalive.android/files
+    private const val LOG_FILE_NAME = "app_debug_logs.txt"
+
+    fun initialize(context: Context) {
+        if (!::appContext.isInitialized) {
+            appContext = context.applicationContext
+        }
     }
 
-    private fun addLog(log: String) {
+    @Synchronized
+    fun d(tag: String, message: String, ex: Exception? = null) {
+
+        Log.d(tag, message, ex)
+
+        // build the log message; the timestamp will be stored as UTC
+        val dtStr = getDateTimeStrFromTimestamp(System.currentTimeMillis())
+        val logMessage = "$dtStr: $message" + (ex?.let { "\nException: ${it.localizedMessage}" } ?: "")
+
+        // keep tracking logs in memory in case there is some issue writing logs to file?
+        addLogToMemory(logMessage)
+
+        if (!::appContext.isInitialized) {
+
+            // don't throw an exception so that the logger doesn't crash the app
+            // throw IllegalStateException("DebugLogger is not initialized. Call initialize(context) before logging.")
+            return
+        }
+
+        // limit the # of lines in the log file
+        trimLog()
+
+        try {
+            // this will create the file if it doesn't exist
+            appContext.openFileOutput(LOG_FILE_NAME, Context.MODE_APPEND).use { fos ->
+                fos.write((logMessage + "\n").toByteArray())
+            }
+        } catch (e: IOException) {
+            Log.e("DebugLogger", "Error writing log entry to file", e)
+        }
+    }
+
+    private fun trimLog() {
+        try {
+            val file = appContext.getFileStreamPath(LOG_FILE_NAME)
+            if (!file.exists()) return
+
+            // get the line count
+            val lines = file.readLines()
+            if (lines.size > MAX_LINES) {
+
+                // lines are appended so the most recent are at the bottom, so take
+                //  the last MAX_LINES lines
+                val trimmedLines = lines.takeLast(MAX_LINES)
+
+                // rewrite the log file...
+                appContext.openFileOutput(LOG_FILE_NAME, Context.MODE_PRIVATE).use { fos ->
+                    trimmedLines.forEach { line ->
+                        fos.write((line + "\n").toByteArray())
+                    }
+                }
+            }
+        } catch (e: IOException) {
+            Log.e("DebugLogger", "Error trimming log file", e)
+        }
+    }
+
+    private fun addLogToMemory(log: String) {
         synchronized(logBuffer) {
             logBuffer.add(0, log) // Add new log at the beginning
             if (logBuffer.size > MAX_BUFFER_SIZE) {
@@ -457,7 +529,56 @@ object DebugLogger {
     }
 
     fun getLogs(): List<String> {
-        return logBuffer.toList() // Return a copy of the logs
+
+        // if there is an error return the logs in memory instead
+        if (!::appContext.isInitialized) {
+            return logBuffer.toList()
+        }
+
+        val logs = mutableListOf<String>()
+        try {
+
+            // check if the file exists, if not then return the logs in memory
+            if (!appContext.getFileStreamPath(LOG_FILE_NAME).exists()) {
+                return logBuffer.toList()
+            }
+
+            appContext.openFileInput(LOG_FILE_NAME).use { fis ->
+                BufferedReader(InputStreamReader(fis)).use { br ->
+                    var line = br.readLine()
+                    while (line != null) {
+                        logs.add(line)
+                        line = br.readLine()
+                    }
+                }
+            }
+        } catch (e: IOException) {
+            Log.e("DebugLogger", "Error reading log file", e)
+        }
+
+        Log.d("DebugLogger", "Returning ${logs.size} logs")
+
+        // return the logs in reverse order so that the newest logs are at the top
+        // if there are issues with the logs saved to file then return the memory logs instead
+        return if (logs.size > 0) logs.toList().reversed() else logBuffer.toList()
+    }
+
+    fun deleteLogs() {
+        if (!::appContext.isInitialized) {
+            return
+        }
+        try {
+            // clear the logs in memory
+            logBuffer.clear()
+
+            // delete the logfile
+            val fileDeleted = appContext.deleteFile(LOG_FILE_NAME)
+            if (!fileDeleted) {
+                Log.e("DebugLogger", "Log file could not be deleted.")
+            }
+        } catch (e: Exception) {
+            Log.e("DebugLogger", "Error deleting log file", e)
+        }
     }
 }
 
