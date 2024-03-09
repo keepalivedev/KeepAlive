@@ -8,19 +8,17 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.os.SystemClock
 import android.util.Log
+import androidx.annotation.ColorRes
 import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.keepalive.android.receivers.AlarmReceiver
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.ZoneId
-import java.time.ZoneOffset
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Collections
 import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 
 // data class used to represent an SMS emergency contact setting
@@ -39,6 +37,14 @@ data class RestPeriod(
     var endMinute: Int
 )
 
+// data class used to track data about a monitored app
+data class MonitoredAppDetails(
+    val packageName: String,
+    val appName: String,
+    val lastUsed: Long,
+    val className: String
+)
+
 // load a JSON string from shared preferences and convert it to a list of objects
 // used with the SMSEmergencyContactSetting and RestPeriods
 inline fun <reified T> loadJSONSharedPreference(
@@ -46,7 +52,7 @@ inline fun <reified T> loadJSONSharedPreference(
     preferenceKey: String
 ): MutableList<T> {
     val jsonString = sharedPrefs.getString(preferenceKey, null) ?: return mutableListOf()
-    Log.d("loadJSONSharedPreference", "Loading $preferenceKey: $jsonString")
+    Log.d("loadJSONSharedPref", "Loading $preferenceKey: $jsonString")
 
     val gson = Gson()
     return gson.fromJson(
@@ -117,15 +123,16 @@ fun getEncryptedSharedPreferences(context: Context): SharedPreferences {
     } catch (e: Exception) {
 
         // fall back to the default shared preferences...
-        Log.e("getEncryptedSharedPreferences", "Failed getting encrypted shared preferences?!", e)
+        DebugLogger.d("getSharedPrefs", "Failed getting shared preferences?!", e)
         PreferenceManager.getDefaultSharedPreferences(context)
     }
 }
 
-fun getDateTimeStrFromTimestamp(timestamp: Long, timeZone: ZoneId = ZoneOffset.UTC): String {
-    return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        .withZone(timeZone)
-        .format(Date(timestamp).toInstant())
+
+fun getDateTimeStrFromTimestamp(timestamp: Long, timeZoneId: String = "UTC"): String {
+    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    formatter.timeZone = TimeZone.getTimeZone(timeZoneId)
+    return formatter.format(Date(timestamp))
 }
 
 
@@ -168,6 +175,11 @@ fun setAlarm(
     // more info https://developer.android.com/training/scheduling/alarms
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
 
+    if (alarmManager == null) {
+        DebugLogger.d("setAlarm", "Failed to get AlarmManager?!")
+        return
+    }
+
     // when an alarm goes off it will call the AlarmReceiver
     val intent = Intent(context, AlarmReceiver::class.java).also {
 
@@ -189,8 +201,6 @@ fun setAlarm(
     // these alarms are not super time sensitive so as long as they happen eventually it's fine?
     if (alarmStage == "periodic") {
 
-        DebugLogger.d("setAlarm", "Setting new periodic alarm for approximately $alarmDtStr")
-
         // we are not using setExactAndAllowWhileIdle() because it could lead to more
         //  battery usage but can ultimately still get delayed or ignored by the OS?
         // the alternative is to use setAlarmClock() for every alarm but that would definitely
@@ -203,13 +213,32 @@ fun setAlarm(
         // furthermore, emulators can exhibit weird behavior when using ELAPSED_REALTIME_WAKEUP
         //  alarms because their internal time is off, potentially causing an alarm to go off
         //  and be re-set continuously because the emulator's time is in the future...
-        alarmManager?.setAndAllowWhileIdle(
-            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-            // this uses system time instead of RTC time
-            SystemClock.elapsedRealtime() + alarmInMs,
-            pendingIntent
-        )
+            DebugLogger.d("setAlarm", "Setting new periodic alarm for approximately $alarmDtStr")
+
+            alarmManager.setAndAllowWhileIdle(
+                AlarmManager.ELAPSED_REALTIME_WAKEUP,
+
+                // this uses system time instead of RTC time
+                SystemClock.elapsedRealtime() + alarmInMs,
+                pendingIntent
+            )
+        } else {
+
+            DebugLogger.d("setAlarm", "Setting new periodic alarm for exactly $alarmDtStr")
+
+            // on API 22 we have to use setAlarmClock because there isn't a setAndAllowWhileIdle()
+            //  and .set() wouldn't be guaranteed to fire?
+            // note that this will cause an alarm clock icon to show up on the status bar
+            alarmManager.setAlarmClock(
+                AlarmManager.AlarmClockInfo(
+                    alarmTimestamp,
+                    pendingIntent
+                ), pendingIntent
+            )
+        }
+
     } else {
 
         // assume we can use exact alarms by default
@@ -218,7 +247,7 @@ fun setAlarm(
         // API 31+ added new permissions for setting exact alarms so we need to
         //  make sure we have them
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            useExact = alarmManager != null && alarmManager.canScheduleExactAlarms()
+            useExact = alarmManager.canScheduleExactAlarms()
         }
 
         if (useExact) {
@@ -226,7 +255,7 @@ fun setAlarm(
 
             // according to the docs, this is the only thing that won't get delayed by the OS?
             // random note, this shows up on the lock screen as a pending alarm
-            alarmManager?.setAlarmClock(
+            alarmManager.setAlarmClock(
                 AlarmManager.AlarmClockInfo(
                     alarmTimestamp,
                     pendingIntent
@@ -240,11 +269,24 @@ fun setAlarm(
                 "setAlarm", "Unable to set exact alarm?!  " +
                         "Setting normal final alarm to go off at $alarmDtStr"
             )
-            alarmManager?.setAndAllowWhileIdle(
-                AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                SystemClock.elapsedRealtime() + alarmInMs,
-                pendingIntent
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setAndAllowWhileIdle(
+                    AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                    SystemClock.elapsedRealtime() + alarmInMs,
+                    pendingIntent
+                )
+            } else {
+                DebugLogger.d(
+                    "setAlarm", "This is API 22 but we weren't able to set an exact alarm?!"
+                )
+                // this should really never happen right? but if it does this is what we would
+                //  have to use...
+                alarmManager.set(
+                    AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                    SystemClock.elapsedRealtime() + alarmInMs,
+                    pendingIntent
+                )
+            }
         }
     }
 
@@ -281,47 +323,48 @@ fun cancelAlarm(context: Context) {
 fun adjustTimestampIfInRestPeriod(
     utcTimestampMillis: Long,
     restPeriod: RestPeriod,
-    localZoneId: ZoneId = ZoneId.systemDefault() // Default to system's time zone
+    timeZoneId: String = TimeZone.getDefault().id
 ): Long {
-
-    // Convert the UTC timestamp to LocalDateTime in the local time zone
-    val localDateTime = Instant.ofEpochMilli(utcTimestampMillis)
-        .atZone(ZoneOffset.UTC)
-        .withZoneSameInstant(localZoneId)
-        .toLocalDateTime()
-
-    // Create LocalTime objects for the start and end times
-    val startTime = LocalTime.of(restPeriod.startHour, restPeriod.startMinute, 0, 0)
-    val endTime = LocalTime.of(restPeriod.endHour, restPeriod.endMinute, 0, 0)
-
-    // Extract the time from the local timestamp
-    val localTime = localDateTime.toLocalTime()
-
-    // this
-    val isInRange = isWithinRestPeriod(localTime, restPeriod)
-
-    return if (isInRange) {
-        // Adjust the timestamp to have the rest period's end time, and adjust the date if necessary
-        val adjustedDateTime = if (endTime.isBefore(startTime) && localTime.isAfter(startTime)) {
-            localDateTime.plusDays(1).withHour(restPeriod.endHour).withMinute(restPeriod.endMinute)
-                .withSecond(0).withNano(0)
-        } else {
-            localDateTime.withHour(restPeriod.endHour).withMinute(restPeriod.endMinute)
-                .withSecond(0).withNano(0)
-        }
-        adjustedDateTime.atZone(localZoneId).toInstant().toEpochMilli()
-    } else {
-        // Return the original timestamp if not in range
-        utcTimestampMillis
+    val localZone = TimeZone.getTimeZone(timeZoneId)
+    val calendar = Calendar.getInstance(localZone).apply {
+        timeInMillis = utcTimestampMillis
     }
+
+    val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
+    val minute = calendar.get(Calendar.MINUTE)
+
+    if (isWithinRestPeriod(hourOfDay, minute, restPeriod)) {
+        val startTimeMinutes = restPeriod.startHour * 60 + restPeriod.startMinute
+        val endTimeMinutes = restPeriod.endHour * 60 + restPeriod.endMinute
+        val currentTimeMinutes = hourOfDay * 60 + minute
+
+        // Calculate the adjustment in minutes
+        val adjustmentMinutes = if (endTimeMinutes > startTimeMinutes) {
+            endTimeMinutes - currentTimeMinutes
+        } else {
+            if (currentTimeMinutes >= startTimeMinutes) {
+                24 * 60 - currentTimeMinutes + endTimeMinutes // Crosses midnight to the next day
+            } else {
+                endTimeMinutes - currentTimeMinutes // Before midnight, same day
+            }
+        }
+
+        // Adjust the calendar object
+        calendar.add(Calendar.MINUTE, adjustmentMinutes)
+        return calendar.timeInMillis
+    }
+
+    return utcTimestampMillis
 }
+
 
 // we need to look for activity over a certain time range while making sure to exclude rest periods
 fun calculatePastDateTimeExcludingRestPeriod(
-    targetDateTime: LocalDateTime, checkPeriodHours: Float, restPeriod: RestPeriod
-): ZonedDateTime {
+    targetDtCalendar: Calendar, checkPeriodHours: Float, restPeriod: RestPeriod
+): Calendar {
 
-    var thisTargetDateTime = targetDateTime
+    // make a copy of the target date time so we don't modify the original
+    val thisTargetDtCalendar = targetDtCalendar.clone() as Calendar
 
     // at a minimum, the amount of time that needs to be subtracted based on the check period
     var minutesToSubtract = (checkPeriodHours * 60).toLong()
@@ -335,22 +378,22 @@ fun calculatePastDateTimeExcludingRestPeriod(
     // the user shouldn't be allowed to save a rest period with the same start and end times but
     //  leave this check here just in case...
     if (restPeriod.startHour == restPeriod.endHour && restPeriod.startMinute == restPeriod.endMinute) {
-
-        Log.d("calculatePastDateTimeExcludingRestPeriod", "Invalid rest period? $restPeriod")
-
-        // assume there is no rest period and just subtract the check period
-        thisTargetDateTime = thisTargetDateTime.minusMinutes(minutesToSubtract)
-
+        Log.d("calcPastDtExcRestPeriod", "Invalid rest period? $restPeriod")
+        thisTargetDtCalendar.add(Calendar.MINUTE, -minutesToSubtract.toInt())
     } else {
-
         while (minutesToSubtract > 0) {
 
             // every minute, check whether the current time is within the rest period and, if not,
             //  subtract another minute until we get to 0 minutes, i.e. the end of the check period
 
-            thisTargetDateTime = thisTargetDateTime.minusMinutes(1)
+            thisTargetDtCalendar.add(Calendar.MINUTE, -1)
 
-            if (!isWithinRestPeriod(thisTargetDateTime.toLocalTime(), restPeriod)) {
+            // if the current time isn't within the rest period, subtract another minute
+            if (!isWithinRestPeriod(
+                    thisTargetDtCalendar.get(Calendar.HOUR_OF_DAY),
+                    thisTargetDtCalendar.get(Calendar.MINUTE),
+                    restPeriod
+            )) {
                 minutesToSubtract--
             } else {
                 skippedMinutes++
@@ -359,34 +402,37 @@ fun calculatePastDateTimeExcludingRestPeriod(
     }
 
     // Convert the local datetime to UTC
-    val targetDateTimeUTC =
-        thisTargetDateTime.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC"))
+    val utcCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+    utcCalendar.timeInMillis = thisTargetDtCalendar.timeInMillis
 
     Log.d(
-        "calculatePastDateTimeExcludingRestPeriod", "Returning local DT $thisTargetDateTime, " +
-                "$targetDateTimeUTC UTC, skipped $skippedMinutes minutes, " +
-                "check period hours was $checkPeriodHours"
+        "calcPastDtExcRestPeriod",
+        "Returning local DT $thisTargetDtCalendar, $utcCalendar UTC, " +
+                "skipped $skippedMinutes minutes, check period hours was $checkPeriodHours"
     )
 
-    return targetDateTimeUTC
+    return utcCalendar
 }
 
 // function that returns whether the given time is within the given rest period
-// note that
-fun isWithinRestPeriod(time: LocalTime, restPeriod: RestPeriod): Boolean {
+fun isWithinRestPeriod(
+    hourOfDay: Int,
+    minute: Int,
+    restPeriod: RestPeriod
+): Boolean {
+    val startHour = restPeriod.startHour
+    val startMinute = restPeriod.startMinute
+    val endHour = restPeriod.endHour
+    val endMinute = restPeriod.endMinute
 
-    val startTime = LocalTime.of(restPeriod.startHour, restPeriod.startMinute)
-    val endTime = LocalTime.of(restPeriod.endHour, restPeriod.endMinute)
+    val startTimeMinutes = startHour * 60 + startMinute
+    val endTimeMinutes = endHour * 60 + endMinute
+    val currentTimeMinutes = hourOfDay * 60 + minute
 
-    // if this rest period crosses midnight
-    return if (startTime.isBefore(endTime)) {
-
-        // if its not before the start time and is before the end time
-        !time.isBefore(startTime) && time.isBefore(endTime)
+    return if (startTimeMinutes < endTimeMinutes) {
+        currentTimeMinutes in startTimeMinutes until endTimeMinutes
     } else {
-
-        // if its not before the start time or is before the end time
-        !time.isBefore(startTime) || time.isBefore(endTime)
+        currentTimeMinutes >= startTimeMinutes || currentTimeMinutes < endTimeMinutes
     }
 }
 
@@ -412,5 +458,14 @@ object DebugLogger {
 
     fun getLogs(): List<String> {
         return logBuffer.toList() // Return a copy of the logs
+    }
+}
+
+fun getColorCompat(context: Context, @ColorRes colorResId: Int): Int {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        context.resources.getColor(colorResId, context.theme)
+    } else {
+        @Suppress("DEPRECATION")
+        context.resources.getColor(colorResId)
     }
 }

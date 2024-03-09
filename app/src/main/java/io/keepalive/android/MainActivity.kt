@@ -26,8 +26,8 @@ import androidx.core.content.PackageManagerCompat
 import androidx.core.content.UnusedAppRestrictionsConstants
 import com.google.common.util.concurrent.ListenableFuture
 import io.keepalive.android.databinding.ActivityMainBinding
-import java.time.ZoneId
 import java.util.Locale
+import java.util.TimeZone
 
 
 class MainActivity : AppCompatActivity() {
@@ -91,19 +91,23 @@ class MainActivity : AppCompatActivity() {
             // show an About dialog with information about the app
             R.id.action_about -> {
 
+                // fill in the build version
+                val messageStr = String.format(
+                    getString(R.string.about_message_content),
+                    BuildConfig.VERSION_NAME
+                )
+
+                // use HTML to make the formatting easier...
+                val htmlMessage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Html.fromHtml(messageStr, Html.FROM_HTML_MODE_LEGACY)
+                } else {
+                    @Suppress("DEPRECATION")
+                    Html.fromHtml(messageStr)
+                }
+
                 val dialog = AlertDialog.Builder(this, R.style.AlertDialogTheme)
                     .setTitle(getString(R.string.about_dialog_title))
-                    .setMessage(
-                        // use HTML to make the formatting easier...
-                        Html.fromHtml(
-                            // fill in the build version
-                            String.format(
-                                getString(R.string.about_message_content),
-                                BuildConfig.VERSION_NAME
-                            ),
-                            Html.FROM_HTML_MODE_LEGACY
-                        )
-                    )
+                    .setMessage(htmlMessage)
                     .setPositiveButton(getString(R.string.close), null)
                     .show()
 
@@ -286,18 +290,14 @@ class MainActivity : AppCompatActivity() {
             // set a big red message indicating that monitoring is not active
             monitoringStatusTextView.text = getString(R.string.monitoring_disabled_title)
             monitoringStatusTextView.setTextColor(
-                resources.getColor(
-                    R.color.monitoringInActive,
-                    theme
-                )
+                getColorCompat(this, R.color.monitoringInActive)
             )
             monitoringMessageTextView.text = getString(R.string.monitoring_disabled_message)
 
         } else {
 
             // convert to system timezone when displaying to the user
-            val alarmDtStr =
-                getDateTimeStrFromTimestamp(alarmTimestamp, timeZone = ZoneId.systemDefault())
+            val alarmDtStr = getDateTimeStrFromTimestamp(alarmTimestamp, TimeZone.getDefault().id)
 
             DebugLogger.d(tag, "Current alarm set for $alarmDtStr local time")
 
@@ -313,10 +313,16 @@ class MainActivity : AppCompatActivity() {
                 checkPeriodHours =
                     maxOf(checkPeriodHours, AppController.LAST_ACTIVITY_MAX_PERIOD_CHECK_HOURS)
 
+                val appsToMonitor: MutableList<MonitoredAppDetails> = loadJSONSharedPreference(
+                    sharedPrefs,"APPS_TO_MONITOR")
+
                 // as a sanity check, look back either 48 hours or, if the user has set a
                 //  longer time period, use that instead
-                val lastInteractiveEvent = getLastPhoneActivity(this,
-                    (System.currentTimeMillis() - (checkPeriodHours * 1000 * 60 * 60)).toLong())
+                val lastInteractiveEvent = getLastPhoneActivity(
+                    this,
+                    (System.currentTimeMillis() - (checkPeriodHours * 1000 * 60 * 60)).toLong(),
+                    appsToMonitor.map { it.packageName }
+                )
 
                 // if we haven't found any events then the user probably doesn't have a lock screen
                 //  and the app isn't going to work
@@ -327,9 +333,9 @@ class MainActivity : AppCompatActivity() {
                     monitoringStatusTextView.text =
                         getString(R.string.monitoring_no_activity_detected_title)
                     monitoringStatusTextView.setTextColor(
-                        resources.getColor(
+                        getColorCompat(
+                            this,
                             R.color.monitoringInActive,
-                            theme
                         )
                     )
 
@@ -348,10 +354,7 @@ class MainActivity : AppCompatActivity() {
                         monitoringStatusTextView.text =
                             getString(R.string.monitoring_permissions_required_title)
                         monitoringStatusTextView.setTextColor(
-                            resources.getColor(
-                                R.color.monitoringImpaired,
-                                theme
-                            )
+                            getColorCompat(this, R.color.monitoringImpaired)
                         )
                         monitoringMessageTextView.text =
                             getString(R.string.monitoring_permissions_required_message)
@@ -369,10 +372,7 @@ class MainActivity : AppCompatActivity() {
                         // set a big green message indicating that monitoring is active
                         monitoringStatusTextView.text = getString(R.string.monitoring_active_title)
                         monitoringStatusTextView.setTextColor(
-                            resources.getColor(
-                                R.color.monitoringActive,
-                                theme
-                            )
+                            getColorCompat(this,R.color.monitoringActive)
                         )
 
                         // set the message to show the last detected activity and when the next check is
@@ -380,7 +380,7 @@ class MainActivity : AppCompatActivity() {
                             getString(R.string.monitoring_active_message),
                             getDateTimeStrFromTimestamp(
                                 lastInteractiveEvent.timeStamp,
-                                timeZone = ZoneId.systemDefault()
+                                TimeZone.getDefault().id
                             ), hours, minutes
                         )
 
@@ -446,7 +446,7 @@ class MainActivity : AppCompatActivity() {
         if (callPhoneNumber == "") {
             testAlertCallButton.isEnabled = false
             callPhoneTextView.text = getString(R.string.no_configured_contacts_message)
-            callPhoneTextView.setTextColor(resources.getColor(R.color.red, theme))
+            callPhoneTextView.setTextColor(getColorCompat(this, R.color.red))
         } else {
             testAlertCallButton.isEnabled = true
             // format the phone number and show the text view and button
@@ -478,13 +478,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         // set the text color to the default, may change below
-        smsPhoneTextView.setTextColor(resources.getColor(R.color.textColor, theme))
+        smsPhoneTextView.setTextColor(getColorCompat(this, R.color.textColor))
 
         // if we don't have any SMS contacts then disable the button and set a red message
         if (smsPhoneNumbers == "") {
             testAlertSMSButton.isEnabled = false
             smsPhoneTextView.text = getString(R.string.no_configured_contacts_message)
-            smsPhoneTextView.setTextColor(resources.getColor(R.color.red, theme))
+            smsPhoneTextView.setTextColor(getColorCompat(this, R.color.red))
         } else {
 
             // first see if we can even send SMS
@@ -501,7 +501,7 @@ class MainActivity : AppCompatActivity() {
                 // showing the message here so that its display is independent
                 //  from the main status text view
                 smsPhoneTextView.text = getString(R.string.unable_to_send_sms_message)
-                smsPhoneTextView.setTextColor(resources.getColor(R.color.red, theme))
+                smsPhoneTextView.setTextColor(getColorCompat(this, R.color.red))
 
             } else {
                 testAlertSMSButton.isEnabled = true
@@ -565,41 +565,38 @@ class MainActivity : AppCompatActivity() {
         when (appRestrictionsStatus) {
             UnusedAppRestrictionsConstants.ERROR -> {
                 Log.d(
-                    "updateTextViewsFromAppRestrictionStatus",
+                    "updViewsAppResStatus",
                     "Error checking app restriction status"
                 )
             }
             // Restrictions don't apply to your app on this device.
             UnusedAppRestrictionsConstants.FEATURE_NOT_AVAILABLE -> {
                 Log.d(
-                    "updateTextViewsFromAppRestrictionStatus",
+                    "updViewsAppResStatus",
                     "App restriction not available on this device"
                 )
             }
             // The user has disabled restrictions for your app; which is what we want
             UnusedAppRestrictionsConstants.DISABLED -> {
-                Log.d("updateTextViewsFromAppRestrictionStatus", "App restriction disabled")
+                Log.d("updViewsAppResStatus", "App restriction disabled")
             }
             // restrictions are enabled
             UnusedAppRestrictionsConstants.API_30_BACKPORT,
             UnusedAppRestrictionsConstants.API_30,
             UnusedAppRestrictionsConstants.API_31 -> {
-                Log.d("updateTextViewsFromAppRestrictionStatus", "App restrictions enabled?!")
+                Log.d("updViewsAppResStatus", "App restrictions enabled?!")
 
                 // show a warning to the user indicating that app restrictions are enabled
                 monitoringStatusTextView.text = getString(R.string.monitoring_impaired_title)
                 monitoringStatusTextView.setTextColor(
-                    resources.getColor(
-                        R.color.monitoringImpaired,
-                        theme
-                    )
+                    getColorCompat(this, R.color.monitoringImpaired)
                 )
                 checkAppRestrictionsButton.visibility = View.VISIBLE
             }
 
             else -> {
                 Log.d(
-                    "updateTextViewsFromAppRestrictionStatus",
+                    "updViewsAppResStatus",
                     "App restrictions disabled or not applicable?"
                 )
             }
@@ -625,14 +622,14 @@ class MainActivity : AppCompatActivity() {
                 //  createManageUnusedAppRestrictionsIntent will take them there directly
                 UnusedAppRestrictionsConstants.API_30_BACKPORT -> {
                     Log.d(
-                        "requestDisableAppHibernation",
+                        "reqDisableAppHiber",
                         "App hibernation enabled on API 30 backport"
                     )
                     dialogMessage = getString(R.string.hibernation_dialog_message_api_backport)
                 }
 
                 UnusedAppRestrictionsConstants.API_30 -> {
-                    Log.d("requestDisableAppHibernation", "App hibernation enabled on API 30")
+                    Log.d("reqDisableAppHiber", "App hibernation enabled on API 30")
                     dialogMessage = getString(R.string.hibernation_dialog_message_api30)
                 }
 
@@ -640,7 +637,7 @@ class MainActivity : AppCompatActivity() {
                 //  31 than it is in 32+ so we need to detect which the device is using...
                 UnusedAppRestrictionsConstants.API_31 -> {
                     Log.d(
-                        "requestDisableAppHibernation",
+                        "reqDisableAppHiber",
                         "App hibernation enabled on API 31 or higher. SDK_INT is ${Build.VERSION.SDK_INT}"
                     )
 
@@ -678,7 +675,7 @@ class MainActivity : AppCompatActivity() {
                 .show()
 
         } catch (e: Exception) {
-            Log.e("requestDisableAppHibernation", "Failed requesting disable app hibernation?!", e)
+            Log.e("reqDisableAppHiber", "Failed requesting disable app hibernation?!", e)
         }
     }
 }

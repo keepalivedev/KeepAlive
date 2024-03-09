@@ -2,6 +2,7 @@ package io.keepalive.android
 
 import android.app.Application
 import android.content.pm.ApplicationInfo
+import android.os.Build
 import android.util.Log
 
 
@@ -36,6 +37,9 @@ class AppController : Application() {
 
         // request code used with AppHibernationActivity intent
         const val APP_HIBERNATION_ACTIVITY_RESULT_CODE = 98
+
+        // we have to check this several times so use a variable so its more clear what its for
+        const val MIN_API_LEVEL_FOR_DEVICE_LOCK_UNLOCK = Build.VERSION_CODES.P
     }
 
     override fun onCreate() {

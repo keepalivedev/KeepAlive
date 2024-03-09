@@ -10,6 +10,7 @@
     <string name="delete">Delete</string>
     <string name="close">Close</string>
     <string name="cancel">Cancel</string>
+    <string name="back">Back</string>
     <string name="go_to_settings">Go to Settings</string>
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
@@ -124,6 +125,7 @@
     <string name="enabled_title">Monitoring Enabled</string>
     <string name="disabled_title">Monitoring Disabled</string>
     <string name="auto_restart_title">Auto-Restart Monitoring After Alert</string>
+    <string name="monitored_apps_title">Monitoring Method</string>
     <string name="time_period_title">Hours of Inactivity Before Prompt</string>
     <string name="time_period_description">The # of hours of inactivity before you will be prompted with an \'Are you there?\' notification.</string>
     <string name="followup_time_period_title">Minutes to Wait for Confirmation</string>
@@ -137,6 +139,24 @@
     <string name="default_alert_message_alt">Hey I may be dead, if I do not contact you in the next 24 hours, you know what to do...</string>
     <string name="add_emergency_contact_title">Add Emergency Contact</string>
     <string name="edit_emergency_contact_title">Edit Emergency Contact</string>
+
+    <!-- Monitored Apps strings -->
+    <string name="monitored_apps_dialog_title">Select 1 or more apps on your device</string>
+    <string name="monitored_apps_dialog_message">Usage of the selected app(s) will be used to determine when your device was last interacted with</string>
+    <string name="monitored_apps_chosen_title">Selected App(s)</string>
+    <string name="monitored_apps_usage_history_dialog_title">App Usage History (72 hours)</string>
+    <string name="monitored_apps_usage_history_message">These events may not always be a result of user activity. Please review them carefully before choosing this app.</string>
+    <string name="monitored_apps_recently_used_title">Recently Used Apps (Last 72 Hours)</string>
+    <string name="monitored_apps_not_configured_title">Monitoring Method Not Configured</string>
+    <string name="monitored_apps_not_configured_message">Your device is running Android 8 or earlier. In order to use Keep Alive you must first select the other app(s) that will be used to monitor for activity. Please click the Monitoring Method setting to configure.</string>
+    <string name="monitored_apps_warning_dialog_title">WARNING: Feature in Beta Release</string>
+    <string name="monitored_apps_warning_dialog_message">Please keep in mind that this feature is in beta testing and behavior may differ depending on the app(s) selected. Keep Alive looks for a MOVE_TO_FOREGROUND event from the app(s), which is not always a result of user interaction. Apps that may be able to wake up your device, like Alarm, Phone or Media apps, should not be used.</string>
+    <string name="monitored_apps_warning_dialog_message_alt">\n\nNOTE: This device is running Android 9 or later, usage of device lock/unlock events instead of app monitoring is highly recommended.</string>
+    <string name="monitored_apps_view_history_text">View History</string>
+    <string name="monitored_apps_history_date_header">Used At</string>
+    <string name="monitored_apps_history_name_header">Activity Name</string>
+    <string name="monitored_apps_no_usage_stats_permissions_dialog_title">Permissions Required</string>
+    <string name="monitored_apps_no_usage_stats_permissions_dialog_message">In order to configure this setting you must first grant the Usage Stats permission. Please click the back button to return to the main page and click the \'Grant Permissions\' button. </string>
 
     <!-- SEND_SMS Permission -->
     <string name="permission_send_sms_title">Permission Required: Send SMS Messages</string>

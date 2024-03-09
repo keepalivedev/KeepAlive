@@ -13,6 +13,8 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
+import java.util.Calendar
+import java.util.TimeZone
 
 
 // lets try the easy stuff first...
@@ -83,38 +85,60 @@ class UtilityFunctionsTest {
 
         @Test
         fun longCheckPeriod() {
-            val targetDateTime = LocalDateTime.of(2024, 1, 3, 12, 0)
+            val targetDateTime: Calendar = Calendar.getInstance().apply {
+                set(Calendar.YEAR, 2024)
+                set(Calendar.MONTH, Calendar.JANUARY)
+                set(Calendar.DAY_OF_MONTH, 3)
+                set(Calendar.HOUR_OF_DAY, 12)
+                set(Calendar.MINUTE, 0)
+            }
+
             val checkPeriodHours = 48.0f
             val restPeriod = RestPeriod(22, 0, 6, 0) // Rest period from 10 PM to 6 AM
 
             // Assuming the rest period affects 3 nights, each with 8 hours
             val totalRestMinutes = 8 * 60 * 3
             val checkPeriodMinutes = (checkPeriodHours * 60).toLong()
-            val expectedDateTime = targetDateTime.minusMinutes(checkPeriodMinutes + totalRestMinutes)
+            val expectedDateTime: Calendar = targetDateTime.clone() as Calendar
+            expectedDateTime.add(Calendar.MINUTE, -(checkPeriodMinutes + totalRestMinutes).toInt())
 
             val result = calculatePastDateTimeExcludingRestPeriod(targetDateTime, checkPeriodHours, restPeriod)
-
-            assertEquals(ZonedDateTime.of(expectedDateTime, ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC")), result)
+            assertEquals(expectedDateTime.timeInMillis, result.timeInMillis)
+            //assertEquals(ZonedDateTime.of(expectedDateTime, ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC")), result)
         }
 
         @Test
         fun longRestPeriod() {
-            val targetDateTime = LocalDateTime.of(2024, 1, 1, 12, 0)
+            val targetDateTime: Calendar = Calendar.getInstance().apply {
+                set(Calendar.YEAR, 2024)
+                set(Calendar.MONTH, Calendar.JANUARY)
+                set(Calendar.DAY_OF_MONTH, 1)
+                set(Calendar.HOUR_OF_DAY, 12)
+                set(Calendar.MINUTE, 0)
+            }
             val checkPeriodHours = 4.0f
             val restPeriod = RestPeriod(0, 0, 12, 0) // Rest period from 12 AM to 12 PM
 
             // The entire check period falls within the rest period
             val totalRestMinutes = 12 * 60
             val checkPeriodMinutes = (checkPeriodHours * 60).toLong()
-            val expectedDateTime = targetDateTime.minusMinutes(checkPeriodMinutes + totalRestMinutes)
+            val expectedDateTime: Calendar = targetDateTime.clone() as Calendar
+            expectedDateTime.add(Calendar.MINUTE, -(checkPeriodMinutes + totalRestMinutes).toInt())
 
             val result = calculatePastDateTimeExcludingRestPeriod(targetDateTime, checkPeriodHours, restPeriod)
 
-            assertEquals(ZonedDateTime.of(expectedDateTime, ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC")), result)
+            assertEquals(expectedDateTime.timeInMillis, result.timeInMillis)
         }
         @Test
         fun startInRestingPeriod() {
-            val targetDateTime = LocalDateTime.of(2024, 1, 1, 1, 0) // 1 AM, within the rest period
+            //val targetDateTime = LocalDateTime.of(2024, 1, 1, 1, 0) // 1 AM, within the rest period
+            val targetDateTime: Calendar = Calendar.getInstance().apply {
+                set(Calendar.YEAR, 2024)
+                set(Calendar.MONTH, Calendar.JANUARY)
+                set(Calendar.DAY_OF_MONTH, 1)
+                set(Calendar.HOUR_OF_DAY, 1)
+                set(Calendar.MINUTE, 0)
+            }
             val checkPeriodHours = 6.0f
             val restPeriod = RestPeriod(22, 0, 2, 0) // Rest period from 10 PM to 2 AM
 
@@ -122,16 +146,23 @@ class UtilityFunctionsTest {
             val totalRestMinutes = 3 * 60
             val checkPeriodMinutes = (checkPeriodHours * 60).toLong()
 
-            val expectedDateTime = targetDateTime.minusMinutes(checkPeriodMinutes + totalRestMinutes)
+            val expectedDateTime: Calendar = targetDateTime.clone() as Calendar
+            expectedDateTime.add(Calendar.MINUTE, -(checkPeriodMinutes + totalRestMinutes).toInt())
 
             val result = calculatePastDateTimeExcludingRestPeriod(targetDateTime, checkPeriodHours, restPeriod)
-
-            assertEquals(ZonedDateTime.of(expectedDateTime, ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC")), result)
+            assertEquals(expectedDateTime.timeInMillis, result.timeInMillis)
         }
 
         @Test
         fun restPeriodCrossesMidnight() {
-            val targetDateTime = LocalDateTime.of(2024, 1, 1, 6, 0) // 6 AM, outside the rest period
+            val targetDateTime: Calendar = Calendar.getInstance().apply {
+                set(Calendar.YEAR, 2024)
+                set(Calendar.MONTH, Calendar.JANUARY)
+                set(Calendar.DAY_OF_MONTH, 1)
+                set(Calendar.HOUR_OF_DAY, 6)
+                set(Calendar.MINUTE, 0)
+            }
+
             val checkPeriodHours = 6.0f
             val restPeriod = RestPeriod(22, 0, 2, 0) // Rest period from 10 PM to 2 AM
 
@@ -139,27 +170,35 @@ class UtilityFunctionsTest {
             val totalRestMinutes = 4 * 60 // 4 hours in minutes (entire duration of the rest period)
             val checkPeriodMinutes = (checkPeriodHours * 60).toLong()
 
-            val expectedDateTime = targetDateTime.minusMinutes(checkPeriodMinutes + totalRestMinutes)
+            val expectedDateTime: Calendar = targetDateTime.clone() as Calendar
+            expectedDateTime.add(Calendar.MINUTE, -(checkPeriodMinutes + totalRestMinutes).toInt())
 
             val result = calculatePastDateTimeExcludingRestPeriod(targetDateTime, checkPeriodHours, restPeriod)
-
-            assertEquals(ZonedDateTime.of(expectedDateTime, ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC")), result)
+            assertEquals(expectedDateTime.timeInMillis, result.timeInMillis)
         }
 
         @Test
         fun restPeriodEntirelyWithinCheckPeriod() {
-            val targetDateTime = LocalDateTime.of(2024, 1, 1, 18, 0)
+            val targetDateTime: Calendar = Calendar.getInstance().apply {
+                set(Calendar.YEAR, 2024)
+                set(Calendar.MONTH, Calendar.JANUARY)
+                set(Calendar.DAY_OF_MONTH, 1)
+                set(Calendar.HOUR_OF_DAY, 18)
+                set(Calendar.MINUTE, 0)
+            }
+
             val checkPeriodHours = 8.0f
             val restPeriod = RestPeriod(14, 0, 16, 0) // Rest period from 2 PM to 4 PM
 
             // The rest period affects 2 hours of the check period
             val totalRestMinutes = 2 * 60 // 2 hours
             val checkPeriodMinutes = (checkPeriodHours * 60).toLong()
-            val expectedDateTime = targetDateTime.minusMinutes(checkPeriodMinutes + totalRestMinutes)
+
+            val expectedDateTime: Calendar = targetDateTime.clone() as Calendar
+            expectedDateTime.add(Calendar.MINUTE, -(checkPeriodMinutes + totalRestMinutes).toInt())
 
             val result = calculatePastDateTimeExcludingRestPeriod(targetDateTime, checkPeriodHours, restPeriod)
-
-            assertEquals(ZonedDateTime.of(expectedDateTime, ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC")), result)
+            assertEquals(expectedDateTime.timeInMillis, result.timeInMillis)
         }
     }
 
@@ -169,7 +208,7 @@ class UtilityFunctionsTest {
         fun timestampWithinRestPeriod() {
             val utcTimestampMillis = Instant.parse("2024-01-01T16:00:00Z").toEpochMilli() // 10 AM CST
             val restPeriod = RestPeriod(9, 0, 11, 0) // Rest period from 9 AM to 11 AM
-            val localZoneId = ZoneId.of("America/Chicago") // CST
+            val localZoneId = TimeZone.getTimeZone("America/Chicago").id // CST
 
             val adjustedTimestamp = adjustTimestampIfInRestPeriod(utcTimestampMillis, restPeriod, localZoneId)
 
@@ -181,7 +220,7 @@ class UtilityFunctionsTest {
         fun timestampOutsideRestPeriod() {
             val utcTimestampMillis =Instant.parse("2024-01-01T18:00:00Z").toEpochMilli() // 12 PM CST
             val restPeriod = RestPeriod(1, 0, 3, 0) // Rest period from 1 AM to 3 AM
-            val localZoneId = ZoneId.of("America/Chicago") // CST
+            val localZoneId = TimeZone.getTimeZone("America/Chicago").id // CST
 
             val adjustedTimestamp = adjustTimestampIfInRestPeriod(utcTimestampMillis, restPeriod, localZoneId)
 
@@ -192,7 +231,7 @@ class UtilityFunctionsTest {
         fun restPeriodCrossMidnight() {
             val utcTimestampMillis = Instant.parse("2024-01-01T04:30:00Z").toEpochMilli() // 10:30 PM CST previous day
             val restPeriod = RestPeriod(22, 0, 2, 0) // Rest period from 10 PM to 2 AM
-            val localZoneId = ZoneId.of("America/Chicago") // CST
+            val localZoneId = TimeZone.getTimeZone("America/Chicago").id // CST
 
             val adjustedTimestamp = adjustTimestampIfInRestPeriod(utcTimestampMillis, restPeriod, localZoneId)
 
@@ -208,14 +247,15 @@ class UtilityFunctionsTest {
             val restPeriod = RestPeriod(6, 0, 12, 0) // Rest period from 22:00 to 06:00
             val time = LocalTime.of(8, 30)
 
-            assertTrue(isWithinRestPeriod(time, restPeriod))
+            assertTrue(isWithinRestPeriod(time.hour, time.minute, restPeriod))
         }
 
         @Test
         fun timeWithinRestPeriod_crossingMidnight() {
             val restPeriod = RestPeriod(22, 0, 2, 0) // Rest period from 22:00 to 02:00
             val time = LocalTime.of(0, 30) // Time after midnight
-            assertTrue(isWithinRestPeriod(time, restPeriod))
+
+            assertTrue(isWithinRestPeriod(time.hour, time.minute, restPeriod))
         }
 
         @Test
@@ -223,7 +263,7 @@ class UtilityFunctionsTest {
             val restPeriod = RestPeriod(12, 0, 18, 0) // Rest period from 22:00 to 06:00
             val time = LocalTime.of(21, 0)
 
-            assertFalse(isWithinRestPeriod(time, restPeriod))
+            assertFalse(isWithinRestPeriod(time.hour, time.minute, restPeriod))
         }
 
         @Test
@@ -231,7 +271,7 @@ class UtilityFunctionsTest {
             val restPeriod = RestPeriod(22, 0, 6, 0) // Rest period from 22:00 to 06:00
             val time = LocalTime.of(21, 0)
 
-            assertFalse(isWithinRestPeriod(time, restPeriod))
+            assertFalse(isWithinRestPeriod(time.hour, time.minute, restPeriod))
         }
     }
 }

@@ -19,23 +19,28 @@ import android.telephony.SubscriptionManager
 import android.util.Log
 import androidx.core.content.ContextCompat
 import io.keepalive.android.receivers.SMSSentReceiver
-import java.time.LocalDateTime
+import java.util.Calendar
 import java.util.Locale
 
 @SuppressLint("MissingPermission")
 fun getDefaultSmsSubscriptionId(context: Context): Int {
     val subscriptionManager =
         context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
-    val defaultSmsSubscriptionId = SubscriptionManager.getDefaultSmsSubscriptionId()
+
+    val defaultSmsSubscriptionId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        SubscriptionManager.getDefaultSmsSubscriptionId()
+    } else {
+       -1
+    }
 
     // Check if the default SMS subscription ID is valid
     if (defaultSmsSubscriptionId != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
 
-        Log.d("getDefaultSmsSubscriptionId","The default sms subscription id is not valid?!")
+        Log.d("getDefaultSmsSubId","The default sms subscription id is not valid?!")
 
         subscriptionManager.activeSubscriptionInfoList?.let { activeSubscriptionInfoList ->
             Log.d(
-                "getDefaultSmsSubscriptionId",
+                "getDefaultSmsSubId",
                 "activeSubscriptionInfoList: $activeSubscriptionInfoList"
             )
 
@@ -49,8 +54,7 @@ fun getDefaultSmsSubscriptionId(context: Context): Int {
     }
 
     // Fallback to the first active subscription if the default is not valid
-    return subscriptionManager.activeSubscriptionInfoList?.firstOrNull()?.subscriptionId
-        ?: SubscriptionManager.INVALID_SUBSCRIPTION_ID
+    return subscriptionManager.activeSubscriptionInfoList?.firstOrNull()?.subscriptionId ?: -1
 }
 
 fun getSMSManager(context: Context): SmsManager? {
@@ -259,7 +263,7 @@ class AlertMessageSender(private val context: Context) {
         if (smsManager == null) {
             return
         }
-        Log.d("sendLocationAlertMessage", "Sending location alert SMS! loc string is $locationStr")
+        Log.d("sendLocationAlertMsg", "Sending location alert SMS! loc string is $locationStr")
 
         // iterate through the contacts and send 1 or 2 SMS messages to each
         for (contact in smsContacts) {
@@ -278,7 +282,7 @@ class AlertMessageSender(private val context: Context) {
                     if (contact.includeLocation) {
 
                         DebugLogger.d(
-                            "sendLocationAlertMessage",
+                            "sendLocationAlertMsg",
                             "Sending location message to: ${contact.phoneNumber}"
                         )
 
@@ -289,14 +293,14 @@ class AlertMessageSender(private val context: Context) {
                     }
 
                 } catch (e: Exception) {
-                    DebugLogger.d("sendLocationAlertMessage", "Failed sending location SMS message to ${contact.phoneNumber}!?", e)
+                    DebugLogger.d("sendLocationAlertMsg", "Failed sending location SMS message to ${contact.phoneNumber}!?", e)
                 }
 
             } else {
-                DebugLogger.d("sendLocationAlertMessage", "SMS phone # was blank?!")
+                DebugLogger.d("sendLocationAlertMsg", "SMS phone # was blank?!")
             }
         }
-        Log.d( "sendLocationAlertMessage", "Done sending location alert messages")
+        Log.d( "sendLocationAlertMsg", "Done sending location alert messages")
     }
 }
 
@@ -351,7 +355,7 @@ fun makeAlertCall(context: Context) {
 }
 
 // trying to find when the phone was last locked or unlocked
-fun getLastPhoneActivity(context: Context, startTimestamp: Long): UsageEvents.Event? {
+fun getLastPhoneActivity(context: Context, startTimestamp: Long, monitoredApps: List<String>? = null): UsageEvents.Event? {
     var lastInteractiveEvent: UsageEvents.Event? = null
 
     // todo check for permissions usage stats permissions? this will fail silently and not
@@ -367,6 +371,38 @@ fun getLastPhoneActivity(context: Context, startTimestamp: Long): UsageEvents.Ev
         // get all events between the starting timestamp and now
         val events = usageStatsManager.queryEvents(startTimestamp, System.currentTimeMillis())
 
+        var appsToMonitor = monitoredApps
+        val targetEvents: MutableList<Int> = mutableListOf()
+
+        Log.d("getLastPhoneActivity", "Checking for monitored apps: ${appsToMonitor == null} $appsToMonitor")
+
+        // if no apps were passed in then use the package for monitoring lock/unlock events
+        if (appsToMonitor.isNullOrEmpty() && Build.VERSION.SDK_INT >= AppController.MIN_API_LEVEL_FOR_DEVICE_LOCK_UNLOCK) {
+
+            DebugLogger.d("getLastPhoneActivity", "Checking for system lock/unlock events")
+            appsToMonitor = listOf("android")
+
+            // KEYGUARD_HIDDEN seems to fire when the phone is unlocked?? and KEYGUARD_SHOWN when
+            //  the phone is locked?? doesn't seem to fire when something else wakes the screen up,
+            //  like SCREEN_INTERACTIVE does...  it also fires even if using finger print to unlock?
+            targetEvents.add(UsageEvents.Event.KEYGUARD_HIDDEN)
+            targetEvents.add(UsageEvents.Event.KEYGUARD_SHOWN)
+
+        } else {
+            // this is deprecated in API 29 but still seems to be in use?
+            targetEvents.add(UsageEvents.Event.MOVE_TO_FOREGROUND)
+
+            // when testing under API 34 this never seems to fire, apps still sending MOVE_TO_FOREGROUND
+            // if it is available we should still check it though
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                targetEvents.add(UsageEvents.Event.ACTIVITY_RESUMED)
+            }
+
+            // we shouldn't have set an alarm if this is < API 28 and no apps to monitor have
+            //  been set so just set this to an empty list so it doesn't throw an error...
+            appsToMonitor = monitoredApps ?: emptyList()
+        }
+
         // while there are still more events
         while (events.hasNextEvent()) {
 
@@ -374,16 +410,8 @@ fun getLastPhoneActivity(context: Context, startTimestamp: Long): UsageEvents.Ev
             val event = UsageEvents.Event()
             events.getNextEvent(event)
 
-            // KEYGUARD_HIDDEN seems to fire when the phone is unlocked?? and KEYGUARD_SHOWN when
-            //  the phone is locked?? doesn't seem to fire when something else wakes the screen up,
-            //  like SCREEN_INTERACTIVE does...  it also fires even if using finger print to unlock?
-            val targetEvents = arrayOf(
-                UsageEvents.Event.KEYGUARD_HIDDEN,
-                UsageEvents.Event.KEYGUARD_SHOWN
-            )
-
-            // the target events will only be from android
-            if (event.packageName == "android" && event.eventType in targetEvents) {
+            // check for any apps that sent any of the target event types
+            if (event.packageName in appsToMonitor && event.eventType in targetEvents) {
 
                 // look for the most recent event, though these should be in order from oldest to
                 //  most recent so the timestmap check may not be necessary...
@@ -421,9 +449,10 @@ fun doAlertCheck(context: Context, alarmStage: String) {
     val checkPeriodHours = prefs.getString("time_period_hours", "12")!!.toFloat()
     val followupPeriodMinutes = prefs.getString("followup_time_period_minutes", "60")!!.toLong()
     val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(prefs,"REST_PERIODS")
+    val appsToMonitor: MutableList<MonitoredAppDetails> = loadJSONSharedPreference(prefs,"APPS_TO_MONITOR")
 
     // time in the system default timezone, which is what the rest period will be in
-    val nowLocalDateTime = LocalDateTime.now()
+    val nowCalendar = Calendar.getInstance()
 
     // time in milliseconds since epoch, store this so we use the same time for everything
     val nowTimestamp = System.currentTimeMillis()
@@ -448,13 +477,14 @@ fun doAlertCheck(context: Context, alarmStage: String) {
     if (restPeriods.isNotEmpty()) {
 
         // get whether we are currently in a rest period
-        isInRestPeriod = isWithinRestPeriod(nowLocalDateTime.toLocalTime(), restPeriods[0])
+        isInRestPeriod = isWithinRestPeriod(nowCalendar.get(Calendar.HOUR_OF_DAY),
+            nowCalendar.get(Calendar.MINUTE), restPeriods[0])
 
         // get a date in the past that is checkPeriodHours ago while excluding any rest periods
         //  and then convert it to a timestamp
         activitySearchStartTimestamp = calculatePastDateTimeExcludingRestPeriod(
-            nowLocalDateTime, checkPeriodHours, restPeriods[0]
-        ).toInstant().toEpochMilli()
+            nowCalendar, checkPeriodHours, restPeriods[0]
+        ).timeInMillis
 
         Log.d("doPeriodicCheck", "updating activity search start timestamp to " +
                 getDateTimeStrFromTimestamp(activitySearchStartTimestamp))
@@ -462,7 +492,7 @@ fun doAlertCheck(context: Context, alarmStage: String) {
 
     // double check that there is still no recent user activity
     val lastInteractiveEvent = getLastPhoneActivity(
-        context, activitySearchStartTimestamp
+        context, activitySearchStartTimestamp, appsToMonitor.map { it.packageName }
     )
 
     // if this is the final alarm and there is no recent activity then we need to send the alert

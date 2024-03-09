@@ -44,11 +44,6 @@ class PermissionManager(private val context: Context, private val activity: AppC
             context.getString(R.string.permission_usage_access_description)
         ),
 
-        Settings.ACTION_MANAGE_OVERLAY_PERMISSION to arrayOf(
-            context.getString(R.string.permission_manage_overlay_title),
-            context.getString(R.string.permission_manage_overlay_description)
-        ),
-
         Manifest.permission.ACCESS_FINE_LOCATION to arrayOf(
             context.getString(R.string.permission_access_fine_location_title),
             context.getString(R.string.permission_access_fine_location_description)
@@ -71,6 +66,14 @@ class PermissionManager(private val context: Context, private val activity: AppC
         if (sharedPrefs.getString("contact_phone", "") != "") {
             callPhoneEnabled = true
             basicPermissions.add(Manifest.permission.CALL_PHONE)
+        }
+
+        // overlay permissions added in API 23
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            permissionExplanations[Settings.ACTION_MANAGE_OVERLAY_PERMISSION] to arrayOf(
+                context.getString(R.string.permission_manage_overlay_title),
+                context.getString(R.string.permission_manage_overlay_description)
+            )
         }
 
         // need to request notification permissions starting in API 33
@@ -270,7 +273,7 @@ class PermissionManager(private val context: Context, private val activity: AppC
         } else {
             Log.d(tag, "Checking overlay permissions")
 
-            if (!Settings.canDrawOverlays(context)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(context)) {
 
                 if (!requestPermissions) {
                     return false
@@ -326,7 +329,7 @@ class PermissionManager(private val context: Context, private val activity: AppC
         }
     }
 
-    private fun checkUsageStatsPermissions(requestPermissions: Boolean): Boolean {
+    fun checkUsageStatsPermissions(requestPermissions: Boolean): Boolean {
         Log.d(tag, "checking usage stats permissions")
         val opsMan = context.getSystemService(AppCompatActivity.APP_OPS_SERVICE) as AppOpsManager
 

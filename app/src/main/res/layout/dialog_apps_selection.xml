@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/monitored_apps_dialog_message"
+        android:textSize="@dimen/default_text_size"
+        android:textColor="@color/textColor"
+        android:paddingBottom="16dp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/monitored_apps_chosen_title"
+        android:textSize="@dimen/header_text_size"
+        android:textColor="@color/primary"
+        />
+
+
+    <ListView
+        android:id="@+id/chosenAppsListView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fadeScrollbars="false"
+        android:layout_weight="0.5"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/monitored_apps_recently_used_title"
+        android:textSize="@dimen/header_text_size"
+        android:textColor="@color/primary"
+
+        android:paddingTop="16dp"/>
+
+    <ListView
+        android:id="@+id/availableAppsListView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fadeScrollbars="false"
+        android:layout_weight="1"/>
+</LinearLayout>

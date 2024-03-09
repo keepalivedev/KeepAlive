@@ -71,7 +71,7 @@ class LocationHelper(
                 val providerLocation = locationManager.getLastKnownLocation(provider)
 
                 Log.d(
-                    "getBestLastKnownLocation",
+                    "getBestLastKnownLoc",
                     "lastKnownLocation with provider $provider is $providerLocation"
                 )
 
@@ -85,7 +85,7 @@ class LocationHelper(
 
             } catch (e: Exception) {
                 Log.e(
-                    "getBestLastKnownLocation",
+                    "getBestLastKnownLoc",
                     "Failed getting lastKnownLocation with provider $provider", e
                 )
             }
@@ -148,7 +148,7 @@ class LocationHelper(
                 val providerKey = loc.provider ?: return
 
                 Log.d(
-                    "processProviderLocationResult", "Location from provider $providerKey at " +
+                    "processProviderLocRes", "Location from provider $providerKey at " +
                             "${getDateTimeStrFromTimestamp(loc.time)} with acc ${loc.accuracy}: $loc"
                 )
 
@@ -178,7 +178,7 @@ class LocationHelper(
                         //  use the most recent one
                         if (loc.time > locations[providerKey]!!.time) {
                             Log.d(
-                                "processProviderLocationResult", "New location is more recent," +
+                                "processProviderLocRes", "New location is more recent," +
                                         " updating location for provider $providerKey from " +
                                         "${locations[providerKey]!!.time} to ${loc.time}"
                             )
@@ -192,14 +192,14 @@ class LocationHelper(
         // called either when we have all locations or when we time out
         // this is equivalent to the processLocationResult() in the google play LocationHelper
         private fun processCurrentLocationResults() {
-            Log.d("processCurrentLocationResults", "Processing ${locations.size} locations")
+            Log.d("processCurLocResults", "Processing ${locations.size} locations")
 
             // get the location with the best accuracy and most recent timestamp
             // docs say not to compare time between location providers because they aren't
             //  guaranteed to be using the same clock?!
             val bestLoc =
                 locations.values.minWithOrNull(compareBy<Location> { it.accuracy }.thenByDescending { it.time })
-            Log.d("processCurrentLocationResults", "Best location: $bestLoc")
+            Log.d("processCurLocResults", "Best location: $bestLoc")
 
             // This block will be executed whether the task was successful or not
             if (bestLoc != null) {
@@ -207,7 +207,7 @@ class LocationHelper(
                 // it doesn't matter where we get the location from, if we get one then we can
                 //  geocode it and send it to the callback
                 Log.d(
-                    "processCurrentLocationResults",
+                    "processCurLocResults",
                     "Location from ${bestLoc.provider} is (${bestLoc.latitude}, ${bestLoc.longitude}) " +
                             "${bestLoc.accuracy}acc at ${getDateTimeStrFromTimestamp(bestLoc.time)}"
                 )
