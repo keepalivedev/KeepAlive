@@ -130,7 +130,7 @@ fun getEncryptedSharedPreferences(context: Context): SharedPreferences {
     } catch (e: Exception) {
 
         // fall back to the default shared preferences...
-        DebugLogger.d("getSharedPrefs", "Failed getting shared preferences?!", e)
+        DebugLogger.d("getSharedPrefs", context.getString(R.string.debug_log_failed_getting_shared_prefs), e)
         PreferenceManager.getDefaultSharedPreferences(context)
     }
 }
@@ -183,7 +183,7 @@ fun setAlarm(
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
 
     if (alarmManager == null) {
-        DebugLogger.d("setAlarm", "Failed to get AlarmManager?!")
+        DebugLogger.d("setAlarm", context.getString(R.string.debug_log_failed_getting_alarm_manager))
         return
     }
 
@@ -222,7 +222,8 @@ fun setAlarm(
         //  and be re-set continuously because the emulator's time is in the future...
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-            DebugLogger.d("setAlarm", "Setting new periodic alarm for approximately $alarmDtStr")
+            DebugLogger.d("setAlarm", context.getString(R.string.debug_log_setting_periodic_alarm, alarmDtStr))
+
 
             alarmManager.setAndAllowWhileIdle(
                 AlarmManager.ELAPSED_REALTIME_WAKEUP,
@@ -233,7 +234,7 @@ fun setAlarm(
             )
         } else {
 
-            DebugLogger.d("setAlarm", "Setting new periodic alarm for exactly $alarmDtStr")
+            DebugLogger.d("setAlarm", context.getString(R.string.debug_log_setting_periodic_alarm, alarmDtStr))
 
             // on API 22 we have to use setAlarmClock because there isn't a setAndAllowWhileIdle()
             //  and .set() wouldn't be guaranteed to fire?
@@ -258,7 +259,8 @@ fun setAlarm(
         }
 
         if (useExact) {
-            DebugLogger.d("setAlarm", "Setting final exact alarm to go off at $alarmDtStr")
+            DebugLogger.d("setAlarm", context.getString(R.string.debug_log_setting_final_exact_alarm, alarmDtStr))
+
 
             // according to the docs, this is the only thing that won't get delayed by the OS?
             // random note, this shows up on the lock screen as a pending alarm
@@ -273,8 +275,7 @@ fun setAlarm(
         } else {
 
             DebugLogger.d(
-                "setAlarm", "Unable to set exact alarm?!  " +
-                        "Setting normal final alarm to go off at $alarmDtStr"
+                "setAlarm", context.getString(R.string.debug_log_unable_to_set_exact_alarm, alarmDtStr)
             )
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 alarmManager.setAndAllowWhileIdle(
@@ -284,7 +285,7 @@ fun setAlarm(
                 )
             } else {
                 DebugLogger.d(
-                    "setAlarm", "This is API 22 but we weren't able to set an exact alarm?!"
+                    "setAlarm", context.getString(R.string.debug_log_api_22_unable_to_set_exact_alarm)
                 )
                 // this should really never happen right? but if it does this is what we would
                 //  have to use...

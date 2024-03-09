@@ -44,7 +44,7 @@ class LogDisplayActivity : AppCompatActivity() {
         }
         logsRecyclerView.addItemDecoration(dividerItemDecoration)
 
-        DebugLogger.d("LogDisplayActivity", "Debug Log Display Activity started")
+        DebugLogger.d("LogDisplayActivity", getString(R.string.debug_log_log_display_activity_started))
 
         // load the text size from shared preferences
         val sharedPrefs = getEncryptedSharedPreferences(this.applicationContext)
@@ -93,7 +93,7 @@ class LogDisplayActivity : AppCompatActivity() {
                 .setMessage(getString(R.string.log_display_delete_dialog_message))
                 .setPositiveButton(getString(R.string.yes)) { _, _ ->
                     DebugLogger.deleteLogs()
-                    DebugLogger.d("LogDisplayActivity", "Debug logs deleted")
+                    DebugLogger.d("LogDisplayActivity", getString(R.string.debug_log_logs_deleted))
                     updateLogs(logsRecyclerView, textSize)
                 }
                 .setNegativeButton(getString(R.string.no), null)
@@ -107,7 +107,7 @@ class LogDisplayActivity : AppCompatActivity() {
             val clip = ClipData.newPlainText("Logs", DebugLogger.getLogs().joinToString("\n"))
             clipboard.setPrimaryClip(clip)
 
-            DebugLogger.d("LogDisplayActivity", "Debug logs copied to clipboard")
+            DebugLogger.d("LogDisplayActivity", getString(R.string.debug_log_logs_copied_to_clipboard))
 
             // update the logs so our message is displayed
             updateLogs(logsRecyclerView, textSize)

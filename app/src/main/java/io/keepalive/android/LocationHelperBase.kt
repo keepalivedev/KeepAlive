@@ -86,7 +86,7 @@ open class LocationHelperBase(
 
     open val globalTimeoutRunnable = Runnable {
 
-        DebugLogger.d("globalTimeoutRunnable", "Timeout reached while getting location?!")
+        DebugLogger.d("globalTimeoutRunnable", context.getString(R.string.debug_log_timeout_reached_getting_location))
 
         myCallback(context, context.getString(R.string.location_invalid_message))
     }
@@ -113,7 +113,7 @@ open class LocationHelperBase(
 
         startGlobalTimeoutHandler()
 
-        DebugLogger.d("getLocationAndExecute", "Attempting to get location...")
+        DebugLogger.d("getLocationAndExecute", context.getString(R.string.debug_log_attempting_to_get_location))
         try {
             if (ContextCompat.checkSelfPermission(
                     context,
@@ -143,7 +143,7 @@ open class LocationHelperBase(
 
                     DebugLogger.d(
                         "getLocationAndExecute",
-                        "Device is in idle mode, not getting current location"
+                        context.getString(R.string.debug_log_device_idle_not_getting_current_location)
                     )
 
                     // if the device is in idle mode then try to get the last location
@@ -152,7 +152,7 @@ open class LocationHelperBase(
             } else {
 
                 // if we don't have location permissions then just execute the callback
-                DebugLogger.d("getLocationAndExecute", "Don't have location permission, executing callback")
+                DebugLogger.d("getLocationAndExecute", context.getString(R.string.debug_log_no_location_permission_executing_callback))
                 stopGlobalTimeoutHandler()
                 myCallback(context, context.getString(R.string.location_invalid_message))
             }
@@ -160,7 +160,7 @@ open class LocationHelperBase(
 
             // if we for some reason fail while building the request then try
             //   to get the last location
-            DebugLogger.d("getLocationAndExecute", "Failed getting current location?!", e)
+            DebugLogger.d("getLocationAndExecute", context.getString(R.string.debug_log_failed_getting_current_location), e)
             getLastLocation()
         }
     }
@@ -175,7 +175,7 @@ open class LocationHelperBase(
         //  because the old geocoding method is synchronous
         private val geocodingTimeoutRunnable = Runnable {
 
-            DebugLogger.d("geocodingTimeoutRunnable", "Timeout reached, locationString is $locationString")
+            DebugLogger.d("geocodingTimeoutRunnable", context.getString(R.string.debug_log_geocoding_timeout_reached, locationString))
 
             // the global timeout handler should still be running so need to stop it
             stopGlobalTimeoutHandler()
@@ -248,7 +248,7 @@ open class LocationHelperBase(
                 }
 
             } catch (e: Exception) {
-                DebugLogger.d("geocodeLocationAndExecute", "Failed geocoding GPS coordinates?!", e)
+                DebugLogger.d("geocodeLocationAndExecute", context.getString(R.string.debug_log_failed_geocoding_gps_coordinates), e)
             }
 
             // if we aren't using geocode listener or if there was an error
@@ -286,7 +286,7 @@ open class LocationHelperBase(
                 }
 
             } else {
-                DebugLogger.d("processGeocodeResult", "No address results")
+                DebugLogger.d("processGeocodeResult", context.getString(R.string.debug_log_no_address_results))
             }
             return addressString
         }

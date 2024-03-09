@@ -29,7 +29,7 @@ class SMSSentReceiver : BroadcastReceiver() {
 
         // if it was sent successfully
         if (resultCode == Activity.RESULT_OK) {
-            DebugLogger.d("SMSSentReceiver", "SMS sent!")
+            DebugLogger.d("SMSSentReceiver", context.getString(R.string.debug_log_sms_sent))
 
             notificationHelper.sendNotification(
                 context.getString(R.string.alert_notification_title),
@@ -38,7 +38,7 @@ class SMSSentReceiver : BroadcastReceiver() {
             )
 
         } else {
-            DebugLogger.d("SMSSentReceiver", "SMS send error: $result")
+            DebugLogger.d("SMSSentReceiver", context.getString(R.string.debug_log_sms_send_error, result))
 
             // if it failed then let the user know why
             AlertNotificationHelper(context).sendNotification(

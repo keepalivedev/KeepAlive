@@ -285,7 +285,7 @@ class MainActivity : AppCompatActivity() {
 
         // this should only happen the first time the app is run or if the user has disabled it
         if (alarmTimestamp == -1L || !isEnabled) {
-            DebugLogger.d(tag, "No alarm found or monitoring is disabled")
+            DebugLogger.d(tag, getString(R.string.debug_log_no_alarm_or_monitoring_disabled))
 
             // set a big red message indicating that monitoring is not active
             monitoringStatusTextView.text = getString(R.string.monitoring_disabled_title)
@@ -299,7 +299,7 @@ class MainActivity : AppCompatActivity() {
             // convert to system timezone when displaying to the user
             val alarmDtStr = getDateTimeStrFromTimestamp(alarmTimestamp, TimeZone.getDefault().id)
 
-            DebugLogger.d(tag, "Current alarm set for $alarmDtStr local time")
+            DebugLogger.d(tag, getString(R.string.debug_log_current_alarm_time, alarmDtStr))
 
             // if the time is positive then there is an active alarm so let
             //  the user know that the monitoring is enabled
@@ -318,7 +318,7 @@ class MainActivity : AppCompatActivity() {
 
                 // as a sanity check, look back either 48 hours or, if the user has set a
                 //  longer time period, use that instead
-                val lastInteractiveEvent = getLastPhoneActivity(
+                val lastInteractiveEvent = getLastDeviceActivity(
                     this,
                     (System.currentTimeMillis() - (checkPeriodHours * 1000 * 60 * 60)).toLong(),
                     appsToMonitor.map { it.packageName }
@@ -327,7 +327,7 @@ class MainActivity : AppCompatActivity() {
                 // if we haven't found any events then the user probably doesn't have a lock screen
                 //  and the app isn't going to work
                 if (lastInteractiveEvent == null) {
-                    DebugLogger.d(tag, "No events found, may not have lock screen?")
+                    DebugLogger.d(tag, getString(R.string.debug_log_no_events_found_lock_screen))
 
                     // set a big red message indicating that we can't enable monitoring
                     monitoringStatusTextView.text =
@@ -397,7 +397,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                DebugLogger.d(tag, "No active alarm found, showing button to restart")
+                DebugLogger.d(tag, getString(R.string.debug_log_no_active_alarm_showing_restart_button))
 
                 monitoringMessageTextView.text = getString(R.string.monitoring_inactive_message)
 
@@ -491,7 +491,7 @@ class MainActivity : AppCompatActivity() {
             val smsManager = getSMSManager(this)
             if (smsManager == null) {
 
-                DebugLogger.d(tag, "Failed to get SMS manager? Disabling SMS test button")
+                DebugLogger.d(tag, getString(R.string.debug_log_failed_getting_sms_manager_disable_button))
 
                 // make the test alert button visible but disabled
                 smsPhoneTextView.visibility = View.VISIBLE
