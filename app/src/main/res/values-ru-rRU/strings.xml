@@ -138,6 +138,33 @@
     <string name="add_emergency_contact_title">Добавить экстренный контакт</string>
     <string name="edit_emergency_contact_title">Редактировать экстренный контакт</string>
 
+    <!-- Monitored Apps strings -->
+    <string name="monitored_apps_title">Метод мониторинга</string>
+    <string name="monitored_apps_dialog_title">Выберите 1 или несколько приложений на вашем устройстве</string>
+    <string name="monitored_apps_dialog_message">Использование выбранных приложений будет использоваться для определения последнего взаимодействия с устройством</string>
+    <string name="monitored_apps_chosen_title">Выбранные приложения</string>
+    <string name="monitored_apps_usage_history_dialog_title">История использования приложений (72 часа)</string>
+    <string name="monitored_apps_usage_history_message">Эти события не всегда являются результатом действий пользователя. Пожалуйста, внимательно просмотрите их перед выбором этого приложения.</string>
+    <string name="monitored_apps_recently_used_title">Недавно использованные приложения (последние 72 часа)</string>
+    <string name="monitored_apps_not_configured_title">Метод мониторинга не настроен</string>
+    <string name="monitored_apps_not_configured_message">На вашем устройстве установлена ОС Android 8 или более ранней версии. Чтобы использовать Keep Alive, вы должны сначала выбрать другие приложения, которые будут использоваться для мониторинга активности. Пожалуйста, нажмите на настройку "Метод мониторинга" для конфигурации.</string>
+    <string name="monitored_apps_warning_dialog_title">ПРЕДУПРЕЖДЕНИЕ: Функция в бета-версии</string>
+    <string name="monitored_apps_warning_dialog_message">Пожалуйста, имейте в виду, что эта функция находится в стадии бета-тестирования, и поведение может отличаться в зависимости от выбранных приложений. Keep Alive ищет событие MOVE_TO_FOREGROUND от приложений, которое не всегда является результатом взаимодействия с пользователем. Приложения, которые могут пробуждать ваше устройство, такие как Будильник, Телефон или Медиа-приложения, не следует использовать.</string>
+    <string name="monitored_apps_warning_dialog_message_alt">\n\nПРИМЕЧАНИЕ: Это устройство работает под управлением Android 9 или более поздней версии, настоятельно рекомендуется использовать события блокировки/разблокировки устройства вместо мониторинга приложений.</string>
+    <string name="monitored_apps_view_history_text">Просмотреть историю</string>
+    <string name="monitored_apps_history_date_header">Использовано в</string>
+    <string name="monitored_apps_history_name_header">Название активности</string>
+    <string name="monitored_apps_no_usage_stats_permissions_dialog_title">Требуются разрешения</string>
+    <string name="monitored_apps_no_usage_stats_permissions_dialog_message">Чтобы настроить этот параметр, вы должны сначала предоставить разрешение на статистику использования. Пожалуйста, нажмите кнопку "Назад", чтобы вернуться на главную страницу, и нажмите кнопку "Предоставить разрешения".</string>
+
+    <!-- Log Display strings -->
+    <string name="log_display_increase_size_button_text">Размер +</string>
+    <string name="log_display_decrease_size_button_text">Размер -</string>
+    <string name="log_display_copy_button_text">Копировать</string>
+    <string name="log_display_copy_button_toast">Текст скопирован</string>
+    <string name="log_display_delete_dialog_title">Удалить журналы?</string>
+    <string name="log_display_delete_dialog_message">Вы уверены, что хотите удалить все сохраненные журналы?</string>
+
     <!-- SEND_SMS Permission -->
     <string name="permission_send_sms_title">Необходимо разрешение: Отправка SMS</string>
     <string name="permission_send_sms_description">SMS используется в качестве основного метода уведомления при срабатывании оповещения.</string>
@@ -169,4 +196,95 @@
     <!-- REQUEST_SCHEDULE_EXACT_ALARM Permission (For S and above) -->
     <string name="permission_schedule_alarms_title">Требуется разрешение: Отложенные уведомления</string>
     <string name="permission_schedule_alarms_description">Планирование оповещений необходимо, чтобы оповещение могло срабатывать, даже когда ваше устройство находится в спящем режиме или в режиме \'Не беспокоить\'.\n\nВключите это разрешение для приложения KeepAlive в настройках вашего устройства.</string>
+
+    <!-- AlertFunctions.kt -->
+    <string name="debug_log_doing_alert_check">Выполнение периодической проверки, этап оповещения %1$s</string>
+    <string name="debug_log_sending_alert_sms">Отправка SMS-оповещения!</string>
+    <string name="debug_log_getting_sms_manager_with_sub_id">Получение менеджера SMS с помощью context.getSystemService и идентификатора подписки %1$d</string>
+    <string name="debug_log_getting_sms_manager_with_context">Получение менеджера SMS с помощью context.getSystemService</string>
+    <string name="debug_log_getting_default_sms_manager">Получение менеджера SMS по умолчанию</string>
+    <string name="debug_log_getting_default_sms_manager_for_sub_id">Получение менеджера SMS по умолчанию для идентификатора подписки %1$d</string>
+    <string name="debug_log_exception_while_getting_sms_manager">Исключение при получении менеджера SMS: %1$s</string>
+    <string name="debug_log_failed_getting_sms_manager">Не удалось получить менеджер SMS?!</string>
+    <string name="debug_log_sending_text_message_to">Отправка текстового сообщения: %1$s</string>
+    <string name="debug_log_sending_multipart_sms">Отправка многочастного SMS-сообщения с %1$d частями</string>
+    <string name="debug_log_sending_single_sms">Отправка одиночного SMS-сообщения</string>
+    <string name="debug_log_failed_sending_sms">Не удалось отправить SMS-сообщение на %1$s!? %2$s</string>
+    <string name="debug_log_sms_phone_blank">Номер телефона SMS был пустым?!</string>
+    <string name="debug_log_sending_location_message_to">Отправка сообщения о местоположении: %1$s</string>
+    <string name="debug_log_failed_sending_location_sms">Не удалось отправить SMS-сообщение о местоположении на %1$s!?</string>
+    <string name="debug_log_placing_alert_phone_call">Выполнение телефонного вызова оповещения на %1$s</string>
+    <string name="debug_log_no_call_phone_permission">Невозможно сделать вызов, нет разрешений?!</string>
+    <string name="debug_log_checking_for_activity">проверка активности, начиная с %1$s по местному времени</string>
+    <string name="debug_log_checking_for_system_events">Проверка событий блокировки/разблокировки системы</string>
+    <string name="debug_log_failed_getting_last_phone_activity">Не удалось получить последнюю активность телефона?!</string>
+    <string name="debug_log_no_events_sending_notification">за последние %1$.2f часа не найдено событий, отправка уведомления \"Ты здесь?\"</string>
+    <string name="debug_log_sending_alert">Отправка оповещения!</string>
+    <string name="debug_log_sending_alert_failed">Не удалось получить и отправить оповещение о местоположении</string>
+    <string name="debug_log_last_device_activity">Последнее событие использования было %1$s из %2$s в %3$s</string>
+
+    <!-- AppController.kt -->
+    <string name="debug_log_starting_up">KeepAlive запускается!</string>
+
+    <!-- UtilityFunctions.kt -->
+    <string name="debug_log_failed_getting_shared_prefs">Не удалось получить общие настройки?!</string>
+    <string name="debug_log_failed_getting_alarm_manager">Не удалось получить AlarmManager?!</string>
+    <string name="debug_log_setting_periodic_alarm">Установка нового периодического будильника примерно на %1$s</string>
+    <string name="debug_log_setting_final_exact_alarm">Установка окончательного точного будильника на %1$s</string>
+    <string name="debug_log_unable_to_set_exact_alarm">Невозможно установить точный будильник?! Установка обычного окончательного будильника на %1$s</string>
+    <string name="debug_log_api_22_unable_to_set_exact_alarm">Это API 22, но мы не смогли установить точный будильник?!</string>
+    <string name="debug_log_returning_logs">Возвращение %1$d журналов</string>
+
+    <!-- LogDisplayActivity.kt -->
+    <string name="debug_log_log_display_activity_started">Активность отображения журнала отладки запущена</string>
+    <string name="debug_log_logs_deleted">Журналы отладки удалены</string>
+    <string name="debug_log_logs_copied_to_clipboard">Журналы отладки скопированы в буфер обмена</string>
+
+    <!-- LocationHelperBase.kt -->
+    <string name="debug_log_timeout_reached_getting_location">Достигнут тайм-аут при получении местоположения?!</string>
+    <string name="debug_log_attempting_to_get_location">Попытка получить местоположение…</string>
+    <string name="debug_log_device_idle_not_getting_current_location">Устройство находится в режиме ожидания, не получает текущее местоположение</string>
+    <string name="debug_log_no_location_permission_executing_callback">Нет разрешения на местоположение, выполнение обратного вызова</string>
+    <string name="debug_log_failed_getting_current_location">Не удалось получить текущее местоположение?!</string>
+    <string name="debug_log_geocoding_timeout_reached">Достигнут тайм-аут, locationString - %1$s</string>
+    <string name="debug_log_failed_geocoding_gps_coordinates">Не удалось выполнить геокодирование GPS-координат?!</string>
+    <string name="debug_log_no_address_results">Нет результатов адреса</string>
+
+    <!-- LocationHelper.kt -->
+    <string name="debug_log_attempting_to_get_last_location">Попытка получить последнее местоположение…</string>
+    <string name="debug_log_best_last_known_location">лучшее последнее известное местоположение от провайдера %1$s с точностью %2$f</string>
+    <string name="debug_log_unable_to_determine_location">Невозможно определить местоположение</string>
+    <string name="debug_log_failed_getting_last_location">Не удалось получить последнее местоположение:</string>
+    <string name="debug_log_unable_to_get_current_location">Невозможно получить текущее местоположение</string>
+    <string name="debug_log_location_timeout_reached">Достигнут тайм-аут местоположения</string>
+    <string name="debug_log_timeout_reached_getting_location_from_google_play">Достигнут тайм-аут при получении местоположения из Google Play?!</string>
+    <string name="debug_log_failed_getting_location_from_source">Не удалось получить местоположение %1$s</string>
+
+    <!-- MainActivity.kt -->
+    <string name="debug_log_no_alarm_or_monitoring_disabled">Будильник не найден или мониторинг отключен</string>
+    <string name="debug_log_no_events_found_lock_screen">События не найдены, возможно, нет экрана блокировки?</string>
+    <string name="debug_log_no_active_alarm_showing_restart_button">Активный будильник не найден, отображение кнопки перезапуска</string>
+    <string name="debug_log_failed_getting_sms_manager_disable_button">Не удалось получить менеджер SMS? Отключение кнопки тестирования SMS</string>
+    <string name="debug_log_current_alarm_time">Текущий будильник установлен на %1$s местного времени</string>
+
+    <!-- PermissionManager.kt -->
+    <string name="debug_log_still_need_some_permissions">Мне все еще нужны некоторые разрешения</string>
+    <string name="debug_log_have_all_permissions">У меня есть все разрешения</string>
+    <string name="debug_log_finished_requesting_permissions">Запрос разрешений завершен</string>
+
+    <!-- AlarmReceiver.kt -->
+    <string name="debug_log_alarm_just_fired">Будильник только что сработал!</string>
+    <string name="debug_log_app_not_enabled_alarm_went_off">Приложение не включено, почему сработал будильник?!</string>
+    <string name="debug_log_alarm_stage">Этап будильника - %1$s</string>
+    <string name="debug_log_alarm_time_comparison">Время %1$s, будильник должен был сработать в %2$s, что было %3$d секунд назад</string>
+    <string name="debug_log_failed_processing_alarm">Не удалось обработать будильник:</string>
+
+    <!-- SMSSentReceiver.kt -->
+    <string name="debug_log_sms_sent">SMS отправлено!</string>
+    <string name="debug_log_sms_send_error">Ошибка отправки SMS: %1$s</string>
+
+    <!-- BootBroadcastReceiver.kt -->
+    <string name="debug_log_boot_completed">Загрузка завершена!?</string>
+    <string name="debug_log_app_is_disabled">Приложение отключено?</string>
+    <string name="debug_log_boot_receiver_exception">Исключение в BootBroadcastReceiver: %1$s</string>
 </resources>
