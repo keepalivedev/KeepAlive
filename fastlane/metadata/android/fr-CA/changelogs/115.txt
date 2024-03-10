@@ -1,0 +1,3 @@
+* Ajouter une fonctionnalité: surveillance des applications (bêta)
+* Ajouter la prise en charge d'Android 5.1 ou ultérieure (bêta)
+* Enregistrez les journaux de débogage sur le disque et améliorez l'interface utilisateur du journal

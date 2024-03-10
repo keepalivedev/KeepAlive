@@ -10,8 +10,8 @@ android {
         applicationId "io.keepalive.android"
         minSdk 22
         targetSdk 33
-        versionCode 114
-        versionName "1.1.4"
+        versionCode 115
+        versionName "1.2.0-beta1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

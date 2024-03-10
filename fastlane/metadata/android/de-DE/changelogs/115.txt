@@ -1,0 +1,3 @@
+* Funktion hinzufügen: App -Überwachung (Beta)
+* Unterstützung für Android 5.1 oder höher (Beta)
+* Speichern Sie Debug -Protokolle auf Festplatten und verbessern Sie die Benutzeroberfläche der Protokollanzeige.
