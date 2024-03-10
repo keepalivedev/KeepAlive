@@ -110,12 +110,18 @@ class AppsSelectionDialogFragment(val callback: () -> Unit) : DialogFragment() {
         availableAppsListView.adapter = availableAppsAdapter
         chosenAppsListView.adapter = chosenAppsAdapter
 
+        setListViewHeightBasedOnItemCount(chosenAppsListView)
+
         // add listeners for when a list item is clicked on
         availableAppsListView.setOnItemClickListener { _, _, position, _ ->
 
             // move the app from the available list to the chosen list
             val app = availableApps.removeAt(position)
             chosenApps.add(app)
+
+            // update the chosenAppsListView height, the availableAppsListView will
+            //  auto expand to fill the remaining space
+            setListViewHeightBasedOnItemCount(chosenAppsListView)
 
             // display chosen apps in alphabetical order and update the list display
             chosenApps.sortBy { it.appName }
@@ -137,6 +143,9 @@ class AppsSelectionDialogFragment(val callback: () -> Unit) : DialogFragment() {
             val thisAvailableAppDetails = getAppUsageDetails(requireContext(), System.currentTimeMillis() - 1000L * 60 * 60 * 72)
             availableApps.clear()
             availableApps.addAll(thisAvailableAppDetails)
+
+            // update the list view height
+            setListViewHeightBasedOnItemCount(chosenAppsListView)
 
             // update the list display
             availableAppsAdapter.notifyDataSetChanged()
@@ -182,6 +191,26 @@ class AppsSelectionDialogFragment(val callback: () -> Unit) : DialogFragment() {
                 callback()
             }
             .create()
+    }
+
+    private fun setListViewHeightBasedOnItemCount(listView: ListView, maxItems: Int = 5) {
+        val listAdapter = listView.adapter ?: return
+
+        // calculate the height of the list view based on the number of items in the list
+        // limit the height to maxItems
+        var totalHeight = 0
+        for (i in 0 until minOf(listAdapter.count, maxItems)) {
+            val listItem = listAdapter.getView(i, null, listView)
+            listItem.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+            totalHeight += listItem.measuredHeight
+        }
+
+        Log.d("AppsSelectionDialogFrag", "Total height: $totalHeight for ${listAdapter.count} items in listview $listView")
+
+        val params = listView.layoutParams
+        params.height = totalHeight + listView.dividerHeight * (listAdapter.count - 1)
+        listView.layoutParams = params
+        listView.requestLayout()
     }
 
     private fun saveChosenApps(context: Context, appInfos: MutableList<MonitoredAppDetails>) {
