@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import io.keepalive.android.DebugLogger
+import io.keepalive.android.R
 import io.keepalive.android.doAlertCheck
 import io.keepalive.android.getEncryptedSharedPreferences
 
@@ -25,7 +27,7 @@ class BootBroadcastReceiver : BroadcastReceiver() {
             // if this is a boot intent
             if (intent.action in bootActions) {
 
-                Log.d(tag, "Boot completed!  Intent action is ${intent.action}. ")
+                DebugLogger.d(tag, context.getString(R.string.debug_log_boot_completed))
 
                 // verify that the app is enabled
                 val prefs = getEncryptedSharedPreferences(context)
@@ -42,11 +44,11 @@ class BootBroadcastReceiver : BroadcastReceiver() {
                     doAlertCheck(context, "periodic")
 
                 } else {
-                    Log.d(tag, "App is disabled?!")
+                    DebugLogger.d(tag, context.getString(R.string.debug_log_app_is_disabled))
                 }
             }
         } catch (e: Exception) {
-            Log.e(tag, "Exception in BootBroadcastReceiver", e)
+            DebugLogger.d(tag, context.getString(R.string.debug_log_boot_receiver_exception, e.message), e)
         }
     }
 }

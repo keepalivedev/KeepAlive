@@ -126,11 +126,11 @@ class PermissionManager(private val context: Context, private val activity: AppC
             !checkBackgroundLocationPermissions(false) ||
             !checkOverlayPermissions(false)
         ) {
-            DebugLogger.d(tag, "Still need some permissions")
+            DebugLogger.d(tag, context.getString(R.string.debug_log_still_need_some_permissions))
             return true
         }
 
-        DebugLogger.d(tag, "Have all permissions")
+        DebugLogger.d(tag, context.getString(R.string.debug_log_have_all_permissions))
         // if we haven't returned true yet then we don't need any permissions
         return false
     }
@@ -161,10 +161,10 @@ class PermissionManager(private val context: Context, private val activity: AppC
             !checkBackgroundLocationPermissions(true) ||
             !checkOverlayPermissions(true)
         ) {
-            DebugLogger.d(tag, "Finished requesting permissions")
+            DebugLogger.d(tag, context.getString(R.string.debug_log_finished_requesting_permissions))
             false
         } else {
-            DebugLogger.d(tag, "Have all permissions")
+            DebugLogger.d(tag, context.getString(R.string.debug_log_have_all_permissions))
             true
         }
     }

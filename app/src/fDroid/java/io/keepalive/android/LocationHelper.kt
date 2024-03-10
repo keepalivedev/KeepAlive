@@ -27,7 +27,7 @@ class LocationHelper(
     // override the function to get the last location
     override fun getLastLocation() {
 
-        DebugLogger.d("getLastLocation", "Attempting to get lastLocation...")
+        DebugLogger.d("getLastLocation", context.getString(R.string.debug_log_attempting_to_get_last_location))
 
         try {
 
@@ -36,8 +36,8 @@ class LocationHelper(
 
             if (lastLocation != null) {
                 DebugLogger.d(
-                    "getLastLocation", "best lastKnownLocation is from provider " +
-                            "${lastLocation.provider} with accuracy ${lastLocation.accuracy}"
+                    "getLastLocation", context.getString(R.string.debug_log_best_last_known_location,
+                        lastLocation.provider, lastLocation.accuracy)
                 )
 
                 // attempt to geocode the location and then execute the callback
@@ -45,11 +45,11 @@ class LocationHelper(
                 return
 
             } else {
-                DebugLogger.d("getLastLocation", "Unable to determine location")
+                DebugLogger.d("getLastLocation", context.getString(R.string.debug_log_unable_to_determine_location))
             }
 
         } catch (e: Exception) {
-            DebugLogger.d("getLastLocation", "Failed while getting last location:", e)
+            DebugLogger.d("getLastLocation", context.getString(R.string.debug_log_failed_getting_last_location), e)
         }
 
         // if the location was null or there was an error then execute the callback
@@ -218,7 +218,7 @@ class LocationHelper(
             } else {
 
                 // if the current location is null then try to get the last location
-                DebugLogger.d("processCurrentLocationResult", "Unable to get current location")
+                DebugLogger.d("processCurrentLocationResult", context.getString(R.string.debug_log_unable_to_get_current_location))
                 getLastLocation()
             }
         }
@@ -226,7 +226,7 @@ class LocationHelper(
         // this will get called if we time out while trying to get the location(s) from each provider
         private val timeoutRunnable = Runnable {
 
-            DebugLogger.d("LocationComparator", "Timeout reached")
+            DebugLogger.d("LocationComparator", context.getString(R.string.debug_log_location_timeout_reached))
 
             // this is only used with requestLocationUpdates but we can cancel it anyway?
             cancellationSignal.cancel()

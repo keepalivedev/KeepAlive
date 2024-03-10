@@ -127,7 +127,34 @@
     <string name="default_alert_message_alt">Hé, je suis peut-être mort, si je ne te contacte pas dans les prochaines 24 heures, tu sais quoi faire...</string>
     <string name="add_emergency_contact_title">Ajouter un contact d\'urgence</string>
 	<string name="edit_emergency_contact_title">Modifier un contact d\'urgence</string>
-	 
+
+    <!-- Monitored Apps strings -->
+    <string name="monitored_apps_title">Méthode de surveillance</string>
+    <string name="monitored_apps_dialog_title">Sélectionnez 1 ou plusieurs applications sur votre appareil</string>
+    <string name="monitored_apps_dialog_message">L\'utilisation de l\'application ou des applications sélectionnées sera utilisée pour déterminer quand votre appareil a été utilisé pour la dernière fois</string>
+    <string name="monitored_apps_chosen_title">Application(s) sélectionnée(s)</string>
+    <string name="monitored_apps_usage_history_dialog_title">Historique d\'utilisation des applications (72 heures)</string>
+    <string name="monitored_apps_usage_history_message">Ces événements ne sont pas toujours le résultat de l\'activité de l\'utilisateur. Veuillez les examiner attentivement avant de choisir cette application.</string>
+    <string name="monitored_apps_recently_used_title">Applications récemment utilisées (dernières 72 heures)</string>
+    <string name="monitored_apps_not_configured_title">Méthode de surveillance non configurée</string>
+    <string name="monitored_apps_not_configured_message">Votre appareil fonctionne sous Android 8 ou une version antérieure. Afin d\'utiliser Keep Alive, vous devez d\'abord sélectionner la ou les autres applications qui seront utilisées pour surveiller l\'activité. Veuillez cliquer sur le paramètre Méthode de surveillance pour configurer.</string>
+    <string name="monitored_apps_warning_dialog_title">AVERTISSEMENT : Fonctionnalité en version bêta</string>
+    <string name="monitored_apps_warning_dialog_message">Veuillez garder à l\'esprit que cette fonctionnalité est en phase de test bêta et que le comportement peut différer selon l\'application ou les applications sélectionnées. Keep Alive recherche un événement MOVE_TO_FOREGROUND de l\'application ou des applications, qui n\'est pas toujours le résultat d\'une interaction de l\'utilisateur. Les applications qui peuvent réveiller votre appareil, comme les applications Alarme, Téléphone ou Média, ne doivent pas être utilisées.</string>
+    <string name="monitored_apps_warning_dialog_message_alt">\n\nREMARQUE : Cet appareil fonctionne sous Android 9 ou une version ultérieure, l\'utilisation des événements de verrouillage/déverrouillage de l\'appareil au lieu de la surveillance des applications est fortement recommandée.</string>
+    <string name="monitored_apps_view_history_text">Afficher l\'historique</string>
+    <string name="monitored_apps_history_date_header">Utilisé à</string>
+    <string name="monitored_apps_history_name_header">Nom de l\'activité</string>
+    <string name="monitored_apps_no_usage_stats_permissions_dialog_title">Autorisations requises</string>
+    <string name="monitored_apps_no_usage_stats_permissions_dialog_message">Pour configurer ce paramètre, vous devez d\'abord accorder l\'autorisation Statistiques d\'utilisation. Veuillez cliquer sur le bouton retour pour revenir à la page principale et cliquer sur le bouton "Accorder les autorisations".</string>
+
+    <!-- Log Display strings -->
+    <string name="log_display_increase_size_button_text">Taille +</string>
+    <string name="log_display_decrease_size_button_text">Taille -</string>
+    <string name="log_display_copy_button_text">Copier</string>
+    <string name="log_display_copy_button_toast">Texte copié</string>
+    <string name="log_display_delete_dialog_title">Supprimer les journaux ?</string>
+    <string name="log_display_delete_dialog_message">Êtes-vous sûr de vouloir supprimer tous les journaux enregistrés ?</string>
+
 	<!-- SEND_SMS Permission -->
     <string name="permission_send_sms_title">Autorisation requise: Envoyer des messages SMS</string>
     <string name="permission_send_sms_description">Le SMS est utilisé comme méthode de notification principale lorsqu\'une alerte est déclenchée.</string>
@@ -159,4 +186,95 @@
     <!-- REQUEST_SCHEDULE_EXACT_ALARM Permission (For S and above) -->
     <string name="permission_schedule_alarms_title">Autorisation requise: Planifier des alarmes</string>
     <string name="permission_schedule_alarms_description">La planification des alarmes est requise pour que l\'alerte puisse se déclencher même lorsque votre appareil est en veille ou en mode Ne pas déranger.\n\nVeuillez activer cette autorisation pour l\'application KeepAlive dans les paramètres de votre appareil.</string>
+
+    <!-- AlertFunctions.kt -->
+    <string name="debug_log_doing_alert_check">Effectuer une vérification périodique, l\'étape d\'alerte est %1$s</string>
+    <string name="debug_log_sending_alert_sms">Envoi d\'un SMS d\'alerte!</string>
+    <string name="debug_log_getting_sms_manager_with_sub_id">Obtention du gestionnaire de SMS avec context.getSystemService et l\'identifiant d\'abonnement %1$d</string>
+    <string name="debug_log_getting_sms_manager_with_context">Obtention du gestionnaire de SMS avec context.getSystemService</string>
+    <string name="debug_log_getting_default_sms_manager">Obtention du gestionnaire de SMS par défaut</string>
+    <string name="debug_log_getting_default_sms_manager_for_sub_id">Obtention du gestionnaire de SMS par défaut pour l\'identifiant d\'abonnement %1$d</string>
+    <string name="debug_log_exception_while_getting_sms_manager">Exception lors de l\'obtention du gestionnaire de SMS: %1$s</string>
+    <string name="debug_log_failed_getting_sms_manager">Échec de l\'obtention du gestionnaire de SMS?!</string>
+    <string name="debug_log_sending_text_message_to">Envoi d\'un message texte à: %1$s</string>
+    <string name="debug_log_sending_multipart_sms">Envoi d\'un message SMS multipartite avec %1$d parties</string>
+    <string name="debug_log_sending_single_sms">Envoi d\'un message SMS unique</string>
+    <string name="debug_log_failed_sending_sms">Échec de l\'envoi du message SMS à %1$s!? %2$s</string>
+    <string name="debug_log_sms_phone_blank">Le numéro de téléphone SMS était vide?!</string>
+    <string name="debug_log_sending_location_message_to">Envoi d\'un message de localisation à: %1$s</string>
+    <string name="debug_log_failed_sending_location_sms">Échec de l\'envoi du message SMS de localisation à %1$s!?</string>
+    <string name="debug_log_placing_alert_phone_call">Passer un appel téléphonique d\'alerte à %1$s</string>
+    <string name="debug_log_no_call_phone_permission">Impossible de passer l\'appel, pas les autorisations?!</string>
+    <string name="debug_log_checking_for_activity">vérification de l\'activité à partir de %1$s heure locale</string>
+    <string name="debug_log_checking_for_system_events">Vérification des événements de verrouillage/déverrouillage du système</string>
+    <string name="debug_log_failed_getting_last_phone_activity">Échec de l\'obtention de la dernière activité du téléphone?!</string>
+    <string name="debug_log_no_events_sending_notification">aucun événement trouvé dans les %1$.2f dernières heures, envoi de la notification Es-tu là?</string>
+    <string name="debug_log_sending_alert">Envoi de l\'alerte!</string>
+    <string name="debug_log_sending_alert_failed">Échec lors de la tentative d\'obtention et d\'envoi de l\'alerte de localisation</string>
+    <string name="debug_log_last_device_activity">Le dernier événement d\'utilisation était %1$s de %2$s à %3$s</string>
+
+    <!-- AppController.kt -->
+    <string name="debug_log_starting_up">KeepAlive démarre!</string>
+
+    <!-- UtilityFunctions.kt -->
+    <string name="debug_log_failed_getting_shared_prefs">Échec de l\'obtention des préférences partagées?!</string>
+    <string name="debug_log_failed_getting_alarm_manager">Échec de l\'obtention de l\'AlarmManager?!</string>
+    <string name="debug_log_setting_periodic_alarm">Définition d\'une nouvelle alarme périodique pour environ %1$s</string>
+    <string name="debug_log_setting_final_exact_alarm">Définition de l\'alarme exacte finale pour se déclencher à %1$s</string>
+    <string name="debug_log_unable_to_set_exact_alarm">Impossible de définir l\'alarme exacte?! Définition de l\'alarme finale normale pour se déclencher à %1$s</string>
+    <string name="debug_log_api_22_unable_to_set_exact_alarm">C\'est l\'API 22 mais nous n\'avons pas pu définir une alarme exacte?!</string>
+    <string name="debug_log_returning_logs">Retour de %1$d journaux</string>
+
+    <!-- LogDisplayActivity.kt -->
+    <string name="debug_log_log_display_activity_started">Activité d\'affichage du journal de débogage démarrée</string>
+    <string name="debug_log_logs_deleted">Journaux de débogage supprimés</string>
+    <string name="debug_log_logs_copied_to_clipboard">Journaux de débogage copiés dans le presse-papiers</string>
+
+    <!-- LocationHelperBase.kt -->
+    <string name="debug_log_timeout_reached_getting_location">Délai d\'attente atteint lors de l\'obtention de l\'emplacement?!</string>
+    <string name="debug_log_attempting_to_get_location">Tentative d\'obtention de l\'emplacement…</string>
+    <string name="debug_log_device_idle_not_getting_current_location">L\'appareil est en mode inactif, n\'obtient pas l\'emplacement actuel</string>
+    <string name="debug_log_no_location_permission_executing_callback">Pas d\'autorisation de localisation, exécution du rappel</string>
+    <string name="debug_log_failed_getting_current_location">Échec de l\'obtention de l\'emplacement actuel?!</string>
+    <string name="debug_log_geocoding_timeout_reached">Délai d\'attente atteint, locationString est %1$s</string>
+    <string name="debug_log_failed_geocoding_gps_coordinates">Échec du géocodage des coordonnées GPS?!</string>
+    <string name="debug_log_no_address_results">Aucun résultat d\'adresse</string>
+
+    <!-- LocationHelper.kt -->
+    <string name="debug_log_attempting_to_get_last_location">Tentative d\'obtention du dernier emplacement…</string>
+    <string name="debug_log_best_last_known_location">le meilleur dernier emplacement connu est du fournisseur %1$s avec une précision de %2$f</string>
+    <string name="debug_log_unable_to_determine_location">Impossible de déterminer l\'emplacement</string>
+    <string name="debug_log_failed_getting_last_location">Échec de l\'obtention du dernier emplacement:</string>
+    <string name="debug_log_unable_to_get_current_location">Impossible d\'obtenir l\'emplacement actuel</string>
+    <string name="debug_log_location_timeout_reached">Délai d\'attente atteint</string>
+    <string name="debug_log_timeout_reached_getting_location_from_google_play">Délai d\'attente atteint lors de l\'obtention de l\'emplacement à partir de Google Play?!</string>
+    <string name="debug_log_failed_getting_location_from_source">Échec lors de la tentative d\'obtention de l\'emplacement %1$s</string>
+
+    <!-- MainActivity.kt -->
+    <string name="debug_log_no_alarm_or_monitoring_disabled">Aucune alarme trouvée ou surveillance désactivée</string>
+    <string name="debug_log_no_events_found_lock_screen">Aucun événement trouvé, peut-être pas d\'écran de verrouillage?</string>
+    <string name="debug_log_no_active_alarm_showing_restart_button">Aucune alarme active trouvée, affichage du bouton de redémarrage</string>
+    <string name="debug_log_failed_getting_sms_manager_disable_button">Échec de l\'obtention du gestionnaire de SMS? Désactivation du bouton de test SMS</string>
+    <string name="debug_log_current_alarm_time">Alarme actuelle définie pour %1$s heure locale</string>
+
+    <!-- PermissionManager.kt -->
+    <string name="debug_log_still_need_some_permissions">J\'ai encore besoin de certaines autorisations</string>
+    <string name="debug_log_have_all_permissions">J\'ai toutes les autorisations</string>
+    <string name="debug_log_finished_requesting_permissions">Demande d\'autorisations terminée</string>
+
+    <!-- AlarmReceiver.kt -->
+    <string name="debug_log_alarm_just_fired">L\'alarme vient de se déclencher!</string>
+    <string name="debug_log_app_not_enabled_alarm_went_off">L\'application n\'est pas activée, pourquoi l\'alarme s\'est-elle déclenchée?!</string>
+    <string name="debug_log_alarm_stage">L\'étape d\'alarme est %1$s</string>
+    <string name="debug_log_alarm_time_comparison">L\'heure est %1$s, l\'alarme était censée se déclencher à %2$s, c\'est-à-dire il y a %3$d secondes</string>
+    <string name="debug_log_failed_processing_alarm">Échec lors du traitement de l\'alarme:</string>
+
+    <!-- SMSSentReceiver.kt -->
+    <string name="debug_log_sms_sent">SMS envoyé!</string>
+    <string name="debug_log_sms_send_error">Erreur d\'envoi du SMS: %1$s</string>
+
+    <!-- BootBroadcastReceiver.kt -->
+    <string name="debug_log_boot_completed">Démarrage terminé!?</string>
+    <string name="debug_log_app_is_disabled">L\'application est désactivée?</string>
+    <string name="debug_log_boot_receiver_exception">Exception dans BootBroadcastReceiver: %1$s</string>
 </resources>

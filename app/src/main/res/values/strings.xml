@@ -125,7 +125,6 @@
     <string name="enabled_title">Monitoring Enabled</string>
     <string name="disabled_title">Monitoring Disabled</string>
     <string name="auto_restart_title">Auto-Restart Monitoring After Alert</string>
-    <string name="monitored_apps_title">Monitoring Method</string>
     <string name="time_period_title">Hours of Inactivity Before Prompt</string>
     <string name="time_period_description">The # of hours of inactivity before you will be prompted with an \'Are you there?\' notification.</string>
     <string name="followup_time_period_title">Minutes to Wait for Confirmation</string>
@@ -141,6 +140,7 @@
     <string name="edit_emergency_contact_title">Edit Emergency Contact</string>
 
     <!-- Monitored Apps strings -->
+    <string name="monitored_apps_title">Monitoring Method</string>
     <string name="monitored_apps_dialog_title">Select 1 or more apps on your device</string>
     <string name="monitored_apps_dialog_message">Usage of the selected app(s) will be used to determine when your device was last interacted with</string>
     <string name="monitored_apps_chosen_title">Selected App(s)</string>
@@ -157,6 +157,14 @@
     <string name="monitored_apps_history_name_header">Activity Name</string>
     <string name="monitored_apps_no_usage_stats_permissions_dialog_title">Permissions Required</string>
     <string name="monitored_apps_no_usage_stats_permissions_dialog_message">In order to configure this setting you must first grant the Usage Stats permission. Please click the back button to return to the main page and click the \'Grant Permissions\' button. </string>
+
+    <!-- Log Display strings -->
+    <string name="log_display_increase_size_button_text">Size +</string>
+    <string name="log_display_decrease_size_button_text">Size -</string>
+    <string name="log_display_copy_button_text">Copy</string>
+    <string name="log_display_copy_button_toast">Text Copied</string>
+    <string name="log_display_delete_dialog_title">Delete Logs?</string>
+    <string name="log_display_delete_dialog_message">Are you sure you want to delete all saved logs?</string>
 
     <!-- SEND_SMS Permission -->
     <string name="permission_send_sms_title">Permission Required: Send SMS Messages</string>
@@ -189,4 +197,97 @@
     <!-- REQUEST_SCHEDULE_EXACT_ALARM Permission (For S and above) -->
     <string name="permission_schedule_alarms_title">Permission Required: Schedule Alarms</string>
     <string name="permission_schedule_alarms_description">Scheduling alarms is required so that the Alert can trigger even when your device is sleeping or in Do Not Disturb mode.\n\nPlease enable this permission for the KeepAlive app in your device settings.</string>
+
+    <!-- AlertFunctions.kt -->
+    <string name="debug_log_doing_alert_check">Doing periodic check, alarm stage is %1$s</string>
+    <string name="debug_log_sending_alert_sms">Sending alert SMS!</string>
+    <string name="debug_log_getting_sms_manager_with_sub_id">Getting SMS manager with context.getSystemService and sub id %1$d</string>
+    <string name="debug_log_getting_sms_manager_with_context">Getting SMS manager with context.getSystemService</string>
+    <string name="debug_log_getting_default_sms_manager">Getting default SMS manager</string>
+    <string name="debug_log_getting_default_sms_manager_for_sub_id">Getting default SMS manager for sub id %1$d</string>
+    <string name="debug_log_exception_while_getting_sms_manager">Exception while getting SMS manager: %1$s</string>
+    <string name="debug_log_failed_getting_sms_manager">Failed getting SMS manager?!</string>
+    <string name="debug_log_sending_text_message_to">Sending text message to: %1$s</string>
+    <string name="debug_log_sending_multipart_sms">Sending multipart SMS message with %1$d parts</string>
+    <string name="debug_log_sending_single_sms">Sending single SMS message</string>
+    <string name="debug_log_failed_sending_sms">Failed sending SMS message to %1$s!? %2$s</string>
+    <string name="debug_log_sms_phone_blank">SMS phone # was blank?!</string>
+    <string name="debug_log_sending_location_message_to">Sending location message to: %1$s</string>
+    <string name="debug_log_failed_sending_location_sms">Failed sending location SMS message to %1$s!?</string>
+    <string name="debug_log_placing_alert_phone_call">Placing Alert phone call to %1$s</string>
+    <string name="debug_log_no_call_phone_permission">Unable to place call, don\'t have permissions?!</string>
+    <string name="debug_log_checking_for_activity">checking for activity starting at %1$s local time</string>
+    <string name="debug_log_checking_for_system_events">Checking for system lock/unlock events</string>
+    <string name="debug_log_failed_getting_last_phone_activity">Failed getting last phone activity?!</string>
+    <string name="debug_log_no_events_sending_notification">no events found in the last %1$.2f hours, sending Are you there? notification</string>
+    <string name="debug_log_sending_alert">Sending alert!</string>
+    <string name="debug_log_sending_alert_failed">Failed while attempting to get and send location alert</string>
+    <string name="debug_log_last_device_activity">Last usage event was %1$s from %2$s at %3$s</string>
+
+    <!-- AppController.kt -->
+    <string name="debug_log_starting_up">KeepAlive starting up!</string>
+
+    <!-- UtilityFunctions.kt -->
+    <string name="debug_log_failed_getting_shared_prefs">Failed getting shared preferences?!</string>
+    <string name="debug_log_failed_getting_alarm_manager">Failed to get AlarmManager?!</string>
+    <string name="debug_log_setting_periodic_alarm">Setting new periodic alarm for approximately %1$s</string>
+    <string name="debug_log_setting_final_exact_alarm">Setting final exact alarm to go off at %1$s</string>
+    <string name="debug_log_unable_to_set_exact_alarm">Unable to set exact alarm?!  Setting normal final alarm to go off at %1$s</string>
+    <string name="debug_log_api_22_unable_to_set_exact_alarm">This is API 22 but we weren\'t able to set an exact alarm?!</string>
+    <string name="debug_log_returning_logs">Returning %1$d logs</string>
+
+    <!-- LogDisplayActivity.kt -->
+    <string name="debug_log_log_display_activity_started">Debug Log Display Activity started</string>
+    <string name="debug_log_logs_deleted">Debug logs deleted</string>
+    <string name="debug_log_logs_copied_to_clipboard">Debug logs copied to clipboard</string>
+
+    <!-- LocationHelperBase.kt -->
+    <string name="debug_log_timeout_reached_getting_location">Timeout reached while getting location?!</string>
+    <string name="debug_log_attempting_to_get_location">Attempting to get location…</string>
+    <string name="debug_log_device_idle_not_getting_current_location">Device is in idle mode, not getting current location</string>
+    <string name="debug_log_no_location_permission_executing_callback">Don\'t have location permission, executing callback</string>
+    <string name="debug_log_failed_getting_current_location">Failed getting current location?!</string>
+    <string name="debug_log_geocoding_timeout_reached">Timeout reached, locationString is %1$s</string>
+    <string name="debug_log_failed_geocoding_gps_coordinates">Failed geocoding GPS coordinates?!</string>
+    <string name="debug_log_no_address_results">No address results</string>
+
+    <!-- LocationHelper.kt -->
+    <string name="debug_log_attempting_to_get_last_location">Attempting to get lastLocation…</string>
+    <string name="debug_log_best_last_known_location">best lastKnownLocation is from provider %1$s with accuracy %2$f</string>
+    <string name="debug_log_unable_to_determine_location">Unable to determine location</string>
+    <string name="debug_log_failed_getting_last_location">Failed while getting last location:</string>
+    <string name="debug_log_unable_to_get_current_location">Unable to get current location</string>
+    <string name="debug_log_location_timeout_reached">Timeout reached</string>
+    <string name="debug_log_timeout_reached_getting_location_from_google_play">Timeout reached while getting location from google play?!</string>
+    <string name="debug_log_failed_getting_location_from_source">Failed while trying to get the %1$s location</string>
+
+    <!-- MainActivity.kt -->
+    <string name="debug_log_no_alarm_or_monitoring_disabled">No alarm found or monitoring is disabled</string>
+    <string name="debug_log_no_events_found_lock_screen">No events found, may not have lock screen?</string>
+    <string name="debug_log_no_active_alarm_showing_restart_button">No active alarm found, showing button to restart</string>
+    <string name="debug_log_failed_getting_sms_manager_disable_button">Failed to get SMS manager? Disabling SMS test button</string>
+    <string name="debug_log_current_alarm_time">Current alarm set for %1$s local time</string>
+
+    <!-- PermissionManager.kt -->
+    <string name="debug_log_still_need_some_permissions">Still need some permissions</string>
+    <string name="debug_log_have_all_permissions">Have all permissions</string>
+    <string name="debug_log_finished_requesting_permissions">Finished requesting permissions</string>
+
+    <!-- AlarmReceiver.kt -->
+    <string name="debug_log_alarm_just_fired">Alarm just fired!</string>
+    <string name="debug_log_app_not_enabled_alarm_went_off">App is not enabled, why did the alarm go off?!</string>
+    <string name="debug_log_alarm_stage">Alarm stage is %1$s</string>
+    <string name="debug_log_alarm_time_comparison">Time is %1$s, alarm was supposed to go off at %2$s, which was %3$d seconds ago</string>
+    <string name="debug_log_failed_processing_alarm">Failed while processing alarm:</string>
+
+    <!-- SMSSentReceiver.kt -->
+    <string name="debug_log_sms_sent">SMS sent!</string>
+    <string name="debug_log_sms_send_error">SMS send error: %1$s</string>
+
+    <!-- BootBroadcastReceiver.kt -->
+    <string name="debug_log_boot_completed">Boot completed!?</string>
+    <string name="debug_log_app_is_disabled">App is disabled?</string>
+    <string name="debug_log_boot_receiver_exception">Exception in BootBroadcastReceiver: %1$s</string>
+
+
 </resources>

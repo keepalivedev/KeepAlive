@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat
 import io.keepalive.android.receivers.SMSSentReceiver
 import java.util.Calendar
 import java.util.Locale
+import java.util.TimeZone
 
 @SuppressLint("MissingPermission")
 fun getDefaultSmsSubscriptionId(context: Context): Int {
@@ -73,32 +74,30 @@ fun getSMSManager(context: Context): SmsManager? {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (subscriptionId == SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
 
-                DebugLogger.d("sendAlertMessage", "Getting SMS manager with context.getSystemService")
+                DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_getting_sms_manager_with_context))
                 context.getSystemService(SmsManager::class.java)
             } else {
 
-                DebugLogger.d("sendAlertMessage", "Getting SMS manager with context.getSystemService " +
-                        "and sub id $subscriptionId")
+                DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_getting_sms_manager_with_sub_id, subscriptionId))
                 context.getSystemService(SmsManager::class.java).createForSubscriptionId(subscriptionId)
             }
 
         } else {
             if (subscriptionId == SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
-                DebugLogger.d("sendAlertMessage", "Getting default SMS manager")
+                DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_getting_default_sms_manager))
 
                 // the deprecation details here have good info on the single vs multi-sim situations
                 SmsManager.getDefault()
 
             } else {
-                DebugLogger.d("sendAlertMessage", "Getting default SMS manager for " +
-                        "sub id $subscriptionId")
+                DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_getting_default_sms_manager_for_sub_id, subscriptionId))
 
                 // this actually still seemed to work when passing -1 as the subscription id...
                 SmsManager.getSmsManagerForSubscriptionId(subscriptionId)
             }
         }
     } catch (e: Exception) {
-        DebugLogger.d("sendAlertMessage", "Exception while getting SMS manager: ${e.message}", e)
+        DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_exception_while_getting_sms_manager, e.message), e)
 
         // if the above fails default to the normal method of getting the SMS manager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -120,7 +119,7 @@ class AlertMessageSender(private val context: Context) {
 
         // if this is an emulator or if the device doesn't have an active SIM plan this can be null
         if (smsManager == null) {
-            DebugLogger.d("AlertMessageSender", "Failed getting SMS manager?!")
+            DebugLogger.d("AlertMessageSender", context.getString(R.string.debug_log_failed_getting_sms_manager))
 
             // if smsManager is null we can't send SMS so send a notification to let the user know
             AlertNotificationHelper(context).sendNotification(
@@ -169,7 +168,7 @@ class AlertMessageSender(private val context: Context) {
             return
         }
 
-        DebugLogger.d("sendAlertMessage", "Sending alert SMS!")
+        DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_alert_sms))
 
         // create a pending intent for the SMS sent intent to use when sending the SMS
         val sentPI = PendingIntent.getBroadcast(
@@ -193,7 +192,7 @@ class AlertMessageSender(private val context: Context) {
             // this shouldn't ever happen but just in case...
             if (contact.phoneNumber != "") {
 
-                DebugLogger.d("sendAlertMessage", "Sending text message to: ${contact.phoneNumber}")
+                DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_text_message_to, contact.phoneNumber))
 
                 try {
 
@@ -222,7 +221,7 @@ class AlertMessageSender(private val context: Context) {
 
                     // only use sendMultipartTextMessage if there is more than 1 part
                     if (messageParts.size > 1) {
-                        DebugLogger.d("sendAlertMessage", "Sending multipart SMS message with ${messageParts.size} parts")
+                        DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_multipart_sms, messageParts.size))
 
                         // create an array with the same pending intent for each part
                         val sentPIList = ArrayList<PendingIntent>()
@@ -235,7 +234,7 @@ class AlertMessageSender(private val context: Context) {
                             messageParts, sentPIList, null)
                     } else {
 
-                        DebugLogger.d("sendAlertMessage", "Sending single SMS message")
+                        DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_single_sms))
 
                         // send a single part SMS message
                         smsManager.sendTextMessage(contact.phoneNumber, null,
@@ -243,7 +242,7 @@ class AlertMessageSender(private val context: Context) {
                     }
 
                 } catch (e: Exception) {
-                    DebugLogger.d("sendAlertMessage", "Failed sending SMS message to ${contact.phoneNumber}!? ${e.message}", e)
+                    DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_failed_sending_sms, contact.phoneNumber, e.message), e)
 
                     // if we failed while sending the SMS then send a notification
                     //  to let the user know
@@ -254,7 +253,7 @@ class AlertMessageSender(private val context: Context) {
                     )
                 }
             } else {
-                DebugLogger.d("sendAlertMessage", "SMS phone # was blank?!")
+                DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sms_phone_blank))
             }
         }
     }
@@ -281,10 +280,7 @@ class AlertMessageSender(private val context: Context) {
                     // if enabled, send the location details
                     if (contact.includeLocation) {
 
-                        DebugLogger.d(
-                            "sendLocationAlertMsg",
-                            "Sending location message to: ${contact.phoneNumber}"
-                        )
+                        DebugLogger.d("sendLocationAlertMsg", context.getString(R.string.debug_log_sending_location_message_to, contact.phoneNumber))
 
                         // send the location message
                         smsManager.sendTextMessage(
@@ -293,11 +289,11 @@ class AlertMessageSender(private val context: Context) {
                     }
 
                 } catch (e: Exception) {
-                    DebugLogger.d("sendLocationAlertMsg", "Failed sending location SMS message to ${contact.phoneNumber}!?", e)
+                    DebugLogger.d("sendLocationAlertMsg", context.getString(R.string.debug_log_failed_sending_location_sms, contact.phoneNumber), e)
                 }
 
             } else {
-                DebugLogger.d("sendLocationAlertMsg", "SMS phone # was blank?!")
+                DebugLogger.d("sendLocationAlertMsg", context.getString(R.string.debug_log_sms_phone_blank))
             }
         }
         Log.d( "sendLocationAlertMsg", "Done sending location alert messages")
@@ -321,7 +317,7 @@ fun makeAlertCall(context: Context) {
             ) == PackageManager.PERMISSION_GRANTED
         ) {
 
-            DebugLogger.d("makeAlarmCall", "Placing Alert phone call to $phoneContactNumber")
+            DebugLogger.d("makeAlarmCall", context.getString(R.string.debug_log_placing_alert_phone_call, phoneContactNumber))
 
             // build the call intent
             val callIntent = Intent(Intent.ACTION_CALL)
@@ -347,7 +343,7 @@ fun makeAlertCall(context: Context) {
             )
 
         } else {
-            DebugLogger.d("makeAlarmCall", "Unable to place call, don't have permissions?!")
+            DebugLogger.d("makeAlarmCall", context.getString(R.string.debug_log_no_call_phone_permission))
         }
     } else {
         Log.d("makeAlarmCall", "Phone # was null?!")
@@ -355,15 +351,14 @@ fun makeAlertCall(context: Context) {
 }
 
 // trying to find when the phone was last locked or unlocked
-fun getLastPhoneActivity(context: Context, startTimestamp: Long, monitoredApps: List<String>? = null): UsageEvents.Event? {
+fun getLastDeviceActivity(context: Context, startTimestamp: Long, monitoredApps: List<String>? = null): UsageEvents.Event? {
     var lastInteractiveEvent: UsageEvents.Event? = null
 
     // todo check for permissions usage stats permissions? this will fail silently and not
     //  return any events if we don't have permissions
     try {
 
-        DebugLogger.d("getLastPhoneActivity", "checking for activity starting at" +
-                " ${getDateTimeStrFromTimestamp(startTimestamp)}")
+        DebugLogger.d("getLastDeviceActivity", context.getString(R.string.debug_log_checking_for_activity, getDateTimeStrFromTimestamp(startTimestamp, TimeZone.getDefault().id)))
 
         val usageStatsManager =
             context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
@@ -374,12 +369,15 @@ fun getLastPhoneActivity(context: Context, startTimestamp: Long, monitoredApps: 
         var appsToMonitor = monitoredApps
         val targetEvents: MutableList<Int> = mutableListOf()
 
-        Log.d("getLastPhoneActivity", "Checking for monitored apps: ${appsToMonitor == null} $appsToMonitor")
+        // create a map to translate the event types to strings
+        val activityMap: MutableMap<Int, String> = mutableMapOf()
+
+        Log.d("getLastDeviceActivity", "Checking for monitored apps: ${appsToMonitor == null} $appsToMonitor")
 
         // if no apps were passed in then use the package for monitoring lock/unlock events
         if (appsToMonitor.isNullOrEmpty() && Build.VERSION.SDK_INT >= AppController.MIN_API_LEVEL_FOR_DEVICE_LOCK_UNLOCK) {
 
-            DebugLogger.d("getLastPhoneActivity", "Checking for system lock/unlock events")
+            DebugLogger.d("getLastDeviceActivity", context.getString(R.string.debug_log_checking_for_system_events))
             appsToMonitor = listOf("android")
 
             // KEYGUARD_HIDDEN seems to fire when the phone is unlocked?? and KEYGUARD_SHOWN when
@@ -388,14 +386,21 @@ fun getLastPhoneActivity(context: Context, startTimestamp: Long, monitoredApps: 
             targetEvents.add(UsageEvents.Event.KEYGUARD_HIDDEN)
             targetEvents.add(UsageEvents.Event.KEYGUARD_SHOWN)
 
+            activityMap[UsageEvents.Event.KEYGUARD_HIDDEN] = "KEYGUARD_HIDDEN"
+            activityMap[UsageEvents.Event.KEYGUARD_SHOWN] = "KEYGUARD_SHOWN"
+
         } else {
             // this is deprecated in API 29 but still seems to be in use?
             targetEvents.add(UsageEvents.Event.MOVE_TO_FOREGROUND)
+
+            activityMap[UsageEvents.Event.MOVE_TO_FOREGROUND] = "MOVE_TO_FOREGROUND"
 
             // when testing under API 34 this never seems to fire, apps still sending MOVE_TO_FOREGROUND
             // if it is available we should still check it though
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 targetEvents.add(UsageEvents.Event.ACTIVITY_RESUMED)
+
+                activityMap[UsageEvents.Event.ACTIVITY_RESUMED] = "ACTIVITY_RESUMED"
             }
 
             // we shouldn't have set an alarm if this is < API 28 and no apps to monitor have
@@ -423,26 +428,31 @@ fun getLastPhoneActivity(context: Context, startTimestamp: Long, monitoredApps: 
 
         // print out the last event found, if any
         if (lastInteractiveEvent != null) {
-            Log.d(
-                "getLastPhoneActivity",
-                "Last usage event was ${lastInteractiveEvent.eventType} at" +
-                        " ${getDateTimeStrFromTimestamp(lastInteractiveEvent.timeStamp)}"
-            )
+
+            DebugLogger.d("getLastDeviceActivity",
+                context.getString(R.string.debug_log_last_device_activity,
+                    activityMap[lastInteractiveEvent.eventType],
+                    lastInteractiveEvent.packageName,
+                    getDateTimeStrFromTimestamp(lastInteractiveEvent.timeStamp)))
+
         } else {
             Log.d(
-                "getLastPhoneActivity",
+                "getLastDeviceActivity",
                 "No usage events found since ${getDateTimeStrFromTimestamp(startTimestamp)}"
             )
         }
 
     } catch (e: Exception) {
-        DebugLogger.d("getLastPhoneActivity", "Failed getting last phone activity?!", e)
+        DebugLogger.d("getLastDeviceActivity", context.getString(R.string.debug_log_failed_getting_last_phone_activity), e)
     }
     return lastInteractiveEvent
 }
 
 
 fun doAlertCheck(context: Context, alarmStage: String) {
+
+    DebugLogger.d("doAlertCheck", context.getString(R.string.debug_log_doing_alert_check, alarmStage))
+
     val prefs = getEncryptedSharedPreferences(context)
 
     // get the necessary preferences
@@ -491,7 +501,7 @@ fun doAlertCheck(context: Context, alarmStage: String) {
     }
 
     // double check that there is still no recent user activity
-    val lastInteractiveEvent = getLastPhoneActivity(
+    val lastInteractiveEvent = getLastDeviceActivity(
         context, activitySearchStartTimestamp, appsToMonitor.map { it.packageName }
     )
 
@@ -517,10 +527,7 @@ fun doAlertCheck(context: Context, alarmStage: String) {
     // make sure we aren't in a rest period though because we should never initiate the
     //  'are you there?' check during a rest period
     if (lastInteractiveEvent == null && !isInRestPeriod) {
-        DebugLogger.d(
-            "doPeriodicCheck",
-            "no events found in the last $checkPeriodHours hours, sending Are you there? notification"
-        )
+        DebugLogger.d("doPeriodicCheck", context.getString(R.string.debug_log_no_events_sending_notification, checkPeriodHours))
 
         // send the 'Are you there?' notification
         AlertNotificationHelper(context).sendNotification(
@@ -559,7 +566,7 @@ fun doAlertCheck(context: Context, alarmStage: String) {
 }
 
 fun sendAlert(context: Context, prefs: SharedPreferences) {
-    DebugLogger.d("sendAlert","Sending alert!")
+    DebugLogger.d("sendAlert", context.getString(R.string.debug_log_sending_alert))
 
     // cancel the 'Are you there?' notification
     AlertNotificationHelper(context).cancelNotification(
@@ -586,7 +593,7 @@ fun sendAlert(context: Context, prefs: SharedPreferences) {
         } catch (e: Exception) {
 
             // if we fail for any reason then send the alert messages
-            DebugLogger.d("sendAlert", "Failed while attempting to get and send location alert", e)
+            DebugLogger.d("sendAlert", context.getString(R.string.debug_log_sending_alert_failed), e)
         }
     }
 

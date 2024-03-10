@@ -22,7 +22,7 @@ class AppController : Application() {
         const val SMS_ALERT_FAILURE_NOTIFICATION_ID = 4
 
         // when doing a sanity check to see if we can see ANY events, this is the # of hours
-        //  to use with getLastPhoneActivity().  if the user has a higher value set it
+        //  to use with getLastDeviceActivity().  if the user has a higher value set it
         //  will use that instead
         const val LAST_ACTIVITY_MAX_PERIOD_CHECK_HOURS = 48F
 
@@ -45,7 +45,9 @@ class AppController : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        DebugLogger.d(TAG, "KeepAlive starting up!")
+        DebugLogger.initialize(this)
+
+        DebugLogger.d(TAG, getString(R.string.debug_log_starting_up))
 
         // alternative is to check BuildConfig.DEBUG?
         if ((this.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0) {
