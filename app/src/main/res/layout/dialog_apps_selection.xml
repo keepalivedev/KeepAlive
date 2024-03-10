@@ -22,13 +22,13 @@
         android:textColor="@color/primary"
         />
 
-
+    <!-- allow the availableAppsListView to expand by default, the size of the
+            chosenAppsListView will be set dynamically based on the # of items -->
     <ListView
         android:id="@+id/chosenAppsListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:fadeScrollbars="false"
-        android:layout_weight="0.5"/>
+        android:fadeScrollbars="false" />
 
     <TextView
         android:layout_width="match_parent"
@@ -36,13 +36,12 @@
         android:text="@string/monitored_apps_recently_used_title"
         android:textSize="@dimen/header_text_size"
         android:textColor="@color/primary"
-
         android:paddingTop="16dp"/>
 
     <ListView
         android:id="@+id/availableAppsListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:fadeScrollbars="false"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:fadeScrollbars="false" />
 </LinearLayout>
