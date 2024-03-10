@@ -70,7 +70,7 @@ class PermissionManager(private val context: Context, private val activity: AppC
 
         // overlay permissions added in API 23
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            permissionExplanations[Settings.ACTION_MANAGE_OVERLAY_PERMISSION] to arrayOf(
+            permissionExplanations[Settings.ACTION_MANAGE_OVERLAY_PERMISSION] = arrayOf(
                 context.getString(R.string.permission_manage_overlay_title),
                 context.getString(R.string.permission_manage_overlay_description)
             )
