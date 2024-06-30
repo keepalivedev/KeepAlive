@@ -1,0 +1,3 @@
+* Add Feature: App Monitoring
+* Add Support for Android 5.1 or later
+* Save Debug Logs to disk and improve log display UI
