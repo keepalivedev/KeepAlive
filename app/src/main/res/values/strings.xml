@@ -126,7 +126,7 @@
     <string name="disabled_title">Monitoring Disabled</string>
     <string name="auto_restart_title">Auto-Restart Monitoring After Alert</string>
     <string name="time_period_title">Hours of Inactivity Before Prompt</string>
-    <string name="time_period_description">The # of hours of inactivity before you will be prompted with an \'Are you there?\' notification.</string>
+    <string name="time_period_description">The # of hours of inactivity before you will be prompted with an \'Are you there?\' notification.\n\nNOTE: This timing is not exact and the system may delay this notification by up to 1 hour.</string>
     <string name="followup_time_period_title">Minutes to Wait for Confirmation</string>
     <string name="rest_period_title">Rest Period Time Range</string>
     <string name="followup_time_period_description">The # of minutes to wait after sending a \'Are you there?\' notification before an Alert will be sent to your Emergency Contact(s)</string>
