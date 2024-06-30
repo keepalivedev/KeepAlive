@@ -126,7 +126,7 @@
     <string name="disabled_title">Мониторинг выключен</string>
     <string name="auto_restart_title">Перезапускать мониторинг после срабатывания оповещения</string>
     <string name="time_period_title">Часов неактивности до проверки</string>
-    <string name="time_period_description">Количество часов бездействия до того, как вам будет предложено уведомление \'Вы здесь?\'.</string>
+    <string name="time_period_description">Количество часов бездействия до того, как вам будет предложено уведомление \'Вы здесь?\'.\n\nПРИМЕЧАНИЕ: Это время не точно, и система может задержать это уведомление на срок до одного часа.</string>
     <string name="followup_time_period_title">Сколько минут ожидать подтверждения</string>
     <string name="rest_period_title">Период отдыха</string>
     <string name="followup_time_period_description">Количество минут ожидания после отправки уведомления \'Вы здесь?\', прежде чем оповещение будет отправлено вашим контактам для экстренных случаев.</string>

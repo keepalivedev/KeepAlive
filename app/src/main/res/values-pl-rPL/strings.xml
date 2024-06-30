@@ -127,7 +127,7 @@
     <string name="disabled_title">Monitorowanie Wyłączone</string>
     <string name="auto_restart_title">Auto-Restart Monitorowania Po Alercie</string>
     <string name="time_period_title">Godziny Nieaktywności przed Zapytaniem</string>
-    <string name="time_period_description">Ile godzin nieaktywności musi minąć zanim aplikacja wyśle pytanie \'Jesteś tam?\'.</string>
+    <string name="time_period_description">Ile godzin nieaktywności musi minąć zanim aplikacja wyśle pytanie \'Jesteś tam?\'.\n\nUWAGA: Czas ten nie jest dokładny i system może opóźnić to powiadomienie o maksymalnie jedną godzinę.</string>
     <string name="followup_time_period_title">Ilość minut na Potwierdzenie Pytania</string>
     <string name="rest_period_title">Zakres Czasu Odpoczynku</string>
     <string name="followup_time_period_description">Ile minut należy poczekać na odpowiedź do pytania \'Jesteś tam?\' zanim Alert wysłany zostanie do Twoich Kontaktów Alarmowych.</string>
