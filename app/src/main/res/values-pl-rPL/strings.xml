@@ -10,6 +10,7 @@
     <string name="delete">Usuń</string>
     <string name="close">Zamknij</string>
     <string name="cancel">Anuluj</string>
+    <string name="back">Z powrotem</string>
     <string name="go_to_settings">Przejdź do Ustawień</string>
     <string name="enabled">Aktywny</string>
     <string name="disabled">Nieaktywny</string>
