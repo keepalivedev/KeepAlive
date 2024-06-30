@@ -10,6 +10,7 @@
     <string name="delete">Usuń</string>
     <string name="close">Zamknij</string>
     <string name="cancel">Anuluj</string>
+    <string name="back">Z powrotem</string>
     <string name="go_to_settings">Przejdź do Ustawień</string>
     <string name="enabled">Aktywny</string>
     <string name="disabled">Nieaktywny</string>
@@ -37,10 +38,10 @@
 
     <!-- abb hibernation/restriction stuff -->
     <string name="hibernation_dialog_title">Wyłącz Ograniczenia Aplikacji</string>
-    <string name="hibernation_dialog_message">Android automatycznie usuwa uprawnienia aplikacji, które nie były ostatnio używane.  Aplikacja Keep Alive nie potrzebuje żadnej interakcji po jej pierwszej konfiguracji i może przez to stracić uprawnienia.\n\nŻeby mieć pewność, że Keep Alive może działać poprawnie wyłącz opcje \'Usuń uprawnienia jeśli aplikacja jest nieużywana\'.</string>
-    <string name="hibernation_dialog_message_api30">Android automatycznie usuwa uprawnienia aplikacji, które nie były ostatnio używane.  Aplikacja Keep Alive nie potrzebuje żadnej interakcji po jej pierwszej konfiguracji i może przez to stracić uprawnienia.\n\nŻeby mieć pewność, że Keep Alive może działać poprawnie wyłącz opcje \'Usuń uprawnienia jeśli aplikacja jest nieużywana\'.</string>
-    <string name="hibernation_dialog_message_api31">Android automatycznie usuwa uprawnienia aplikacji, które nie były ostatnio używane.  Aplikacja Keep Alive nie potrzebuje żadnej interakcji po jej pierwszej konfiguracji i może przez to stracić uprawnienia.\n\nŻeby mieć pewność, że Keep Alive może działać poprawnie wyłącz opcje \'Usuń uprawnienia i zwolnij miejsce\' dla aplikacji Keep Alive.</string>
-    <string name="hibernation_dialog_message_api_backport">Android automatycznie usuwa uprawnienia aplikacji, które nie były ostatnio używane.  Aplikacja Keep Alive nie potrzebuje żadnej interakcji po jej pierwszej konfiguracji i może przez to stracić uprawnienia.\n\nŻeby mieć pewność, że Keep Alive może działać poprawnie wyłącz opcje \'Usuń uprawnienia jeśli aplikacja jest nieużywana\'.</string>
+    <string name="hibernation_dialog_message"><![CDATA[Android automatycznie usuwa uprawnienia aplikacji, które nie były ostatnio używane.  Aplikacja Keep Alive nie potrzebuje żadnej interakcji po jej pierwszej konfiguracji i może przez to stracić uprawnienia.<br/><br/>Żeby mieć pewność, że Keep Alive może działać poprawnie wyłącz opcje <b>\'Usuń uprawnienia jeśli aplikacja jest nieużywana\'</b>.]]></string>
+    <string name="hibernation_dialog_message_api30"><![CDATA[Android automatycznie usuwa uprawnienia aplikacji, które nie były ostatnio używane.  Aplikacja Keep Alive nie potrzebuje żadnej interakcji po jej pierwszej konfiguracji i może przez to stracić uprawnienia.<br/><br/>Żeby mieć pewność, że Keep Alive może działać poprawnie wyłącz opcje <b>\'Usuń uprawnienia jeśli aplikacja jest nieużywana\'</b>.]]></string>
+    <string name="hibernation_dialog_message_api31"><![CDATA[Android automatycznie usuwa uprawnienia aplikacji, które nie były ostatnio używane.  Aplikacja Keep Alive nie potrzebuje żadnej interakcji po jej pierwszej konfiguracji i może przez to stracić uprawnienia.<br/><br/>Żeby mieć pewność, że Keep Alive może działać poprawnie wyłącz opcje <b>\'Usuń uprawnienia i zwolnij miejsce\'</b> dla aplikacji Keep Alive.]]></string>
+    <string name="hibernation_dialog_message_api_backport"><![CDATA[Android automatycznie usuwa uprawnienia aplikacji, które nie były ostatnio używane.  Aplikacja Keep Alive nie potrzebuje żadnej interakcji po jej pierwszej konfiguracji i może przez to stracić uprawnienia.<br/><br/>Żeby mieć pewność, że Keep Alive może działać poprawnie wyłącz opcje <b>\'Usuń uprawnienia jeśli aplikacja jest nieużywana\'</b>.]]></string>
 
     <!-- MainActivity textview and button messages -->
     <string name="monitoring_active_message">Ostatnia wykryta aktywność: %1$s\nNastępne sprawdzenie za: %2$s godzin %3$s minut</string>
@@ -126,7 +127,7 @@
     <string name="disabled_title">Monitorowanie Wyłączone</string>
     <string name="auto_restart_title">Auto-Restart Monitorowania Po Alercie</string>
     <string name="time_period_title">Godziny Nieaktywności przed Zapytaniem</string>
-    <string name="time_period_description">Ile godzin nieaktywności musi minąć zanim aplikacja wyśle pytanie \'Jesteś tam?\'.</string>
+    <string name="time_period_description">Ile godzin nieaktywności musi minąć zanim aplikacja wyśle pytanie \'Jesteś tam?\'.\n\nUWAGA: Czas ten nie jest dokładny i system może opóźnić to powiadomienie o maksymalnie jedną godzinę.</string>
     <string name="followup_time_period_title">Ilość minut na Potwierdzenie Pytania</string>
     <string name="rest_period_title">Zakres Czasu Odpoczynku</string>
     <string name="followup_time_period_description">Ile minut należy poczekać na odpowiedź do pytania \'Jesteś tam?\' zanim Alert wysłany zostanie do Twoich Kontaktów Alarmowych.</string>

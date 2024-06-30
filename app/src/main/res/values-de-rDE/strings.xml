@@ -9,6 +9,7 @@
     <string name="delete">Löschen</string>
     <string name="close">Schließen</string>
     <string name="cancel">Abbrechen</string>
+    <string name="back">Zurück</string>
     <string name="go_to_settings">Einstellungen</string>
     <string name="enabled">Aktiv</string>
     <string name="disabled">Inaktiv</string>
@@ -27,10 +28,10 @@
 
     <!-- app hibernation/restriction stuff -->
     <string name="hibernation_dialog_title">App-Beschränkung deaktivieren</string>
-    <string name="hibernation_dialog_message">Android entfernt jetzt automatisch die Berechtigungen für Apps, die in letzter Zeit nicht verwendet wurden.  Da Keep Alive nach der Konfiguration keine weitere Interaktion benötigt, können ihr dadurch versehentlich die Berechtigungen entzogen werden.\n\nUm sicherzustellen, dass die Berechtigungen für Keep Alive nicht entzogen werden, deaktivieren Sie bitte die Option \"App-Aktivität bei Nichtbenutzung stoppen\" für die App Keep Alive.</string>
-    <string name="hibernation_dialog_message_api30">Android entfernt jetzt automatisch die Berechtigungen für Apps, die in letzter Zeit nicht verwendet wurden.  Sobald die Einstellungen konfiguriert sind, benötigt Keep Alive keine weitere Interaktion, es sei denn, ein Alarm wird ausgelöst.\n\nUm sicherzustellen, dass die Berechtigungen nicht entzogen werden, navigieren Sie bitte zum Abschnitt \"Berechtigungen\" für Keep Alive und deaktivieren Sie die Option \"Berechtigungen für ungenutzte App entfernen\".</string>
-    <string name="hibernation_dialog_message_api31">Android entfernt nun automatisch die Berechtigungen für Apps, die in letzter Zeit nicht genutzt wurden.  Sobald die Einstellungen konfiguriert sind, benötigt Keep Alive keine weitere Interaktion, es sei denn, ein Alarm wird ausgelöst.\n\nUm sicherzustellen, dass die Berechtigungen nicht entzogen werden, deaktivieren Sie bitte die Option \"Berechtigungen entfernen und Speicherplatz freigeben\" für die Keep Alive-App.</string>
-    <string name="hibernation_dialog_message_api_backport">Android entfernt jetzt automatisch die Berechtigungen für Apps, die in letzter Zeit nicht verwendet wurden.  Sobald die Einstellungen konfiguriert sind, benötigt Keep Alive keine weitere Interaktion, es sei denn, ein Alarm wird ausgelöst.\n\nUm sicherzustellen, dass die Berechtigungen nicht entzogen werden, deaktivieren Sie bitte die Option \"Berechtigungen entfernen, wenn die App nicht verwendet wird\".</string>
+    <string name="hibernation_dialog_message"><![CDATA[Android entfernt jetzt automatisch die Berechtigungen für Apps, die in letzter Zeit nicht verwendet wurden.  Da Keep Alive nach der Konfiguration keine weitere Interaktion benötigt, können ihr dadurch versehentlich die Berechtigungen entzogen werden.<br/><br/>Um sicherzustellen, dass die Berechtigungen für Keep Alive nicht entzogen werden, deaktivieren Sie bitte die Option <b>\"App-Aktivität bei Nichtbenutzung stoppen\"</b> für die App Keep Alive.]]></string>
+    <string name="hibernation_dialog_message_api30"><![CDATA[Android entfernt jetzt automatisch die Berechtigungen für Apps, die in letzter Zeit nicht verwendet wurden.  Sobald die Einstellungen konfiguriert sind, benötigt Keep Alive keine weitere Interaktion, es sei denn, ein Alarm wird ausgelöst.<br/><br/>Um sicherzustellen, dass die Berechtigungen nicht entzogen werden, navigieren Sie bitte zum Abschnitt \"Berechtigungen\" für Keep Alive und deaktivieren Sie die Option <b>\"Berechtigungen für ungenutzte App entfernen\"</b>.]]></string>
+    <string name="hibernation_dialog_message_api31"><![CDATA[Android entfernt nun automatisch die Berechtigungen für Apps, die in letzter Zeit nicht genutzt wurden.  Sobald die Einstellungen konfiguriert sind, benötigt Keep Alive keine weitere Interaktion, es sei denn, ein Alarm wird ausgelöst.<br/><br/>Um sicherzustellen, dass die Berechtigungen nicht entzogen werden, deaktivieren Sie bitte die Option <b>\"Berechtigungen entfernen und Speicherplatz freigeben\"</b> für die Keep Alive-App.]]></string>
+    <string name="hibernation_dialog_message_api_backport"><![CDATA[Android entfernt jetzt automatisch die Berechtigungen für Apps, die in letzter Zeit nicht verwendet wurden.  Sobald die Einstellungen konfiguriert sind, benötigt Keep Alive keine weitere Interaktion, es sei denn, ein Alarm wird ausgelöst.<br/><br/>Um sicherzustellen, dass die Berechtigungen nicht entzogen werden, deaktivieren Sie bitte die Option <b>\"Berechtigungen entfernen, wenn die App nicht verwendet wird\"</b>.]]></string>
 
     <!-- MainActivity textview and button messages -->
     <string name="monitoring_active_message">Letzte Aktivität erkannt um: %1$s\nNächster Aktivitäts-Check in: %2$s Stunden und %3$s Minuten</string>
@@ -113,7 +114,7 @@
     <string name="disabled_title">Überwachung inaktiv</string>
     <string name="auto_restart_title">Automatischer Neustart der Überwachung nach Alarmierung</string>
     <string name="time_period_title">Stunden Inaktivität bis zur Aufforderung</string>
-    <string name="time_period_description">Stunden Inaktivität, bevor Sie eine Benachrichtigung \"Sind Sie da?\" erhalten.</string>
+    <string name="time_period_description">Stunden Inaktivität, bevor Sie eine Benachrichtigung \"Sind Sie da?\" erhalten.\n\nHINWEIS: Diese Zeitangabe ist nicht exakt, und das System kann diese Benachrichtigung um bis zu eine Stunde verzögern.</string>
     <string name="followup_time_period_title">Minuten warten auf Bestätigung</string>
     <string name="rest_period_title">Ruhezeit</string>
     <string name="followup_time_period_description">Die Anzahl Minuten, die nach einer \"Sind Sie da?\"-Benachrichtigung gewartet wird, bevor ein Alarm an Ihre Notfallkontakte gesendet wird.</string>
