@@ -650,11 +650,19 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
+            // the hibernation dialog messages use HTML tags for formatting
+            val formattedDialogMessage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Html.fromHtml(dialogMessage, Html.FROM_HTML_MODE_LEGACY)
+            } else {
+                @Suppress("DEPRECATION")
+                Html.fromHtml(dialogMessage)
+            }
+
             // create a dialog to explain what we want the user to do and then, if they
             //  click ok, take them to the app settings page
             AlertDialog.Builder(this)
                 .setTitle(getString(R.string.hibernation_dialog_title))
-                .setMessage(dialogMessage)
+                .setMessage(formattedDialogMessage)
                 .setPositiveButton(getString(R.string.go_to_settings)) { _, _ ->
 
                     // regardless of the API version this will take the user to the correct place
