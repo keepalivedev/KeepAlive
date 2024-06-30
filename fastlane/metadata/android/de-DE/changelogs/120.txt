@@ -1,0 +1,3 @@
+* Funktion hinzufügen: App -Überwachung
+* Unterstützung für Android 5.1 oder höher
+* Speichern Sie Debug -Protokolle auf Festplatten und verbessern Sie die Benutzeroberfläche der Protokollanzeige.

@@ -1,0 +1,3 @@
+* Dodaj funkcję: Monitorowanie aplikacji
+* Dodaj obsługę Androida 5.1 lub nowszych
+* Zapisz dzienniki debugowania na dysku i ulepsz interfejs użytkownika wyświetlania dziennika
