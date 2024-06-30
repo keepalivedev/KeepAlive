@@ -22,10 +22,8 @@ class PermissionManager(private val context: Context, private val activity: AppC
     private var locationEnabled = false
     private var callPhoneEnabled = false
 
-    // at a minimum need the ability to send SMS messages
-    private val basicPermissions = mutableListOf(
-        Manifest.permission.SEND_SMS
-    )
+    // start with no permissions
+    private val basicPermissions = mutableListOf<String>()
 
     // map of a permission to the title and description to use in the explanation dialog
     private val permissionExplanations = mutableMapOf(
@@ -52,9 +50,18 @@ class PermissionManager(private val context: Context, private val activity: AppC
 
     init {
 
-        // get the preferences and check whether location is enabled and
+        // get the preferences and check for SMS contacts, whether location is enabled and
         //  if there is a call phone number
         val sharedPrefs = getEncryptedSharedPreferences(context)
+
+        val smsContacts: MutableList<SMSEmergencyContactSetting> = loadJSONSharedPreference(sharedPrefs,
+            "PHONE_NUMBER_SETTINGS")
+
+        // only request SMS permissions if there is at least one SMS contact
+        if (smsContacts.isNotEmpty()) {
+            basicPermissions.add(Manifest.permission.SEND_SMS)
+        }
+
         locationEnabled = sharedPrefs.getBoolean("location_enabled", false)
 
         // only request location if its enabled
