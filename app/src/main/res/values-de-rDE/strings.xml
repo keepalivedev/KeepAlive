@@ -9,6 +9,7 @@
     <string name="delete">Löschen</string>
     <string name="close">Schließen</string>
     <string name="cancel">Abbrechen</string>
+    <string name="back">Zurück</string>
     <string name="go_to_settings">Einstellungen</string>
     <string name="enabled">Aktiv</string>
     <string name="disabled">Inaktiv</string>

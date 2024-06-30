@@ -10,6 +10,7 @@
     <string name="delete">Удалить</string>
     <string name="close">Закрыть</string>
     <string name="cancel">Отмена</string>
+    <string name="back">Назад</string>
     <string name="go_to_settings">В настройки</string>
     <string name="enabled">Включено</string>
     <string name="disabled">Выключено</string>
