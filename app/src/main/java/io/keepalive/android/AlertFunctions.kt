@@ -12,6 +12,7 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.os.PowerManager
 import android.telecom.TelecomManager
 import android.telephony.PhoneNumberUtils
 import android.telephony.SmsManager
@@ -510,6 +511,19 @@ fun doAlertCheck(context: Context, alarmStage: String) {
     //  a rest period so we can assume that the 'are you there?' check was done
     //  outside of a rest period and so we should still send the alert
     if (alarmStage == "final" && lastInteractiveEvent == null) {
+
+        // we can't trust the OS to not pause execution so set a wake lock
+        val wakeLock: PowerManager.WakeLock =
+            (context.getSystemService(Context.POWER_SERVICE) as PowerManager).run {
+                newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KeepAlive::AlertWakeLock").apply {
+
+                    Log.d("sendAlert", "Acquiring wake lock")
+
+                    // set a 2 minute timeout
+                    acquire(120 * 1000)
+                }
+            }
+
         sendAlert(context, prefs)
 
         // if auto restart is enabled
@@ -518,6 +532,12 @@ fun doAlertCheck(context: Context, alarmStage: String) {
             // we can't set the alarm using last activity otherwise it would immediately fire an
             //  'are you there?' check so just base it on the checkPeriodHours and the rest periods
             setAlarm(context, (checkPeriodHours * 60 * 60 * 1000).toLong(), "periodic", restPeriods)
+        }
+
+        // release the wake lock
+        if (wakeLock.isHeld) {
+            Log.d("sendAlert", "Releasing wake lock")
+            wakeLock.release()
         }
 
         return
