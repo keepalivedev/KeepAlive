@@ -213,6 +213,8 @@
     <string name="debug_log_sending_alert">Envoi de l\'alerte!</string>
     <string name="debug_log_sending_alert_failed">Échec lors de la tentative d\'obtention et d\'envoi de l\'alerte de localisation</string>
     <string name="debug_log_last_device_activity">Le dernier événement d\'utilisation était %1$s de %2$s à %3$s</string>
+    <string name="debug_log_location_power_mode_warning">Le mode d\'économie d\'énergie de localisation peut nous empêcher d\'obtenir la localisation : %1$s</string>
+    <string name="debug_log_power_and_idle_status">En mode économie d\'énergie ? %1$b. L\'appareil est-il en veille ? %2$b</string>
 
     <!-- AppController.kt -->
     <string name="debug_log_starting_up">KeepAlive démarre!</string>

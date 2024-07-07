@@ -26,6 +26,7 @@ open class LocationHelperBase(
     private var locationEnabled = false
     private var isDeviceIdleMode = false
     private var isPowerSaveMode = false
+    private var locationPowerSaveMode = 0
     var availableProviders: MutableList<String> = arrayListOf()
 
     // how long to wait for location requests to complete before timing out
@@ -67,6 +68,31 @@ open class LocationHelperBase(
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 isDeviceIdleMode = powerManager.isDeviceIdleMode
+            }
+
+            // also check the location power save mode
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+
+                locationPowerSaveMode = powerManager.getLocationPowerSaveMode()
+
+                val modeString = when (locationPowerSaveMode) {
+                    PowerManager.LOCATION_MODE_NO_CHANGE -> "LOCATION_MODE_NO_CHANGE"
+                    PowerManager.LOCATION_MODE_ALL_DISABLED_WHEN_SCREEN_OFF -> "LOCATION_MODE_ALL_DISABLED_WHEN_SCREEN_OFF"
+                    PowerManager.LOCATION_MODE_FOREGROUND_ONLY -> "LOCATION_MODE_FOREGROUND_ONLY"
+                    PowerManager.LOCATION_MODE_GPS_DISABLED_WHEN_SCREEN_OFF -> "LOCATION_MODE_GPS_DISABLED_WHEN_SCREEN_OFF"
+                    PowerManager.LOCATION_MODE_THROTTLE_REQUESTS_WHEN_SCREEN_OFF -> "LOCATION_MODE_THROTTLE_REQUESTS_WHEN_SCREEN_OFF"
+                    else -> "unknown"
+                }
+
+                Log.d("LocationHelperBase", "Location power save mode: $modeString")
+
+                if (locationPowerSaveMode != PowerManager.LOCATION_MODE_NO_CHANGE) {
+
+                    DebugLogger.d(
+                        "LocationHelperBase",
+                        context.getString(R.string.debug_log_location_power_mode_warning, modeString)
+                    )
+                }
             }
 
         } catch (e: Exception) {
@@ -125,10 +151,9 @@ open class LocationHelperBase(
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
 
-                Log.d(
+                DebugLogger.d(
                     "getLocationAndExecute",
-                    "Power save mode is $isPowerSaveMode. " +
-                            "Is device idle? $isDeviceIdleMode"
+                    context.getString(R.string.debug_log_power_and_idle_status, isPowerSaveMode, isDeviceIdleMode)
                 )
 
                 // if the device is in power save mode then we can't get the current location or it
