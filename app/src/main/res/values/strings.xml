@@ -223,6 +223,8 @@
     <string name="debug_log_sending_alert">Sending alert!</string>
     <string name="debug_log_sending_alert_failed">Failed while attempting to get and send location alert</string>
     <string name="debug_log_last_device_activity">Last usage event was %1$s from %2$s at %3$s</string>
+    <string name="debug_log_location_power_mode_warning">Location power save mode may prevent us from obtaining location: %1$s</string>
+    <string name="debug_log_power_and_idle_status">In power save mode? %1$b. Is device idle? %2$b</string>
 
     <!-- AppController.kt -->
     <string name="debug_log_starting_up">KeepAlive starting up!</string>

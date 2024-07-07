@@ -79,7 +79,7 @@ class LocationHelper(
     // process the result from getting either the Last or the Current location
     private fun processLocationResult(task: Task<Location>, locationSource: String) {
 
-        // This block will be executed whether the task was successful or not
+        // task.isSuccessful can return true but still have a null result...
         if (task.isSuccessful && task.result != null) {
             val location = task.result
 

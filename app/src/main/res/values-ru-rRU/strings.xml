@@ -223,6 +223,9 @@
     <string name="debug_log_sending_alert">Отправка оповещения!</string>
     <string name="debug_log_sending_alert_failed">Не удалось получить и отправить оповещение о местоположении</string>
     <string name="debug_log_last_device_activity">Последнее событие использования было %1$s из %2$s в %3$s</string>
+    <string name="debug_log_location_power_mode_warning">Режим экономии энергии для определения местоположения может помешать нам получить данные о местоположении: %1$s</string>
+    <string name="debug_log_power_and_idle_status">В режиме энергосбережения? %1$b. Устройство находится в режиме ожидания? %2$b</string>
+
 
     <!-- AppController.kt -->
     <string name="debug_log_starting_up">KeepAlive запускается!</string>
