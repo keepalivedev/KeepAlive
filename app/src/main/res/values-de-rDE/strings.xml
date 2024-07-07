@@ -211,6 +211,9 @@
     <string name="debug_log_sending_alert">Sende Alarm!</string>
     <string name="debug_log_sending_alert_failed">Fehler beim Abrufen und Senden des Standortalarms</string>
     <string name="debug_log_last_device_activity">Letztes Nutzungsereignis war %1$s von %2$s um %3$s</string>
+    <string name="debug_log_location_power_mode_warning">Der Energiesparmodus für Standorte kann verhindern, dass wir den Standort ermitteln: %1$s</string>
+    <string name="debug_log_power_and_idle_status">Im Energiesparmodus? %1$b. Ist das Gerät im Ruhezustand? %2$b</string>
+
 
     <!-- AppController.kt -->
     <string name="debug_log_starting_up">KeepAlive startet!</string>
