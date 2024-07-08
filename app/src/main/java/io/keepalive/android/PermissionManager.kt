@@ -31,17 +31,18 @@ class PermissionManager(private val context: Context, private val activity: AppC
             context.getString(R.string.permission_send_sms_title),
             context.getString(R.string.permission_send_sms_description)
         ),
-
         Manifest.permission.CALL_PHONE to arrayOf(
             context.getString(R.string.permission_call_phone_title),
             context.getString(R.string.permission_call_phone_description)
         ),
-
+        Manifest.permission.READ_PHONE_STATE to arrayOf(
+            context.getString(R.string.permission_read_phone_state_title),
+            context.getString(R.string.permission_read_phone_state_description)
+        ),
         Settings.ACTION_USAGE_ACCESS_SETTINGS to arrayOf(
             context.getString(R.string.permission_usage_access_title),
             context.getString(R.string.permission_usage_access_description)
         ),
-
         Manifest.permission.ACCESS_FINE_LOCATION to arrayOf(
             context.getString(R.string.permission_access_fine_location_title),
             context.getString(R.string.permission_access_fine_location_description)
@@ -60,6 +61,12 @@ class PermissionManager(private val context: Context, private val activity: AppC
         // only request SMS permissions if there is at least one SMS contact
         if (smsContacts.isNotEmpty()) {
             basicPermissions.add(Manifest.permission.SEND_SMS)
+
+            // only request read phone state permissions if we are on android O as there is a bug
+            //  that requires it in order to send SMS
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O) {
+                basicPermissions.add(Manifest.permission.READ_PHONE_STATE)
+            }
         }
 
         locationEnabled = sharedPrefs.getBoolean("location_enabled", false)
