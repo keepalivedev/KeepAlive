@@ -175,6 +175,10 @@
     <string name="permission_call_phone_title">Wymagane Uprawnienie: Wykonywanie Połączeń Telefonicznych</string>
     <string name="permission_call_phone_description">Połączenie zostanie nawiązane z ustawionym numerem Kontaktu Alarmowego, wymaga to możliwości inicjowania rozmów telefonicznych.</string>
 
+    <!-- READ_PHONE_STATE Permission -->
+    <string name="permission_read_phone_state_title">Wymagane uprawnienie: Zarządzanie rozmowami telefonicznymi</string>
+    <string name="permission_read_phone_state_description">Z powodu błędu w Androidzie 8, uprawnienie do zarządzania rozmowami telefonicznymi jest wymagane do wysyłania SMS-ów.</string>
+
     <!-- USAGE_ACCESS_SETTINGS Permission -->
     <string name="permission_usage_access_title">Wymagane Uprawnienie: Dostęp do Informacji o Korzystaniu z Aplikacji</string>
     <string name="permission_usage_access_description">Żeby ustalić czy urządzenie było niedawno używane, potrzebne jest specjalne uprawnienie nazwane Dostęp do Informacji o Korzystaniu z Aplikacji.\n\nProszę przyznać to uprawnienie aplikacji Keep Alive.</string>
@@ -226,6 +230,8 @@
     <string name="debug_log_last_device_activity">Ostatnie zdarzenie użycia to %1$s z %2$s o %3$s</string>
     <string name="debug_log_location_power_mode_warning">Tryb oszczędzania energii lokalizacji może uniemożliwić nam uzyskanie lokalizacji: %1$s</string>
     <string name="debug_log_power_and_idle_status">Czy w trybie oszczędzania energii? %1$b. Czy urządzenie jest w stanie bezczynności? %2$b</string>
+    <string name="debug_log_failed_registering_sms_sent_receiver">Nie udało się zarejestrować odbiornika wysłanych SMS-ów.</string>
+    <string name="debug_log_failed_getting_sms_sub_id">Nie udało się pobrać domyślnego ID subskrypcji SMS.</string>
 
 
     <!-- AppController.kt -->

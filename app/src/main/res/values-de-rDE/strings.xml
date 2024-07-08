@@ -162,6 +162,10 @@
     <string name="permission_call_phone_title">Berechtigung erforderlich: Telefonanrufe tätigen</string>
     <string name="permission_call_phone_description" tools:ignore="Typos">Es wurde eine Telefonnummer für den Notruf eingerichtet, die die Möglichkeit eines Anrufs voraussetzt.</string>
 
+    <!-- READ_PHONE_STATE Permission -->
+    <string name="permission_read_phone_state_title">Berechtigung erforderlich: Verwaltung von Telefonanrufen</string>
+    <string name="permission_read_phone_state_description">Aufgrund eines Fehlers in Android 8 ist die Berechtigung zur Verwaltung von Telefonanrufen erforderlich, um SMS zu senden.</string>
+
     <!-- USAGE_ACCESS_SETTINGS Permission -->
     <string name="permission_usage_access_title">Berechtigung erforderlich: Zugriff auf Nutzungsdaten</string>
     <string name="permission_usage_access_description">Um festzustellen, wann Ihr Gerät zuletzt benutzt wurde, ist eine spezielle Berechtigung namens \"Zugriff auf Nutzungsdaten\" erforderlich.\n\nBitte aktivieren Sie diese Berechtigung für die Keep Alive-App.</string>
@@ -213,6 +217,8 @@
     <string name="debug_log_last_device_activity">Letztes Nutzungsereignis war %1$s von %2$s um %3$s</string>
     <string name="debug_log_location_power_mode_warning">Der Energiesparmodus für Standorte kann verhindern, dass wir den Standort ermitteln: %1$s</string>
     <string name="debug_log_power_and_idle_status">Im Energiesparmodus? %1$b. Ist das Gerät im Ruhezustand? %2$b</string>
+    <string name="debug_log_failed_registering_sms_sent_receiver">Registrierung des SMS-Sendereceivers fehlgeschlagen.</string>
+    <string name="debug_log_failed_getting_sms_sub_id">Standard-SMS-Abonnement-ID konnte nicht abgerufen werden.</string>
 
 
     <!-- AppController.kt -->
