@@ -41,7 +41,7 @@ class SMSSentReceiver : BroadcastReceiver() {
             DebugLogger.d("SMSSentReceiver", context.getString(R.string.debug_log_sms_send_error, result))
 
             // if it failed then let the user know why
-            AlertNotificationHelper(context).sendNotification(
+            notificationHelper.sendNotification(
                 context.getString(R.string.sms_alert_failure_notification_title),
                 String.format(
                     context.getString(R.string.sms_alert_failure_notification_text_with_error),
