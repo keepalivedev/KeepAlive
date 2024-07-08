@@ -174,6 +174,10 @@
     <string name="permission_call_phone_title">Permission Required: Make Phone Calls</string>
     <string name="permission_call_phone_description">An Emergency Contact Call Phone Number has been provided, which requires the ability to place a phone call.</string>
 
+    <!-- READ_PHONE_STATE Permission -->
+    <string name="permission_read_phone_state_title">Permission Required: Manage Phone Calls</string>
+    <string name="permission_read_phone_state_description">Due to a bug in Android 8, the Manage Phone Calls permission is required in order to send SMS.</string>
+
     <!-- USAGE_ACCESS_SETTINGS Permission -->
     <string name="permission_usage_access_title">Permission Required: Usage Access Stats</string>
     <string name="permission_usage_access_description">In order to determine when your device was last used, a special permission called Usage Access Stats is required.\n\nPlease enable this permission for the Keep Alive app.</string>
@@ -225,6 +229,8 @@
     <string name="debug_log_last_device_activity">Last usage event was %1$s from %2$s at %3$s</string>
     <string name="debug_log_location_power_mode_warning">Location power save mode may prevent us from obtaining location: %1$s</string>
     <string name="debug_log_power_and_idle_status">In power save mode? %1$b. Is device idle? %2$b</string>
+    <string name="debug_log_failed_registering_sms_sent_receiver">Failed to register SMS Sent receiver.</string>
+    <string name="debug_log_failed_getting_sms_sub_id">Failed to get default SMS subscription ID.</string>
 
     <!-- AppController.kt -->
     <string name="debug_log_starting_up">KeepAlive starting up!</string>

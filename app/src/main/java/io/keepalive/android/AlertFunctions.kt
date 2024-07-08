@@ -1,7 +1,6 @@
 package io.keepalive.android
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
@@ -24,39 +23,27 @@ import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 
-@SuppressLint("MissingPermission")
 fun getDefaultSmsSubscriptionId(context: Context): Int {
-    val subscriptionManager =
-        context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
+    var defaultSmsSubscriptionId = -1
+    return try {
 
-    val defaultSmsSubscriptionId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        SubscriptionManager.getDefaultSmsSubscriptionId()
-    } else {
-       -1
-    }
-
-    // Check if the default SMS subscription ID is valid
-    if (defaultSmsSubscriptionId != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
-
-        Log.d("getDefaultSmsSubId","The default sms subscription id is not valid?!")
-
-        subscriptionManager.activeSubscriptionInfoList?.let { activeSubscriptionInfoList ->
-            Log.d(
-                "getDefaultSmsSubId",
-                "activeSubscriptionInfoList: $activeSubscriptionInfoList"
-            )
-
-            // look through the active subscriptions and see if the default is in the list
-            for (subscriptionInfo in activeSubscriptionInfoList) {
-                if (subscriptionInfo.subscriptionId == defaultSmsSubscriptionId) {
-                    return defaultSmsSubscriptionId
-                }
-            }
+        defaultSmsSubscriptionId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            SubscriptionManager.getDefaultSmsSubscriptionId()
+        } else {
+            // this isn't deprecated but docs say we should use SubscriptionManager?
+            SmsManager.getDefaultSmsSubscriptionId()
         }
-    }
 
-    // Fallback to the first active subscription if the default is not valid
-    return subscriptionManager.activeSubscriptionInfoList?.firstOrNull()?.subscriptionId ?: -1
+        // there is no reason to look at subscriptionManager.activeSubscriptionInfoList because
+        //  we don't have a way to let the user choose which SIM to use and because checking it
+        //  requires READ_PHONE_STATE permissions which we won't have if we are just sending SMS
+
+        defaultSmsSubscriptionId
+
+    } catch (e: Exception) {
+        DebugLogger.d("getDefaultSmsSubId", context.getString(R.string.debug_log_failed_getting_sms_sub_id), e)
+        defaultSmsSubscriptionId
+    }
 }
 
 fun getSMSManager(context: Context): SmsManager? {
@@ -64,6 +51,9 @@ fun getSMSManager(context: Context): SmsManager? {
 
         Log.d("sendAlertMessage", "Trying to get SMS manager using sub id")
 
+        // the subscription id is unique to a SIM card and is basically
+        //  the order in which SIMs were used in a given device (1,2,3,etc)
+        // https://developer.android.com/identity/user-data-ids#accounts
         val subscriptionId = getDefaultSmsSubscriptionId(context)
 
         Log.d("sendAlertMessage", "Got default sub id: $subscriptionId")
@@ -195,25 +185,37 @@ class AlertMessageSender(private val context: Context) {
 
                 DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_text_message_to, contact.phoneNumber))
 
+                // add try/catch here to be extra safe in case there is an issue
+                //  registering the receiver...
                 try {
 
                     // do this for each contact instead of once at the beginning because
                     //  the SMSSentReceiver will unregister it when it gets called
                     // add a receiver for the SMS sent intent so we will get notified of the result
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        context.registerReceiver(
+
+                        // registerReceiver requires API 26+ but requires the use of
+                        //  Context.RECEIVER_NOT_EXPORTED, which isn't available until API 33...
+                        context.applicationContext.registerReceiver(
                             SMSSentReceiver(),
                             IntentFilter("SMS_SENT"),
                             Context.RECEIVER_NOT_EXPORTED
                         )
+
                     } else {
                         ContextCompat.registerReceiver(
-                            context,
+                            context.applicationContext,
                             SMSSentReceiver(),
                             IntentFilter("SMS_SENT"),
                             ContextCompat.RECEIVER_NOT_EXPORTED
                         )
                     }
+                }
+                catch (e: Exception) {
+                    DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_failed_registering_sms_sent_receiver), e)
+                }
+
+                try {
 
                     // divide the message into parts based on how long it is
                     // messages with unicode characters have a shorter max length
