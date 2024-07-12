@@ -3,6 +3,7 @@ package io.keepalive.android
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
+import android.os.Build
 import android.util.Log
 import com.google.android.gms.location.CurrentLocationRequest
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -92,7 +93,11 @@ class LocationHelper(
             )
 
             // try to geocode the location and then execute the callback
-            GeocodingHelper().geocodeLocationAndExecute(location)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                GeocodingHelperAPI33Plus().geocodeLocationAndExecute(location)
+            } else {
+                GeocodingHelper().geocodeLocationAndExecute(location)
+            }
 
         } else {
 
