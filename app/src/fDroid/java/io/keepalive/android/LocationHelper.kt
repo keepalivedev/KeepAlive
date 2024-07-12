@@ -41,7 +41,12 @@ class LocationHelper(
                 )
 
                 // attempt to geocode the location and then execute the callback
-                GeocodingHelper().geocodeLocationAndExecute(lastLocation)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    GeocodingHelperAPI33Plus().geocodeLocationAndExecute(lastLocation)
+                } else {
+                    GeocodingHelper().geocodeLocationAndExecute(lastLocation)
+                }
+
                 return
 
             } else {
@@ -213,7 +218,11 @@ class LocationHelper(
                 )
 
                 // try to geocode the location and then execute the callback
-                GeocodingHelper().geocodeLocationAndExecute(bestLoc)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    GeocodingHelperAPI33Plus().geocodeLocationAndExecute(bestLoc)
+                } else {
+                    GeocodingHelper().geocodeLocationAndExecute(bestLoc)
+                }
 
             } else {
 
