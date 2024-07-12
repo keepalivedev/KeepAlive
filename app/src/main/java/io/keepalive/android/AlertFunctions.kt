@@ -7,11 +7,9 @@ import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import android.os.PowerManager
 import android.telecom.TelecomManager
 import android.telephony.PhoneNumberUtils
 import android.telephony.SmsManager
@@ -514,19 +512,17 @@ fun doAlertCheck(context: Context, alarmStage: String) {
     //  outside of a rest period and so we should still send the alert
     if (alarmStage == "final" && lastInteractiveEvent == null) {
 
-        // we can't trust the OS to not pause execution so set a wake lock
-        val wakeLock: PowerManager.WakeLock =
-            (context.getSystemService(Context.POWER_SERVICE) as PowerManager).run {
-                newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KeepAlive::AlertWakeLock").apply {
+        // start a service to send the alert to avoid being killed by the OS or causing an ANR
+        Intent(context, AlertService::class.java).also { intent ->
 
-                    Log.d("sendAlert", "Acquiring wake lock")
+            DebugLogger.d("doAlertCheck", context.getString(R.string.debug_log_alert_service_start))
 
-                    // set a 2 minute timeout
-                    acquire(120 * 1000)
-                }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(intent)
+            } else {
+                context.startService(intent)
             }
-
-        sendAlert(context, prefs)
+        }
 
         // if auto restart is enabled
         if (prefs.getBoolean("auto_restart_monitoring", false)) {
@@ -535,13 +531,6 @@ fun doAlertCheck(context: Context, alarmStage: String) {
             //  'are you there?' check so just base it on the checkPeriodHours and the rest periods
             setAlarm(context, (checkPeriodHours * 60 * 60 * 1000).toLong(), "periodic", restPeriods)
         }
-
-        // release the wake lock
-        if (wakeLock.isHeld) {
-            Log.d("sendAlert", "Releasing wake lock")
-            wakeLock.release()
-        }
-
         return
     }
 
@@ -556,7 +545,7 @@ fun doAlertCheck(context: Context, alarmStage: String) {
             context.getString(R.string.initial_check_notification_title),
             String.format(
                 context.getString(R.string.initial_check_notification_text),
-                followupPeriodMinutes
+                followupPeriodMinutes.toString()
             ),
             AppController.ARE_YOU_THERE_NOTIFICATION_ID
         )
@@ -584,47 +573,5 @@ fun doAlertCheck(context: Context, alarmStage: String) {
 
         // set a new alarm so we can check again in the future
         setAlarm(context, newAlarmInMs, "periodic", restPeriods)
-    }
-}
-
-fun sendAlert(context: Context, prefs: SharedPreferences) {
-    DebugLogger.d("sendAlert", context.getString(R.string.debug_log_sending_alert))
-
-    // cancel the 'Are you there?' notification
-    AlertNotificationHelper(context).cancelNotification(
-        AppController.ARE_YOU_THERE_NOTIFICATION_ID
-    )
-
-    // send the alert messages
-    val alertSender = AlertMessageSender(context)
-    alertSender.sendAlertMessage()
-
-    // only get the location if the user has enabled it for at least one
-    if (prefs.getBoolean("location_enabled", false)) {
-
-        // just add an extra layer try/catch in case anything unexpected
-        //  happens when trying to get the location
-        try {
-
-            // attempt to get the location and then execute sendLocationAlertMessage
-            val locationHelper = LocationHelper(context) { _, locationStr ->
-                alertSender.sendLocationAlertMessage(locationStr)
-            }
-            locationHelper.getLocationAndExecute()
-
-        } catch (e: Exception) {
-
-            // if we fail for any reason then send the alert messages
-            DebugLogger.d("sendAlert", context.getString(R.string.debug_log_sending_alert_failed), e)
-        }
-    }
-
-    // also make the phone call (if enabled)
-    makeAlertCall(context)
-
-    // update prefs to include when the alert was sent
-    with(prefs.edit()) {
-        putLong("LastAlertAt", System.currentTimeMillis())
-        apply()
     }
 }
