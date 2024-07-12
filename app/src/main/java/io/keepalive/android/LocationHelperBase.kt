@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.PowerManager
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import java.util.Locale
 
@@ -40,6 +41,9 @@ open class LocationHelperBase(
 
     // timeout handler to make sure the entire location process doesn't hang
     private val globalTimeoutHandler = Handler(context.mainLooper)
+
+    private var locationString = ""
+    private val geocodingTimeoutHandler = Handler(context.mainLooper)
 
     init {
 
@@ -96,7 +100,7 @@ open class LocationHelperBase(
             }
 
         } catch (e: Exception) {
-            Log.e("LocationHelperBase", "Error checking GPS or network provider", e)
+            DebugLogger.d("LocationHelperBase", context.getString(R.string.debug_log_location_helper_init_error), e)
         }
 
         Log.d(
@@ -125,6 +129,29 @@ open class LocationHelperBase(
         globalTimeoutHandler.removeCallbacks(globalTimeoutRunnable)
     }
 
+    // timeout handler for the geocoding process, really only necessary in API 33+
+    //  because the old geocoding method is synchronous
+    private val geocodingTimeoutRunnable = Runnable {
+
+        DebugLogger.d("geocodingTimeoutRunnable", context.getString(R.string.debug_log_geocoding_timeout_reached, locationString))
+
+        // the global timeout handler should still be running so need to stop it
+        stopGlobalTimeoutHandler()
+
+        myCallback(context, locationString)
+    }
+
+    private fun startGeocodingTimeoutHandler() {
+        geocodingTimeoutHandler.postDelayed(
+            geocodingTimeoutRunnable,
+            geocodingRequestTimeoutLength
+        )
+    }
+
+    private fun stopGeocodingTimeoutHandler() {
+        geocodingTimeoutHandler.removeCallbacks(geocodingTimeoutRunnable)
+    }
+
     fun executeCallback(locationString: String) {
 
         // stop the global timeout handler and execute the callback
@@ -141,14 +168,21 @@ open class LocationHelperBase(
 
         DebugLogger.d("getLocationAndExecute", context.getString(R.string.debug_log_attempting_to_get_location))
         try {
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED &&
+            // background location permissions are only needed for API 29+
+            val haveBackgroundLocPerms = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 ContextCompat.checkSelfPermission(
                     context,
                     Manifest.permission.ACCESS_BACKGROUND_LOCATION
                 ) == PackageManager.PERMISSION_GRANTED
+            } else {
+                true
+            }
+
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED &&
+                haveBackgroundLocPerms
             ) {
 
                 DebugLogger.d(
@@ -190,34 +224,10 @@ open class LocationHelperBase(
         }
     }
 
-    inner class GeocodingHelper {
-
-        private var locationString = ""
-        private val geocodingTimeoutHandler = Handler(context.mainLooper)
-
-
-        // timeout handler for the geocoding process, really only necessary in API 33+
-        //  because the old geocoding method is synchronous
-        private val geocodingTimeoutRunnable = Runnable {
-
-            DebugLogger.d("geocodingTimeoutRunnable", context.getString(R.string.debug_log_geocoding_timeout_reached, locationString))
-
-            // the global timeout handler should still be running so need to stop it
-            stopGlobalTimeoutHandler()
-
-            myCallback(context, locationString)
-        }
-
-        private fun startGeocodingTimeoutHandler() {
-            geocodingTimeoutHandler.postDelayed(
-                geocodingTimeoutRunnable,
-                geocodingRequestTimeoutLength
-            )
-        }
-
-        private fun stopGeocodingTimeoutHandler() {
-            geocodingTimeoutHandler.removeCallbacks(geocodingTimeoutRunnable)
-        }
+    // had to create a separate class to avoid a ClassNotFoundException on API <33
+    //  because the GeocodeListener is not available but it compiles it anyway
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    inner class GeocodingHelperAPI33Plus {
 
         // try to geocode the location and then execute the callback
         // all paths need to lead to the callback being executed or we may fail to send an alert!!
@@ -233,7 +243,7 @@ open class LocationHelperBase(
                 //  the raw GPS coordinates
                 locationString = String.format(
                     context.getString(R.string.geocode_invalid_message),
-                    loc.latitude, loc.longitude, loc.accuracy
+                    loc.latitude.toString(), loc.longitude.toString(), loc.accuracy.toString()
                 )
 
                 // start a timeout handler in case the geocoder hangs
@@ -241,36 +251,22 @@ open class LocationHelperBase(
 
                 val geocoder = Geocoder(context, Locale.getDefault())
 
-                // GeocodeListener is only available in API 33+
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                val geocodeListener = Geocoder.GeocodeListener { addresses ->
 
-                    val geocodeListener = Geocoder.GeocodeListener { addresses ->
-
-                        Log.d(
-                            "geocodeLocAndExecute",
-                            "listener done, geocode result: $addresses"
-                        )
-                        val addressString = processGeocodeResult(addresses)
-                        locationString = buildGeocodedLocationStr(addressString, loc)
-
-                        // execute the callback with the new location string
-                        stopGeocodingTimeoutHandler()
-                        executeCallback(locationString)
-                    }
-
-                    geocoder.getFromLocation(loc.latitude, loc.longitude, 1, geocodeListener)
-                    return
-
-                } else {
-
-                    // the synchronous version is deprecated but nothing else available in <33
-                    val addresses: List<Address> =
-                        geocoder.getFromLocation(loc.latitude, loc.longitude, 1)!!
-
-                    Log.d("geocodeLocAndExecute", "geocode result: $addresses")
+                    Log.d(
+                        "geocodeLocAndExecute",
+                        "listener done, geocode result: $addresses"
+                    )
                     val addressString = processGeocodeResult(addresses)
                     locationString = buildGeocodedLocationStr(addressString, loc)
+
+                    // execute the callback with the new location string
+                    stopGeocodingTimeoutHandler()
+                    executeCallback(locationString)
                 }
+
+                geocoder.getFromLocation(loc.latitude, loc.longitude, 1, geocodeListener)
+                return
 
             } catch (e: Exception) {
                 DebugLogger.d("geocodeLocationAndExecute", context.getString(R.string.debug_log_failed_geocoding_gps_coordinates), e)
@@ -280,55 +276,97 @@ open class LocationHelperBase(
             stopGeocodingTimeoutHandler()
             executeCallback(locationString)
         }
+    }
 
-        // take the list of possible addresses and build a string
-        private fun processGeocodeResult(addresses: List<Address>): String {
+    inner class GeocodingHelper {
 
-            var addressString = ""
+        // try to geocode the location and then execute the callback
+        // all paths need to lead to the callback being executed or we may fail to send an alert!!
+        fun geocodeLocationAndExecute(loc: Location) {
 
-            if (addresses.isNotEmpty()) {
+            try {
                 Log.d(
-                    "processGeocodeResult",
-                    "Address has ${addresses[0].maxAddressLineIndex + 1} lines"
+                    "geocodeLocAndExecute",
+                    "Geocoding location: ${loc.latitude}, ${loc.longitude}, ${loc.accuracy}"
                 )
 
-                // we should have only requested a single address so just check the first in the list
-                // most addresses only have a single line?
-                for (i in 0..addresses[0].maxAddressLineIndex) {
-
-                    val addressLine: String = addresses[0].getAddressLine(i)
-
-                    // include as many address lines as we can in the SMS
-                    // +2 because we are adding a period and a space
-                    if ((addressString.length + addressLine.length + 2) < AppController.SMS_MESSAGE_MAX_LENGTH) {
-                        addressString += "$addressLine. "
-                    } else {
-                        Log.d(
-                            "processGeocodeResult",
-                            "Not adding address line, would exceed character limit: $addressLine"
-                        )
-                    }
-                }
-
-            } else {
-                DebugLogger.d("processGeocodeResult", context.getString(R.string.debug_log_no_address_results))
-            }
-            return addressString
-        }
-
-        // build the location string that will be sent to the callback
-        private fun buildGeocodedLocationStr(addressStr: String, loc: Location): String {
-            return if (addressStr == "") {
-                String.format(
+                // default to a message indicating we couldn't geocode the location and just include
+                //  the raw GPS coordinates
+                locationString = String.format(
                     context.getString(R.string.geocode_invalid_message),
-                    loc.latitude, loc.longitude, loc.accuracy
+                    loc.latitude.toString(), loc.longitude.toString(), loc.accuracy.toString()
                 )
-            } else {
-                String.format(
-                    context.getString(R.string.geocode_valid_message),
-                    loc.latitude, loc.longitude, loc.accuracy, addressStr
-                )
+
+                // start a timeout handler in case the geocoder hangs
+                startGeocodingTimeoutHandler()
+
+                val geocoder = Geocoder(context, Locale.getDefault())
+
+                // the synchronous version is deprecated but nothing else available in <33
+                val addresses: List<Address> =
+                    geocoder.getFromLocation(loc.latitude, loc.longitude, 1)!!
+
+                Log.d("geocodeLocAndExecute", "geocode result: $addresses")
+                val addressString = processGeocodeResult(addresses)
+                locationString = buildGeocodedLocationStr(addressString, loc)
+
+            } catch (e: Exception) {
+                DebugLogger.d("geocodeLocationAndExecute", context.getString(R.string.debug_log_failed_geocoding_gps_coordinates), e)
             }
+
+            // if we aren't using geocode listener or if there was an error
+            stopGeocodingTimeoutHandler()
+            executeCallback(locationString)
+        }
+    }
+
+    // take the list of possible addresses and build a string
+    private fun processGeocodeResult(addresses: List<Address>): String {
+
+        var addressString = ""
+
+        if (addresses.isNotEmpty()) {
+            Log.d(
+                "processGeocodeResult",
+                "Address has ${addresses[0].maxAddressLineIndex + 1} lines"
+            )
+
+            // we should have only requested a single address so just check the first in the list
+            // most addresses only have a single line?
+            for (i in 0..addresses[0].maxAddressLineIndex) {
+
+                val addressLine: String = addresses[0].getAddressLine(i)
+
+                // include as many address lines as we can in the SMS
+                // +2 because we are adding a period and a space
+                if ((addressString.length + addressLine.length + 2) < AppController.SMS_MESSAGE_MAX_LENGTH) {
+                    addressString += "$addressLine. "
+                } else {
+                    Log.d(
+                        "processGeocodeResult",
+                        "Not adding address line, would exceed character limit: $addressLine"
+                    )
+                }
+            }
+
+        } else {
+            DebugLogger.d("processGeocodeResult", context.getString(R.string.debug_log_no_address_results))
+        }
+        return addressString
+    }
+
+    // build the location string that will be sent to the callback
+    private fun buildGeocodedLocationStr(addressStr: String, loc: Location): String {
+        return if (addressStr == "") {
+            String.format(
+                context.getString(R.string.geocode_invalid_message),
+                loc.latitude.toString(), loc.longitude.toString(), loc.accuracy.toString()
+            )
+        } else {
+            String.format(
+                context.getString(R.string.geocode_valid_message),
+                loc.latitude.toString(), loc.longitude.toString(), loc.accuracy.toString(), addressStr
+            )
         }
     }
 }
