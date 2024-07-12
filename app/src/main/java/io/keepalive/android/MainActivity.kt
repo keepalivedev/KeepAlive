@@ -1,13 +1,17 @@
 package io.keepalive.android
 
+import android.app.ActivityManager
+import android.content.Context
 import androidx.appcompat.app.AlertDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Typeface
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.telephony.PhoneNumberUtils
 import android.text.Html
 import android.text.method.LinkMovementMethod
@@ -342,7 +346,7 @@ class MainActivity : AppCompatActivity() {
                     // and a message indicating why
                     monitoringMessageTextView.text = String.format(
                         getString(R.string.monitoring_no_activity_detected_message),
-                        checkPeriodHours
+                        checkPeriodHours.toString()
                     )
 
                 } else {
@@ -381,7 +385,7 @@ class MainActivity : AppCompatActivity() {
                             getDateTimeStrFromTimestamp(
                                 lastInteractiveEvent.timeStamp,
                                 TimeZone.getDefault().id
-                            ), hours, minutes
+                            ), hours.toString(), minutes.toString()
                         )
 
                         // check whether app restrictions are enabled and adjust the components based
@@ -684,6 +688,37 @@ class MainActivity : AppCompatActivity() {
 
         } catch (e: Exception) {
             Log.e("reqDisableAppHiber", "Failed requesting disable app hibernation?!", e)
+        }
+    }
+
+    // todo implement this?
+    // also requires android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+    private fun checkAppBatteryRestrictions() {
+        try {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager?
+                if (activityManager!!.isBackgroundRestricted) {
+                    Log.d(tag, "Background battery use restricted")
+                } else {
+                    Log.d(tag, "Background battery use not restricted")
+                }
+            }
+
+            // this launches a UI prompt asking the user whether to 'Let app always run in background'
+            //  if allowed, the battery optimization settings page will have NO options selected
+            //  and activityManager.isBackgroundRestricted will still return true
+            // the prompt WILL NOT be displayed if the app is set to Optimized or Unrestricted or
+            //  if the permissions aren't declared in the manifest
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+                intent.setData(Uri.parse("package:$packageName"))
+                ActivityCompat.startActivity(this, intent, null)
+            }
+
+        } catch (e: Exception) {
+            Log.e("checkAppBattRestriction", "Failed checking app battery restrictions?!", e)
         }
     }
 }
