@@ -157,6 +157,7 @@
     <string name="monitored_apps_warning_dialog_message">This feature is a work in progress and behavior may differ depending on the app(s) selected. Keep Alive looks for a MOVE_TO_FOREGROUND event from the app(s), which is not always a result of user interaction. Apps that may be able to wake up your device, like Alarm, Phone or Media apps, should not be used.</string>
     <string name="monitored_apps_warning_dialog_message_alt">\n\nNOTE: This device is running Android 9 or later, usage of device lock/unlock events instead of App Monitoring is highly recommended.</string>
     <string name="monitored_apps_view_history_text">View History</string>
+    <string name="monitored_apps_view_history_title">App History: %1$s</string>
     <string name="monitored_apps_history_date_header">Used At</string>
     <string name="monitored_apps_history_name_header">Activity Name</string>
     <string name="monitored_apps_no_usage_stats_permissions_dialog_title">Permissions Required</string>
