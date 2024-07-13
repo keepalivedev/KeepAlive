@@ -58,9 +58,19 @@ class AppsSelectionDialogFragment(val callback: () -> Unit) : DialogFragment() {
                     onShowDetailsClick(context, appInfo!!)
                 }
             } else {
-                // for easier readability, remove the package name from the class name
-                //appNameTextView.text = appInfo?.className?.replace(appInfo.packageName + ".", "")
-                appNameTextView.text = appInfo?.className
+
+                if (appInfo?.className != null) {
+
+                    // for easier readability, remove the package name from the class name
+                    if (appInfo.className.contains(appInfo.packageName)) {
+                        appNameTextView.text = appInfo.className.replace(appInfo.packageName + ".", "")
+
+                        // if the package name isn't in the class name, just show the
+                        //  part of the class name after the last period
+                    } else {
+                        appNameTextView.text = appInfo.className.substringAfterLast(".")
+                    }
+                }
 
                 // format the datetime
                 viewDetailsTextView.text = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(
