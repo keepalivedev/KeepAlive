@@ -46,6 +46,13 @@ class AlertNotificationHelper(private val context: Context) {
                 context.getString(R.string.call_sent_notification_channel_title),
                 context.getString(R.string.call_sent_notification_channel_description)
             )
+
+            // service notification used when an alert is being sent
+            createNotificationChannel(
+                AppController.ALERT_SERVICE_NOTIFICATION_CHANNEL_ID,
+                context.getString(R.string.alert_service_notification_channel_title),
+                context.getString(R.string.alert_service_notification_channel_description)
+            )
         }
     }
 
@@ -151,6 +158,7 @@ class AlertNotificationHelper(private val context: Context) {
                 AppController.ARE_YOU_THERE_NOTIFICATION_ID -> AppController.ARE_YOU_THERE_NOTIFICATION_CHANNEL_ID
                 AppController.SMS_ALERT_SENT_NOTIFICATION_ID -> AppController.SMS_SENT_NOTIFICATION_CHANNEL_ID
                 AppController.CALL_ALERT_SENT_NOTIFICATION_ID -> AppController.CALL_SENT_NOTIFICATION_CHANNEL_ID
+                AppController.ALERT_SERVICE_NOTIFICATION_ID -> AppController.ALERT_SERVICE_NOTIFICATION_CHANNEL_ID
                 else -> AppController.ARE_YOU_THERE_NOTIFICATION_CHANNEL_ID
             }
 

@@ -1,10 +1,13 @@
 package io.keepalive.android.receivers
 
 
+import android.app.ActivityManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import io.keepalive.android.*
 
 
@@ -16,6 +19,21 @@ class AlarmReceiver : BroadcastReceiver() {
         try {
             DebugLogger.d(tag, context.getString(R.string.debug_log_alarm_just_fired))
 
+            // for extra debugging, check to see if the app is in the foreground or background
+            val appForegroundChecker = AppForegroundChecker(context)
+
+            if (appForegroundChecker.isAppInForeground()) {
+                DebugLogger.d(tag, context.getString(R.string.debug_log_app_in_foreground))
+            } else {
+                DebugLogger.d(tag, context.getString(R.string.debug_log_app_in_background))
+            }
+
+            // https://developer.android.com/reference/android/content/Intent#FLAG_RECEIVER_FOREGROUND
+            if (intent.flags and Intent.FLAG_RECEIVER_FOREGROUND != 0) {
+                DebugLogger.d(tag, context.getString(R.string.debug_log_flag_receiver_true))
+            } else {
+                DebugLogger.d(tag, context.getString(R.string.debug_log_flag_receiver_false))
+            }
 
             // shouldn't need to check whether the app is still enabled here because
             //  we will cancel the alarm when the setting is changed
@@ -39,6 +57,8 @@ class AlarmReceiver : BroadcastReceiver() {
 
             // take action depending on what alarm stage it is
             doAlertCheck(context, alarmStage)
+
+            Log.d(tag, "AlarmReceiver.onReceive() finished")
 
         } catch (e: Exception) {
             DebugLogger.d(tag, context.getString(R.string.debug_log_failed_processing_alarm), e)
@@ -71,4 +91,45 @@ class AlarmReceiver : BroadcastReceiver() {
         }
         return alarmStage
     }
+
+    class AppForegroundChecker(private val context: Context) {
+
+        private val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+
+        fun isAppInForeground(): Boolean {
+            try {
+                return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    isAppInForegroundAndroid10Plus()
+                } else {
+                    isAppInForegroundLegacy()
+                }
+            } catch (e: Exception) {
+                Log.e("AppForegroundChecker", "Error checking if app is in foreground", e)
+            }
+            return false
+        }
+
+        @RequiresApi(Build.VERSION_CODES.Q)
+        private fun isAppInForegroundAndroid10Plus(): Boolean {
+            val processInfo = activityManager.runningAppProcesses?.firstOrNull {
+                it.uid == context.applicationInfo.uid
+            } ?: return false
+
+            return processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+        }
+
+        private fun isAppInForegroundLegacy(): Boolean {
+            val appProcesses = activityManager.runningAppProcesses ?: return false
+            val packageName = context.packageName
+
+            for (appProcess in appProcesses) {
+                if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+                    && appProcess.processName == packageName) {
+                    return true
+                }
+            }
+            return false
+        }
+    }
 }
+

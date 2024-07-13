@@ -63,9 +63,11 @@
     <string name="default_notification_channel_title">Alarm-Benachrichtigungen</string>
     <string name="sms_sent_notification_channel_title">Benachrichtigungen über gesendete SMS</string>
     <string name="call_sent_notification_channel_title">Benachrichtigungen über getätigte Anrufe</string>
+    <string name="alert_service_notification_channel_title">Benachrichtigungen des Alarmdienstes</string>
     <string name="default_notification_channel_description">Sind Sie da?-Abfragen</string>
     <string name="sms_sent_notification_channel_description">Wird gesendet, wenn eine Alarm-SMS ausgelöst wird</string>
     <string name="call_sent_notification_channel_description">Wird gesendet, wenn ein Alarm-Anruf ausgelöst wird</string>
+    <string name="alert_service_notification_channel_description">Wird beim Senden eines Alarms angezeigt</string>
     <string name="activity_notification_message">Schön, dass Sie noch am Leben sind! Alarm wird aufgehoben.</string>
     <string name="initial_check_notification_title">Sind Sie noch da?</string>
     <string name="initial_check_notification_text">Klicken Sie hier, wenn Sie noch am Leben sind! Andernfalls wird in %1$s Minuten ein Alarm gesendet.</string>
@@ -79,6 +81,8 @@
     <string name="sms_service_failure_notification_text">Beim Versuch, eine Alarm-SMS zu senden, ist ein Fehler aufgetreten.  Bitte überprüfen Sie, ob Sie eine aktive SIM-Karte haben.</string>
     <string name="sms_sent_toast_text">Keep Alive Alarm-SMS gesendet!</string>
     <string name="sms_failure_toast_text">Versand der Keep Alive Alarm-SMS fehlgeschlagen?!</string>
+    <string name="alert_service_notification_title">Alarm wird gesendet…</string>
+    <string name="alert_service_notification_message">Alarm(e) werden an Ihre konfigurierten Kontakte gesendet, bitte warten.</string>
 
     <!-- alert location strings -->
     <string name="location_invalid_message">Standort kann nicht ermittelt werden.</string>
@@ -123,7 +127,7 @@
     <string name="add_sms_contact_button_text">SMS-Notfallkontakt hinzufügen</string>
     <string name="contact_phone_description">Wenn ein Alarm ausgelöst wird, wird diese Telefonnummer mit aktivierter Freisprecheinrichtung angerufen.\n\nBitte beachten Sie, dass hierfür zusätzliche Berechtigungen erforderlich sind, damit Telefonanrufe im Hintergrund getätigt werden können.</string>
     <string name="default_alert_message">Hallo! Ich habe mein Telefon seit einiger Zeit nicht mehr benutzt und benötige vielleicht Unterstützung.  Bitte Hilfe schicken!</string>
-    <string name="default_alert_message_alt">Hey, ich bin vielleicht tot. Wenn ich dich in den nächsten 24 Stunden nicht melde, weißt du, was zu tun ist...</string>
+    <string name="default_alert_message_alt">Hey, ich bin vielleicht tot. Wenn ich dich in den nächsten 24 Stunden nicht melde, weißt du, was zu tun ist.</string>
     <string name="add_emergency_contact_title">Notfallkontakt hinzufügen</string>
     <string name="edit_emergency_contact_title">Notfallkontakt bearbeiten</string>
 
@@ -219,7 +223,10 @@
     <string name="debug_log_power_and_idle_status">Im Energiesparmodus? %1$b. Ist das Gerät im Ruhezustand? %2$b</string>
     <string name="debug_log_failed_registering_sms_sent_receiver">Registrierung des SMS-Sendereceivers fehlgeschlagen.</string>
     <string name="debug_log_failed_getting_sms_sub_id">Standard-SMS-Abonnement-ID konnte nicht abgerufen werden.</string>
-
+    <string name="debug_log_alert_service_start">Alarmdienst wird gestartet</string>
+    <string name="debug_log_alert_service_stop">Alarmdienst wird gestoppt</string>
+    <string name="debug_log_alert_service_error">Fehler im Alarmdienst aufgetreten: %1$s</string>
+    <string name="debug_log_auto_restart_monitoring">Automatischer Neustart der Überwachung ist aktiviert, Alarm wird neu gestartet…</string>
 
     <!-- AppController.kt -->
     <string name="debug_log_starting_up">KeepAlive startet!</string>
@@ -247,6 +254,7 @@
     <string name="debug_log_geocoding_timeout_reached">Timeout erreicht, locationString ist %1$s</string>
     <string name="debug_log_failed_geocoding_gps_coordinates">Fehler beim Geocodieren der GPS-Koordinaten?!</string>
     <string name="debug_log_no_address_results">Keine Adressergebnisse</string>
+    <string name="debug_log_location_helper_init_error">Fehler beim Überprüfen des GPS- oder Netzwerkanbieters</string>
 
     <!-- LocationHelper.kt -->
     <string name="debug_log_attempting_to_get_last_location">Versuche, den letzten Standort abzurufen…</string>
@@ -276,6 +284,14 @@
     <string name="debug_log_alarm_stage">Alarmphase ist %1$s</string>
     <string name="debug_log_alarm_time_comparison">Uhrzeit ist %1$s, Alarm sollte um %2$s ausgelöst werden, was %3$d Sekunden her ist</string>
     <string name="debug_log_failed_processing_alarm">Fehler bei der Alarmverarbeitung:</string>
+    <string name="debug_log_app_in_foreground">KeepAlive ist derzeit im Vordergrund</string>
+    <string name="debug_log_app_in_background">KeepAlive ist derzeit im Hintergrund</string>
+    <string name="debug_log_flag_receiver_true">FLAG_RECEIVER_FOREGROUND ist wahr</string>
+    <string name="debug_log_flag_receiver_false">FLAG_RECEIVER_FOREGROUND ist falsch</string>
+
+    <!-- AlertService.kt -->
+    <string name="debug_log_wake_lock_acquired">Wake-Lock wird erworben</string>
+    <string name="debug_log_wake_lock_released">Wake-Lock wird freigegeben</string>
 
     <!-- SMSSentReceiver.kt -->
     <string name="debug_log_sms_sent">SMS gesendet!</string>

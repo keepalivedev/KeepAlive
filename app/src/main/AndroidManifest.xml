@@ -17,9 +17,11 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
@@ -64,6 +66,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="io.keepalive.android.MainActivity" />
         </activity>
+
+        <service
+            android:name="io.keepalive.android.AlertService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
 
         <receiver
             android:name="io.keepalive.android.receivers.AlarmReceiver"
