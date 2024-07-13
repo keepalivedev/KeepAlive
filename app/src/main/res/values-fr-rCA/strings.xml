@@ -65,9 +65,11 @@
     <string name="default_notification_channel_title">Notifications d\'alerte</string>
     <string name="sms_sent_notification_channel_title">Notifications d\'envoi SMS</string>
     <string name="call_sent_notification_channel_title">Notifications d\'appel envoyé</string>
+    <string name="alert_service_notification_channel_title">Notifications du service d\'alerte</string>
     <string name="default_notification_channel_description">Êtes-vous là?</string>
 	<string name="sms_sent_notification_channel_description">Envoyé lorsqu\'une alerte SMS est déclenchée</string>
     <string name="call_sent_notification_channel_description">Envoyé lorsqu\'une alerte d\'appel téléphonique est déclenchée</string>
+    <string name="alert_service_notification_channel_description">Affiché lors de l\'envoi d\'une alerte</string>
     <string name="activity_notification_message">Ravi de voir que vous êtes toujours en vie! Annulation de l\'alerte.</string>
     <string name="initial_check_notification_title">Êtes-vous toujours là?</string>
     <string name="initial_check_notification_text">Cliquez ici si vous êtes toujours en vie! Sinon, une alerte sera envoyée dans %1$s minutes.</string>
@@ -79,9 +81,10 @@
     <string name="sms_alert_failure_notification_text_with_error">Une erreur s\'est produite lors de la tentative d\'envoi d\'un SMS d\'alerte: %1$s</string>
     <string name="sms_service_failure_notification_text">Une erreur s\'est produite lors de la tentative d\'envoi d\'un SMS d\'alerte, veuillez vérifier que vous disposez d\'une carte SIM active</string>
     <string name="sms_failure_toast_text">Échec de l\'envoi du SMS d\'alerte Keep Alive?!</string>
-	
-	
-	<!-- alert location strings -->
+    <string name="alert_service_notification_title">Envoi de l\'alerte en cours…</string>
+    <string name="alert_service_notification_message">L\'alerte (ou les alertes) est en cours d\'envoi à vos contacts configurés, veuillez patienter.</string>
+
+    <!-- alert location strings -->
     <string name="location_invalid_message">Impossible de déterminer l\'emplacement.</string>
     <string name="geocode_invalid_message">Impossible de géocoder l\'emplacement. Les coordonnées GPS sont (%1$s, %2$s). Précision (m) : %3$s.</string>
     <string name="geocode_valid_message">Coordonnées GPS: (%1$s, %2$s). Précision (m) : %3$s. Adresse possible: %4$s</string>
@@ -125,7 +128,7 @@
     <string name="add_sms_contact_button_text">Ajouter un contact d\'urgence SMS</string>
     <string name="contact_phone_description">Lorsqu\'une alerte est déclenchée, un appel téléphonique sera passé vers ce numéro de téléphone avec le haut-parleur activé.\n\nVeuillez noter que cela nécessite des autorisations supplémentaires afin que les appels téléphoniques puissent être passés en arrière-plan.</string>
     <string name="default_alert_message">Bonjour! Je n\'ai pas utilisé mon téléphone depuis un certain temps et j\'ai peut-être besoin d\'aide. S\'il vous plaît envoyez de l\'aide!</string>
-    <string name="default_alert_message_alt">Hé, je suis peut-être mort, si je ne te contacte pas dans les prochaines 24 heures, tu sais quoi faire...</string>
+    <string name="default_alert_message_alt">Hé, je suis peut-être mort, si je ne te contacte pas dans les prochaines 24 heures, tu sais quoi faire.</string>
     <string name="add_emergency_contact_title">Ajouter un contact d\'urgence</string>
 	<string name="edit_emergency_contact_title">Modifier un contact d\'urgence</string>
 
@@ -221,6 +224,11 @@
     <string name="debug_log_power_and_idle_status">En mode économie d\'énergie ? %1$b. L\'appareil est-il en veille ? %2$b</string>
     <string name="debug_log_failed_registering_sms_sent_receiver">Échec de l\'enregistrement du récepteur SMS envoyé.</string>
     <string name="debug_log_failed_getting_sms_sub_id">Échec de l\'obtention de l\'ID d\'abonnement SMS par défaut.</string>
+    <string name="debug_log_alert_service_start">Démarrage du service d\'alerte</string>
+    <string name="debug_log_alert_service_stop">Arrêt du service d\'alerte</string>
+    <string name="debug_log_alert_service_error">Une erreur s\'est produite dans le service d\'alerte : %1$s</string>
+    <string name="debug_log_auto_restart_monitoring">La surveillance de redémarrage automatique est activée, redémarrage de l\'alarme…</string>
+
 
     <!-- AppController.kt -->
     <string name="debug_log_starting_up">KeepAlive démarre!</string>
@@ -248,6 +256,7 @@
     <string name="debug_log_geocoding_timeout_reached">Délai d\'attente atteint, locationString est %1$s</string>
     <string name="debug_log_failed_geocoding_gps_coordinates">Échec du géocodage des coordonnées GPS?!</string>
     <string name="debug_log_no_address_results">Aucun résultat d\'adresse</string>
+    <string name="debug_log_location_helper_init_error">Erreur lors de la vérification du GPS ou du fournisseur réseau</string>
 
     <!-- LocationHelper.kt -->
     <string name="debug_log_attempting_to_get_last_location">Tentative d\'obtention du dernier emplacement…</string>
@@ -277,6 +286,14 @@
     <string name="debug_log_alarm_stage">L\'étape d\'alarme est %1$s</string>
     <string name="debug_log_alarm_time_comparison">L\'heure est %1$s, l\'alarme était censée se déclencher à %2$s, c\'est-à-dire il y a %3$d secondes</string>
     <string name="debug_log_failed_processing_alarm">Échec lors du traitement de l\'alarme:</string>
+    <string name="debug_log_app_in_foreground">KeepAlive est actuellement au premier plan</string>
+    <string name="debug_log_app_in_background">KeepAlive est actuellement en arrière-plan</string>
+    <string name="debug_log_flag_receiver_true">FLAG_RECEIVER_FOREGROUND est vrai</string>
+    <string name="debug_log_flag_receiver_false">FLAG_RECEIVER_FOREGROUND est faux</string>
+
+    <!-- AlertService.kt -->
+    <string name="debug_log_wake_lock_acquired">Acquisition du verrou d\'éveil</string>
+    <string name="debug_log_wake_lock_released">Libération du verrou d\'éveil</string>
 
     <!-- SMSSentReceiver.kt -->
     <string name="debug_log_sms_sent">SMS envoyé!</string>

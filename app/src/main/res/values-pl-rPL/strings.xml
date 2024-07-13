@@ -75,9 +75,11 @@
     <string name="default_notification_channel_title">Alerty</string>
     <string name="sms_sent_notification_channel_title">Powiadomienia o Wysłanych SMSach</string>
     <string name="call_sent_notification_channel_title">Powiadomienia o Połączeniach Telefonicznych</string>
+    <string name="alert_service_notification_channel_title">Powiadomienia usługi alertów</string>
     <string name="default_notification_channel_description">Pytania \'Jesteś tam?\'</string>
     <string name="sms_sent_notification_channel_description">Wysyłane kiedy alert SMS zostanie aktywowany</string>
     <string name="call_sent_notification_channel_description">Wysyłane kiedy alert z połączeniem telefonicznym zostanie aktywowany</string>
+    <string name="alert_service_notification_channel_description">Wyświetlane podczas wysyłania alertu</string>
     <string name="activity_notification_message">Cieszę się że żyjesz! Anuluję Alert.</string>
     <string name="initial_check_notification_title">Jesteś tam?</string>
     <string name="initial_check_notification_text">Kliknij tu jeśli wciąż żyjesz! W przeciwnym wypadku alert aktywuje się za %1$s minut.</string>
@@ -91,6 +93,8 @@
     <string name="sms_service_failure_notification_text">Wystąpił błąd podczas wysyłania Alertu SMS, upewnij się, że masz aktywną kartę SIM</string>
     <string name="sms_sent_toast_text">Keep Alive wysłał Alert SMS!</string>
     <string name="sms_failure_toast_text">Keep Alive nie mógł wysłać Alertu SMS?!</string>
+    <string name="alert_service_notification_title">Wysyłanie alertu…</string>
+    <string name="alert_service_notification_message">Alert(y) są wysyłane do skonfigurowanych kontaktów, proszę czekać.</string>
 
     <!-- alert location strings -->
     <string name="location_invalid_message">Nie udało się ustalić lokalizacji.</string>
@@ -136,7 +140,7 @@
     <string name="add_sms_contact_button_text">Dodaj Numer Alerów SMS</string>
     <string name="contact_phone_description">Kiedy Alert zostanie wywołany, telefon zadzwoni na ten numer telefonu z włączonym trybem głośnomówiącym.\n\nWymaga to dodatkowych uprawnień, żeby telefon mógł dzwonić w tle.</string>
     <string name="default_alert_message">Hej! Nie używałem telefonu już od dłuższego czasu i mogę potrzebować wsparcia. Pomóż proszę!</string>
-    <string name="default_alert_message_alt">Hej mogę już nie żyć, jeśli nie skontaktuję się z Tobą przez 24 godziny to wiesz co robić...</string>
+    <string name="default_alert_message_alt">Hej mogę już nie żyć, jeśli nie skontaktuję się z Tobą przez 24 godziny to wiesz co robić.</string>
     <string name="add_emergency_contact_title">Dodaj Kontakt Alarmowy</string>
     <string name="edit_emergency_contact_title">Zmień Kontakt Alarmowy</string>
 
@@ -232,7 +236,10 @@
     <string name="debug_log_power_and_idle_status">Czy w trybie oszczędzania energii? %1$b. Czy urządzenie jest w stanie bezczynności? %2$b</string>
     <string name="debug_log_failed_registering_sms_sent_receiver">Nie udało się zarejestrować odbiornika wysłanych SMS-ów.</string>
     <string name="debug_log_failed_getting_sms_sub_id">Nie udało się pobrać domyślnego ID subskrypcji SMS.</string>
-
+    <string name="debug_log_alert_service_start">Uruchamianie usługi alertów</string>
+    <string name="debug_log_alert_service_stop">Zatrzymywanie usługi alertów</string>
+    <string name="debug_log_alert_service_error">Wystąpił błąd w usłudze alertów: %1$s</string>
+    <string name="debug_log_auto_restart_monitoring">Automatyczne ponowne uruchamianie monitorowania jest włączone, ponowne uruchamianie alarmu…</string>
 
     <!-- AppController.kt -->
     <string name="debug_log_starting_up">KeepAlive uruchamia się!</string>
@@ -260,6 +267,7 @@
     <string name="debug_log_geocoding_timeout_reached">Osiągnięto limit czasu, locationString to %1$s</string>
     <string name="debug_log_failed_geocoding_gps_coordinates">Nie udało się geokodować współrzędnych GPS?!</string>
     <string name="debug_log_no_address_results">Brak wyników adresu</string>
+    <string name="debug_log_location_helper_init_error">Błąd podczas sprawdzania dostawcy GPS lub sieci</string>
 
     <!-- LocationHelper.kt -->
     <string name="debug_log_attempting_to_get_last_location">Próba pobrania ostatniej lokalizacji…</string>
@@ -289,6 +297,14 @@
     <string name="debug_log_alarm_stage">Etap alarmu to %1$s</string>
     <string name="debug_log_alarm_time_comparison">Czas to %1$s, alarm miał się uruchomić o %2$s, co było %3$d sekund temu</string>
     <string name="debug_log_failed_processing_alarm">Nie udało się przetworzyć alarmu:</string>
+    <string name="debug_log_app_in_foreground">KeepAlive jest obecnie na pierwszym planie</string>
+    <string name="debug_log_app_in_background">KeepAlive jest obecnie w tle</string>
+    <string name="debug_log_flag_receiver_true">FLAG_RECEIVER_FOREGROUND jest prawdziwe</string>
+    <string name="debug_log_flag_receiver_false">FLAG_RECEIVER_FOREGROUND jest fałszywe</string>
+
+    <!-- AlertService.kt -->
+    <string name="debug_log_wake_lock_acquired">Uzyskiwanie blokady wybudzenia</string>
+    <string name="debug_log_wake_lock_released">Zwalnianie blokady wybudzenia</string>
 
     <!-- SMSSentReceiver.kt -->
     <string name="debug_log_sms_sent">SMS wysłany!</string>
