@@ -153,10 +153,11 @@
     <string name="monitored_apps_recently_used_title">Недавно использованные приложения (последние 72 часа)</string>
     <string name="monitored_apps_not_configured_title">Метод мониторинга не настроен</string>
     <string name="monitored_apps_not_configured_message">На вашем устройстве установлена ОС Android 8 или более ранней версии. Чтобы использовать Keep Alive, вы должны сначала выбрать другие приложения, которые будут использоваться для мониторинга активности. Пожалуйста, нажмите на настройку "Метод мониторинга" для конфигурации.</string>
-    <string name="monitored_apps_warning_dialog_title">ПРЕДУПРЕЖДЕНИЕ: Функция в бета-версии</string>
-    <string name="monitored_apps_warning_dialog_message">Пожалуйста, имейте в виду, что эта функция находится в стадии бета-тестирования, и поведение может отличаться в зависимости от выбранных приложений. Keep Alive ищет событие MOVE_TO_FOREGROUND от приложений, которое не всегда является результатом взаимодействия с пользователем. Приложения, которые могут пробуждать ваше устройство, такие как Будильник, Телефон или Медиа-приложения, не следует использовать.</string>
-    <string name="monitored_apps_warning_dialog_message_alt">\n\nПРИМЕЧАНИЕ: Это устройство работает под управлением Android 9 или более поздней версии, настоятельно рекомендуется использовать события блокировки/разблокировки устройства вместо мониторинга приложений.</string>
+    <string name="monitored_apps_warning_dialog_title">Мониторинг приложений</string>
+    <string name="monitored_apps_warning_dialog_message">Эта функция находится в разработке, и поведение может отличаться в зависимости от выбранного приложения (приложений). Keep Alive ищет событие MOVE_TO_FOREGROUND от приложения (приложений), что не всегда является результатом взаимодействия пользователя. Не следует использовать приложения, которые могут пробуждать ваше устройство, такие как будильник, телефон или медиа-приложения.</string>
+    <string name="monitored_apps_warning_dialog_message_alt">\n\nПРИМЕЧАНИЕ: Это устройство работает на Android 9 или более поздней версии, настоятельно рекомендуется использовать события блокировки/разблокировки устройства вместо мониторинга приложений.</string>
     <string name="monitored_apps_view_history_text">Просмотреть историю</string>
+    <string name="monitored_apps_view_history_title">История приложения: %1$s</string>
     <string name="monitored_apps_history_date_header">Использовано в</string>
     <string name="monitored_apps_history_name_header">Название активности</string>
     <string name="monitored_apps_no_usage_stats_permissions_dialog_title">Требуются разрешения</string>

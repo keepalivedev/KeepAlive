@@ -6,6 +6,8 @@ import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Paint
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -47,6 +49,11 @@ class AppsSelectionDialogFragment(val callback: () -> Unit) : DialogFragment() {
             if (displayMode == "details") {
                 appNameTextView.text = appInfo?.appName
                 viewDetailsTextView.text = context.getString(R.string.monitored_apps_view_history_text)
+
+                // set the text to bold and underlined to make it more obvious that it is clickable
+                viewDetailsTextView.paintFlags = viewDetailsTextView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+                viewDetailsTextView.setTypeface(null, Typeface.BOLD)
+
                 viewDetailsTextView.setOnClickListener {
                     onShowDetailsClick(context, appInfo!!)
                 }
@@ -80,7 +87,7 @@ class AppsSelectionDialogFragment(val callback: () -> Unit) : DialogFragment() {
         )
 
         AlertDialog.Builder(context, R.style.AlertDialogTheme)
-            .setTitle(appInfo.appName)
+            .setTitle(context.getString(R.string.monitored_apps_view_history_title, appInfo.appName))
             .setView(dialogView)
             .setPositiveButton(context.getString(R.string.close), null)
             .show()

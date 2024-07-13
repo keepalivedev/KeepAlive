@@ -154,10 +154,11 @@
     <string name="monitored_apps_recently_used_title">Ostatnio używane aplikacje (ostatnie 72 godziny)</string>
     <string name="monitored_apps_not_configured_title">Metoda monitorowania nie jest skonfigurowana</string>
     <string name="monitored_apps_not_configured_message">Twoje urządzenie działa pod kontrolą systemu Android 8 lub wcześniejszego. Aby korzystać z Keep Alive, musisz najpierw wybrać inne aplikacje, które będą używane do monitorowania aktywności. Kliknij ustawienie Metoda monitorowania, aby przeprowadzić konfigurację.</string>
-    <string name="monitored_apps_warning_dialog_title">OSTRZEŻENIE: Funkcja w wersji beta</string>
-    <string name="monitored_apps_warning_dialog_message">Pamiętaj, że ta funkcja jest w fazie testów beta i zachowanie może się różnić w zależności od wybranych aplikacji. Keep Alive szuka zdarzenia MOVE_TO_FOREGROUND z aplikacji, które nie zawsze są wynikiem interakcji użytkownika. Nie należy używać aplikacji, które mogą wybudzić urządzenie, takich jak Alarm, Telefon lub aplikacje multimedialne.</string>
-    <string name="monitored_apps_warning_dialog_message_alt">\n\nUWAGA: To urządzenie działa pod kontrolą systemu Android 9 lub nowszego, zdecydowanie zaleca się użycie zdarzeń blokady/odblokowania urządzenia zamiast monitorowania aplikacji.</string>
+    <string name="monitored_apps_warning_dialog_title">Monitorowanie aplikacji</string>
+    <string name="monitored_apps_warning_dialog_message">Ta funkcja jest w trakcie rozwoju i zachowanie może się różnić w zależności od wybranej aplikacji lub aplikacji. Keep Alive szuka zdarzenia MOVE_TO_FOREGROUND z aplikacji, co nie zawsze jest wynikiem interakcji użytkownika. Aplikacje, które mogą budzić urządzenie, takie jak aplikacje alarmowe, telefoniczne lub medialne, nie powinny być używane.</string>
+    <string name="monitored_apps_warning_dialog_message_alt">\n\nUWAGA: To urządzenie działa na systemie Android 9 lub nowszym, zdecydowanie zaleca się korzystanie z wydarzeń blokowania/odblokowania urządzenia zamiast monitorowania aplikacji.</string>
     <string name="monitored_apps_view_history_text">Wyświetl historię</string>
+    <string name="monitored_apps_view_history_title">Historia aplikacji: %1$s</string>
     <string name="monitored_apps_history_date_header">Używane o</string>
     <string name="monitored_apps_history_name_header">Nazwa aktywności</string>
     <string name="monitored_apps_no_usage_stats_permissions_dialog_title">Wymagane uprawnienia</string>
