@@ -26,6 +26,7 @@ class PhoneNumberAdapter(
         val alertMessageText: TextView = itemView.findViewById(R.id.alertMessageText)
         val enabledSwitch: SwitchCompat = itemView.findViewById(R.id.enabledSwitch)
         val locationSwitch: SwitchCompat = itemView.findViewById(R.id.locationSwitch)
+        var isInitializing = true
 
         init {
 
@@ -34,14 +35,18 @@ class PhoneNumberAdapter(
 
             // if the user changes the enabled switch from the main screen, save the settings
             enabledSwitch.setOnCheckedChangeListener { _, _ ->
-                phoneNumberList[adapterPosition].isEnabled = enabledSwitch.isChecked
-                saveSMSEmergencyContactSettings(sharedPrefs, phoneNumberList, gson)
+                if (!isInitializing) {
+                    phoneNumberList[adapterPosition].isEnabled = enabledSwitch.isChecked
+                    saveSMSEmergencyContactSettings(sharedPrefs, phoneNumberList, gson)
+                }
             }
 
             // if the user changes the location switch from the main screen, save the settings
             locationSwitch.setOnCheckedChangeListener { _, _ ->
-                phoneNumberList[adapterPosition].includeLocation = locationSwitch.isChecked
-                saveSMSEmergencyContactSettings(sharedPrefs, phoneNumberList, gson)
+                if (!isInitializing) {
+                    phoneNumberList[adapterPosition].includeLocation = locationSwitch.isChecked
+                    saveSMSEmergencyContactSettings(sharedPrefs, phoneNumberList, gson)
+                }
             }
         }
     }
@@ -54,6 +59,8 @@ class PhoneNumberAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = phoneNumberList[position]
+
+        holder.isInitializing = true
 
         // format the phone number for display
         holder.phoneNumberText.text = PhoneNumberUtils.formatNumber(
@@ -70,15 +77,17 @@ class PhoneNumberAdapter(
             holder.itemView.context.getString(
                 R.string.enable_switch_enabled_content_desc
             ),
-            position
+            position.toString()
         )
 
         holder.locationSwitch.contentDescription = String.format(
             holder.itemView.context.getString(
                 R.string.location_switch_enabled_content_desc
             ),
-            position
+            position.toString()
         )
+
+        holder.isInitializing = false
     }
 
     override fun getItemCount() = phoneNumberList.size
