@@ -75,9 +75,11 @@
     <string name="default_notification_channel_title">Alert Notifications</string>
     <string name="sms_sent_notification_channel_title">SMS Sent Notifications</string>
     <string name="call_sent_notification_channel_title">Call Sent Notifications</string>
+    <string name="alert_service_notification_channel_title">Alert Service Notifications</string>
     <string name="default_notification_channel_description">Are you there? Prompts</string>
     <string name="sms_sent_notification_channel_description">Sent when an SMS alert is triggered</string>
     <string name="call_sent_notification_channel_description">Sent when an Phone Call alert is triggered</string>
+    <string name="alert_service_notification_channel_description">Displayed while sending an Alert</string>
     <string name="activity_notification_message">Glad to see you are still alive! Cancelling Alert.</string>
     <string name="initial_check_notification_title">Are you still there?</string>
     <string name="initial_check_notification_text">Click here if you are still alive! Otherwise an alert will be sent in %1$s minutes.</string>
@@ -91,6 +93,8 @@
     <string name="sms_service_failure_notification_text">Error occurred while attempting to send Alert SMS, please verify you have an active SIM</string>
     <string name="sms_sent_toast_text">Keep Alive Alert SMS sent!</string>
     <string name="sms_failure_toast_text">Failed to send Keep Alive Alert SMS?!</string>
+    <string name="alert_service_notification_title">Sending Alert…</string>
+    <string name="alert_service_notification_message">Alert(s) are being sent to your configured contacts, please wait.</string>
 
     <!-- alert location strings -->
     <string name="location_invalid_message">Unable to determine location.</string>
@@ -135,7 +139,7 @@
     <string name="add_sms_contact_button_text">Add SMS Emergency Contact</string>
     <string name="contact_phone_description">When an Alert is triggered, a phone call will be placed to this phone number with speakerphone enabled.\n\nPlease note that this requires additional permissions so that phone calls can be placed from the background.</string>
     <string name="default_alert_message">Hello! I have not used my phone in a while and may be in need of assistance. Please send help!</string>
-    <string name="default_alert_message_alt">Hey I may be dead, if I do not contact you in the next 24 hours, you know what to do...</string>
+    <string name="default_alert_message_alt">Hey I may be dead, if I do not contact you in the next 24 hours, you know what to do.</string>
     <string name="add_emergency_contact_title">Add Emergency Contact</string>
     <string name="edit_emergency_contact_title">Edit Emergency Contact</string>
 
@@ -149,9 +153,9 @@
     <string name="monitored_apps_recently_used_title">Recently Used Apps (Last 72 Hours)</string>
     <string name="monitored_apps_not_configured_title">Monitoring Method Not Configured</string>
     <string name="monitored_apps_not_configured_message">Your device is running Android 8 or earlier. In order to use Keep Alive you must first select the other app(s) that will be used to monitor for activity. Please click the Monitoring Method setting to configure.</string>
-    <string name="monitored_apps_warning_dialog_title">WARNING: Feature in Beta Release</string>
-    <string name="monitored_apps_warning_dialog_message">Please keep in mind that this feature is in beta testing and behavior may differ depending on the app(s) selected. Keep Alive looks for a MOVE_TO_FOREGROUND event from the app(s), which is not always a result of user interaction. Apps that may be able to wake up your device, like Alarm, Phone or Media apps, should not be used.</string>
-    <string name="monitored_apps_warning_dialog_message_alt">\n\nNOTE: This device is running Android 9 or later, usage of device lock/unlock events instead of app monitoring is highly recommended.</string>
+    <string name="monitored_apps_warning_dialog_title">App Monitoring</string>
+    <string name="monitored_apps_warning_dialog_message">This feature is a work in progress and behavior may differ depending on the app(s) selected. Keep Alive looks for a MOVE_TO_FOREGROUND event from the app(s), which is not always a result of user interaction. Apps that may be able to wake up your device, like Alarm, Phone or Media apps, should not be used.</string>
+    <string name="monitored_apps_warning_dialog_message_alt">\n\nNOTE: This device is running Android 9 or later, usage of device lock/unlock events instead of App Monitoring is highly recommended.</string>
     <string name="monitored_apps_view_history_text">View History</string>
     <string name="monitored_apps_history_date_header">Used At</string>
     <string name="monitored_apps_history_name_header">Activity Name</string>
@@ -231,6 +235,10 @@
     <string name="debug_log_power_and_idle_status">In power save mode? %1$b. Is device idle? %2$b</string>
     <string name="debug_log_failed_registering_sms_sent_receiver">Failed to register SMS Sent receiver.</string>
     <string name="debug_log_failed_getting_sms_sub_id">Failed to get default SMS subscription ID.</string>
+    <string name="debug_log_alert_service_start">Starting Alert Service</string>
+    <string name="debug_log_alert_service_stop">Stopping Alert Service</string>
+    <string name="debug_log_alert_service_error">Error occurred in the Alert Service: %1$s</string>
+    <string name="debug_log_auto_restart_monitoring">Auto-Restart Monitoring is enabled, restarting alarm…</string>
 
     <!-- AppController.kt -->
     <string name="debug_log_starting_up">KeepAlive starting up!</string>
@@ -258,6 +266,7 @@
     <string name="debug_log_geocoding_timeout_reached">Timeout reached, locationString is %1$s</string>
     <string name="debug_log_failed_geocoding_gps_coordinates">Failed geocoding GPS coordinates?!</string>
     <string name="debug_log_no_address_results">No address results</string>
+    <string name="debug_log_location_helper_init_error">Error checking GPS or network provider</string>
 
     <!-- LocationHelper.kt -->
     <string name="debug_log_attempting_to_get_last_location">Attempting to get lastLocation…</string>
@@ -287,6 +296,14 @@
     <string name="debug_log_alarm_stage">Alarm stage is %1$s</string>
     <string name="debug_log_alarm_time_comparison">Time is %1$s, alarm was supposed to go off at %2$s, which was %3$d seconds ago</string>
     <string name="debug_log_failed_processing_alarm">Failed while processing alarm:</string>
+    <string name="debug_log_app_in_foreground">KeepAlive is currently in the foreground</string>
+    <string name="debug_log_app_in_background">KeepAlive is currently in the background</string>
+    <string name="debug_log_flag_receiver_true">FLAG_RECEIVER_FOREGROUND is true</string>
+    <string name="debug_log_flag_receiver_false">FLAG_RECEIVER_FOREGROUND is false</string>
+
+    <!-- AlertService.kt -->
+    <string name="debug_log_wake_lock_acquired">Acquiring wake lock</string>
+    <string name="debug_log_wake_lock_released">Releasing wake lock</string>
 
     <!-- SMSSentReceiver.kt -->
     <string name="debug_log_sms_sent">SMS sent!</string>

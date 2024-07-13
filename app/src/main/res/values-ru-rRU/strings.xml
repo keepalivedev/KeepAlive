@@ -75,9 +75,11 @@
     <string name="default_notification_channel_title">Оповещения</string>
     <string name="sms_sent_notification_channel_title">Уведомления об отправке СМС</string>
     <string name="call_sent_notification_channel_title">Уведомления о совершенных вызовах</string>
+    <string name="alert_service_notification_channel_title">Уведомления службы оповещения</string>
     <string name="default_notification_channel_description">Вы здесь? Подтверждение</string>
     <string name="sms_sent_notification_channel_description">Отправляется при срабатывании SMS-оповещения</string>
     <string name="call_sent_notification_channel_description">Отправляется при срабатывании оповещения о телефонном звонке</string>
+    <string name="alert_service_notification_channel_description">Отображается при отправке оповещения</string>
     <string name="activity_notification_message">Замечательно, что ты все еще здесь! Отмена оповещений</string>
     <string name="initial_check_notification_title">Вы всё еще здесь?</string>
     <string name="initial_check_notification_text">Нажмите здесь если вы тут! В противном случае оповещение будет отправлено через %1$s минут.</string>
@@ -91,6 +93,8 @@
     <string name="sms_service_failure_notification_text">Произошла ошибка при попытке отправить SMS-сообщение с оповещением. Убедитесь, что у вас активна SIM-карта.</string>
     <string name="sms_sent_toast_text">Keep Alive Alert SMS отправлено!</string>
     <string name="sms_failure_toast_text">Не удалось отправить SMS-сообщение с оповещением Keep Alive?!</string>
+    <string name="alert_service_notification_title">Отправка оповещения…</string>
+    <string name="alert_service_notification_message">Оповещение(я) отправляются вашим настроенным контактам, пожалуйста, подождите.</string>
 
     <!-- alert location strings -->
     <string name="location_invalid_message">Невозможно определить местоположение</string>
@@ -135,7 +139,7 @@
     <string name="add_sms_contact_button_text">Добавить экстренный контакт по SMS</string>
     <string name="contact_phone_description">При срабатывании оповещения на этот номер телефона будет совершен телефонный звонок с включенной громкой связью.\n\nОбратите внимание, что для этого требуются дополнительные разрешения, чтобы телефонные звонки можно было совершать в фоновом режиме.</string>
     <string name="default_alert_message">Привет! Я давно не пользовался телефоном и, возможно, мне нужна помощь. Пожалуйста, пришлите помощь!</string>
-    <string name="default_alert_message_alt">Эй, возможно, я мертв, если я не свяжусь с тобой в ближайшие 24 часа, ты знаешь, что делать...</string>
+    <string name="default_alert_message_alt">Эй, возможно, я мертв, если я не свяжусь с тобой в ближайшие 24 часа, ты знаешь, что делать.</string>
     <string name="add_emergency_contact_title">Добавить экстренный контакт</string>
     <string name="edit_emergency_contact_title">Редактировать экстренный контакт</string>
 
@@ -231,7 +235,10 @@
     <string name="debug_log_power_and_idle_status">В режиме энергосбережения? %1$b. Устройство находится в режиме ожидания? %2$b</string>
     <string name="debug_log_failed_registering_sms_sent_receiver">Не удалось зарегистрировать приёмник отправленных SMS.</string>
     <string name="debug_log_failed_getting_sms_sub_id">Не удалось получить ID подписки на SMS по умолчанию.</string>
-
+    <string name="debug_log_alert_service_start">Запуск службы оповещения</string>
+    <string name="debug_log_alert_service_stop">Остановка службы оповещения</string>
+    <string name="debug_log_alert_service_error">Произошла ошибка в службе оповещения: %1$s</string>
+    <string name="debug_log_auto_restart_monitoring">Автоматический перезапуск мониторинга включен, перезапуск будильника…</string>
 
     <!-- AppController.kt -->
     <string name="debug_log_starting_up">KeepAlive запускается!</string>
@@ -259,6 +266,7 @@
     <string name="debug_log_geocoding_timeout_reached">Достигнут тайм-аут, locationString - %1$s</string>
     <string name="debug_log_failed_geocoding_gps_coordinates">Не удалось выполнить геокодирование GPS-координат?!</string>
     <string name="debug_log_no_address_results">Нет результатов адреса</string>
+    <string name="debug_log_location_helper_init_error">Ошибка при проверке провайдера GPS или сети</string>
 
     <!-- LocationHelper.kt -->
     <string name="debug_log_attempting_to_get_last_location">Попытка получить последнее местоположение…</string>
@@ -288,6 +296,14 @@
     <string name="debug_log_alarm_stage">Этап будильника - %1$s</string>
     <string name="debug_log_alarm_time_comparison">Время %1$s, будильник должен был сработать в %2$s, что было %3$d секунд назад</string>
     <string name="debug_log_failed_processing_alarm">Не удалось обработать будильник:</string>
+    <string name="debug_log_app_in_foreground">KeepAlive сейчас на переднем плане</string>
+    <string name="debug_log_app_in_background">KeepAlive сейчас в фоновом режиме</string>
+    <string name="debug_log_flag_receiver_true">FLAG_RECEIVER_FOREGROUND истинно</string>
+    <string name="debug_log_flag_receiver_false">FLAG_RECEIVER_FOREGROUND ложно</string>
+
+    <!-- AlertService.kt -->
+    <string name="debug_log_wake_lock_acquired">Получение блокировки пробуждения</string>
+    <string name="debug_log_wake_lock_released">Освобождение блокировки пробуждения</string>
 
     <!-- SMSSentReceiver.kt -->
     <string name="debug_log_sms_sent">SMS отправлено!</string>
