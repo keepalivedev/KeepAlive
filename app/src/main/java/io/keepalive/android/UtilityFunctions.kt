@@ -85,7 +85,7 @@ fun saveSMSEmergencyContactSettings(
         var includeLocation = false
 
         for (phoneNumberSetting in phoneNumberList) {
-            if (phoneNumberSetting.includeLocation) {
+            if (phoneNumberSetting.isEnabled && phoneNumberSetting.includeLocation) {
                 Log.d("saveSettings", "phoneNumberSetting: $phoneNumberSetting")
                 includeLocation = true
             }
