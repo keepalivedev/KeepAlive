@@ -469,7 +469,7 @@ fun doAlertCheck(context: Context, alarmStage: String) {
     val nowTimestamp = System.currentTimeMillis()
 
     Log.d(
-        "doPeriodicCheck",
+        "doAlertCheck",
         "check period is $checkPeriodHours hours, " +
                 "followup period is $followupPeriodMinutes minutes."
     )
@@ -479,7 +479,7 @@ fun doAlertCheck(context: Context, alarmStage: String) {
     var activitySearchStartTimestamp = (nowTimestamp - (checkPeriodHours * 1000 * 60 * 60)).toLong()
     var isInRestPeriod = false
 
-    Log.d("doPeriodicCheck", "activity search start timestamp is " +
+    Log.d("doAlertCheck", "activity search start timestamp is " +
             getDateTimeStrFromTimestamp(activitySearchStartTimestamp)
     )
 
@@ -497,7 +497,7 @@ fun doAlertCheck(context: Context, alarmStage: String) {
             nowCalendar, checkPeriodHours, restPeriods[0]
         ).timeInMillis
 
-        Log.d("doPeriodicCheck", "updating activity search start timestamp to " +
+        Log.d("doAlertCheck", "updating activity search start timestamp to " +
                 getDateTimeStrFromTimestamp(activitySearchStartTimestamp))
     }
 
@@ -527,6 +527,8 @@ fun doAlertCheck(context: Context, alarmStage: String) {
         // if auto restart is enabled
         if (prefs.getBoolean("auto_restart_monitoring", false)) {
 
+            DebugLogger.d("doAlertCheck", context.getString(R.string.debug_log_auto_restart_monitoring))
+
             // we can't set the alarm using last activity otherwise it would immediately fire an
             //  'are you there?' check so just base it on the checkPeriodHours and the rest periods
             setAlarm(context, (checkPeriodHours * 60 * 60 * 1000).toLong(), "periodic", restPeriods)
@@ -538,7 +540,7 @@ fun doAlertCheck(context: Context, alarmStage: String) {
     // make sure we aren't in a rest period though because we should never initiate the
     //  'are you there?' check during a rest period
     if (lastInteractiveEvent == null && !isInRestPeriod) {
-        DebugLogger.d("doPeriodicCheck", context.getString(R.string.debug_log_no_events_sending_notification, checkPeriodHours))
+        DebugLogger.d("doAlertCheck", context.getString(R.string.debug_log_no_events_sending_notification, checkPeriodHours))
 
         // send the 'Are you there?' notification
         AlertNotificationHelper(context).sendNotification(
@@ -562,7 +564,7 @@ fun doAlertCheck(context: Context, alarmStage: String) {
 
         // this just here for informational purposes
         val lastEventMsAgo = nowTimestamp - lastInteractiveEventTimestamp
-        Log.d("doPeriodicCheck", "last event was ${lastEventMsAgo / 1000} seconds ago")
+        Log.d("doAlertCheck", "last event was ${lastEventMsAgo / 1000} seconds ago")
 
         // since now know when the last activity was we can set our next alarm for the
         //  exact time we need to check again

@@ -141,10 +141,11 @@
     <string name="monitored_apps_recently_used_title">Kürzlich verwendete Apps (letzte 72 Stunden)</string>
     <string name="monitored_apps_not_configured_title">Überwachungsmethode nicht konfiguriert</string>
     <string name="monitored_apps_not_configured_message">Ihr Gerät läuft unter Android 8 oder früher. Um Keep Alive zu verwenden, müssen Sie zunächst die andere(n) App(s) auswählen, die zur Überwachung der Aktivität verwendet werden sollen. Bitte klicken Sie auf die Einstellung Überwachungsmethode, um die Konfiguration vorzunehmen.</string>
-    <string name="monitored_apps_warning_dialog_title">WARNUNG: Funktion in der Beta-Version</string>
-    <string name="monitored_apps_warning_dialog_message">Bitte beachten Sie, dass sich diese Funktion noch im Beta-Test befindet und das Verhalten je nach ausgewählter App unterschiedlich sein kann. Keep Alive sucht nach einem MOVE_TO_FOREGROUND-Ereignis von der/den App(s), was nicht immer auf eine Benutzerinteraktion zurückzuführen ist. Apps, die Ihr Gerät aufwecken können, wie Wecker-, Telefon- oder Medien-Apps, sollten nicht verwendet werden.</string>
-    <string name="monitored_apps_warning_dialog_message_alt">\n\nHINWEIS: Dieses Gerät läuft unter Android 9 oder höher, die Verwendung von Gerätesperr-/Entsperrereignissen anstelle der App-Überwachung wird dringend empfohlen.</string>
+    <string name="monitored_apps_warning_dialog_title">App-Überwachung</string>
+    <string name="monitored_apps_warning_dialog_message">Diese Funktion befindet sich noch in der Entwicklung und das Verhalten kann je nach ausgewählter App(s) variieren. Keep Alive sucht nach einem MOVE_TO_FOREGROUND-Ereignis der App(s), was nicht immer das Ergebnis einer Benutzerinteraktion ist. Apps, die Ihr Gerät möglicherweise aufwecken können, wie Wecker-, Telefon- oder Medien-Apps, sollten nicht verwendet werden.</string>
+    <string name="monitored_apps_warning_dialog_message_alt">\n\nHINWEIS: Dieses Gerät läuft unter Android 9 oder höher, die Verwendung von Geräte-Sperr-/Entsperr-Ereignissen anstelle der App-Überwachung wird dringend empfohlen.</string>
     <string name="monitored_apps_view_history_text">Verlauf anzeigen</string>
+    <string name="monitored_apps_view_history_title">App-Verlauf: %1$s</string>
     <string name="monitored_apps_history_date_header">Verwendet am</string>
     <string name="monitored_apps_history_name_header">Aktivitätsname</string>
     <string name="monitored_apps_no_usage_stats_permissions_dialog_title">Berechtigungen erforderlich</string>
