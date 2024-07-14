@@ -159,9 +159,15 @@ class AlertMessageSender(private val context: Context) {
 
         DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_alert_sms))
 
+        // API 34+ requires that a package name be specified for pending and implicit intents
+        //  it seemed to work without this though...
+        val smsSentIntent = Intent("SMS_SENT").apply {
+            setPackage(context.packageName)
+        }
+
         // create a pending intent for the SMS sent intent to use when sending the SMS
         val sentPI = PendingIntent.getBroadcast(
-            context, 0, Intent("SMS_SENT"),
+            context, 0, smsSentIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
