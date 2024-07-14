@@ -5,12 +5,14 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.ServiceInfo
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
 import android.util.Log
+import androidx.core.app.ServiceCompat
 
 class AlertService : Service() {
 
@@ -55,8 +57,32 @@ class AlertService : Service() {
             // create a notification to show that the service is running
             val notification = createNotification()
 
+            // a lot of this seems unnecessary, the type of service declared doesn't seem to affect
+            //  what we are actually able to do in the service...
+            var foregroundServiceTypes = 0
+
+            // if this is API 29+ then we should add the foreground service type(s)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+
+                // if the user has enabled location then add the location type
+                if (prefs.getBoolean("location_enabled", false)) {
+                    foregroundServiceTypes = foregroundServiceTypes or ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
+                }
+
+                // if this is API 34+ then add the new short service type
+                // https://developer.android.com/about/versions/14/changes/fgs-types-required#short-service
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    foregroundServiceTypes = foregroundServiceTypes or ServiceInfo.FOREGROUND_SERVICE_TYPE_SHORT_SERVICE
+                }
+            }
+
             // start the service
-            startForeground(AppController.ALERT_SERVICE_NOTIFICATION_ID, notification)
+            ServiceCompat.startForeground(
+                this,
+                AppController.ALERT_SERVICE_NOTIFICATION_ID,
+                notification,
+                foregroundServiceTypes
+            )
 
             DebugLogger.d("AlertService", getString(R.string.debug_log_wake_lock_acquired))
             wakeLock.acquire(wakeLockTimeout)
@@ -120,6 +146,8 @@ class AlertService : Service() {
             .setContentTitle(getString(R.string.alert_service_notification_title))
             .setContentText(getString(R.string.alert_service_notification_message))
             .setSmallIcon(R.drawable.ic_notification)
+            // the OS may delay the visibility of the notification so force it to be visible immediately
+            .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .build()
     }
 
