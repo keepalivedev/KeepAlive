@@ -10,12 +10,13 @@ Keep Alive wyśle ustaloną wiadomość SMS do jednej lub więcej osób, jeśli 
 - Opcjonalnie: Połączenie telefoniczne z trybem głośnomówiącym
 
 Wymagania
-  Keep Alive wymaga ustawionego ekranu blokady i aktywnej sieci komórkowej.  Dzwonienie i wiadomości przez WiFi będzie użyte jeśli urządzenie je wspiera.
+   Funkcja Keep Alive wymaga, aby Twoje urządzenie miało aktywny plan sieci komórkowej. Połączenia i wiadomości Wi-Fi będą używane, jeśli urządzenie je obsługuje.
 
 Jak to działa
-  Keep Alive używa ekranu blokady Twojego urządzenia do wykrywania aktywności. Jeśli nie odblokowywałeś urządzenia przez określony czas, dostaniesz wiadomość z pytaniem 'Jesteś tam?'. Jeśli wiadomość nie zostanie potwierdzona, wywołany zostanie Alert. W zależności od ustawień Kontaktów Alarmowych jedna lub więcej wiadomości SMS i/lub połączenie telefoniczne zostanie wykonane, aby powiadomić innych o tym, że możesz potrzebować pomocy.
+   Keep Alive wykorzystuje ekran blokady urządzenia lub inną aplikację do wykrywania aktywności. Jeśli Twoje urządzenie nie było zablokowane ani odblokowane przez określony czas lub jeśli nie miałeś dostępu do wybranych aplikacji, zostanie wyświetlony monit „Czy tam jesteś?” powiadomienie. Jeśli to powiadomienie nie zostanie potwierdzone, zostanie uruchomiony alert. W oparciu o skonfigurowane ustawienia kontaktu alarmowego zostanie wykonana jedna lub więcej wiadomości SMS i/lub połączenie telefoniczne, aby powiadomić inne osoby, że możesz potrzebować pomocy.
 
 Główne ustawienia
+- Metoda monitorowania - wybierz pomiędzy użyciem ekranu blokady lub innej aplikacji do wykrywania aktywności. Jeśli używasz innych aplikacji, zostaniesz poproszony o wybranie aplikacji do monitorowania.
 - Godziny Nieaktywności przed Zapytaniem - ile godzin od ostatniego odblokowania/zablokowania musi minąć, żeby aplikacja zapytała Cię 'Jesteś tam?'. Domyślnie 12 godzin
 - Minuty na Potwierdzenie - jeśli pytanie nie zostanie potwierdzone przez ten czas, Alert będzie wysłany do skonfigurowanych Kontaktów Alarmowych. Domyślnie 60 minut
 - Czas Odpoczynku - zakres czasu podczas którego nieaktywność urządzenia nie będzie liczona. Na przykład, przy 6 'Godzinach Nieaktywności Przed Zapytaniem' i Czasie Odpoczynku między 22:00 a 6:00, urządzenie użyte ostatnio o 18:00 wyśle Alertu aż do godziny 8:00.  Warto zauważyć, że Alert może zadziałać podczas Czasu Odpoczynku jeśli wiadomość 'Jesteś tam?' wysłana PRZED początkiem okresu odpoczynku.
