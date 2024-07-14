@@ -22,6 +22,7 @@
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
@@ -70,7 +71,7 @@
         <service
             android:name="io.keepalive.android.AlertService"
             android:exported="false"
-            android:foregroundServiceType="location" />
+            android:foregroundServiceType="shortService|location" />
 
         <receiver
             android:name="io.keepalive.android.receivers.AlarmReceiver"
