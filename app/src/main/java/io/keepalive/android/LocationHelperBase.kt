@@ -23,6 +23,7 @@ open class LocationHelperBase(
     val myCallback: (Context, String) -> Unit,
 ) {
 
+    // todo should we be using LocationManagerCompat instead?
     lateinit var locationManager: LocationManager
     private var locationEnabled = false
     private var isDeviceIdleMode = false
