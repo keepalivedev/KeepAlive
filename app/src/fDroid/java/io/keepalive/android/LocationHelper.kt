@@ -3,7 +3,7 @@ package io.keepalive.android
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
-import android.location.LocationListener
+import androidx.core.location.LocationListenerCompat
 import android.os.Build
 import android.os.CancellationSignal
 import android.os.Handler
@@ -136,7 +136,10 @@ class LocationHelper(
         }
 
         // listener to be used with the deprecated locationManager.requestSingleUpdate
-        private val locationListener = LocationListener { location ->
+        // use LocationListenerCompat because there is an issue with the onStatusChanged method
+        //  that is deprecated in API 29+ but which causes an error on API <29
+        // https://developer.android.com/reference/android/location/LocationListener#onStatusChanged(java.lang.String,%20int,%20android.os.Bundle)
+        private val locationListener = LocationListenerCompat { location ->
 
             Log.d("locationListener", "Received location: $location")
             processProviderLocationResult(location)
