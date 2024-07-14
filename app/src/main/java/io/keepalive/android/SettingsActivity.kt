@@ -21,6 +21,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -758,7 +759,9 @@ class SettingsActivity : AppCompatActivity() {
                 // if this is the alert message then we want to make sure it
                 //  not more than 160 characters
                 else if (preferenceKey == "alert_message") {
-                    val shouldEnable = s.length <= AppController.SMS_MESSAGE_MAX_LENGTH
+
+                    // make sure the alert message is not too long or empty
+                    val shouldEnable = s.length <= AppController.SMS_MESSAGE_MAX_LENGTH && s.isNotEmpty()
 
                     // if the current alert message is valid and so is the SMS phone number
                     if (shouldEnable && contactSMSPhoneValid) {
@@ -779,6 +782,14 @@ class SettingsActivity : AppCompatActivity() {
                     if (s.length > AppController.SMS_MESSAGE_MAX_LENGTH) {
                         showToast(context.getString(R.string.alarm_message_too_long_message))
                     }
+                }
+
+                // regardless of the setting, if the submit button isn't enabled then
+                //  change the text color to gray to indicate that
+                if (submitButton.isEnabled) {
+                    submitButton.setTextColor(ContextCompat.getColor(context, R.color.primary))
+                } else {
+                    submitButton.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
                 }
             }
         }

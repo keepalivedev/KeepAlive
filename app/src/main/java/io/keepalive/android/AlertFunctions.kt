@@ -181,6 +181,12 @@ class AlertMessageSender(private val context: Context) {
             // this shouldn't ever happen but just in case...
             if (contact.phoneNumber != "") {
 
+                // this shouldn't be able to happen either but just in case...
+                if (contact.alertMessage.isEmpty()) {
+                    Log.d("sendAlertMessage", "Alert message is blank, skipping...")
+                    continue
+                }
+
                 DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_text_message_to, contact.phoneNumber))
 
                 // add try/catch here to be extra safe in case there is an issue
