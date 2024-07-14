@@ -330,6 +330,9 @@ class SettingsActivity : AppCompatActivity() {
         // configure the dialog based on which setting this is
         var dialogTitle = ""
 
+        // for the call phone number, show a delete button to make it easier to clear the setting
+        var showDeleteButton = false
+
         // customize the dialog based on which setting is being edited
         when (preferenceKey) {
 
@@ -362,6 +365,7 @@ class SettingsActivity : AppCompatActivity() {
                 dialogDescription.text = getString(R.string.contact_phone_description)
                 dialogEditText.inputType = EditorInfo.TYPE_CLASS_PHONE
                 dialogEditText.setText(sharedPrefs!!.getString("contact_phone", ""))
+                showDeleteButton = true
             }
         }
 
@@ -385,16 +389,32 @@ class SettingsActivity : AppCompatActivity() {
                 updateTextViewsFromPreferences()
             }
             .setNegativeButton(getString(R.string.cancel), null)
-            .show()
+
+        if (showDeleteButton) {
+            dialog.setNeutralButton(getString(R.string.delete)) { _, _ ->
+
+                // if the user deletes the phone number then remove it from shared prefs
+                with(sharedPrefs!!.edit()) {
+                    remove(preferenceKey)
+                    apply()
+                }
+
+                // processSettingChange(preferenceKey)
+                updateTextViewsFromPreferences()
+            }
+        }
+
+        // show the dialog
+        val shownDialog = dialog.show()
 
         // omg it works... focus the edit text and make the keyboard appear
         dialogEditText.requestFocus()
         if (dialogEditText.requestFocus()) {
-            dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+            shownDialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
         }
 
         // add a text watcher to the edit text so that we can enable/disable the submit button
-        val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+        val positiveButton = shownDialog.getButton(AlertDialog.BUTTON_POSITIVE)
         dialogEditText.addTextChangedListener(InputTextWatcher(positiveButton, this, preferenceKey, dialogEditText))
     }
 

@@ -112,6 +112,13 @@ class AlertNotificationHelper(private val context: Context) {
         }
     }
 
+    private fun notificationExists(notificationId: Int): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return notificationManager.activeNotifications.any { it.id == notificationId }
+        }
+        return false
+    }
+
     fun cancelNotification(notificationId: Int) {
         notificationManager.cancel(notificationId)
     }
@@ -130,6 +137,11 @@ class AlertNotificationHelper(private val context: Context) {
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
                 Log.d("sendNotification", "No notification permissions!")
+                return
+            }
+
+            if (notificationExists(notificationId)) {
+                Log.d("sendNotification", "Notification already exists!")
                 return
             }
 
