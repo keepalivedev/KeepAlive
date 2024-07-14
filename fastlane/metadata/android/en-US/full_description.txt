@@ -10,12 +10,13 @@ Keep Alive will send a custom message via SMS to one or more people if you haven
 - Optional: Place a phone call with speakerphone enabled
 
 Requirements
-  Keep Alive requires that your device has a lock screen and an active cellular plan.  WiFi calling and messaging will be used if the device supports it.
+  Keep Alive requires that your device has an active cellular plan.  WiFi calling and messaging will be used if the device supports it.
 
 How it Works
-  Keep Alive uses your device's lock screen to detect activity. If your device hasn't been lock or unlocked for a set period of time, you will be prompted with an 'Are you there?' notification. If this notification is not acknowledged an Alert will be triggered. Based on the configured Emergency Contact Settings, one or more SMS messages and/or a phone call will be placed to notify others that you may be in need of assistance.
+  Keep Alive uses either your device's lock screen or another app(s) to detect activity. If your device hasn't been lock or unlocked for a set period of time, or if you haven't accessed the selected app(s), you will be prompted with an 'Are you there?' notification. If this notification is not acknowledged an Alert will be triggered. Based on the configured Emergency Contact Settings, one or more SMS messages and/or a phone call will be placed to notify others that you may be in need of assistance.
 
 Main Settings
+- Monitoring Method - Choose between using the lock screen or another app(s) to detect activity. If using another app(s), you will be prompted to select the app(s) to monitor.
 - Hours of Inactivity Before Prompt - how many hours since your phone was last locked or unlocked before you are prompted with an 'Are you there?' notification. Defaults to 12 hours
 - Minutes to Wait - if the prompt is not acknowledged within this time, an Alert will be sent based on the configured emergency contact settings. Defaults to 60 minutes
 - Rest Period Time Range - a range of time during which inactivity will not be counted. For example, with 'Hours of Inactivity' set at 6 hours and a Rest Period of 22:00 – 6:00, if the device is last used at 18:00, the 'Are you there?' check would not be sent until 8:00.  Note that an alert can still be sent during a rest period if the 'Are you there?' check was sent BEFORE the start of a rest period.
