@@ -1,0 +1,2 @@
+* Correction du problème de SMS sur Android 12 et versions antérieures
+* Améliorations de l'interface utilisateur
