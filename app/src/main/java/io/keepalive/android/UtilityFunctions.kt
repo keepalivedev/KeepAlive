@@ -470,7 +470,7 @@ object DebugLogger {
 
         // build the log message; the timestamp will be stored as UTC
         val dtStr = getDateTimeStrFromTimestamp(System.currentTimeMillis())
-        val logMessage = "$dtStr: $message" + (ex?.let { "\nException: ${it.localizedMessage}" } ?: "")
+        val logMessage = "$dtStr: $message" + (ex?.let { ". Exception: ${it.localizedMessage}" } ?: "")
 
         // keep tracking logs in memory in case there is some issue writing logs to file?
         addLogToMemory(logMessage)
