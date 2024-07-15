@@ -1,2 +1,2 @@
-* Fix SMS issue on Android 12 and below
-* UI Improvements
+* Behebung des SMS-Problems auf Android 12 und älteren Versionen
+* Verbesserungen der Benutzeroberfläche
