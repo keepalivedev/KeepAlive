@@ -73,6 +73,12 @@ class AlertNotificationHelper(private val context: Context) {
         //  THE APP ENTIRELY OR ASK THE USER TO GO INTO SETTINGS AND ADJUST THEM MANUALLY
         // ALSO, THE USER COULD COME IN AT ANY TIME AND ADJUST THE SETTINGS AND WE WOULDN'T KNOW
 
+        // check if the channel already exists
+        if (notificationManager.getNotificationChannel(channelId) != null) {
+            Log.d("createNotifyChannel", "Notification channel already exists for $channelId")
+            return
+        }
+
         // this controls the notification settings for the app that can be viewed in the phone settings
         val channel = NotificationChannel(
             channelId,
@@ -102,7 +108,8 @@ class AlertNotificationHelper(private val context: Context) {
         notificationManager.createNotificationChannel(channel)
 
         Log.d(
-            "sendNotification", "sound: ${channel.sound}, priority ${channel.importance}, " +
+            "createNotifyChannel", "Creating notification channel $channelId: " +
+                    "sound: ${channel.sound}, priority ${channel.importance}, " +
                     "vibrate: ${channel.vibrationPattern}, lights: ${channel.lightColor}, " +
                     "badge: ${channel.canShowBadge()}, lockscreen: ${channel.lockscreenVisibility}"
         )
