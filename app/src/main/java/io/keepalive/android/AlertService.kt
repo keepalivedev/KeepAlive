@@ -61,19 +61,12 @@ class AlertService : Service() {
             //  what we are actually able to do in the service...
             var foregroundServiceTypes = 0
 
-            // if this is API 29+ then we should add the foreground service type(s)
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            // FOREGROUND_SERVICE_LOCATION is only for 'long-running' location services...
 
-                // if the user has enabled location then add the location type
-                if (prefs.getBoolean("location_enabled", false)) {
-                    foregroundServiceTypes = foregroundServiceTypes or ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
-                }
-
-                // if this is API 34+ then add the new short service type
-                // https://developer.android.com/about/versions/14/changes/fgs-types-required#short-service
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                    foregroundServiceTypes = foregroundServiceTypes or ServiceInfo.FOREGROUND_SERVICE_TYPE_SHORT_SERVICE
-                }
+            // if this is API 34+ then add the new short service type
+            // https://developer.android.com/about/versions/14/changes/fgs-types-required#short-service
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                foregroundServiceTypes = foregroundServiceTypes or ServiceInfo.FOREGROUND_SERVICE_TYPE_SHORT_SERVICE
             }
 
             // start the service
