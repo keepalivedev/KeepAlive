@@ -15,13 +15,15 @@ class AppController : Application() {
         const val CALL_SENT_NOTIFICATION_CHANNEL_ID = "CallSentNotificationChannel"
         const val SMS_SENT_NOTIFICATION_CHANNEL_ID = "SMSSentNotificationChannel"
         const val ALERT_SERVICE_NOTIFICATION_CHANNEL_ID = "AlertServiceNotificationChannel"
+        const val WEBHOOK_SENT_NOTIFICATION_CHANNEL_ID = "WebhookSentNotificationChannel"
 
         // notification IDs
         const val ARE_YOU_THERE_NOTIFICATION_ID = 1
         const val SMS_ALERT_SENT_NOTIFICATION_ID = 2
         const val CALL_ALERT_SENT_NOTIFICATION_ID = 3
         const val SMS_ALERT_FAILURE_NOTIFICATION_ID = 4
-        const val ALERT_SERVICE_NOTIFICATION_ID = 4
+        const val ALERT_SERVICE_NOTIFICATION_ID = 5
+        const val WEBHOOK_ALERT_SENT_NOTIFICATION_ID = 6
 
         // when doing a sanity check to see if we can see ANY events, this is the # of hours
         //  to use with getLastDeviceActivity().  if the user has a higher value set it

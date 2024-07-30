@@ -53,6 +53,13 @@ class AlertNotificationHelper(private val context: Context) {
                 context.getString(R.string.alert_service_notification_channel_title),
                 context.getString(R.string.alert_service_notification_channel_description)
             )
+
+            // notification sent when a Webhook Alert is sent
+            createNotificationChannel(
+                AppController.WEBHOOK_SENT_NOTIFICATION_CHANNEL_ID,
+                context.getString(R.string.webhook_sent_notification_channel_title),
+                context.getString(R.string.webhook_sent_notification_channel_description)
+            )
         }
     }
 
@@ -130,7 +137,7 @@ class AlertNotificationHelper(private val context: Context) {
         notificationManager.cancel(notificationId)
     }
 
-    fun sendNotification(title: String, content: String, notificationId: Int) {
+    fun sendNotification(title: String, content: String, notificationId: Int, overwrite: Boolean = false) {
         try {
             Log.d(
                 "sendNotification",
@@ -147,7 +154,7 @@ class AlertNotificationHelper(private val context: Context) {
                 return
             }
 
-            if (notificationExists(notificationId)) {
+            if (notificationExists(notificationId) && !overwrite) {
                 Log.d("sendNotification", "Notification already exists!")
                 return
             }
@@ -178,6 +185,7 @@ class AlertNotificationHelper(private val context: Context) {
                 AppController.SMS_ALERT_SENT_NOTIFICATION_ID -> AppController.SMS_SENT_NOTIFICATION_CHANNEL_ID
                 AppController.CALL_ALERT_SENT_NOTIFICATION_ID -> AppController.CALL_SENT_NOTIFICATION_CHANNEL_ID
                 AppController.ALERT_SERVICE_NOTIFICATION_ID -> AppController.ALERT_SERVICE_NOTIFICATION_CHANNEL_ID
+                AppController.WEBHOOK_ALERT_SENT_NOTIFICATION_ID -> AppController.WEBHOOK_SENT_NOTIFICATION_CHANNEL_ID
                 else -> AppController.ARE_YOU_THERE_NOTIFICATION_CHANNEL_ID
             }
 
