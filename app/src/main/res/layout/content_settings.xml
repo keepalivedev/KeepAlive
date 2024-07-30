@@ -148,6 +148,32 @@
         android:text="@string/auto_restart_title"
         android:textSize="@dimen/default_text_size" />
 
+    <LinearLayout
+        android:id="@+id/alertWebhookRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/default_view_height"
+        android:layout_gravity="center"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.5"
+            android:text="@string/webhook_title"
+            android:textSize="@dimen/default_text_size" />
+
+        <TextView
+            android:id="@+id/edit_webhook"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="end" />
+    </LinearLayout>
+
     <!-- Contact Header Section -->
     <TextView
         android:layout_width="wrap_content"
