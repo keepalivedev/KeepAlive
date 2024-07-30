@@ -86,7 +86,7 @@ fun getSMSManager(context: Context): SmsManager? {
             }
         }
     } catch (e: Exception) {
-        DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_exception_while_getting_sms_manager, e.message), e)
+        DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_exception_while_getting_sms_manager, e.localizedMessage), e)
 
         // if the above fails default to the normal method of getting the SMS manager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -255,7 +255,7 @@ class AlertMessageSender(private val context: Context) {
                     }
 
                 } catch (e: Exception) {
-                    DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_failed_sending_sms, contact.phoneNumber, e.message), e)
+                    DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_failed_sending_sms, contact.phoneNumber, e.localizedMessage), e)
 
                     // if we failed while sending the SMS then send a notification
                     //  to let the user know
