@@ -9,18 +9,21 @@ import android.location.Location
 import android.location.LocationManager
 import android.os.Build
 import android.os.Handler
+import android.os.HandlerThread
 import android.os.PowerManager
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import java.util.Locale
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 
 
 // base class for the location helper, this will be extended based on whether
 //  we are using android.location (for f-droid) or com.google.android.gms.location (for google play)
 open class LocationHelperBase(
     val context: Context,
-    val myCallback: (Context, String) -> Unit,
+    val myCallback: (Context, LocationResult) -> Unit,
 ) {
 
     // todo should we be using LocationManagerCompat instead?
@@ -40,11 +43,18 @@ open class LocationHelperBase(
     // how long to wait for everything to complete before timing out
     private val globalTimeoutLength = 61000L
 
-    // timeout handler to make sure the entire location process doesn't hang
-    private val globalTimeoutHandler = Handler(context.mainLooper)
+    // background executor to be used with location requests
+    private val backgroundExecutor: Executor = Executors.newSingleThreadExecutor()
 
-    private var locationString = ""
-    private val geocodingTimeoutHandler = Handler(context.mainLooper)
+    // background handler to be used with timeout handlers here and in fDroid version
+    val backgroundHandler = Handler(HandlerThread("LocationBackgroundThread").apply { start() }.looper)
+
+    // timeout handler to make sure the entire location process doesn't hang
+    private val globalTimeoutHandler = Handler(backgroundHandler.looper)
+
+    //private var locationString = ""
+    private val geocodingTimeoutHandler = Handler(backgroundHandler.looper)
+    var locationResult = LocationResult(0.0, 0.0, 0.0f, "", "")
 
     init {
 
@@ -116,10 +126,10 @@ open class LocationHelperBase(
     open fun getCurrentLocation() {}
 
     open val globalTimeoutRunnable = Runnable {
-
         DebugLogger.d("globalTimeoutRunnable", context.getString(R.string.debug_log_timeout_reached_getting_location))
 
-        myCallback(context, context.getString(R.string.location_invalid_message))
+        locationResult.formattedLocationString = context.getString(R.string.location_invalid_message)
+        myCallback(context, locationResult)
     }
 
     private fun startGlobalTimeoutHandler() {
@@ -133,13 +143,12 @@ open class LocationHelperBase(
     // timeout handler for the geocoding process, really only necessary in API 33+
     //  because the old geocoding method is synchronous
     private val geocodingTimeoutRunnable = Runnable {
-
-        DebugLogger.d("geocodingTimeoutRunnable", context.getString(R.string.debug_log_geocoding_timeout_reached, locationString))
+        DebugLogger.d("geocodingTimeoutRunnable", context.getString(R.string.debug_log_geocoding_timeout_reached, locationResult.formattedLocationString))
 
         // the global timeout handler should still be running so need to stop it
         stopGlobalTimeoutHandler()
 
-        myCallback(context, locationString)
+        myCallback(context, locationResult)
     }
 
     private fun startGeocodingTimeoutHandler() {
@@ -153,17 +162,21 @@ open class LocationHelperBase(
         geocodingTimeoutHandler.removeCallbacks(geocodingTimeoutRunnable)
     }
 
-    fun executeCallback(locationString: String) {
+    fun executeCallback(locationResult: LocationResult) {
 
-        // stop the global timeout handler and execute the callback
-        stopGlobalTimeoutHandler()
-        myCallback(context, locationString)
+        // make sure the callback is executed on a background thread
+        backgroundExecutor.execute {
+
+            // stop the global timeout handler and execute the callback
+            stopGlobalTimeoutHandler()
+            myCallback(context, locationResult)
+        }
     }
 
     // depending on the current power state, try to get the current location or the last location
     //  and then geocode it and then pass it to the callback
     // all paths should result in the callback being executed or we may fail to send an alert!
-    fun getLocationAndExecute() {
+    fun getLocationAndExecute(ignoreBackgroundPerms: Boolean = false) {
 
         startGlobalTimeoutHandler()
 
@@ -183,7 +196,10 @@ open class LocationHelperBase(
                     context,
                     Manifest.permission.ACCESS_FINE_LOCATION
                 ) == PackageManager.PERMISSION_GRANTED &&
-                haveBackgroundLocPerms
+
+                // allow for the background permissions to be ignored because they aren't needed
+                //  when testing the webhook
+                (haveBackgroundLocPerms || ignoreBackgroundPerms)
             ) {
 
                 DebugLogger.d(
@@ -191,6 +207,7 @@ open class LocationHelperBase(
                     context.getString(R.string.debug_log_power_and_idle_status, isPowerSaveMode, isDeviceIdleMode)
                 )
 
+                // todo this might not be the case since the switch to AlertService...
                 // if the device is in power save mode then we can't get the current location or it
                 //  will just freeze and never return?
                 if (!isDeviceIdleMode) {
@@ -213,8 +230,10 @@ open class LocationHelperBase(
 
                 // if we don't have location permissions then just execute the callback
                 DebugLogger.d("getLocationAndExecute", context.getString(R.string.debug_log_no_location_permission_executing_callback))
+
+                locationResult.formattedLocationString = context.getString(R.string.location_invalid_message)
                 stopGlobalTimeoutHandler()
-                myCallback(context, context.getString(R.string.location_invalid_message))
+                myCallback(context, locationResult)
             }
         } catch (e: Exception) {
 
@@ -242,7 +261,7 @@ open class LocationHelperBase(
 
                 // default to a message indicating we couldn't geocode the location and just include
                 //  the raw GPS coordinates
-                locationString = String.format(
+                locationResult.formattedLocationString = String.format(
                     context.getString(R.string.geocode_invalid_message),
                     loc.latitude.toString(), loc.longitude.toString(), loc.accuracy.toString()
                 )
@@ -259,11 +278,13 @@ open class LocationHelperBase(
                         "listener done, geocode result: $addresses"
                     )
                     val addressString = processGeocodeResult(addresses)
-                    locationString = buildGeocodedLocationStr(addressString, loc)
+
+                    locationResult.geocodedAddress = addressString
+                    locationResult.formattedLocationString = buildGeocodedLocationStr(addressString, loc)
 
                     // execute the callback with the new location string
                     stopGeocodingTimeoutHandler()
-                    executeCallback(locationString)
+                    executeCallback(locationResult)
                 }
 
                 geocoder.getFromLocation(loc.latitude, loc.longitude, 1, geocodeListener)
@@ -275,7 +296,7 @@ open class LocationHelperBase(
 
             // if we aren't using geocode listener or if there was an error
             stopGeocodingTimeoutHandler()
-            executeCallback(locationString)
+            executeCallback(locationResult)
         }
     }
 
@@ -293,7 +314,7 @@ open class LocationHelperBase(
 
                 // default to a message indicating we couldn't geocode the location and just include
                 //  the raw GPS coordinates
-                locationString = String.format(
+                locationResult.formattedLocationString = String.format(
                     context.getString(R.string.geocode_invalid_message),
                     loc.latitude.toString(), loc.longitude.toString(), loc.accuracy.toString()
                 )
@@ -309,7 +330,9 @@ open class LocationHelperBase(
 
                 Log.d("geocodeLocAndExecute", "geocode result: $addresses")
                 val addressString = processGeocodeResult(addresses)
-                locationString = buildGeocodedLocationStr(addressString, loc)
+
+                locationResult.geocodedAddress = addressString
+                locationResult.formattedLocationString = buildGeocodedLocationStr(addressString, loc)
 
             } catch (e: Exception) {
                 DebugLogger.d("geocodeLocationAndExecute", context.getString(R.string.debug_log_failed_geocoding_gps_coordinates), e)
@@ -317,7 +340,8 @@ open class LocationHelperBase(
 
             // if we aren't using geocode listener or if there was an error
             stopGeocodingTimeoutHandler()
-            executeCallback(locationString)
+
+            executeCallback(locationResult)
         }
     }
 
@@ -371,3 +395,11 @@ open class LocationHelperBase(
         }
     }
 }
+
+data class LocationResult(
+    var latitude: Double,
+    var longitude: Double,
+    var accuracy: Float,
+    var geocodedAddress: String,
+    var formattedLocationString: String
+)
