@@ -144,6 +144,62 @@ class AlertService : Service() {
             .build()
     }
 
+    private fun sendWebhookRequest(context: Context, locationResult: LocationResult?) {
+        try {
+            val webhookConfigManager = WebhookConfigManager(this, null)
+            val webhookConfig = webhookConfigManager.getWebhookConfig()
+
+            val webhookSender = WebhookSender(this, webhookConfig)
+            webhookSender.sendRequest(locationResult, callback = webhookCallback(context))
+
+        } catch (e: Exception) {
+            DebugLogger.d("sendAlert", context.getString(R.string.debug_log_sending_webhook_failed, e.localizedMessage), e)
+        }
+    }
+
+    private fun webhookCallback(context: Context) : WebhookCallback {
+        return object : WebhookCallback {
+            override fun onSuccess(responseCode: Int) {
+
+                AlertNotificationHelper(context).sendNotification(
+                    context.getString(R.string.webhook_request_success_notification_title),
+                    String.format(
+                        context.getString(R.string.webhook_request_success_notification_text),
+                        responseCode
+                    ),
+                    AppController.WEBHOOK_ALERT_SENT_NOTIFICATION_ID,
+                    true
+                )
+            }
+
+            override fun onFailure(responseCode: Int) {
+
+                AlertNotificationHelper(context).sendNotification(
+                    context.getString(R.string.webhook_request_failure_notification_title),
+                    String.format(
+                        context.getString(R.string.webhook_request_failure_code_notification_text),
+                        responseCode
+                    ),
+                    AppController.WEBHOOK_ALERT_SENT_NOTIFICATION_ID,
+                    true
+                )
+            }
+
+            override fun onError(errorMessage: String) {
+
+                AlertNotificationHelper(context).sendNotification(
+                    context.getString(R.string.webhook_request_failure_notification_title),
+                    String.format(
+                        context.getString(R.string.webhook_request_failure_error_notification_text),
+                        errorMessage
+                    ),
+                    AppController.WEBHOOK_ALERT_SENT_NOTIFICATION_ID,
+                    true
+                )
+            }
+        }
+    }
+
     private fun sendAlert(context: Context, prefs: SharedPreferences) {
         DebugLogger.d("sendAlert", context.getString(R.string.debug_log_sending_alert))
 
@@ -156,16 +212,27 @@ class AlertService : Service() {
         val alertSender = AlertMessageSender(context)
         alertSender.sendAlertMessage()
 
-        // only get the location if the user has enabled it for at least one
-        if (prefs.getBoolean("location_enabled", false)) {
+        // only get the location if the user has enabled it for at least one contact
+        //  or for the webhook
+        if (prefs.getBoolean("location_enabled", false) || prefs.getBoolean("webhook_location_enabled", false)) {
 
             // just add an extra layer try/catch in case anything unexpected
             //  happens when trying to get the location
             try {
 
                 // attempt to get the location and then execute sendLocationAlertMessage
-                val locationHelper = LocationHelper(context) { _, locationStr ->
-                    alertSender.sendLocationAlertMessage(locationStr)
+                val locationHelper = LocationHelper(context) { _, locationResult ->
+
+                    // this will still check whether location is enabled for each contact
+                    //  (in case location is only enabled for the webhook but not any SMS contacts)
+
+                    // for the SMS alerts we just need the formatted location string
+                    alertSender.sendLocationAlertMessage(locationResult.formattedLocationString)
+
+                    // if enabled, send a request to the webhook with the location result
+                    if (prefs.getBoolean("webhook_enabled", false)) {
+                        sendWebhookRequest(context, locationResult)
+                    }
 
                     // stop the service after the location alert is sent
                     stopService()
@@ -179,6 +246,12 @@ class AlertService : Service() {
                 DebugLogger.d("sendAlert", context.getString(R.string.debug_log_sending_alert_failed), e)
 
                 stopService()
+            }
+        } else {
+
+            // if enabled, send the webhook without the location
+            if (prefs.getBoolean("webhook_enabled", false)) {
+                sendWebhookRequest(context, null)
             }
         }
 

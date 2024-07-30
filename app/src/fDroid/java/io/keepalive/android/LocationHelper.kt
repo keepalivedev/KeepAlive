@@ -15,7 +15,7 @@ import java.util.concurrent.CopyOnWriteArraySet
 // implementation for use with android.location APIs so that its compatible with F-Droid
 class LocationHelper(
     context: Context,
-    myCallback: (Context, String) -> Unit
+    myCallback: (Context, LocationResult) -> Unit
 ) : LocationHelperBase(context, myCallback) {
 
 
@@ -59,7 +59,8 @@ class LocationHelper(
 
         // if the location was null or there was an error then execute the callback
         //  with an error message
-        executeCallback(context.getString(R.string.location_invalid_message))
+        locationResult.formattedLocationString = context.getString(R.string.location_invalid_message)
+        executeCallback(locationResult)
     }
 
     // check all available providers to try to get the best last known location
@@ -101,7 +102,7 @@ class LocationHelper(
     // class to handle everything related to getting the current location
     inner class CurrentLocationProcessor {
         private val locations = ConcurrentHashMap<String, Location>()
-        private val timeoutHandler = Handler(context.mainLooper)
+        private val timeoutHandler = Handler(backgroundHandler.looper)
         private val cancellationSignal = CancellationSignal()
         private val receivedProviders = CopyOnWriteArraySet<String>()
 
@@ -120,7 +121,7 @@ class LocationHelper(
 
                     locationManager.getCurrentLocation(
                         provider, cancellationSignal,
-                        context.mainExecutor, ::processProviderLocationResult
+                        backgroundExecutor, ::processProviderLocationResult
                     )
                 } else {
 
@@ -129,7 +130,7 @@ class LocationHelper(
                     locationManager.requestSingleUpdate(
                         provider,
                         locationListener,
-                        context.mainLooper
+                        backgroundHandler.looper
                     )
                 }
             }
@@ -219,6 +220,10 @@ class LocationHelper(
                     "Location from ${bestLoc.provider} is (${bestLoc.latitude}, ${bestLoc.longitude}) " +
                             "${bestLoc.accuracy}acc at ${getDateTimeStrFromTimestamp(bestLoc.time)}"
                 )
+
+                locationResult.latitude = bestLoc.latitude
+                locationResult.longitude = bestLoc.longitude
+                locationResult.accuracy = bestLoc.accuracy
 
                 // try to geocode the location and then execute the callback
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

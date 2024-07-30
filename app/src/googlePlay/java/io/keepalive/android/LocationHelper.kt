@@ -16,7 +16,7 @@ import com.google.android.gms.tasks.Task
 // implementation for use with Google Play Services Location APIs
 class LocationHelper(
     context: Context,
-    myCallback: (Context, String) -> Unit
+    myCallback: (Context, LocationResult) -> Unit
 ) : LocationHelperBase(context, myCallback) {
 
     private val fusedLocationClient: FusedLocationProviderClient =
@@ -33,7 +33,8 @@ class LocationHelper(
 
         DebugLogger.d("globalTimeoutRunnable", context.getString(R.string.debug_log_timeout_reached_getting_location_from_google_play))
 
-        myCallback(context, context.getString(R.string.location_invalid_message))
+        locationResult.formattedLocationString = context.getString(R.string.location_invalid_message)
+        myCallback(context, locationResult)
     }
 
     // get the current location the Google Play Services location API
@@ -73,7 +74,8 @@ class LocationHelper(
             DebugLogger.d("getLastLocation", context.getString(R.string.debug_log_failed_getting_last_location), e)
 
             // if we failed to get the last location then just send the error message
-            executeCallback(context.getString(R.string.location_invalid_message))
+            locationResult.formattedLocationString = context.getString(R.string.location_invalid_message)
+            executeCallback(locationResult)
         }
     }
 
@@ -91,6 +93,10 @@ class LocationHelper(
                 "$locationSource Location from ${location.provider} is " +
                         "(${location.latitude}, ${location.longitude}) ${location.accuracy}acc"
             )
+
+            locationResult.latitude = location.latitude
+            locationResult.longitude = location.longitude
+            locationResult.accuracy = location.accuracy
 
             // try to geocode the location and then execute the callback
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -114,7 +120,8 @@ class LocationHelper(
                 // otherwise if we fail to get the last location then just send the error message
             } else {
                 Log.d("processLocationResult", "Unable to determine location, executing callback")
-                executeCallback(context.getString(R.string.location_invalid_message))
+                locationResult.formattedLocationString = context.getString(R.string.location_invalid_message)
+                executeCallback(locationResult)
             }
         }
     }

@@ -48,7 +48,7 @@ class BootBroadcastReceiver : BroadcastReceiver() {
                 }
             }
         } catch (e: Exception) {
-            DebugLogger.d(tag, context.getString(R.string.debug_log_boot_receiver_exception, e.message), e)
+            DebugLogger.d(tag, context.getString(R.string.debug_log_boot_receiver_exception, e.localizedMessage), e)
         }
     }
 }
