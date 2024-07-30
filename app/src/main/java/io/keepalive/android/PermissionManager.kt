@@ -69,7 +69,8 @@ class PermissionManager(private val context: Context, private val activity: AppC
             }
         }
 
-        locationEnabled = sharedPrefs.getBoolean("location_enabled", false)
+        // if location is enabled for an SMS contact or for the webhook
+        locationEnabled = sharedPrefs.getBoolean("location_enabled", false) || sharedPrefs.getBoolean("webhook_location_enabled",false)
 
         // only request location if its enabled
         if (locationEnabled) {
@@ -180,6 +181,33 @@ class PermissionManager(private val context: Context, private val activity: AppC
         } else {
             DebugLogger.d(tag, context.getString(R.string.debug_log_have_all_permissions))
             true
+        }
+    }
+
+    // check and request a single permission
+    fun checkRequestSinglePermission(permission: String): Boolean {
+        Log.d(tag, "Checking permissions for $permission")
+
+        // if we don't have location permissions then request them
+        if (ContextCompat.checkSelfPermission(
+                context,
+                permission
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+
+            Log.d(tag, "Requesting permission: $permission")
+
+            explainPermission(
+                permission,
+                permissionExplanations[permission]!![0],
+                permissionExplanations[permission]!![1]
+            )
+
+            // return false because we haven't actually granted the permission at this point
+            return false
+
+        } else {
+            return true
         }
     }
 
