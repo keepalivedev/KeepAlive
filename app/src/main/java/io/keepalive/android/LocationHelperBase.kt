@@ -43,8 +43,8 @@ open class LocationHelperBase(
     // how long to wait for everything to complete before timing out
     private val globalTimeoutLength = 61000L
 
-    // background executor to be used with location requests
-    private val backgroundExecutor: Executor = Executors.newSingleThreadExecutor()
+    // background executor to be used with fDroid location requests and the callback
+    val backgroundExecutor: Executor = Executors.newSingleThreadExecutor()
 
     // background handler to be used with timeout handlers here and in fDroid version
     val backgroundHandler = Handler(HandlerThread("LocationBackgroundThread").apply { start() }.looper)
