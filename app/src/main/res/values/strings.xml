@@ -10,11 +10,56 @@
     <string name="delete">Delete</string>
     <string name="close">Close</string>
     <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
     <string name="back">Back</string>
     <string name="go_to_settings">Go to Settings</string>
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
     <string name="placeholder" translatable="false">PLACEHOLDER TEXT</string>
+
+    <!-- webhook layout strings -->
+    <string name="webhook_get" translatable="false">GET</string>
+    <string name="webhook_post" translatable="false">POST</string>
+    <string name="webhook_url_hint">Webhook URL</string>
+    <string name="webhook_http_method_hint">HTTP Method</string>
+    <string name="webhook_verify_certificate_label">Verify Certificate</string>
+    <string name="webhook_timeout_hint">Timeout (seconds)</string>
+    <string name="webhook_retries_hint">Retries</string>
+    <string name="webhook_include_location_hint">Include Location in Request?</string>
+    <string name="webhook_headers_title">Headers</string>
+    <string name="webhook_add_header_button">Add Header</string>
+    <string name="webhook_remove_header_button">Remove Header</string>
+    <string name="webhook_test_button">Test Webhook</string>
+    <string name="webhook_toast_max_headers">Maximum number of headers reached (%1$s)</string>
+    <string name="webhook_dialog_title">Webhook Configuration</string>
+    <string name="webhook_dialog_description">When an Alert is triggered an HTTP request will be sent using the settings below. By default, no other data is included in the request. If enabled, location data is sent in the following format {"lat": 0.0, "lon": 0.0, "acc": 0.0, "address": "address"}.</string>
+    <string name="webhook_not_configured">Not Configured</string>
+    <string name="webhook_location_do_not_include">Do Not Include</string>
+    <string name="webhook_location_body_json">Body - JSON</string>
+    <string name="webhook_location_body_form">Body - Form</string>
+    <string name="webhook_location_query_parameters">Query Parameters</string>
+    <string name="webhook_url_empty_error">Please enter a webhook URL</string>
+    <string name="webhook_url_invalid_error">URL Invalid</string>
+    <string name="webhook_url_invalid_error_with_url">URL Invalid: %1$s</string>
+    <string name="webhook_timeout_invalid_error">Invalid timeout value</string>
+    <string name="webhook_retries_invalid_error">Invalid retries value</string>
+    <string name="webhook_timeout_max_error">Maximum timeout is %1$s</string>
+    <string name="webhook_retries_max_error">Maximum retries is %1$s</string>
+    <string name="webhook_header_name">Name</string>
+    <string name="webhook_header_value">Value</string>
+    <string name="webhook_header_name_empty_error">Name cannot be blank</string>
+    <string name="webhook_header_name_length_error">Max Name length is %1$s</string>
+    <string name="webhook_header_value_length_error">Max Value length is %1$s</string>
+    <string name="webhook_header_name_invalid_error">Name has invalid characters</string>
+    <string name="webhook_header_value_invalid_error">Value has invalid characters</string>
+    <string name="webhook_request_success_toast_text">Success! Response code was %1$d</string>
+    <string name="webhook_request_error_code_toast_text">Failed! Response code was %1$d</string>
+    <string name="webhook_request_failure_toast_text">Failed! Error was %1$s</string>
+    <string name="webhook_request_success_notification_title">Webhook Successful!</string>
+    <string name="webhook_request_success_notification_text">Request sent to %1$d</string>
+    <string name="webhook_request_failure_notification_title">Webhook Failed!</string>
+    <string name="webhook_request_failure_code_notification_text">Return status code was %1$d</string>
+    <string name="webhook_request_failure_error_notification_text">Error: %1$s</string>
 
     <!-- action settings -->
     <string name="action_settings">Settings</string>
@@ -75,10 +120,12 @@
     <string name="default_notification_channel_title">Alert Notifications</string>
     <string name="sms_sent_notification_channel_title">SMS Sent Notifications</string>
     <string name="call_sent_notification_channel_title">Call Sent Notifications</string>
+    <string name="webhook_sent_notification_channel_title">Webhook Sent Notifications</string>
     <string name="alert_service_notification_channel_title">Alert Service Notifications</string>
     <string name="default_notification_channel_description">Are you there? Prompts</string>
     <string name="sms_sent_notification_channel_description">Sent when an SMS alert is triggered</string>
     <string name="call_sent_notification_channel_description">Sent when an Phone Call alert is triggered</string>
+    <string name="webhook_sent_notification_channel_description">Sent when a Webhook alert is triggered</string>
     <string name="alert_service_notification_channel_description">Displayed while sending an Alert</string>
     <string name="activity_notification_message">Glad to see you are still alive! Cancelling Alert.</string>
     <string name="initial_check_notification_title">Are you still there?</string>
@@ -142,6 +189,8 @@
     <string name="default_alert_message_alt">Hey I may be dead, if I do not contact you in the next 24 hours, you know what to do.</string>
     <string name="add_emergency_contact_title">Add Emergency Contact</string>
     <string name="edit_emergency_contact_title">Edit Emergency Contact</string>
+    <string name="webhook_title">Alert Webhook</string>
+    <string name="webhook_url_title">Webhook URL</string>
 
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Monitoring Method</string>
@@ -315,5 +364,22 @@
     <string name="debug_log_app_is_disabled">App is disabled?</string>
     <string name="debug_log_boot_receiver_exception">Exception in BootBroadcastReceiver: %1$s</string>
 
+    <!-- WebhookConfigManager.kt -->
+    <string name="debug_log_webhook_config_saved">Webhook configuration saved</string>
+    <string name="debug_log_webhook_config_deleted">Webhook configuration deleted</string>
+    <string name="debug_log_webhook_config_load_error">Error loading webhook configuration</string>
+
+    <!-- WebhookSender.kt -->
+    <string name="debug_log_disable_certificate_verification">Disabling webhook certificate verification!</string>
+    <string name="debug_log_request_successful">Request successful with code: %1$d</string>
+    <string name="debug_log_request_failed">Request failed with code: %1$d</string>
+    <string name="debug_log_request_failed_no_retry">Request failed with code %1$d, not retrying.</string>
+    <string name="debug_log_unknown_exception_sending_webhook">Unknown Exception while sending webhook: %1$s</string>
+    <string name="debug_log_io_exception_sending_webhook">IOException while sending webhook: %1$s</string>
+    <string name="debug_log_webhook_attempt">Attempt #%1$d</string>
+    <string name="debug_log_failed_max_retries">Failed sending webhook, max retries exceeded</string>
+    <string name="debug_log_sending_request">Sending request to: %1$s. Location is %2$s</string>
+    <string name="debug_log_webhook_test_error">Error testing webhook: %1$s</string>
+    <string name="debug_log_sending_webhook_failed">Failed while sending webhook: %1$s</string>
 
 </resources>
