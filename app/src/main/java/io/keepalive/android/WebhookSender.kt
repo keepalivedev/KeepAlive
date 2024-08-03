@@ -52,9 +52,11 @@ class WebhookSender(private val context: Context, private val config: WebhookCon
         var responseCode = -1
         var lastException: Exception? = null
 
+        var attemptNum = 1
+
         while (retries >= 0) {
             try {
-                DebugLogger.d("WebhookSender", context.getString(R.string.debug_log_webhook_attempt, retries))
+                DebugLogger.d("WebhookSender", context.getString(R.string.debug_log_webhook_attempt, attemptNum, config.retries + 1))
                 val request = buildRequest(locationResult)
 
                 // this should automatically close the response body
@@ -101,6 +103,7 @@ class WebhookSender(private val context: Context, private val config: WebhookCon
 
             // decrement the retries
             retries--
+            attemptNum++
         }
 
         Log.d("WebhookSender", "Failed to send webhook, final response code: $responseCode, last exception: $lastException")
