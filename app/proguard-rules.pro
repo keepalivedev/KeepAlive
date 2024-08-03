@@ -31,6 +31,7 @@
 
 # remove just the class?
 #-assumenosideeffects class io.keepalive.android.WorkManagementKt
+-assumenosideeffects class io.keepalive.android.DebugFunctions
 
 # https://stackoverflow.com/questions/49856761/java-lang-runtimeexception-missing-type-parameter
 -keep class com.google.gson.reflect.TypeToken
