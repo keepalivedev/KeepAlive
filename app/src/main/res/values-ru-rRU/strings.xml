@@ -1,5 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Keep Alive</string>
 
     <!-- Common strings -->
     <string name="yes">Да</string>
@@ -10,11 +10,53 @@
     <string name="delete">Удалить</string>
     <string name="close">Закрыть</string>
     <string name="cancel">Отмена</string>
+    <string name="confirm">Подтвердить</string>
     <string name="back">Назад</string>
     <string name="go_to_settings">В настройки</string>
     <string name="enabled">Включено</string>
     <string name="disabled">Выключено</string>
-    <string name="placeholder" translatable="false">PLACEHOLDER TEXT</string>
+
+    <!-- webhook layout strings -->
+    <string name="webhook_url_hint">URL вебхука</string>
+    <string name="webhook_http_method_hint">HTTP-метод</string>
+    <string name="webhook_verify_certificate_label">Проверить сертификат</string>
+    <string name="webhook_timeout_hint">Таймаут (секунды)</string>
+    <string name="webhook_retries_hint">Повторные попытки</string>
+    <string name="webhook_include_location_hint">Включить местоположение в запрос?</string>
+    <string name="webhook_headers_title">Заголовки</string>
+    <string name="webhook_add_header_button">Добавить заголовок</string>
+    <string name="webhook_remove_header_button">Удалить заголовок</string>
+    <string name="webhook_test_button">Тестировать вебхук</string>
+    <string name="webhook_toast_max_headers">Достигнуто максимальное количество заголовков (%1$s)</string>
+    <string name="webhook_dialog_title">Конфигурация вебхука</string>
+    <string name="webhook_dialog_description">При срабатывании оповещения будет отправлен HTTP-запрос с использованием указанных ниже настроек. По умолчанию никакие другие данные в запрос не включаются. Если включено, данные о местоположении отправляются в следующем формате:\n{\"lat\": широта, \"lon\": долгота, \"acc\": точность, \"address\": \"адрес\", \"loc_message\": \"сообщение о местоположении\"}.</string>
+    <string name="webhook_not_configured">Не настроено</string>
+    <string name="webhook_location_do_not_include">Не включать</string>
+    <string name="webhook_location_body_json">Тело - JSON</string>
+    <string name="webhook_location_body_form">Тело - Форма</string>
+    <string name="webhook_location_query_parameters">Параметры запроса</string>
+    <string name="webhook_url_empty_error">Пожалуйста, введите URL вебхука</string>
+    <string name="webhook_url_invalid_error">Недействительный URL</string>
+    <string name="webhook_url_invalid_error_with_url">Недействительный URL: %1$s</string>
+    <string name="webhook_timeout_invalid_error">Недопустимое значение таймаута</string>
+    <string name="webhook_retries_invalid_error">Недопустимое значение повторных попыток</string>
+    <string name="webhook_timeout_max_error">Максимальный таймаут %1$s</string>
+    <string name="webhook_retries_max_error">Максимальное количество повторных попыток %1$s</string>
+    <string name="webhook_header_name">Имя</string>
+    <string name="webhook_header_value">Значение</string>
+    <string name="webhook_header_name_empty_error">Имя не может быть пустым</string>
+    <string name="webhook_header_name_length_error">Максимальная длина имени %1$s</string>
+    <string name="webhook_header_value_length_error">Максимальная длина значения %1$s</string>
+    <string name="webhook_header_name_invalid_error">Имя содержит недопустимые символы</string>
+    <string name="webhook_header_value_invalid_error">Значение содержит недопустимые символы</string>
+    <string name="webhook_request_success_toast_text">Успешно! Код ответа: %1$d</string>
+    <string name="webhook_request_error_code_toast_text">Ошибка! Код ответа: %1$d</string>
+    <string name="webhook_request_failure_toast_text">Ошибка! Сообщение об ошибке: %1$s</string>
+    <string name="webhook_request_success_notification_title">Webhook Keep Alive выполнен успешно!</string>
+    <string name="webhook_request_success_notification_text">Код ответа был %1$d</string>
+    <string name="webhook_request_failure_notification_title">Webhook Keep Alive не удался!</string>
+    <string name="webhook_request_failure_code_notification_text">Код ответа был %1$d</string>
+    <string name="webhook_request_failure_error_notification_text">Ошибка: %1$s</string>
 
     <!-- action settings -->
     <string name="action_settings">Настройки</string>
@@ -22,19 +64,10 @@
     <string name="action_logdisplay">Логи</string>
     <string name="about_dialog_title">О Keep Alive</string>
 
-    <!-- wrap in CDATA so that it doesn't get interpreted as XML? -->
-    <string name="about_message_content" translatable="false"><![CDATA[
-    <br /><b>Version:</b><br />%1$s<br /><br />
-    <b>Contact:</b><br />dev@keep-alive.io<br /><br />
-    <b>Privacy Policy:</b><br /><a href="https://keep-alive.io/privacy">keep-alive.io/privacy</a><br /><br />
-    <b>Github:</b><br /><a href="https://github.com/keepalivedev/KeepAlive">github.com/keepalivedev/KeepAlive</a><br /><br />
-]]></string>
-
     <!-- item_phone_number content descriptions that are set based on the item position -->
     <string name="enable_switch_enabled_content_desc">Пункт %1$s активирован</string>
     <string name="location_switch_enabled_content_desc">Пункт %1$s местоположение активировано</string>
-
-    <string name="main_scroll_view_content_description">Scrollable Main Page</string>
+    <string name="main_scroll_view_content_description">Прокручиваемая главная страница</string>
 
     <!-- abb hibernation/restriction stuff -->
     <string name="hibernation_dialog_title">Выключить гибернацию приложения</string>
@@ -64,21 +97,25 @@
     <string name="permissions_button_text">Дать разрешение</string>
     <string name="restart_monitoring_button_text">Перезапустить мониторинг</string>
     <string name="check_app_restrictions_button_text">Отключить ограничения приложений</string>
-
     <string name="test_sms_alert_button_text">Проверка СМС</string>
     <string name="test_phone_alert_button_text">Проверка вызова</string>
-
-    <string name="delete_phone_number_dialog_title">Удалить экстренный контакт</string>
-    <string name="delete_phone_number_dialog_description">Вы уверены, что хотите удалить этот элемент?</string>
+    <string name="test_alert_confirmation_title">Подтвердить тестовое SMS-оповещение</string>
+    <string name="test_alert_switch_include_warning_text">Включить предупреждающее сообщение</string>
+    <string name="test_sms_configured_contacts_message">Это отправит тестовое SMS-оповещение вашим настроенным контактам для экстренной связи: %1$s.</string>
+    <string name="test_alert_confirmation_message_with_count"><![CDATA[Всего будет отправлено <b>%1$d</b> SMS. Хотите продолжить?]]></string>
+    <string name="test_alert_sms_default_message">Следующие сообщения являются тестом из приложения Keep Alive. Пожалуйста, подтвердите получение!</string>
+    <string name="test_alert_warning_message_explanation">Нижеследующее будет отправлено каждому активированному контакту перед отправкой настроенного сообщения оповещения.</string>
 
     <!-- notification strings -->
     <string name="default_notification_channel_title">Оповещения</string>
     <string name="sms_sent_notification_channel_title">Уведомления об отправке СМС</string>
     <string name="call_sent_notification_channel_title">Уведомления о совершенных вызовах</string>
+    <string name="webhook_sent_notification_channel_title">Уведомления об отправленных вебхуках</string>
     <string name="alert_service_notification_channel_title">Уведомления службы оповещения</string>
     <string name="default_notification_channel_description">Вы здесь? Подтверждение</string>
     <string name="sms_sent_notification_channel_description">Отправляется при срабатывании SMS-оповещения</string>
     <string name="call_sent_notification_channel_description">Отправляется при срабатывании оповещения о телефонном звонке</string>
+    <string name="webhook_sent_notification_channel_description">Отправляется при срабатывании оповещения вебхука</string>
     <string name="alert_service_notification_channel_description">Отображается при отправке оповещения</string>
     <string name="activity_notification_message">Замечательно, что ты все еще здесь! Отмена оповещений</string>
     <string name="initial_check_notification_title">Вы всё еще здесь?</string>
@@ -113,13 +150,13 @@
     <string name="include_location_information">Включить информацию о местоположении</string>
     <string name="phone_number_hint">Введите номер телефона</string>
     <string name="alert_message_hint">Введите текст оповещения</string>
+    <string name="delete_phone_number_dialog_title">Удалить экстренный контакт</string>
+    <string name="delete_phone_number_dialog_description">Вы уверены, что хотите удалить этот элемент?</string>
 
     <!-- rest period dialog strings -->
     <string name="rest_period_dialog_title">Настройка периода тишины</string>
     <string name="rest_period_dialog_message">Установите диапазон времени, в течение которого неактивность не будет засчитываться. Например, если для параметра \'Часы бездействия\' установлено значение 6 часов, а для периода отдыха 22:00–6:00, если устройство в последний раз использовалось в 18:00, проверка \'Вы здесь?\' не будет отправляться до 8:00.\n\nПРИМЕЧАНИЕ. Оповещение по-прежнему можно отправлять во время периода отдыха, если проверка \'Вы здесь?\' была отправлена ДО начала периода отдыха.</string>
-    <string name="rest_period_dialog_time_zone_message"><![CDATA[
-   Установлен часовой пояс системы: <b>%1$s</b>
-]]></string>
+    <string name="rest_period_dialog_time_zone_message"><![CDATA[Установлен часовой пояс системы: <b>%1$s</b>]]></string>
     <string name="rest_period_not_set_message">Не установлен</string>
     <string name="rest_period_start_time">Время начала</string>
     <string name="rest_period_end_time">Время окончания</string>
@@ -142,6 +179,8 @@
     <string name="default_alert_message_alt">Эй, возможно, я мертв, если я не свяжусь с тобой в ближайшие 24 часа, ты знаешь, что делать.</string>
     <string name="add_emergency_contact_title">Добавить экстренный контакт</string>
     <string name="edit_emergency_contact_title">Редактировать экстренный контакт</string>
+    <string name="webhook_title">Вебхук оповещения</string>
+    <string name="webhook_url_title">URL вебхука</string>
 
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Метод мониторинга</string>
@@ -240,6 +279,7 @@
     <string name="debug_log_alert_service_stop">Остановка службы оповещения</string>
     <string name="debug_log_alert_service_error">Произошла ошибка в службе оповещения: %1$s</string>
     <string name="debug_log_auto_restart_monitoring">Автоматический перезапуск мониторинга включен, перезапуск будильника…</string>
+    <string name="debug_log_sending_warning_sms">Отправка предупреждающего SMS на %1$s</string>
 
     <!-- AppController.kt -->
     <string name="debug_log_starting_up">KeepAlive запускается!</string>
@@ -314,4 +354,22 @@
     <string name="debug_log_boot_completed">Загрузка завершена!?</string>
     <string name="debug_log_app_is_disabled">Приложение отключено?</string>
     <string name="debug_log_boot_receiver_exception">Исключение в BootBroadcastReceiver: %1$s</string>
+
+    <!-- WebhookConfigManager.kt -->
+    <string name="debug_log_webhook_config_saved">Конфигурация вебхука сохранена</string>
+    <string name="debug_log_webhook_config_deleted">Конфигурация вебхука удалена</string>
+    <string name="debug_log_webhook_config_load_error">Ошибка загрузки конфигурации вебхука</string>
+
+    <!-- WebhookSender.kt -->
+    <string name="debug_log_disable_certificate_verification">Отключение проверки сертификата вебхука!</string>
+    <string name="debug_log_request_successful">Запрос успешно выполнен с кодом: %1$d</string>
+    <string name="debug_log_request_failed">Запрос не выполнен с кодом: %1$d</string>
+    <string name="debug_log_request_failed_no_retry">Запрос не выполнен с кодом %1$d, повторная попытка не будет выполнена.</string>
+    <string name="debug_log_unknown_exception_sending_webhook">Неизвестное исключение при отправке вебхука: %1$s</string>
+    <string name="debug_log_io_exception_sending_webhook">Исключение ввода-вывода при отправке вебхука: %1$s</string>
+    <string name="debug_log_webhook_attempt">Попытка № %1$d из %2$d</string>
+    <string name="debug_log_failed_max_retries">Не удалось отправить вебхук, превышено максимальное количество попыток</string>
+    <string name="debug_log_sending_request">Отправка запроса на: %1$s. Местоположение: %2$s</string>
+    <string name="debug_log_webhook_test_error">Ошибка тестирования вебхука: %1$s</string>
+    <string name="debug_log_sending_webhook_failed">Не удалось отправить вебхук: %1$s</string>
 </resources>

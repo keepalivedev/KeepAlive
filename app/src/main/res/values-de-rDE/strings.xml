@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
+
     <!-- Common strings -->
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
@@ -9,10 +10,53 @@
     <string name="delete">Löschen</string>
     <string name="close">Schließen</string>
     <string name="cancel">Abbrechen</string>
+    <string name="confirm">Bestätigen</string>
     <string name="back">Zurück</string>
     <string name="go_to_settings">Einstellungen</string>
     <string name="enabled">Aktiv</string>
     <string name="disabled">Inaktiv</string>
+
+    <!-- webhook layout strings -->
+    <string name="webhook_url_hint">Webhook-URL</string>
+    <string name="webhook_http_method_hint">HTTP-Methode</string>
+    <string name="webhook_verify_certificate_label">Zertifikat überprüfen</string>
+    <string name="webhook_timeout_hint">Zeitlimit (Sekunden)</string>
+    <string name="webhook_retries_hint">Wiederholungen</string>
+    <string name="webhook_include_location_hint">Standort in Anfrage einschließen?</string>
+    <string name="webhook_headers_title">Headers</string>
+    <string name="webhook_add_header_button">Header hinzufügen</string>
+    <string name="webhook_remove_header_button">Header entfernen</string>
+    <string name="webhook_test_button">Webhook testen</string>
+    <string name="webhook_toast_max_headers">Maximale Anzahl von Headers erreicht (%1$s)</string>
+    <string name="webhook_dialog_title">Webhook-Konfiguration</string>
+    <string name="webhook_dialog_description">Wenn ein Alarm ausgelöst wird, wird eine HTTP-Anfrage mit den unten stehenden Einstellungen gesendet. Standardmäßig werden keine weiteren Daten in die Anfrage aufgenommen. Wenn aktiviert, werden Standortdaten in folgendem Format gesendet:\n{\"lat\": Breitengrad, \"lon\": Längengrad, \"acc\": Genauigkeit, \"address\": \"Adresse\", \"loc_message\": \"Standortnachricht\"}.</string>
+    <string name="webhook_not_configured">Nicht konfiguriert</string>
+    <string name="webhook_location_do_not_include">Nicht einschließen</string>
+    <string name="webhook_location_body_json">Körper - JSON</string>
+    <string name="webhook_location_body_form">Körper - Formular</string>
+    <string name="webhook_location_query_parameters">Abfrageparameter</string>
+    <string name="webhook_url_empty_error">Bitte geben Sie eine Webhook-URL ein</string>
+    <string name="webhook_url_invalid_error">Ungültige URL</string>
+    <string name="webhook_url_invalid_error_with_url">Ungültige URL: %1$s</string>
+    <string name="webhook_timeout_invalid_error">Ungültiger Zeitlimitwert</string>
+    <string name="webhook_retries_invalid_error">Ungültiger Wiederholungswert</string>
+    <string name="webhook_timeout_max_error">Maximales Zeitlimit ist %1$s</string>
+    <string name="webhook_retries_max_error">Maximale Wiederholungen sind %1$s</string>
+    <string name="webhook_header_name">Name</string>
+    <string name="webhook_header_value">Wert</string>
+    <string name="webhook_header_name_empty_error">Name darf nicht leer sein</string>
+    <string name="webhook_header_name_length_error">Maximale Namenslänge ist %1$s</string>
+    <string name="webhook_header_value_length_error">Maximale Wertlänge ist %1$s</string>
+    <string name="webhook_header_name_invalid_error">Name enthält ungültige Zeichen</string>
+    <string name="webhook_header_value_invalid_error">Wert enthält ungültige Zeichen</string>
+    <string name="webhook_request_success_toast_text">Erfolgreich! Antwortcode war %1$d</string>
+    <string name="webhook_request_error_code_toast_text">Fehlgeschlagen! Antwortcode war %1$d</string>
+    <string name="webhook_request_failure_toast_text">Fehlgeschlagen! Fehler war %1$s</string>
+    <string name="webhook_request_success_notification_title">Keep Alive Webhook erfolgreich!</string>
+    <string name="webhook_request_success_notification_text">Der Antwortcode war %1$d</string>
+    <string name="webhook_request_failure_notification_title">Keep Alive Webhook fehlgeschlagen!</string>
+    <string name="webhook_request_failure_code_notification_text">Der Antwortcode war %1$d</string>
+    <string name="webhook_request_failure_error_notification_text">Fehler: %1$s</string>
 
     <!-- action settings -->
     <string name="action_settings">Einstellungen</string>
@@ -24,7 +68,6 @@
     <string name="enable_switch_enabled_content_desc">Eintrag %1$s aktiviert</string>
     <string name="location_switch_enabled_content_desc">Eintrag %1$s Standort aktiviert</string>
     <string name="main_scroll_view_content_description">Scrollbare Hauptseite</string>
-
 
     <!-- app hibernation/restriction stuff -->
     <string name="hibernation_dialog_title">App-Beschränkung deaktivieren</string>
@@ -56,17 +99,23 @@
     <string name="check_app_restrictions_button_text">App-Einschränkungen deaktivieren</string>
     <string name="test_sms_alert_button_text">Alarm-SMS testen</string>
     <string name="test_phone_alert_button_text">Alarm-Anruf testen</string>
-    <string name="delete_phone_number_dialog_title">Notfallkontakt löschen</string>
-    <string name="delete_phone_number_dialog_description">Sind Sie sicher, dass Sie diesen Eintrag löschen wollen?</string>
+    <string name="test_alert_confirmation_title">SMS-Testalarm bestätigen</string>
+    <string name="test_alert_switch_include_warning_text">Eine Warnmeldung einschließen</string>
+    <string name="test_sms_configured_contacts_message">Dies sendet einen Test-SMS-Alarm an Ihre konfigurierten Notfallkontakte: %1$s.</string>
+    <string name="test_alert_confirmation_message_with_count"><![CDATA[Insgesamt werden <b>%1$d</b> SMS gesendet. Möchten Sie fortfahren?]]></string>
+    <string name="test_alert_sms_default_message">Die folgenden Nachrichten sind ein Test der Keep Alive App. Bitte bestätigen Sie den Empfang!</string>
+    <string name="test_alert_warning_message_explanation">Die folgende Nachricht wird an jeden aktivierten Kontakt gesendet, bevor die konfigurierte Alarmmeldung gesendet wird.</string>
 
     <!-- notification strings -->
     <string name="default_notification_channel_title">Alarm-Benachrichtigungen</string>
     <string name="sms_sent_notification_channel_title">Benachrichtigungen über gesendete SMS</string>
     <string name="call_sent_notification_channel_title">Benachrichtigungen über getätigte Anrufe</string>
+    <string name="webhook_sent_notification_channel_title">Benachrichtigungen über gesendete Webhooks</string>
     <string name="alert_service_notification_channel_title">Benachrichtigungen des Alarmdienstes</string>
     <string name="default_notification_channel_description">Sind Sie da?-Abfragen</string>
     <string name="sms_sent_notification_channel_description">Wird gesendet, wenn eine Alarm-SMS ausgelöst wird</string>
     <string name="call_sent_notification_channel_description">Wird gesendet, wenn ein Alarm-Anruf ausgelöst wird</string>
+    <string name="webhook_sent_notification_channel_description">Wird gesendet, wenn ein Webhook-Alarm ausgelöst wird</string>
     <string name="alert_service_notification_channel_description">Wird beim Senden eines Alarms angezeigt</string>
     <string name="activity_notification_message">Schön, dass Sie noch am Leben sind! Alarm wird aufgehoben.</string>
     <string name="initial_check_notification_title">Sind Sie noch da?</string>
@@ -101,13 +150,13 @@
     <string name="include_location_information">Standortinformation mitsenden</string>
     <string name="phone_number_hint">Telefonnummer eingeben</string>
     <string name="alert_message_hint">Alarm-Meldung eingeben</string>
+    <string name="delete_phone_number_dialog_title">Notfallkontakt löschen</string>
+    <string name="delete_phone_number_dialog_description">Sind Sie sicher, dass Sie diesen Eintrag löschen wollen?</string>
 
     <!-- rest period dialog strings -->
     <string name="rest_period_dialog_title">Ruhezeit-Einstellungen</string>
     <string name="rest_period_dialog_message">Zeitspanne, in der Inaktivität nicht gezählt wird. Wenn zum Beispiel \"Stunden Inaktivität\" auf 6 Stunden und eine Ruhezeit von 22:00 – 6:00 Uhr eingestellt ist und das Gerät zum letzten Mal um 18:00 Uhr verwendet wurde, wird die Meldung \"Sind Sie da?\" erst um 8:00 Uhr erscheinen.\n\nHINWEIS: Ein Alarm kann auch während einer Ruhezeit gesendet werden, wenn die Meldung \"Sind Sie da?\" VOR Beginn der Ruhezeit angezeigt wurde.</string>
-    <string name="rest_period_dialog_time_zone_message"><![CDATA[
-   Zeiten verwenden die Standardzeitzone des Systems: <b>%1$s</b>
-]]></string>
+    <string name="rest_period_dialog_time_zone_message"><![CDATA[Zeiten verwenden die Standardzeitzone des Systems: <b>%1$s</b>]]></string>
     <string name="rest_period_not_set_message">Nicht definiert</string>
     <string name="rest_period_start_time">Startzeit</string>
     <string name="rest_period_end_time">Endzeit</string>
@@ -130,6 +179,8 @@
     <string name="default_alert_message_alt">Hey, ich bin vielleicht tot. Wenn ich dich in den nächsten 24 Stunden nicht melde, weißt du, was zu tun ist.</string>
     <string name="add_emergency_contact_title">Notfallkontakt hinzufügen</string>
     <string name="edit_emergency_contact_title">Notfallkontakt bearbeiten</string>
+    <string name="webhook_title">Alarm-Webhook</string>
+    <string name="webhook_url_title">Webhook-URL</string>
 
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Überwachungsmethode</string>
@@ -165,7 +216,7 @@
 
     <!-- CALL_PHONE Permission -->
     <string name="permission_call_phone_title">Berechtigung erforderlich: Telefonanrufe tätigen</string>
-    <string name="permission_call_phone_description" tools:ignore="Typos">Es wurde eine Telefonnummer für den Notruf eingerichtet, die die Möglichkeit eines Anrufs voraussetzt.</string>
+    <string name="permission_call_phone_description">Eine Notrufnummer wurde angegeben, was die Möglichkeit erfordert, einen Telefonanruf zu tätigen.</string>
 
     <!-- READ_PHONE_STATE Permission -->
     <string name="permission_read_phone_state_title">Berechtigung erforderlich: Verwaltung von Telefonanrufen</string>
@@ -177,7 +228,7 @@
 
     <!-- MANAGE_OVERLAY_PERMISSION Permission -->
     <string name="permission_manage_overlay_title">Erlaubnis erforderlich: Am Anfang anzeigen (Manage Overlay)</string>
-    <string name="permission_manage_overlay_description" tools:ignore="Typos">Es wurde eine Telefonnummer für den Notruf eingerichtet, die die Möglichkeit eines Anrufs voraussetzt.\n\nBitte aktivieren Sie die Berechtigung \"Am Anfang anzeigen\" (Manage Overlay) für die Keep Alive-App in Ihren Geräteeinstellungen.</string>
+    <string name="permission_manage_overlay_description">Eine Notrufnummer wurde angegeben, was die Möglichkeit erfordert, einen Anruf aus dem Hintergrund zu tätigen.\n\nBitte aktivieren Sie die Berechtigung "Über anderen Apps einblenden" für die Keep Alive App in Ihren Geräteeinstellungen</string>
 
     <!-- ACCESS_FINE_LOCATION Permission -->
     <string name="permission_access_fine_location_title">Erlaubnis erforderlich: Genauer Standort</string>
@@ -228,6 +279,7 @@
     <string name="debug_log_alert_service_stop">Alarmdienst wird gestoppt</string>
     <string name="debug_log_alert_service_error">Fehler im Alarmdienst aufgetreten: %1$s</string>
     <string name="debug_log_auto_restart_monitoring">Automatischer Neustart der Überwachung ist aktiviert, Alarm wird neu gestartet…</string>
+    <string name="debug_log_sending_warning_sms">Sende Warn-SMS an %1$s</string>
 
     <!-- AppController.kt -->
     <string name="debug_log_starting_up">KeepAlive startet!</string>
@@ -301,6 +353,23 @@
     <!-- BootBroadcastReceiver.kt -->
     <string name="debug_log_boot_completed">Start abgeschlossen!?</string>
     <string name="debug_log_app_is_disabled">App ist deaktiviert?</string>
-    <string name="debug_log_boot_receiver_exception">Ausnahme in BootBroadcastReceiver: %1$s</string>
+    <string name="debug_log_boot_receiver_exception">Ausnahme im BootBroadcastReceiver: %1$s</string>
 
+    <!-- WebhookConfigManager.kt -->
+    <string name="debug_log_webhook_config_saved">Webhook-Konfiguration gespeichert</string>
+    <string name="debug_log_webhook_config_deleted">Webhook-Konfiguration gelöscht</string>
+    <string name="debug_log_webhook_config_load_error">Fehler beim Laden der Webhook-Konfiguration</string>
+
+    <!-- WebhookSender.kt -->
+    <string name="debug_log_disable_certificate_verification">Webhook-Zertifikatsüberprüfung deaktivieren!</string>
+    <string name="debug_log_request_successful">Anfrage erfolgreich mit Code: %1$d</string>
+    <string name="debug_log_request_failed">Anfrage fehlgeschlagen mit Code: %1$d</string>
+    <string name="debug_log_request_failed_no_retry">Anfrage fehlgeschlagen mit Code %1$d, kein erneuter Versuch.</string>
+    <string name="debug_log_unknown_exception_sending_webhook">Unbekannte Ausnahme beim Senden des Webhooks: %1$s</string>
+    <string name="debug_log_io_exception_sending_webhook">IOException beim Senden des Webhooks: %1$s</string>
+    <string name="debug_log_webhook_attempt">Versuch Nr. %1$d von %2$d</string>
+    <string name="debug_log_failed_max_retries">Fehler beim Senden des Webhooks, maximale Wiederholungen überschritten</string>
+    <string name="debug_log_sending_request">Anfrage wird gesendet an: %1$s. Standort ist %2$s</string>
+    <string name="debug_log_webhook_test_error">Fehler beim Testen des Webhooks: %1$s</string>
+    <string name="debug_log_sending_webhook_failed">Fehler beim Senden des Webhooks: %1$s</string>
 </resources>
