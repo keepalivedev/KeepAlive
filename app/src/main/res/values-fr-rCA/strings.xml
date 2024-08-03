@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Common strings -->
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="ok">OK</string>
@@ -8,25 +10,66 @@
     <string name="delete">Supprimer</string>
     <string name="close">Fermer</string>
     <string name="cancel">Annuler</string>
+    <string name="confirm">Confirmer</string>
     <string name="back">Dos</string>
     <string name="go_to_settings">Paramètre</string>
     <string name="enabled">Activé</string>
     <string name="disabled">Désactivé</string>
+
+    <!-- webhook layout strings -->
+    <string name="webhook_url_hint">URL du webhook</string>
+    <string name="webhook_http_method_hint">Méthode HTTP</string>
+    <string name="webhook_verify_certificate_label">Vérifier le certificat</string>
+    <string name="webhook_timeout_hint">Délai d\'expiration (secondes)</string>
+    <string name="webhook_retries_hint">Tentatives</string>
+    <string name="webhook_include_location_hint">Inclure la localisation dans la requête ?</string>
+    <string name="webhook_headers_title">En-têtes</string>
+    <string name="webhook_add_header_button">Ajouter un en-tête</string>
+    <string name="webhook_remove_header_button">Supprimer l\'en-tête</string>
+    <string name="webhook_test_button">Tester le webhook</string>
+    <string name="webhook_toast_max_headers">Nombre maximum d\'en-têtes atteint (%1$s)</string>
+    <string name="webhook_dialog_title">Configuration du webhook</string>
+    <string name="webhook_dialog_description">Lorsqu\'une alerte est déclenchée, une requête HTTP sera envoyée en utilisant les paramètres ci-dessous. Par défaut, aucune autre donnée n\'est incluse dans la requête. Si activé, les données de localisation sont envoyées dans le format suivant :\n{\"lat\": latitude, \"lon\": longitude, \"acc\": précision, \"address\": \"adresse\", \"loc_message\": \"message de localisation\"}.</string>
+    <string name="webhook_not_configured">Non configuré</string>
+    <string name="webhook_location_do_not_include">Ne pas inclure</string>
+    <string name="webhook_location_body_json">Corps - JSON</string>
+    <string name="webhook_location_body_form">Corps - Formulaire</string>
+    <string name="webhook_location_query_parameters">Paramètres de requête</string>
+    <string name="webhook_url_empty_error">Veuillez entrer une URL de webhook</string>
+    <string name="webhook_url_invalid_error">URL invalide</string>
+    <string name="webhook_url_invalid_error_with_url">URL invalide: %1$s</string>
+    <string name="webhook_timeout_invalid_error">Valeur de délai d\'expiration invalide</string>
+    <string name="webhook_retries_invalid_error">Valeur de tentatives invalide</string>
+    <string name="webhook_timeout_max_error">Le délai d\'expiration maximum est %1$s</string>
+    <string name="webhook_retries_max_error">Le nombre maximum de tentatives est %1$s</string>
+    <string name="webhook_header_name">Nom</string>
+    <string name="webhook_header_value">Valeur</string>
+    <string name="webhook_header_name_empty_error">Le nom ne peut pas être vide</string>
+    <string name="webhook_header_name_length_error">La longueur maximale du nom est %1$s</string>
+    <string name="webhook_header_value_length_error">La longueur maximale de la valeur est %1$s</string>
+    <string name="webhook_header_name_invalid_error">Le nom contient des caractères invalides</string>
+    <string name="webhook_header_value_invalid_error">La valeur contient des caractères invalides</string>
+    <string name="webhook_request_success_toast_text">Succès ! Le code de réponse était %1$d</string>
+    <string name="webhook_request_error_code_toast_text">Échec ! Le code de réponse était %1$d</string>
+    <string name="webhook_request_failure_toast_text">Échec ! L\'erreur était %1$s</string>
+    <string name="webhook_request_success_notification_title">Webhook Keep Alive réussi !</string>
+    <string name="webhook_request_success_notification_text">Le code de réponse était %1$d</string>
+    <string name="webhook_request_failure_notification_title">Échec du webhook Keep Alive !</string>
+    <string name="webhook_request_failure_code_notification_text">Le code de réponse était %1$d</string>
+    <string name="webhook_request_failure_error_notification_text">Erreur : %1$s</string>
+
+    <!-- action settings -->
     <string name="action_settings">Paramètres</string>
     <string name="action_about">À propos</string>
     <string name="action_logdisplay">Journaux de débogage</string>
     <string name="about_dialog_title">À propos de Keep Alive</string>
 
-    <string name="sms_service_failure_notification_title">Impossible de transmettre l\'alerte SMS</string>
-    <string name="sms_sent_toast_text">"Alert SMS Keep Alive envoyée! "</string>
-	
-	<!-- item_phone_number content descriptions that are set based on the item position -->
+    <!-- item_phone_number content descriptions that are set based on the item position -->
     <string name="enable_switch_enabled_content_desc">Entrée %1$s activée</string>
     <string name="location_switch_enabled_content_desc">Entrée %1$s Emplacement activé</string>
-
     <string name="main_scroll_view_content_description">Page principale déroulante</string>
 
-    <!-- abb hibernation/restriction stuff -->
+    <!-- app hibernation/restriction stuff -->
     <string name="hibernation_dialog_title">Désactiver la restriction de l\'application</string>
     <string name="hibernation_dialog_message"><![CDATA[Android supprime désormais automatiquement les autorisations pour les applications qui n\'ont pas été utilisées récemment. Keep Alive, une fois les paramètres configurés, n\'a besoin d\'aucune interaction supplémentaire et peut voir ses autorisations révoquées.<br/><br/>Pour garantir que Keep Alive peut fonctionner, veuillez désactiver l\'option <b>\'Suspendre l\'activité de l\'application si elle n\'est pas utilisée\'</b> option pour l\'application Keep Alive.]]></string>
     <string name="hibernation_dialog_message_api30"><![CDATA[Android supprime désormais automatiquement les autorisations pour les applications qui n\'ont pas été utilisées récemment. Keep Alive, une fois les paramètres configurés, ne nécessite aucune autre interaction à moins qu\'une alerte ne soit déclenchée.<br/><br/>Pour vous assurer que les autorisations ne sont pas révoquées, veuillez accéder à la section <b>Autorisations</b> pour Keep Alive et désactiver l\'option <b>\'Supprimer les autorisations si l\'application n\'est pas utilisé\'</b>.]]></string>
@@ -54,21 +97,25 @@
     <string name="permissions_button_text">Accorder des autorisations</string>
     <string name="restart_monitoring_button_text">Redémarrer la surveillance</string>
     <string name="check_app_restrictions_button_text">Désactiver les restrictions d\'application</string>
-
     <string name="test_sms_alert_button_text">Test d\'alerte : SMS</string>
     <string name="test_phone_alert_button_text">Test d\'alerte : Appel</string>
-
-    <string name="delete_phone_number_dialog_title">Supprimer le contact d\'urgence</string>
-    <string name="delete_phone_number_dialog_description">Êtes-vous sûr de vouloir supprimer cette entrée?</string>
+    <string name="test_alert_confirmation_title">Confirmer l\'alerte test par SMS</string>
+    <string name="test_alert_switch_include_warning_text">Inclure un message d\'avertissement</string>
+    <string name="test_sms_configured_contacts_message">Cela enverra une alerte test par SMS à vos contacts d\'urgence configurés : %1$s.</string>
+    <string name="test_alert_confirmation_message_with_count"><![CDATA[Un total de <b>%1$d</b> SMS seront envoyés. Voulez-vous continuer ?]]></string>
+    <string name="test_alert_sms_default_message">Les messages suivants sont un test de l\'application Keep Alive. Veuillez confirmer la réception !</string>
+    <string name="test_alert_warning_message_explanation">Le message ci-dessous sera envoyé à chaque contact activé avant l\'envoi du message d\'alerte configuré.</string>
 
     <!-- notification strings -->
     <string name="default_notification_channel_title">Notifications d\'alerte</string>
     <string name="sms_sent_notification_channel_title">Notifications d\'envoi SMS</string>
     <string name="call_sent_notification_channel_title">Notifications d\'appel envoyé</string>
+    <string name="webhook_sent_notification_channel_title">Notifications d\'envoi de webhook</string>
     <string name="alert_service_notification_channel_title">Notifications du service d\'alerte</string>
     <string name="default_notification_channel_description">Êtes-vous là?</string>
 	<string name="sms_sent_notification_channel_description">Envoyé lorsqu\'une alerte SMS est déclenchée</string>
     <string name="call_sent_notification_channel_description">Envoyé lorsqu\'une alerte d\'appel téléphonique est déclenchée</string>
+    <string name="webhook_sent_notification_channel_description">Envoyé lorsqu\'une alerte webhook est déclenchée</string>
     <string name="alert_service_notification_channel_description">Affiché lors de l\'envoi d\'une alerte</string>
     <string name="activity_notification_message">Ravi de voir que vous êtes toujours en vie! Annulation de l\'alerte.</string>
     <string name="initial_check_notification_title">Êtes-vous toujours là?</string>
@@ -79,7 +126,9 @@
     <string name="sms_alert_failure_notification_title">Échec de l\'envoi de l\'alerte SMS</string>
     <string name="sms_alert_failure_notification_text">Une erreur s\'est produite lors de la tentative d\'envoi d\'un SMS d\'alerte</string>
     <string name="sms_alert_failure_notification_text_with_error">Une erreur s\'est produite lors de la tentative d\'envoi d\'un SMS d\'alerte: %1$s</string>
+    <string name="sms_service_failure_notification_title">Impossible de transmettre l\'alerte SMS</string>
     <string name="sms_service_failure_notification_text">Une erreur s\'est produite lors de la tentative d\'envoi d\'un SMS d\'alerte, veuillez vérifier que vous disposez d\'une carte SIM active</string>
+    <string name="sms_sent_toast_text">Alert SMS Keep Alive envoyée!</string>
     <string name="sms_failure_toast_text">Échec de l\'envoi du SMS d\'alerte Keep Alive?!</string>
     <string name="alert_service_notification_title">Envoi de l\'alerte en cours…</string>
     <string name="alert_service_notification_message">L\'alerte (ou les alertes) est en cours d\'envoi à vos contacts configurés, veuillez patienter.</string>
@@ -101,14 +150,13 @@
     <string name="include_location_information">Inclure les informations de localisation</string>
     <string name="phone_number_hint">Entrer le numéro de téléphone</string>
     <string name="alert_message_hint">Entrer un message d\'alerte</string>
-
+    <string name="delete_phone_number_dialog_title">Supprimer le contact d\'urgence</string>
+    <string name="delete_phone_number_dialog_description">Êtes-vous sûr de vouloir supprimer cette entrée?</string>
 
     <!-- rest period dialog strings -->
     <string name="rest_period_dialog_title">Configurer la période de repos</string>
     <string name="rest_period_dialog_message">Définissez une plage de temps pendant laquelle l\'inactivité ne sera pas comptée. Par exemple, avec des « Heures d\'inactivité » définies sur 6 heures et une Période de repos de 22h00 à 6h00, si l\'appareil est utilisé pour la dernière fois à 18h00, la vérification «Êtes-vous là?» ne sera envoyé qu\'à 8h00.\n\nREMARQUE : Une alerte peut toujours être envoyée pendant une période de repos si le chèque «Êtes-vous là?» a été envoyé AVANT le début d\'une période de repos.</string>
-    <string name="rest_period_dialog_time_zone_message"><![CDATA[
-   Les heures utilisent le fuseau horaire par défaut du système: <b>%1$s</b>
-]]></string>
+    <string name="rest_period_dialog_time_zone_message"><![CDATA[Les heures utilisent le fuseau horaire par défaut du système: <b>%1$s</b>]]></string>
     <string name="rest_period_not_set_message">Pas encore défini</string>
     <string name="rest_period_start_time">Heure de début</string>
     <string name="rest_period_end_time">Heure de fin</string>
@@ -130,7 +178,9 @@
     <string name="default_alert_message">Bonjour! Je n\'ai pas utilisé mon téléphone depuis un certain temps et j\'ai peut-être besoin d\'aide. S\'il vous plaît envoyez de l\'aide!</string>
     <string name="default_alert_message_alt">Hé, je suis peut-être mort, si je ne te contacte pas dans les prochaines 24 heures, tu sais quoi faire.</string>
     <string name="add_emergency_contact_title">Ajouter un contact d\'urgence</string>
-	<string name="edit_emergency_contact_title">Modifier un contact d\'urgence</string>
+    <string name="edit_emergency_contact_title">Modifier un contact d\'urgence</string>
+    <string name="webhook_title">Webhook d\'alerte</string>
+    <string name="webhook_url_title">URL du webhook</string>
 
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Méthode de surveillance</string>
@@ -229,7 +279,7 @@
     <string name="debug_log_alert_service_stop">Arrêt du service d\'alerte</string>
     <string name="debug_log_alert_service_error">Une erreur s\'est produite dans le service d\'alerte : %1$s</string>
     <string name="debug_log_auto_restart_monitoring">La surveillance de redémarrage automatique est activée, redémarrage de l\'alarme…</string>
-
+    <string name="debug_log_sending_warning_sms">Envoi d\'un SMS d\'avertissement à %1$s</string>
 
     <!-- AppController.kt -->
     <string name="debug_log_starting_up">KeepAlive démarre!</string>
@@ -304,4 +354,22 @@
     <string name="debug_log_boot_completed">Démarrage terminé!?</string>
     <string name="debug_log_app_is_disabled">L\'application est désactivée?</string>
     <string name="debug_log_boot_receiver_exception">Exception dans BootBroadcastReceiver: %1$s</string>
+
+    <!-- WebhookConfigManager.kt -->
+    <string name="debug_log_webhook_config_saved">Configuration du webhook enregistrée</string>
+    <string name="debug_log_webhook_config_deleted">Configuration du webhook supprimée</string>
+    <string name="debug_log_webhook_config_load_error">Erreur lors du chargement de la configuration du webhook</string>
+
+    <!-- WebhookSender.kt -->
+    <string name="debug_log_disable_certificate_verification">Désactivation de la vérification du certificat du webhook !</string>
+    <string name="debug_log_request_successful">Requête réussie avec le code : %1$d</string>
+    <string name="debug_log_request_failed">Échec de la requête avec le code : %1$d</string>
+    <string name="debug_log_request_failed_no_retry">Échec de la requête avec le code %1$d, pas de nouvelle tentative.</string>
+    <string name="debug_log_unknown_exception_sending_webhook">Exception inconnue lors de l\'envoi du webhook : %1$s</string>
+    <string name="debug_log_io_exception_sending_webhook">IOException lors de l\'envoi du webhook : %1$s</string>
+    <string name="debug_log_webhook_attempt">Tentative n° %1$d sur %2$d</string>
+    <string name="debug_log_failed_max_retries">Échec de l\'envoi du webhook, nombre maximal de tentatives dépassé</string>
+    <string name="debug_log_sending_request">Envoi de la requête à : %1$s. Localisation est %2$s</string>
+    <string name="debug_log_webhook_test_error">Erreur lors du test du webhook : %1$s</string>
+    <string name="debug_log_sending_webhook_failed">Échec lors de l\'envoi du webhook : %1$s</string>
 </resources>
