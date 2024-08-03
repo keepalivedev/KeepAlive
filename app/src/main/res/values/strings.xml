@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">Keep Alive</string>
 
@@ -55,10 +56,10 @@
     <string name="webhook_request_success_toast_text">Success! Response code was %1$d</string>
     <string name="webhook_request_error_code_toast_text">Failed! Response code was %1$d</string>
     <string name="webhook_request_failure_toast_text">Failed! Error was %1$s</string>
-    <string name="webhook_request_success_notification_title">Webhook Successful!</string>
-    <string name="webhook_request_success_notification_text">Request sent to %1$d</string>
-    <string name="webhook_request_failure_notification_title">Webhook Failed!</string>
-    <string name="webhook_request_failure_code_notification_text">Return status code was %1$d</string>
+    <string name="webhook_request_success_notification_title">Keep Alive Webhook Successful!</string>
+    <string name="webhook_request_success_notification_text">Response code was %1$d</string>
+    <string name="webhook_request_failure_notification_title">Keep Alive Webhook Failed!</string>
+    <string name="webhook_request_failure_code_notification_text">Response code was %1$d</string>
     <string name="webhook_request_failure_error_notification_text">Error: %1$s</string>
 
     <!-- action settings -->
@@ -78,10 +79,9 @@
     <!-- item_phone_number content descriptions that are set based on the item position -->
     <string name="enable_switch_enabled_content_desc">Entry %1$s Enabled</string>
     <string name="location_switch_enabled_content_desc">Entry %1$s Location Enabled</string>
-
     <string name="main_scroll_view_content_description">Scrollable Main Page</string>
 
-    <!-- abb hibernation/restriction stuff -->
+    <!-- app hibernation/restriction stuff -->
     <string name="hibernation_dialog_title">Disable App Restriction</string>
     <string name="hibernation_dialog_message"><![CDATA[Android now automatically removes permissions for apps that have not been used recently.  Keep Alive, once the settings are configured, does not need any further interaction and may have its permissions revoked.<br/><br/>To ensure that permissions are not revoked, please disable the <b>\'Pause app activity if unused\'</b> option for the Keep Alive app.]]></string>
     <string name="hibernation_dialog_message_api30"><![CDATA[Android now automatically removes permissions for Apps that have not been used recently.  Keep Alive, once the settings are configured, does not need any further interaction unless an Alert is triggered.<br/><br/>To ensure that permissions are not revoked, please navigate to the <b>Permissions</b> section for Keep Alive and disable the  <b>\'Remove permissions if app isn\'t used\'</b> option.]]></string>
@@ -115,6 +115,13 @@
 
     <string name="delete_phone_number_dialog_title">Delete Emergency Contact</string>
     <string name="delete_phone_number_dialog_description">Are you sure you want to delete this entry?</string>
+
+    <string name="test_alert_confirmation_title">Confirm SMS Test Alert</string>
+    <string name="test_alert_switch_include_warning_text">Include a Warning Message</string>
+    <string name="test_sms_configured_contacts_message">This will send a test SMS alert to your configured emergency contacts: %1$s.</string>
+    <string name="test_alert_confirmation_message_with_count"><![CDATA[A total of <b>%1$d</b> SMS will be sent. Do you want to proceed?]]></string>
+    <string name="test_alert_sms_default_message">The following messages are a test from the Keep Alive app. Please confirm receipt!</string>
+    <string name="test_alert_warning_message_explanation">The below will be sent to each enabled contact prior to sending the configured alert message.</string>
 
     <!-- notification strings -->
     <string name="default_notification_channel_title">Alert Notifications</string>
@@ -289,6 +296,7 @@
     <string name="debug_log_alert_service_stop">Stopping Alert Service</string>
     <string name="debug_log_alert_service_error">Error occurred in the Alert Service: %1$s</string>
     <string name="debug_log_auto_restart_monitoring">Auto-Restart Monitoring is enabled, restarting alarm…</string>
+    <string name="debug_log_sending_warning_sms">Sending warning SMS to %1$s</string>
 
     <!-- AppController.kt -->
     <string name="debug_log_starting_up">KeepAlive starting up!</string>
@@ -376,7 +384,7 @@
     <string name="debug_log_request_failed_no_retry">Request failed with code %1$d, not retrying.</string>
     <string name="debug_log_unknown_exception_sending_webhook">Unknown Exception while sending webhook: %1$s</string>
     <string name="debug_log_io_exception_sending_webhook">IOException while sending webhook: %1$s</string>
-    <string name="debug_log_webhook_attempt">Attempt #%1$d</string>
+    <string name="debug_log_webhook_attempt">Attempt # %1$d of %2$d</string>
     <string name="debug_log_failed_max_retries">Failed sending webhook, max retries exceeded</string>
     <string name="debug_log_sending_request">Sending request to: %1$s. Location is %2$s</string>
     <string name="debug_log_webhook_test_error">Error testing webhook: %1$s</string>
