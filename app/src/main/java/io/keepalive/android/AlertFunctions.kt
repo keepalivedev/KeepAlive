@@ -101,6 +101,7 @@ fun getSMSManager(context: Context): SmsManager? {
 class AlertMessageSender(private val context: Context) {
     private val smsManager = getSMSManager(context)
     private val prefs = getEncryptedSharedPreferences(context)
+    private val alertNotificationHelper = AlertNotificationHelper(context)
     private val smsContacts: MutableList<SMSEmergencyContactSetting> = loadJSONSharedPreference(prefs,
         "PHONE_NUMBER_SETTINGS")
 
@@ -111,7 +112,7 @@ class AlertMessageSender(private val context: Context) {
             DebugLogger.d("AlertMessageSender", context.getString(R.string.debug_log_failed_getting_sms_manager))
 
             // if smsManager is null we can't send SMS so send a notification to let the user know
-            AlertNotificationHelper(context).sendNotification(
+            alertNotificationHelper.sendNotification(
                 context.getString(R.string.sms_service_failure_notification_title),
                 context.getString(R.string.sms_service_failure_notification_text),
                 AppController.SMS_ALERT_SENT_NOTIFICATION_ID
@@ -259,7 +260,7 @@ class AlertMessageSender(private val context: Context) {
 
                     // if we failed while sending the SMS then send a notification
                     //  to let the user know
-                    AlertNotificationHelper(context).sendNotification(
+                    alertNotificationHelper.sendNotification(
                         context.getString(R.string.sms_alert_failure_notification_title),
                         context.getString(R.string.sms_alert_failure_notification_text),
                         AppController.SMS_ALERT_SENT_NOTIFICATION_ID
@@ -317,7 +318,7 @@ class AlertMessageSender(private val context: Context) {
 fun makeAlertCall(context: Context) {
 
     val prefs = getEncryptedSharedPreferences(context)
-
+    val alertNotificationHelper = AlertNotificationHelper(context)
     val phoneContactNumber = prefs.getString("contact_phone", "")
 
     // if we have a phone number
@@ -344,7 +345,7 @@ fun makeAlertCall(context: Context) {
             context.startActivity(callIntent)
 
             // send a notification to make sure the user knows the call was sent
-            AlertNotificationHelper(context).sendNotification(
+            alertNotificationHelper.sendNotification(
                 context.getString(R.string.alert_notification_title),
                 String.format(
                     context.getString(R.string.call_alert_notification_text),
@@ -554,8 +555,10 @@ fun doAlertCheck(context: Context, alarmStage: String) {
     if (lastInteractiveEvent == null && !isInRestPeriod) {
         DebugLogger.d("doAlertCheck", context.getString(R.string.debug_log_no_events_sending_notification, checkPeriodHours))
 
+        val alertNotificationHelper = AlertNotificationHelper(context)
+
         // send the 'Are you there?' notification
-        AlertNotificationHelper(context).sendNotification(
+        alertNotificationHelper.sendNotification(
             context.getString(R.string.initial_check_notification_title),
             String.format(
                 context.getString(R.string.initial_check_notification_text),

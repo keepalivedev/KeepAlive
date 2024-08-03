@@ -18,6 +18,7 @@ class AlertService : Service() {
 
     private lateinit var prefs: SharedPreferences
     private lateinit var wakeLock: PowerManager.WakeLock
+    private lateinit var alertNotificationHelper: AlertNotificationHelper
     private val handler = Handler(Looper.getMainLooper())
     private var timeoutRunnable: Runnable? = null
     private val wakeLockTag = "KeepAlive::AlertWakeLock"
@@ -33,6 +34,7 @@ class AlertService : Service() {
 
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, wakeLockTag)
+        alertNotificationHelper = AlertNotificationHelper(this)
     }
 
     override fun onDestroy() {
@@ -161,7 +163,7 @@ class AlertService : Service() {
         return object : WebhookCallback {
             override fun onSuccess(responseCode: Int) {
 
-                AlertNotificationHelper(context).sendNotification(
+                alertNotificationHelper.sendNotification(
                     context.getString(R.string.webhook_request_success_notification_title),
                     String.format(
                         context.getString(R.string.webhook_request_success_notification_text),
@@ -174,7 +176,7 @@ class AlertService : Service() {
 
             override fun onFailure(responseCode: Int) {
 
-                AlertNotificationHelper(context).sendNotification(
+                alertNotificationHelper.sendNotification(
                     context.getString(R.string.webhook_request_failure_notification_title),
                     String.format(
                         context.getString(R.string.webhook_request_failure_code_notification_text),
@@ -187,7 +189,7 @@ class AlertService : Service() {
 
             override fun onError(errorMessage: String) {
 
-                AlertNotificationHelper(context).sendNotification(
+                alertNotificationHelper.sendNotification(
                     context.getString(R.string.webhook_request_failure_notification_title),
                     String.format(
                         context.getString(R.string.webhook_request_failure_error_notification_text),
