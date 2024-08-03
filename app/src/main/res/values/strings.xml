@@ -33,7 +33,7 @@
     <string name="webhook_test_button">Test Webhook</string>
     <string name="webhook_toast_max_headers">Maximum number of headers reached (%1$s)</string>
     <string name="webhook_dialog_title">Webhook Configuration</string>
-    <string name="webhook_dialog_description">When an Alert is triggered an HTTP request will be sent using the settings below. By default, no other data is included in the request. If enabled, location data is sent in the following format {"lat": 0.0, "lon": 0.0, "acc": 0.0, "address": "address"}.</string>
+    <string name="webhook_dialog_description">When an Alert is triggered an HTTP request will be sent using the settings below. By default, no other data is included in the request. If enabled, location data is sent in the following format:\n{\"lat\": latitude, \"lon\": longitude, \"acc\": accuracy, \"address\": \"address\", \"loc_message\": \"location message\"}.</string>
     <string name="webhook_not_configured">Not Configured</string>
     <string name="webhook_location_do_not_include">Do Not Include</string>
     <string name="webhook_location_body_json">Body - JSON</string>
@@ -109,13 +109,8 @@
     <string name="permissions_button_text">Grant Permissions</string>
     <string name="restart_monitoring_button_text">Restart Monitoring</string>
     <string name="check_app_restrictions_button_text">Disable App Restrictions</string>
-
     <string name="test_sms_alert_button_text">Test Alert SMS</string>
     <string name="test_phone_alert_button_text">Test Alert Call</string>
-
-    <string name="delete_phone_number_dialog_title">Delete Emergency Contact</string>
-    <string name="delete_phone_number_dialog_description">Are you sure you want to delete this entry?</string>
-
     <string name="test_alert_confirmation_title">Confirm SMS Test Alert</string>
     <string name="test_alert_switch_include_warning_text">Include a Warning Message</string>
     <string name="test_sms_configured_contacts_message">This will send a test SMS alert to your configured emergency contacts: %1$s.</string>
@@ -167,13 +162,13 @@
     <string name="include_location_information">Include Location Information</string>
     <string name="phone_number_hint">Enter Phone Number</string>
     <string name="alert_message_hint">Enter Alert Message</string>
+    <string name="delete_phone_number_dialog_title">Delete Emergency Contact</string>
+    <string name="delete_phone_number_dialog_description">Are you sure you want to delete this entry?</string>
 
     <!-- rest period dialog strings -->
     <string name="rest_period_dialog_title">Configure Rest Period</string>
     <string name="rest_period_dialog_message">Set a range of time during which inactivity will not be counted. For example, with \'Hours of Inactivity\' set at 6 hours and a Rest Period of 22:00 – 6:00, if the device is last used at 18:00, the \'Are you there?\' check would not be sent until 8:00.\n\nNOTE: An alert can still be sent during a rest period if the \'Are you there?\' check was sent BEFORE the start of a rest period.</string>
-    <string name="rest_period_dialog_time_zone_message"><![CDATA[
-   Times use the system default timezone: <b>%1$s</b>
-]]></string>
+    <string name="rest_period_dialog_time_zone_message"><![CDATA[Times use the system default timezone: <b>%1$s</b>]]></string>
     <string name="rest_period_not_set_message">Not Set</string>
     <string name="rest_period_start_time">Start Time</string>
     <string name="rest_period_end_time">End Time</string>
