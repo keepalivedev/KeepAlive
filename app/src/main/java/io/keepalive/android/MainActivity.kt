@@ -14,6 +14,7 @@ import android.os.Looper
 import android.provider.Settings
 import android.telephony.PhoneNumberUtils
 import android.text.Html
+import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.Menu
@@ -21,8 +22,11 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
@@ -199,21 +203,8 @@ class MainActivity : AppCompatActivity() {
         testAlertSmsButton.isClickable = true
         testAlertSmsButton.setOnClickListener { _ ->
 
-            // make it unclickable so we don't fire this more than once at a time
-            testAlertSmsButton.isClickable = false
-
-            // send the alert message
-            val alertSender = AlertMessageSender(this)
-            alertSender.sendAlertMessage()
-
-            // if location is enabled, try to get that and then send the message
-            if (sharedPrefs.getBoolean("location_enabled", false)) {
-
-                val locationHelper = LocationHelper(this) { _, locationStr ->
-                    alertSender.sendLocationAlertMessage(locationStr)
-                }
-                locationHelper.getLocationAndExecute()
-            }
+            // build a dialog so that the user can confirm the test alert before sending
+            showTestAlertSMSDialog(testAlertSmsButton)
         }
 
         // listener for the Test Alert Call button
@@ -246,6 +237,130 @@ class MainActivity : AppCompatActivity() {
                 updateStatusTextViews(false)
             }, 1000)
         }
+    }
+
+    private fun showTestAlertSMSDialog(testAlertSmsButton: Button) {
+
+        // build a custom dialog layout for the test alert confirmation
+        val dialogView = layoutInflater.inflate(R.layout.dialog_test_alert_confirmation, null)
+        val messageTextView = dialogView.findViewById<TextView>(R.id.testConfirmationDialogMessage)
+        val proceedMessageTextView = dialogView.findViewById<TextView>(R.id.testProceedConfirmationDialogMessage)
+        val switchSendWarning = dialogView.findViewById<SwitchCompat>(R.id.switchSendWarning)
+        val editTextWarningMessage = dialogView.findViewById<EditText>(R.id.editTextWarningMessage)
+        val warningMessageLayout = dialogView.findViewById<LinearLayout>(R.id.warningMessageLayout)
+
+        // load the status of the warning message checkbox
+        val warningMessageEnabled = sharedPrefs.getBoolean("test_alert_send_warning", false)
+        switchSendWarning.isChecked = warningMessageEnabled
+
+        // if they saved a custom message use that
+        val testAlertSMSMessage = sharedPrefs.getString("test_alert_warning_sms_message", "")
+        if (testAlertSMSMessage != "") {
+            editTextWarningMessage.setText(testAlertSMSMessage)
+        } else {
+
+            // otherwise set default warning message
+            editTextWarningMessage.setText(getString(R.string.test_alert_sms_default_message))
+        }
+
+        // Initially set visibility based on checkbox state
+        warningMessageLayout.visibility = if (switchSendWarning.isChecked) View.VISIBLE else View.GONE
+
+        // function to calculate the # of SMS that will be sent so it can be
+        //  communicated to the user
+        fun buildProceedSMSCountMessage(phoneNumberCount: Int): Spanned {
+            var messageCount = phoneNumberCount
+
+            // if we are sending a warning message then double the count
+            if (switchSendWarning.isChecked) {
+                messageCount *= 2
+            }
+
+            val proceedMessage = getString(R.string.test_alert_confirmation_message_with_count, messageCount)
+
+            // deal with fromHtml deprecation
+            val formattedProceedMessage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Html.fromHtml(proceedMessage, Html.FROM_HTML_MODE_LEGACY)
+            } else {
+                @Suppress("DEPRECATION")
+                Html.fromHtml(proceedMessage)
+            }
+            return formattedProceedMessage
+        }
+
+        // get the SMS contact phone numbers as a csv string
+        val phoneNumberStr = getSMSContactString()
+        messageTextView.text = getString(R.string.test_sms_configured_contacts_message, phoneNumberStr)
+
+        // get the message count using the csv string
+        val messageCount = phoneNumberStr.split(",").size
+
+        // set the message for the initial dialog load
+        proceedMessageTextView.text = buildProceedSMSCountMessage(messageCount)
+
+        // Show/hide warningMessageLayout based on switch state
+        switchSendWarning.setOnCheckedChangeListener { _, isChecked ->
+            warningMessageLayout.visibility = if (isChecked) View.VISIBLE else View.GONE
+
+            // recalculate the message count when the warning message is enabled/disabled
+            proceedMessageTextView.text = buildProceedSMSCountMessage(messageCount)
+        }
+
+        AlertDialog.Builder(this, R.style.AlertDialogTheme)
+            .setView(dialogView)
+            .setTitle(getString(R.string.test_alert_confirmation_title))
+            .setPositiveButton(getString(R.string.confirm)) { _, _ ->
+
+                // make it unclickable so we don't fire this more than once at a time
+                testAlertSmsButton.isClickable = false
+
+                // disable it to make it evident that the button won't work
+                testAlertSmsButton.isEnabled = false
+
+                // save the status of the warning message checkbox
+                with(sharedPrefs.edit()) {
+                    putBoolean("test_alert_send_warning", switchSendWarning.isChecked)
+                    apply()
+                }
+
+                // if the message isn't still the default message then save it to shared prefs
+                if (editTextWarningMessage.text.toString() != getString(R.string.test_alert_sms_default_message)) {
+                    with(sharedPrefs.edit()) {
+                        putString("test_alert_warning_sms_message", editTextWarningMessage.text.toString())
+                        apply()
+                    }
+                }
+
+                // if the switch is checked then include the warning message to send
+                val warningMessage = if (switchSendWarning.isChecked) editTextWarningMessage.text.toString() else ""
+
+                val alertSender = AlertMessageSender(this)
+
+                // send the configured alert message
+                alertSender.sendAlertMessage(testWarningMessage = warningMessage)
+
+                // if location is enabled, try to get that and then send the message
+                if (sharedPrefs.getBoolean("location_enabled", false)) {
+
+                    val locationHelper = LocationHelper(this) { _, locationResult ->
+                        alertSender.sendLocationAlertMessage(locationResult.formattedLocationString)
+
+                        // re-enable the buttons after sending the location message
+                        runOnUiThread {
+                            testAlertSmsButton.isEnabled = true
+                            testAlertSmsButton.isClickable = true
+                        }
+                    }
+                    locationHelper.getLocationAndExecute()
+                } else {
+
+                    // re-enable the buttons after sending the alert message
+                    testAlertSmsButton.isEnabled = true
+                    testAlertSmsButton.isClickable = true
+                }
+            }
+            .setNegativeButton(getString(R.string.cancel), null)
+            .show()
     }
 
     // show or hide the 'Grant Permissions' button depending
@@ -464,22 +579,8 @@ class MainActivity : AppCompatActivity() {
 
         // next configure the SMS phone number text view and button
 
-        // load SMS contacts
-        val smsContacts: MutableList<SMSEmergencyContactSetting> = loadJSONSharedPreference(sharedPrefs,
-            "PHONE_NUMBER_SETTINGS")
-
-        var smsPhoneNumbers = ""
-
-        // loop through the SMS contacts and create a csv string of the enabled contacts
-        for (contact in smsContacts) {
-
-            if (contact.isEnabled && contact.phoneNumber != "") {
-                smsPhoneNumbers += PhoneNumberUtils.formatNumber(
-                    contact.phoneNumber,
-                    Locale.getDefault().country
-                ) + ", "
-            }
-        }
+        // load SMS contacts as csv string
+        var smsPhoneNumbers = getSMSContactString()
 
         // set the text color to the default, may change below
         smsPhoneTextView.setTextColor(getColorCompat(this, R.color.textColor))
@@ -518,6 +619,26 @@ class MainActivity : AppCompatActivity() {
                     String.format(getString(R.string.test_sms_message), smsPhoneNumbers)
             }
         }
+    }
+
+    private fun getSMSContactString(): String {
+        val smsContacts: MutableList<SMSEmergencyContactSetting> = loadJSONSharedPreference(sharedPrefs,
+            "PHONE_NUMBER_SETTINGS")
+
+        var smsPhoneNumbers = ""
+
+        // loop through the SMS contacts and create a csv string of the enabled contacts
+        for (contact in smsContacts) {
+
+            if (contact.isEnabled && contact.phoneNumber != "") {
+                smsPhoneNumbers += PhoneNumberUtils.formatNumber(
+                    contact.phoneNumber,
+                    Locale.getDefault().country
+                ) + ", "
+            }
+        }
+
+        return smsPhoneNumbers.dropLast(2)
     }
 
     // check to see if any data was passed to the activity
