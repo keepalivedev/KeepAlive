@@ -151,7 +151,7 @@ class AlertMessageSender(private val context: Context) {
         }
     }
 
-    fun sendAlertMessage() {
+    fun sendAlertMessage(testWarningMessage: String = "") {
 
         if (smsManager == null) {
             // there is nothing more we can do so return
@@ -227,6 +227,14 @@ class AlertMessageSender(private val context: Context) {
                 }
 
                 try {
+
+                    // if there is a test message, send it first
+                    if (testWarningMessage != "") {
+                        DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_warning_sms, contact.phoneNumber))
+
+                        // don't include a sentIntent for the test message
+                        smsManager.sendTextMessage(contact.phoneNumber, null, testWarningMessage, null, null)
+                    }
 
                     // divide the message into parts based on how long it is
                     // messages with unicode characters have a shorter max length
