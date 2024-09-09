@@ -266,15 +266,7 @@ class MainActivity : AppCompatActivity() {
         // Initially set visibility based on checkbox state
         warningMessageLayout.visibility = if (switchSendWarning.isChecked) View.VISIBLE else View.GONE
 
-        // function to calculate the # of SMS that will be sent so it can be
-        //  communicated to the user
-        fun buildProceedSMSCountMessage(phoneNumberCount: Int): Spanned {
-            var messageCount = phoneNumberCount
-
-            // if we are sending a warning message then double the count
-            if (switchSendWarning.isChecked) {
-                messageCount *= 2
-            }
+        fun buildProceedSMSCountMessage(messageCount: Int): Spanned {
 
             val proceedMessage = getString(R.string.test_alert_confirmation_message_with_count, messageCount)
 
@@ -292,8 +284,8 @@ class MainActivity : AppCompatActivity() {
         val phoneNumberStr = getSMSContactString()
         messageTextView.text = getString(R.string.test_sms_configured_contacts_message, phoneNumberStr)
 
-        // get the message count using the csv string
-        val messageCount = phoneNumberStr.split(",").size
+        // get the message count based on the enabled contacts and whether they have location
+        val messageCount = getSMSMessageCount(switchSendWarning.isChecked)
 
         // set the message for the initial dialog load
         proceedMessageTextView.text = buildProceedSMSCountMessage(messageCount)
@@ -302,8 +294,11 @@ class MainActivity : AppCompatActivity() {
         switchSendWarning.setOnCheckedChangeListener { _, isChecked ->
             warningMessageLayout.visibility = if (isChecked) View.VISIBLE else View.GONE
 
+            // get the message count based on the enabled contacts and whether they have location
+            val msgCount = getSMSMessageCount(switchSendWarning.isChecked)
+
             // recalculate the message count when the warning message is enabled/disabled
-            proceedMessageTextView.text = buildProceedSMSCountMessage(messageCount)
+            proceedMessageTextView.text = buildProceedSMSCountMessage(msgCount)
         }
 
         AlertDialog.Builder(this, R.style.AlertDialogTheme)
@@ -639,6 +634,35 @@ class MainActivity : AppCompatActivity() {
         }
 
         return smsPhoneNumbers.dropLast(2)
+    }
+
+    // get the number of SMS messages that will be sent when the test alert is triggered
+    private fun getSMSMessageCount(includeWarning: Boolean): Int {
+        val smsContacts: MutableList<SMSEmergencyContactSetting> = loadJSONSharedPreference(sharedPrefs,
+            "PHONE_NUMBER_SETTINGS")
+
+        var messageCount = 0
+
+        // loop through the SMS contacts and create a csv string of the enabled contacts
+        for (contact in smsContacts) {
+
+            if (contact.isEnabled && contact.phoneNumber != "") {
+
+                // add one for the alert message
+                messageCount++
+
+                // add one for the location message
+                if (contact.includeLocation) {
+                    messageCount++
+                }
+
+                // add one for the warning message
+                if (includeWarning) {
+                    messageCount++
+                }
+            }
+        }
+        return messageCount
     }
 
     // check to see if any data was passed to the activity
