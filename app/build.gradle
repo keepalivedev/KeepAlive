@@ -37,6 +37,7 @@ android {
         debug {
             // Append an identifier to the applicationId when debugging
             applicationIdSuffix ".debug"
+            buildDir = "D:\\build\\${rootProject.name}\\${project.name}"
         }
     }
     compileOptions {
@@ -66,8 +67,8 @@ dependencies {
 
     // next versions require compile sdk 34+
     implementation 'androidx.core:core-ktx:1.13.1'
-    implementation 'androidx.activity:activity-ktx:1.9.1'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.7.7'
+    implementation 'androidx.activity:activity-ktx:1.9.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.8.0'
 
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'com.google.code.gson:gson:2.11.0'
@@ -77,7 +78,7 @@ dependencies {
     // implementation 'androidx.security:security-crypto:1.1.0-alpha06'
 
     // work manager stuff, but also gives us ListenableFuture...
-    implementation 'androidx.work:work-runtime-ktx:2.9.0'
+    implementation 'androidx.work:work-runtime-ktx:2.9.1'
 
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
@@ -99,5 +100,5 @@ dependencies {
     androidTestImplementation 'org.mockito:mockito-android:5.12.0'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.6.1'
     androidTestImplementation 'tools.fastlane:screengrab:2.1.1'
-
+    //androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.3.0'
 }
