@@ -1,6 +1,5 @@
 package io.keepalive.android
 
-import android.Manifest
 import android.content.Context
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
@@ -74,6 +73,8 @@ class AppScreenshotsInstrumentedTest {
         onView(withId(R.id.restPeriodRow)).perform(click())
         Thread.sleep(2000)
         Screengrab.screenshot("3-ConfigureRestPeriodScreen")
+
+        // click the negative button to cancel
         onView(withId(android.R.id.button2)).perform(click())
         Thread.sleep(2000)
 
@@ -89,6 +90,12 @@ class AppScreenshotsInstrumentedTest {
         onView(withId(R.id.recyclerView)).perform(clickFirstView())
         Thread.sleep(2000)
         Screengrab.screenshot("5-AddSMSPhoneNumberScreen")
+        onView(withId(android.R.id.button2)).perform(click())
+
+        // open the configure webhook dialog and take a screenshot
+        onView(withId(R.id.alertWebhookRow)).perform(click())
+        Thread.sleep(2000)
+        Screengrab.screenshot("6-ConfigureWebhookScreen")
         onView(withId(android.R.id.button2)).perform(click())
     }
 
@@ -142,18 +149,6 @@ class AppScreenshotsInstrumentedTest {
 
     companion object {
 
-        // the permissions we need for the app to show up normally
-        private val permissions = listOf(
-
-            // to test manually: adb shell pm grant io.keepalive.android android.permission.SEND_SMS
-            Manifest.permission.SEND_SMS,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.CALL_PHONE,
-            Manifest.permission.POST_NOTIFICATIONS,
-            Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-            Manifest.permission.SYSTEM_ALERT_WINDOW
-        )
-
         // this runs before the app is launched, though after it is installed?
         // can't do any locale-specific stuff here, because the locale is set after this runs
         @JvmStatic
@@ -169,35 +164,14 @@ class AppScreenshotsInstrumentedTest {
 
             Screengrab.setDefaultScreenshotStrategy(UiAutomatorScreenshotStrategy())
 
-            // this just sets the time to 12:30 and removes the notification icons...
-            // CleanStatusBar.enableWithDefaults()
-
             val targetContext = InstrumentationRegistry.getInstrumentation().targetContext
 
-            // to test manually
-            // adb shell appops set io.keepalive.android android:get_usage_stats allow
-            // adb shell appops set io.keepalive.android android:schedule_exact_alarm allow
-            // adb shell appops set io.keepalive.android AUTO_REVOKE_PERMISSIONS_IF_UNUSED ignore
+            TestSetupUtil.setupTestEnvironment()
 
-            // grant usage stats permissions
-            cmdExec("appops set ${targetContext.packageName} android:get_usage_stats allow")
-
-            // grant schedule exact alarm permissions
-            cmdExec("appops set ${targetContext.packageName} android:schedule_exact_alarm allow")
-
-            // disable app hibernation restrictions
-            cmdExec("appops set ${targetContext.packageName} AUTO_REVOKE_PERMISSIONS_IF_UNUSED ignore")
-
-            // preload some settings
             loadTestSharedPrefs(targetContext)
 
-            // grant all the permissions
-            permissions.forEach { permission ->
-                InstrumentationRegistry.getInstrumentation().uiAutomation.grantRuntimePermission(
-                    targetContext.packageName,
-                    permission
-                )
-            }
+            // this just sets the time to 12:30 and removes the notification icons...
+            // CleanStatusBar.enableWithDefaults()
 
             // brief sleep after doing setup before the app is launched
             Thread.sleep(1000)
