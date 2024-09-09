@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
 import android.os.Build
+import android.os.Handler
 import android.util.Log
 import com.google.android.gms.location.CurrentLocationRequest
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -37,9 +38,33 @@ class LocationHelper(
         myCallback(context, locationResult)
     }
 
+    private val timeoutHandler = Handler(backgroundHandler.looper)
+
+    // runnable for if fusedLocationClient.getCurrentLocation times out
+    private val locationRequestTimeoutRunnable = Runnable {
+        DebugLogger.d("locationRequestTimeoutRunnable", context.getString(R.string.debug_log_timeout_reached_getting_location_from_google_play))
+
+        // cancel the token
+        cancellationTokenSource.cancel()
+
+        processLocationResult(null, "current")
+    }
+
+    private fun startTimeoutHandler() {
+        timeoutHandler.postDelayed(locationRequestTimeoutRunnable, locationRequestTimeoutLength)
+    }
+
+    private fun stopTimeoutHandler() {
+        timeoutHandler.removeCallbacks(locationRequestTimeoutRunnable)
+    }
+
     // get the current location the Google Play Services location API
     @SuppressLint("MissingPermission")
     override fun getCurrentLocation() {
+
+        // there are various things that may cause this to freeze or timeout and if this
+        //  fails we still want to try to get the last location before the global timeout
+        startTimeoutHandler()
 
         // was originally done like this because we thought we needed to customize
         //  the options but we really don't?
@@ -48,7 +73,8 @@ class LocationHelper(
             .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
 
             // timeout isn't respected in doze mode???
-            .setDurationMillis(locationRequestTimeoutLength)
+            // set the timeout to one second less so it would time out before the timeout handler
+            .setDurationMillis(locationRequestTimeoutLength - 1000)
             //.setMaxUpdateAgeMillis(5000)
             .build()
 
@@ -56,6 +82,7 @@ class LocationHelper(
         fusedLocationClient.getCurrentLocation(currentLocReq, cancellationTokenSource.token)
             .addOnCompleteListener { task ->
                 processLocationResult(task, "current")
+                stopTimeoutHandler()
             }
     }
 
@@ -63,6 +90,9 @@ class LocationHelper(
     override fun getLastLocation() {
 
         DebugLogger.d("getLastLocation", context.getString(R.string.debug_log_attempting_to_get_last_location))
+
+        // no need for a timeout handler here right? this is less likely to have issues and will
+        //  be captured by the global timeout if it does
 
         try {
 
@@ -80,10 +110,10 @@ class LocationHelper(
     }
 
     // process the result from getting either the Last or the Current location
-    private fun processLocationResult(task: Task<Location>, locationSource: String) {
+    private fun processLocationResult(task: Task<Location>?, locationSource: String) {
 
         // task.isSuccessful can return true but still have a null result...
-        if (task.isSuccessful && task.result != null) {
+        if (task != null && task.isSuccessful && task.result != null) {
             val location = task.result
 
             // it doesn't matter where we get the location from, if we get one then we can
@@ -110,7 +140,7 @@ class LocationHelper(
             DebugLogger.d(
                 "processLocationResult",
                 context.getString(R.string.debug_log_failed_getting_location_from_source, locationSource),
-                task.exception
+                task?.exception
             )
 
             // if we just failed to get the current location then try to get the last location
