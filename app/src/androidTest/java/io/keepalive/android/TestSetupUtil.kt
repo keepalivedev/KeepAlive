@@ -1,12 +1,8 @@
 package io.keepalive.android
 
 import android.Manifest
-import android.content.Context
 import android.os.Build
-import androidx.preference.PreferenceManager
 import androidx.test.platform.app.InstrumentationRegistry
-import com.google.gson.Gson
-import io.keepalive.android.AppScreenshotsInstrumentedTest.Companion
 import java.io.BufferedReader
 import java.io.FileInputStream
 import java.io.InputStreamReader
