@@ -1,67 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp">
-
-    <TextView
-        android:id="@+id/testConfirmationDialogMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/default_text_size"
-        android:padding="8dp"
-        />
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="8dp" >
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="@dimen/default_text_size"
-            android:text="@string/test_alert_switch_include_warning_text"/>
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switchSendWarning"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="false"/>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/warningMessageLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="8dp"
-        android:textSize="@dimen/default_text_size"
-        android:visibility="visible">
+        android:padding="8dp">
 
-        <EditText
-            android:id="@+id/editTextWarningMessage"
+        <TextView
+            android:id="@+id/testConfirmationDialogMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/test_alert_sms_default_message"
-            android:autofillHints="none"
-            android:inputType="textMultiLine"
             android:textSize="@dimen/default_text_size"
-            android:minLines="2"
-            android:maxLines="4"/>
+            android:padding="8dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="8dp" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="@dimen/default_text_size"
+                android:textAlignment="textEnd"
+                android:text="@string/test_alert_switch_include_warning_text"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchSendWarning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:checked="false"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/warningMessageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:textSize="@dimen/default_text_size"
+            android:visibility="visible">
+
+            <EditText
+                android:id="@+id/editTextWarningMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/test_alert_sms_default_message"
+                android:autofillHints="none"
+                android:inputType="textMultiLine"
+                android:textSize="@dimen/default_text_size"
+                android:minLines="2"
+                android:maxLines="4"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/testProceedConfirmationDialogMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/default_text_size"
+            android:padding="8dp"
+            android:layout_marginTop="8dp"
+            android:textAlignment="textEnd"
+            />
+
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/testProceedConfirmationDialogMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/default_text_size"
-        android:padding="8dp"
-        android:layout_marginTop="8dp"
-        android:textAlignment="textStart"
-        />
-
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>
