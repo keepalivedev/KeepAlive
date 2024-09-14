@@ -99,3 +99,13 @@ professional advice in situations that require medical attention or emergency se
 - The operation of the Keep Alive app is dependent on the device, software, and network connectivity. 
 The developers are not responsible for any failure due to device malfunctions, software incompatibilities, or network issues.
 
+## Donate
+
+### Ko-Fi
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/keepalivedev)
+
+### Bitcoin (BTC)
+Address: bc1q756uyj9d4alkqxk5y9t7jex568qzkeekqflryv
+
+### Ethereum (ETH)
+Address: 0xacf07027129a18217882eb55d72ab607b27f0feb
