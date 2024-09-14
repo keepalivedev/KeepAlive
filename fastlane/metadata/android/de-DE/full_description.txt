@@ -6,8 +6,9 @@ Keep Alive sendet eine benutzerdefinierte Nachricht per SMS an eine oder mehrere
 - Minimaler Batterieverbrauch
 - Mehrere SMS-Empfänger
 - Benutzerdefinierte Alarm-Meldung
-- Optional: Standortinformationen in SMS einfügen
+- Wahlweise: Standortinformationen in SMS einfügen
 - Wahlweise: Telefonanrufe mit aktivierter Freisprecheinrichtung
+- Wahlweise: Eine HTTP-Anfrage an eine benutzerdefinierte URL senden
 
 Anforderungen
   Keep Alive erfordert, dass Ihr Gerät über einen aktiven Mobilfunktarif verfügt. WiFi-Anrufe und -Nachrichten werden verwendet, wenn das Gerät dies unterstützt.
@@ -22,6 +23,7 @@ Haupt-Einstellungen
 Standardwert: 60 Minuten
 - Ruhezeit - Zeitspanne, in der Inaktivität nicht gezählt wird. Wenn zum Beispiel \"Stunden Inaktivität\" auf 6 Stunden und eine Ruhezeit von 22:00 – 6:00 Uhr eingestellt ist und das Gerät zum letzten Mal um 18:00 Uhr verwendet wurde, wird die Meldung \"Sind Sie da?\" erst um 8:00 Uhr erscheinen.  HINWEIS: Ein Alarm kann auch während einer Ruhezeit gesendet werden, wenn die Meldung \"Sind Sie da?\" VOR Beginn der Ruhezeit angezeigt wurde.
 - Automatischer Neustart der Überwachung nach Alarmierung - Wenn diese Option aktiviert ist, wird die Überwachung automatisch neu gestartet, nachdem ein Alarm gesendet wurde.
+- Alarm-Webhook - Konfigurieren Sie eine HTTP-Anfrage, die bei Auslösung eines Alarms gesendet wird
 
 Einstellungen für Notfallkontakte
 - Telefonnummer (optional) - wenn ein Alarm ausgelöst wird, wird diese Nummer mit aktivierter Freisprecheinrichtung angerufen.

@@ -8,6 +8,7 @@ Keep Alive enverra un message personnalisé par SMS à une ou plusieurs personne
 - Message d'alerte personnalisé
 - Facultatif: inclure les informations de localisation dans les SMS
 - Facultatif: passez un appel téléphonique avec le haut-parleur activé
+- Optionnel : Envoyer une requête HTTP à une URL personnalisée
 
 Exigences
    Keep Alive nécessite que votre appareil dispose d'un forfait cellulaire actif. Les appels et la messagerie WiFi seront utilisés si l'appareil le prend en charge.
@@ -21,6 +22,7 @@ Réglages principaux
 - Minutes d'attente pour confirmation : si la notification d'inactivité n'est pas acquittée dans ce délai, une alerte sera envoyée en fonction des paramètres de contact d'urgence préconfigurés. La valeur par défaut est 60 minutes
 - Plage de temps de période de repos - une plage de temps pendant laquelle l'inactivité ne sera pas comptée. Par exemple, avec des « Heures d'inactivité » définies sur 6 heures et une Période de repos de 22h00 à 6h00, si l'appareil est utilisé pour la dernière fois à 18h00, le message Êtes-vous là ? le chèque ne serait envoyé qu'à 8h00. A noter qu'une alerte peut toujours être envoyée pendant une période de repos si le message Êtes-vous là ? le chèque a été envoyé AVANT le début d’une période de repos
 - Surveillance de redémarrage automatique après alerte - Si elle est activée, la surveillance sera automatiquement redémarrée après l'envoi d'une alerte.
+- Webhook d'alerte - Configurer une requête HTTP à envoyer lorsqu'une alerte est déclenchée
 
 Paramètres des contacts d'urgence
 - Numéro d'appel téléphonique (facultatif) - lorsqu'une alerte est déclenchée, un appel téléphonique sera passé à ce numéro avec le haut-parleur activé
