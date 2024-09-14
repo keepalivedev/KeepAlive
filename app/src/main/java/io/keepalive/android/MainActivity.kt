@@ -605,9 +605,6 @@ class MainActivity : AppCompatActivity() {
 
             } else {
                 testAlertSMSButton.isEnabled = true
-
-                // drop the trailing comma and space
-                smsPhoneNumbers = smsPhoneNumbers.dropLast(2)
                 smsPhoneTextView.visibility = View.VISIBLE
                 testAlertSMSButton.visibility = View.VISIBLE
                 smsPhoneTextView.text =
