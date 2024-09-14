@@ -1,0 +1,2 @@
+* Neue Funktion: Alarm-Webhook
+* Neue Funktion: Warnungs-SMS bei Tests einbeziehen

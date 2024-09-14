@@ -1,0 +1,2 @@
+* Ajout de fonctionnalité : Webhook d'alerte
+* Ajout de fonctionnalité : Inclure un SMS d'avertissement lors des tests

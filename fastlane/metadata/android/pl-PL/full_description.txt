@@ -8,6 +8,7 @@ Keep Alive wyśle ustaloną wiadomość SMS do jednej lub więcej osób, jeśli 
 - Własna treść ostrzeżenia
 - Opcjonalnie: Lokalizacja GPS w wiadomości SMS
 - Opcjonalnie: Połączenie telefoniczne z trybem głośnomówiącym
+- Opcjonalnie: Wyślij żądanie HTTP na niestandardowy adres URL
 
 Wymagania
    Funkcja Keep Alive wymaga, aby Twoje urządzenie miało aktywny plan sieci komórkowej. Połączenia i wiadomości Wi-Fi będą używane, jeśli urządzenie je obsługuje.
@@ -21,6 +22,7 @@ Główne ustawienia
 - Minuty na Potwierdzenie - jeśli pytanie nie zostanie potwierdzone przez ten czas, Alert będzie wysłany do skonfigurowanych Kontaktów Alarmowych. Domyślnie 60 minut
 - Czas Odpoczynku - zakres czasu podczas którego nieaktywność urządzenia nie będzie liczona. Na przykład, przy 6 'Godzinach Nieaktywności Przed Zapytaniem' i Czasie Odpoczynku między 22:00 a 6:00, urządzenie użyte ostatnio o 18:00 wyśle Alertu aż do godziny 8:00.  Warto zauważyć, że Alert może zadziałać podczas Czasu Odpoczynku jeśli wiadomość 'Jesteś tam?' wysłana PRZED początkiem okresu odpoczynku.
 - Auto-Restart Monitorowania Po Alercie - jeśli włączone, monitorowanie będzie automatycznie wznowione po wysłanym Alercie.
+- Webhook alertów - Skonfiguruj żądanie HTTP, które zostanie wysłane po uruchomieniu alertu
 
 Ustawienia Kontaktów Alarmowych
 - Numer Połączenia Telefonicznego (Opcjonalne) - kiedy aktywuje się Alert, urządzenie automatycznie zadzwoni na ten numer z włączonym trybem głośnomówiącym

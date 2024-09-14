@@ -10,10 +10,11 @@ height="80">](https://play.google.com/store/apps/details?id=io.keepalive.android
      alt="Get it on F-Droid"
      height="80">](https://f-droid.org/packages/io.keepalive.android/)
 
-Available Translations: French (CA), German (DE), Polish (PL), Russian (RU)
+Available Translations: French (CA), German (DE), Polish (PL), Russian (RU)<br/>
+Supports Android 5.1 (API 22) and up
 
 ## How it Works
-  Keep Alive uses your device's lock screen to detect activity.
+  Keep Alive uses your device's lock screen, or the usage of specific app(s), to detect activity.
   If your device hasn't been locked or unlocked within a set period of time, you will be prompted with an 'Are you there?' notification.
   If this notification is not acknowledged an Alert will be triggered. Based on the configured Emergency Contact Settings, 
   one or more SMS messages and/or a phone call will be placed to notify others that you may be in need of assistance.
@@ -27,17 +28,20 @@ Available Translations: French (CA), German (DE), Polish (PL), Russian (RU)
 - Custom Alert Messages
 - Optional: Include Location Information in SMS
 - Optional: Place a phone call with speakerphone enabled
+- Optional: Send an HTTP request to a custom URL
 
 ## Requirements
-  - **Lock Screen** - used to detect when the device was last used
   - **Active SIM** - used to send SMS and place phone calls
     - WiFi calling and messaging will be used if the device supports it
 
 ## Main Settings
+- **Monitoring Method**
+  - **Device Lock/Unlock**: Use the lock screen to detect device usage (recommended)
+  - **App Monitoring**: Select one or more apps that will be used to detect device usage
 - **Hours of Inactivity Before Prompt** 
-   - How many hours since your phone was last locked or unlocked before you are prompted with an 'Are you there?' notification
-   - May be delayed up to an hour by the OS if the device has low power or is in DnD mode
-   - Default is 12 hours
+  - How many hours since your phone was last locked or unlocked before you are prompted with an 'Are you there?' notification
+  - May be delayed up to an hour by the OS if the device has low power or is in DnD mode
+  - Default is 12 hours
 - **Minutes to Wait**
   - If the 'Are you there?' prompt is not acknowledged within this time, an Alert will be sent
   - Will not be delayed
@@ -48,6 +52,8 @@ Available Translations: French (CA), German (DE), Polish (PL), Russian (RU)
   - Note that an alert can still be sent during a rest period if the 'Are you there?' check was sent BEFORE the start of a rest period
 - **Auto-Restart Monitoring After Alert**
   - If enabled, monitoring will be automatically restarted after an Alert is sent
+- **Alert Webhook**
+  - Configure an HTTP request to be sent when an alert is triggered
 
 ## Emergency Contact Settings
 - **SMS Contact(s)**:
@@ -99,3 +105,12 @@ professional advice in situations that require medical attention or emergency se
 - The operation of the Keep Alive app is dependent on the device, software, and network connectivity. 
 The developers are not responsible for any failure due to device malfunctions, software incompatibilities, or network issues.
 
+## Donate
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/keepalivedev)
+
+### Bitcoin (BTC)
+Address: bc1q756uyj9d4alkqxk5y9t7jex568qzkeekqflryv
+
+### Ethereum (ETH)
+Address: 0xacf07027129a18217882eb55d72ab607b27f0feb

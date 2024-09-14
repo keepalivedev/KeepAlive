@@ -8,6 +8,7 @@ Keep Alive will send a custom message via SMS to one or more people if you haven
 - Custom Alert Message
 - Optional: Include Location Information in SMS
 - Optional: Place a phone call with speakerphone enabled
+- Optional: Send an HTTP request to a custom URL
 
 Requirements
   Keep Alive requires that your device has an active cellular plan.  WiFi calling and messaging will be used if the device supports it.
@@ -21,6 +22,7 @@ Main Settings
 - Minutes to Wait - if the prompt is not acknowledged within this time, an Alert will be sent based on the configured emergency contact settings. Defaults to 60 minutes
 - Rest Period Time Range - a range of time during which inactivity will not be counted. For example, with 'Hours of Inactivity' set at 6 hours and a Rest Period of 22:00 – 6:00, if the device is last used at 18:00, the 'Are you there?' check would not be sent until 8:00.  Note that an alert can still be sent during a rest period if the 'Are you there?' check was sent BEFORE the start of a rest period.
 - Auto-Restart Monitoring After Alert - If enabled, monitoring will be automatically restarted after an Alert is sent.
+- Alert Webhook - Configure an HTTP request to be sent when an Alert is triggered
 
 Emergency Contact Settings
 - Phone Call Number (Optional) - when an Alert is triggered a phone call will be placed to this number with speakerphone enabled
