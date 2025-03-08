@@ -176,6 +176,12 @@ fun setAlarm(
         }
     }
 
+    // in case the timestamp was adjusted for a rest period, create a new alarmInMs value in case
+    //  we need to use it with SystemClock.elapsedRealtime() later
+    // although it shouldn't happen, ensure that the time is at least 1 minute so that we aren't
+    //  setting an alarm in the past
+    val adjustedAlarmInMs = (alarmTimestamp - System.currentTimeMillis()).coerceAtLeast(60000L)
+
     // convert the timestamp to a string for use in logging
     val alarmDtStr = getDateTimeStrFromTimestamp(alarmTimestamp)
 
@@ -208,6 +214,8 @@ fun setAlarm(
     // these alarms are not super time sensitive so as long as they happen eventually it's fine?
     if (alarmStage == "periodic") {
 
+        DebugLogger.d("setAlarm", context.getString(R.string.debug_log_setting_periodic_alarm, alarmDtStr))
+
         // we are not using setExactAndAllowWhileIdle() because it could lead to more
         //  battery usage but can ultimately still get delayed or ignored by the OS?
         // the alternative is to use setAlarmClock() for every alarm but that would definitely
@@ -222,19 +230,14 @@ fun setAlarm(
         //  and be re-set continuously because the emulator's time is in the future...
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-            DebugLogger.d("setAlarm", context.getString(R.string.debug_log_setting_periodic_alarm, alarmDtStr))
-
-
             alarmManager.setAndAllowWhileIdle(
                 AlarmManager.ELAPSED_REALTIME_WAKEUP,
 
                 // this uses system time instead of RTC time
-                SystemClock.elapsedRealtime() + alarmInMs,
+                SystemClock.elapsedRealtime() + adjustedAlarmInMs,
                 pendingIntent
             )
         } else {
-
-            DebugLogger.d("setAlarm", context.getString(R.string.debug_log_setting_periodic_alarm, alarmDtStr))
 
             // on API 22 we have to use setAlarmClock because there isn't a setAndAllowWhileIdle()
             //  and .set() wouldn't be guaranteed to fire?
@@ -261,7 +264,6 @@ fun setAlarm(
         if (useExact) {
             DebugLogger.d("setAlarm", context.getString(R.string.debug_log_setting_final_exact_alarm, alarmDtStr))
 
-
             // according to the docs, this is the only thing that won't get delayed by the OS?
             // random note, this shows up on the lock screen as a pending alarm
             alarmManager.setAlarmClock(
@@ -280,7 +282,7 @@ fun setAlarm(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 alarmManager.setAndAllowWhileIdle(
                     AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    SystemClock.elapsedRealtime() + alarmInMs,
+                    SystemClock.elapsedRealtime() + adjustedAlarmInMs,
                     pendingIntent
                 )
             } else {
@@ -291,7 +293,7 @@ fun setAlarm(
                 //  have to use...
                 alarmManager.set(
                     AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    SystemClock.elapsedRealtime() + alarmInMs,
+                    SystemClock.elapsedRealtime() + adjustedAlarmInMs,
                     pendingIntent
                 )
             }
