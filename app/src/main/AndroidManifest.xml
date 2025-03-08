@@ -54,7 +54,8 @@
 
         <activity
             android:name="io.keepalive.android.SettingsActivity"
-            android:parentActivityName="io.keepalive.android.MainActivity">
+            android:parentActivityName="io.keepalive.android.MainActivity"
+            android:theme="@style/Theme.KeepAlive.ActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="io.keepalive.android.MainActivity" />
@@ -62,7 +63,8 @@
 
         <activity
             android:name="io.keepalive.android.LogDisplayActivity"
-            android:parentActivityName="io.keepalive.android.MainActivity">
+            android:parentActivityName="io.keepalive.android.MainActivity"
+            android:theme="@style/Theme.KeepAlive.ActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="io.keepalive.android.MainActivity" />
