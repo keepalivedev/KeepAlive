@@ -101,12 +101,13 @@ class LogDisplayActivity : AppCompatActivity() {
 
         }
 
-        // copy logs to the clipboard
+        // copy logs to the clipboard; note that they will be in UTC and not local time
         findViewById<Button>(R.id.copyButton).setOnClickListener {
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("Logs", DebugLogger.getLogs().joinToString("\n"))
             clipboard.setPrimaryClip(clip)
 
+            // todo mention that the log entry timestamps are in UTC and not local time?
             DebugLogger.d("LogDisplayActivity", getString(R.string.debug_log_logs_copied_to_clipboard))
 
             // update the logs so our message is displayed
