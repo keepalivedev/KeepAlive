@@ -324,51 +324,66 @@ class AlertMessageSender(private val context: Context) {
 
 
 fun makeAlertCall(context: Context) {
+    try {
+        val prefs = getEncryptedSharedPreferences(context)
+        val alertNotificationHelper = AlertNotificationHelper(context)
+        val phoneContactNumber = prefs.getString("contact_phone", "")
 
-    val prefs = getEncryptedSharedPreferences(context)
-    val alertNotificationHelper = AlertNotificationHelper(context)
-    val phoneContactNumber = prefs.getString("contact_phone", "")
+        // if we have a phone number
+        if (phoneContactNumber != null && phoneContactNumber != "") {
 
-    // if we have a phone number
-    if (phoneContactNumber != null && phoneContactNumber != "") {
+            // double check that we have permissions
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.CALL_PHONE
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
 
-        // double check that we have permissions
-        if (ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.CALL_PHONE
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
+                DebugLogger.d(
+                    "makeAlarmCall",
+                    context.getString(
+                        R.string.debug_log_placing_alert_phone_call,
+                        phoneContactNumber
+                    )
+                )
 
-            DebugLogger.d("makeAlarmCall", context.getString(R.string.debug_log_placing_alert_phone_call, phoneContactNumber))
+                // build the call intent
+                val callIntent = Intent(Intent.ACTION_CALL)
+                callIntent.data = Uri.parse("tel:$phoneContactNumber")
+                callIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
-            // build the call intent
-            val callIntent = Intent(Intent.ACTION_CALL)
-            callIntent.data = Uri.parse("tel:$phoneContactNumber")
-            callIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                // enable speakerphone on the call
+                callIntent.putExtra(TelecomManager.EXTRA_START_CALL_WITH_SPEAKERPHONE, true)
 
-            // enable speakerphone on the call
-            callIntent.putExtra(TelecomManager.EXTRA_START_CALL_WITH_SPEAKERPHONE, true)
+                // launch the call intent
+                context.startActivity(callIntent)
 
-            // launch the call intent
-            context.startActivity(callIntent)
+                // send a notification to make sure the user knows the call was sent
+                alertNotificationHelper.sendNotification(
+                    context.getString(R.string.alert_notification_title),
+                    String.format(
+                        context.getString(R.string.call_alert_notification_text),
 
-            // send a notification to make sure the user knows the call was sent
-            alertNotificationHelper.sendNotification(
-                context.getString(R.string.alert_notification_title),
-                String.format(
-                    context.getString(R.string.call_alert_notification_text),
+                        // format the phone number to make it more readable
+                        PhoneNumberUtils.formatNumber(
+                            phoneContactNumber,
+                            Locale.getDefault().country
+                        )
+                    ),
+                    AppController.CALL_ALERT_SENT_NOTIFICATION_ID
+                )
 
-                    // format the phone number to make it more readable
-                    PhoneNumberUtils.formatNumber(phoneContactNumber, Locale.getDefault().country)
-                ),
-                AppController.CALL_ALERT_SENT_NOTIFICATION_ID
-            )
-
+            } else {
+                DebugLogger.d(
+                    "makeAlarmCall",
+                    context.getString(R.string.debug_log_no_call_phone_permission)
+                )
+            }
         } else {
-            DebugLogger.d("makeAlarmCall", context.getString(R.string.debug_log_no_call_phone_permission))
+            Log.d("makeAlarmCall", "Phone # was null?!")
         }
-    } else {
-        Log.d("makeAlarmCall", "Phone # was null?!")
+    } catch (e: Exception) {
+        Log.d("makeAlarmCall", "Exception while making alert call: ${e.message}")
     }
 }
 
