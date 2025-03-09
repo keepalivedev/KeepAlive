@@ -1,0 +1,2 @@
+* Correction d'un problème avec l'heure de l'alarme de la période de repos
+* Ajustement des traductions

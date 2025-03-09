@@ -1,0 +1,2 @@
+* Fix issue with Rest Period alarm time
+* Adjust translations

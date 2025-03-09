@@ -1,0 +1,2 @@
+* Naprawiono problem z czasem alarmu okresu odpoczynku
+* Dostosowano tłumaczenia
