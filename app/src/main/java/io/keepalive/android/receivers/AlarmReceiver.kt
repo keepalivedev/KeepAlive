@@ -72,7 +72,6 @@ class AlarmReceiver : BroadcastReceiver() {
         intent.extras?.let {
 
             alarmStage = it.getString("AlarmStage", "periodic")
-            DebugLogger.d(tag, context.getString(R.string.debug_log_alarm_stage, alarmStage))
 
             // also check when the alarm was supposed to go off and compare to
             //   when it actually did go off
