@@ -1,0 +1,2 @@
+* Problem mit der Ruhezeit-Alarmzeit beheben
+* Übersetzungen anpassen
