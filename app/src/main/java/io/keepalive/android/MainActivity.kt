@@ -780,7 +780,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 // ugh there is no 32+ constant and the wording used in the app Settings is different
-                //  31 than it is in 32+ so we need to detect which the device is using...
+                //  in 31 than it is in 32-34 and 35 so we need to detect which the device is using...
                 UnusedAppRestrictionsConstants.API_31 -> {
                     Log.d(
                         "reqDisableAppHiber",
@@ -790,7 +790,11 @@ class MainActivity : AppCompatActivity() {
                     // API 31 uses different wording so need to set the message string accordingly
                     dialogMessage = if (Build.VERSION.SDK_INT == 31) {
                         getString(R.string.hibernation_dialog_message_api31)
+                    } else if (Build.VERSION.SDK_INT == 35) {
+                        // message for 35
+                        getString(R.string.hibernation_dialog_message_api35)
                     } else {
+                        // message for 32-34
                         getString(R.string.hibernation_dialog_message)
                     }
                 }

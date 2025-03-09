@@ -72,6 +72,7 @@
     <!-- app hibernation/restriction stuff -->
     <string name="hibernation_dialog_title">Wyłącz Ograniczenia Aplikacji</string>
     <string name="hibernation_dialog_message"><![CDATA[Android automatycznie usuwa uprawnienia aplikacji, które nie były ostatnio używane.  Aplikacja Keep Alive nie potrzebuje żadnej interakcji po jej pierwszej konfiguracji i może przez to stracić uprawnienia.<br/><br/>Żeby mieć pewność, że Keep Alive może działać poprawnie wyłącz opcje <b>Usuń uprawnienia jeśli aplikacja jest nieużywana</b>.]]></string>
+    <string name="hibernation_dialog_message_api35"><![CDATA[Android automatycznie cofa teraz uprawnienia dla aplikacji, które nie były ostatnio używane. Keep Alive, po skonfigurowaniu ustawień, nie wymaga dalszej interakcji i może zostać pozbawiony swoich uprawnień.<br/><br/>Aby upewnić się, że uprawnienia nie zostaną cofnięte, wyłącz opcję <b>Zarządzaj nieużywanymi aplikacjami</b> dla aplikacji Keep Alive.]]></string>
     <string name="hibernation_dialog_message_api30"><![CDATA[Android automatycznie usuwa uprawnienia aplikacji, które nie były ostatnio używane.  Aplikacja Keep Alive nie potrzebuje żadnej interakcji po jej pierwszej konfiguracji i może przez to stracić uprawnienia.<br/><br/>Żeby mieć pewność, że Keep Alive może działać poprawnie wyłącz opcje <b>Usuń uprawnienia jeśli aplikacja jest nieużywana</b>.]]></string>
     <string name="hibernation_dialog_message_api31"><![CDATA[Android automatycznie usuwa uprawnienia aplikacji, które nie były ostatnio używane.  Aplikacja Keep Alive nie potrzebuje żadnej interakcji po jej pierwszej konfiguracji i może przez to stracić uprawnienia.<br/><br/>Żeby mieć pewność, że Keep Alive może działać poprawnie wyłącz opcje <b>Usuń uprawnienia i zwolnij miejsce</b> dla aplikacji Keep Alive.]]></string>
     <string name="hibernation_dialog_message_api_backport"><![CDATA[Android automatycznie usuwa uprawnienia aplikacji, które nie były ostatnio używane.  Aplikacja Keep Alive nie potrzebuje żadnej interakcji po jej pierwszej konfiguracji i może przez to stracić uprawnienia.<br/><br/>Żeby mieć pewność, że Keep Alive może działać poprawnie wyłącz opcje <b>Usuń uprawnienia jeśli aplikacja jest nieużywana</b>.]]></string>
@@ -270,7 +271,7 @@
     <string name="debug_log_no_events_sending_notification">nie znaleziono zdarzeń w ciągu ostatnich %1$.2f godzin, wysyłanie powiadomienia Jesteś tam?</string>
     <string name="debug_log_sending_alert">Wysyłanie alertu!</string>
     <string name="debug_log_sending_alert_failed">Nie udało się pobrać i wysłać alertu o lokalizacji</string>
-    <string name="debug_log_last_device_activity">Ostatnie zdarzenie użycia to %1$s z %2$s o %3$s</string>
+    <string name="debug_log_last_device_activity">Ostatnie zdarzenie użycia to %1$s z %2$s o %3$s UTC</string>
     <string name="debug_log_location_power_mode_warning">Tryb oszczędzania energii lokalizacji może uniemożliwić nam uzyskanie lokalizacji: %1$s</string>
     <string name="debug_log_power_and_idle_status">Czy w trybie oszczędzania energii? %1$b. Czy urządzenie jest w stanie bezczynności? %2$b</string>
     <string name="debug_log_failed_registering_sms_sent_receiver">Nie udało się zarejestrować odbiornika wysłanych SMS-ów.</string>
@@ -287,9 +288,9 @@
     <!-- UtilityFunctions.kt -->
     <string name="debug_log_failed_getting_shared_prefs">Nie udało się pobrać wspólnych preferencji?!</string>
     <string name="debug_log_failed_getting_alarm_manager">Nie udało się pobrać AlarmManager?!</string>
-    <string name="debug_log_setting_periodic_alarm">Ustawianie nowego okresowego alarmu na około %1$s</string>
-    <string name="debug_log_setting_final_exact_alarm">Ustawianie ostatecznego dokładnego alarmu na %1$s</string>
-    <string name="debug_log_unable_to_set_exact_alarm">Nie można ustawić dokładnego alarmu?! Ustawianie normalnego ostatecznego alarmu na %1$s</string>
+    <string name="debug_log_setting_periodic_alarm">Ustawianie nowego okresowego alarmu na około %1$s UTC</string>
+    <string name="debug_log_setting_final_exact_alarm">Ustawianie ostatecznego dokładnego alarmu na %1$s UTC</string>
+    <string name="debug_log_unable_to_set_exact_alarm">Nie można ustawić dokładnego alarmu?! Ustawianie normalnego ostatecznego alarmu na %1$s UTC</string>
     <string name="debug_log_api_22_unable_to_set_exact_alarm">To jest API 22, ale nie udało się ustawić dokładnego alarmu?!</string>
     <string name="debug_log_returning_logs">Zwracanie %1$d dzienników</string>
 
@@ -334,8 +335,7 @@
     <!-- AlarmReceiver.kt -->
     <string name="debug_log_alarm_just_fired">Alarm właśnie się uruchomił!</string>
     <string name="debug_log_app_not_enabled_alarm_went_off">Aplikacja nie jest włączona, dlaczego alarm się uruchomił?!</string>
-    <string name="debug_log_alarm_stage">Etap alarmu to %1$s</string>
-    <string name="debug_log_alarm_time_comparison">Czas to %1$s, alarm miał się uruchomić o %2$s, co było %3$d sekund temu</string>
+    <string name="debug_log_alarm_time_comparison">Czas to %1$s UTC, alarm miał się uruchomić o %2$s UTC, co było %3$d sekund temu</string>
     <string name="debug_log_failed_processing_alarm">Nie udało się przetworzyć alarmu:</string>
     <string name="debug_log_app_in_foreground">KeepAlive jest obecnie na pierwszym planie</string>
     <string name="debug_log_app_in_background">KeepAlive jest obecnie w tle</string>

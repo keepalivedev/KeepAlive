@@ -72,6 +72,7 @@
     <!-- app hibernation/restriction stuff -->
     <string name="hibernation_dialog_title">Désactiver la restriction de l\'application</string>
     <string name="hibernation_dialog_message"><![CDATA[Android supprime désormais automatiquement les autorisations pour les applications qui n\'ont pas été utilisées récemment. Keep Alive, une fois les paramètres configurés, n\'a besoin d\'aucune interaction supplémentaire et peut voir ses autorisations révoquées.<br/><br/>Pour garantir que Keep Alive peut fonctionner, veuillez désactiver l\'option <b>\'Suspendre l\'activité de l\'application si elle n\'est pas utilisée\'</b> option pour l\'application Keep Alive.]]></string>
+    <string name="hibernation_dialog_message_api35"><![CDATA[Android supprime maintenant automatiquement les autorisations des applications qui n\'ont pas été utilisées récemment. Keep Alive, une fois les paramètres configurés, ne nécessite plus d\'interaction et peut voir ses autorisations révoquées.<br/><br/>Pour vous assurer que les autorisations ne soient pas révoquées, veuillez désactiver l\'option <b>« Gérer l\'appli si inutilisée »</b> pour l\'application Keep Alive.]]></string>
     <string name="hibernation_dialog_message_api30"><![CDATA[Android supprime désormais automatiquement les autorisations pour les applications qui n\'ont pas été utilisées récemment. Keep Alive, une fois les paramètres configurés, ne nécessite aucune autre interaction à moins qu\'une alerte ne soit déclenchée.<br/><br/>Pour vous assurer que les autorisations ne sont pas révoquées, veuillez accéder à la section <b>Autorisations</b> pour Keep Alive et désactiver l\'option <b>\'Supprimer les autorisations si l\'application n\'est pas utilisé\'</b>.]]></string>
     <string name="hibernation_dialog_message_api31"><![CDATA[Android supprime désormais automatiquement les autorisations pour les applications qui n\'ont pas été utilisées récemment. Keep Alive, une fois les paramètres configurés, ne nécessite aucune autre interaction à moins qu\'une alerte ne soit déclenchée.<br/><br/>Pour garantir que les autorisations ne sont pas révoquées, veuillez désactiver l\'option <b>\'Supprimer les autorisations et libérer de l\'espace\'</b> pour Keep Alive application.]]></string>
     <string name="hibernation_dialog_message_api_backport"><![CDATA[Android supprime désormais automatiquement les autorisations pour les applications qui n\'ont pas été utilisées récemment. Keep Alive, une fois les paramètres configurés, ne nécessite aucune autre interaction à moins qu\'une alerte ne soit déclenchée.<br/><br/>Pour garantir que les autorisations ne sont pas révoquées, veuillez désactiver l\'option <b>\'Supprimer les autorisations si l\'application n\'est pas utilisée\'</b>.]]></string>
@@ -270,7 +271,7 @@
     <string name="debug_log_no_events_sending_notification">aucun événement trouvé dans les %1$.2f dernières heures, envoi de la notification Es-tu là?</string>
     <string name="debug_log_sending_alert">Envoi de l\'alerte!</string>
     <string name="debug_log_sending_alert_failed">Échec lors de la tentative d\'obtention et d\'envoi de l\'alerte de localisation</string>
-    <string name="debug_log_last_device_activity">Le dernier événement d\'utilisation était %1$s de %2$s à %3$s</string>
+    <string name="debug_log_last_device_activity">Le dernier événement d\'utilisation était %1$s de %2$s à %3$s UTC</string>
     <string name="debug_log_location_power_mode_warning">Le mode d\'économie d\'énergie de localisation peut nous empêcher d\'obtenir la localisation : %1$s</string>
     <string name="debug_log_power_and_idle_status">En mode économie d\'énergie ? %1$b. L\'appareil est-il en veille ? %2$b</string>
     <string name="debug_log_failed_registering_sms_sent_receiver">Échec de l\'enregistrement du récepteur SMS envoyé.</string>
@@ -287,9 +288,9 @@
     <!-- UtilityFunctions.kt -->
     <string name="debug_log_failed_getting_shared_prefs">Échec de l\'obtention des préférences partagées?!</string>
     <string name="debug_log_failed_getting_alarm_manager">Échec de l\'obtention de l\'AlarmManager?!</string>
-    <string name="debug_log_setting_periodic_alarm">Définition d\'une nouvelle alarme périodique pour environ %1$s</string>
-    <string name="debug_log_setting_final_exact_alarm">Définition de l\'alarme exacte finale pour se déclencher à %1$s</string>
-    <string name="debug_log_unable_to_set_exact_alarm">Impossible de définir l\'alarme exacte?! Définition de l\'alarme finale normale pour se déclencher à %1$s</string>
+    <string name="debug_log_setting_periodic_alarm">Définition d\'une nouvelle alarme périodique pour environ %1$s UTC</string>
+    <string name="debug_log_setting_final_exact_alarm">Définition de l\'alarme exacte finale pour se déclencher à %1$s UTC</string>
+    <string name="debug_log_unable_to_set_exact_alarm">Impossible de définir l\'alarme exacte?! Définition de l\'alarme finale normale pour se déclencher à %1$s UTC</string>
     <string name="debug_log_api_22_unable_to_set_exact_alarm">C\'est l\'API 22 mais nous n\'avons pas pu définir une alarme exacte?!</string>
     <string name="debug_log_returning_logs">Retour de %1$d journaux</string>
 
@@ -334,8 +335,7 @@
     <!-- AlarmReceiver.kt -->
     <string name="debug_log_alarm_just_fired">L\'alarme vient de se déclencher!</string>
     <string name="debug_log_app_not_enabled_alarm_went_off">L\'application n\'est pas activée, pourquoi l\'alarme s\'est-elle déclenchée?!</string>
-    <string name="debug_log_alarm_stage">L\'étape d\'alarme est %1$s</string>
-    <string name="debug_log_alarm_time_comparison">L\'heure est %1$s, l\'alarme était censée se déclencher à %2$s, c\'est-à-dire il y a %3$d secondes</string>
+    <string name="debug_log_alarm_time_comparison">L\'heure est %1$s UTC, l\'alarme était censée se déclencher à %2$s UTC, c\'est-à-dire il y a %3$d secondes</string>
     <string name="debug_log_failed_processing_alarm">Échec lors du traitement de l\'alarme:</string>
     <string name="debug_log_app_in_foreground">KeepAlive est actuellement au premier plan</string>
     <string name="debug_log_app_in_background">KeepAlive est actuellement en arrière-plan</string>

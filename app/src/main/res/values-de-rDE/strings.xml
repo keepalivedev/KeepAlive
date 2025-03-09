@@ -72,6 +72,7 @@
     <!-- app hibernation/restriction stuff -->
     <string name="hibernation_dialog_title">App-Beschränkung deaktivieren</string>
     <string name="hibernation_dialog_message"><![CDATA[Android entfernt jetzt automatisch die Berechtigungen für Apps, die in letzter Zeit nicht verwendet wurden.  Da Keep Alive nach der Konfiguration keine weitere Interaktion benötigt, können ihr dadurch versehentlich die Berechtigungen entzogen werden.<br/><br/>Um sicherzustellen, dass die Berechtigungen für Keep Alive nicht entzogen werden, deaktivieren Sie bitte die Option <b>App-Aktivität bei Nichtbenutzung stoppen</b> für die App Keep Alive.]]></string>
+    <string name="hibernation_dialog_message_api35"><![CDATA[Android entfernt jetzt automatisch die Berechtigungen für Apps, die nicht kürzlich verwendet wurden. Keep Alive benötigt nach der Konfiguration keine weitere Interaktion und kann eventuell seine Berechtigungen verlieren.<br/><br/>Um sicherzustellen, dass die Berechtigungen nicht widerrufen werden, deaktivieren Sie bitte die Option <b>App bei Nichtnutzung pausieren</b> für die Keep Alive-App.]]></string>
     <string name="hibernation_dialog_message_api30"><![CDATA[Android entfernt jetzt automatisch die Berechtigungen für Apps, die in letzter Zeit nicht verwendet wurden.  Sobald die Einstellungen konfiguriert sind, benötigt Keep Alive keine weitere Interaktion, es sei denn, ein Alarm wird ausgelöst.<br/><br/>Um sicherzustellen, dass die Berechtigungen nicht entzogen werden, navigieren Sie bitte zum Abschnitt <b>Berechtigungen</b> für Keep Alive und deaktivieren Sie die Option <b>Berechtigungen für ungenutzte App entfernen</b>.]]></string>
     <string name="hibernation_dialog_message_api31"><![CDATA[Android entfernt nun automatisch die Berechtigungen für Apps, die in letzter Zeit nicht genutzt wurden.  Sobald die Einstellungen konfiguriert sind, benötigt Keep Alive keine weitere Interaktion, es sei denn, ein Alarm wird ausgelöst.<br/><br/>Um sicherzustellen, dass die Berechtigungen nicht entzogen werden, deaktivieren Sie bitte die Option <b>Berechtigungen entfernen und Speicherplatz freigeben</b> für die Keep Alive-App.]]></string>
     <string name="hibernation_dialog_message_api_backport"><![CDATA[Android entfernt jetzt automatisch die Berechtigungen für Apps, die in letzter Zeit nicht verwendet wurden.  Sobald die Einstellungen konfiguriert sind, benötigt Keep Alive keine weitere Interaktion, es sei denn, ein Alarm wird ausgelöst.<br/><br/>Um sicherzustellen, dass die Berechtigungen nicht entzogen werden, deaktivieren Sie bitte die Option <b>Berechtigungen entfernen, wenn die App nicht verwendet wird</b>.]]></string>
@@ -270,7 +271,7 @@
     <string name="debug_log_no_events_sending_notification">Keine Ereignisse in den letzten %1$.2f Stunden gefunden, sende \"Bist du da?\"-Benachrichtigung</string>
     <string name="debug_log_sending_alert">Sende Alarm!</string>
     <string name="debug_log_sending_alert_failed">Fehler beim Abrufen und Senden des Standortalarms</string>
-    <string name="debug_log_last_device_activity">Letztes Nutzungsereignis war %1$s von %2$s um %3$s</string>
+    <string name="debug_log_last_device_activity">Letztes Nutzungsereignis war %1$s von %2$s um %3$s UTC</string>
     <string name="debug_log_location_power_mode_warning">Der Energiesparmodus für Standorte kann verhindern, dass wir den Standort ermitteln: %1$s</string>
     <string name="debug_log_power_and_idle_status">Im Energiesparmodus? %1$b. Ist das Gerät im Ruhezustand? %2$b</string>
     <string name="debug_log_failed_registering_sms_sent_receiver">Registrierung des SMS-Sendereceivers fehlgeschlagen.</string>
@@ -287,9 +288,9 @@
     <!-- UtilityFunctions.kt -->
     <string name="debug_log_failed_getting_shared_prefs">Fehler beim Abrufen der gemeinsamen Einstellungen?!</string>
     <string name="debug_log_failed_getting_alarm_manager">Fehler beim Abrufen des AlarmManagers?!</string>
-    <string name="debug_log_setting_periodic_alarm">Setze neuen periodischen Alarm für ungefähr %1$s</string>
-    <string name="debug_log_setting_final_exact_alarm">Setze endgültigen exakten Alarm, der um %1$s ausgelöst wird</string>
-    <string name="debug_log_unable_to_set_exact_alarm">Exakten Alarm nicht setzen können?! Setze normalen endgültigen Alarm, der um %1$s ausgelöst wird</string>
+    <string name="debug_log_setting_periodic_alarm">Setze neuen periodischen Alarm für ungefähr %1$s UTC</string>
+    <string name="debug_log_setting_final_exact_alarm">Setze endgültigen exakten Alarm, der um %1$s UTC ausgelöst wird</string>
+    <string name="debug_log_unable_to_set_exact_alarm">Exakten Alarm nicht setzen können?! Setze normalen endgültigen Alarm, der um %1$s UTC ausgelöst wird</string>
     <string name="debug_log_api_22_unable_to_set_exact_alarm">Dies ist API 22, aber wir konnten keinen exakten Alarm setzen?!</string>
     <string name="debug_log_returning_logs">Gebe %1$d Protokolle zurück</string>
 
@@ -334,8 +335,7 @@
     <!-- AlarmReceiver.kt -->
     <string name="debug_log_alarm_just_fired">Alarm gerade ausgelöst!</string>
     <string name="debug_log_app_not_enabled_alarm_went_off">App ist nicht aktiviert, warum wurde der Alarm ausgelöst?!</string>
-    <string name="debug_log_alarm_stage">Alarmphase ist %1$s</string>
-    <string name="debug_log_alarm_time_comparison">Uhrzeit ist %1$s, Alarm sollte um %2$s ausgelöst werden, was %3$d Sekunden her ist</string>
+    <string name="debug_log_alarm_time_comparison">Uhrzeit ist %1$s UTC, Alarm sollte um %2$s UTC ausgelöst werden, was %3$d Sekunden her ist</string>
     <string name="debug_log_failed_processing_alarm">Fehler bei der Alarmverarbeitung:</string>
     <string name="debug_log_app_in_foreground">KeepAlive ist derzeit im Vordergrund</string>
     <string name="debug_log_app_in_background">KeepAlive ist derzeit im Hintergrund</string>
