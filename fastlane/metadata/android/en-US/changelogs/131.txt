@@ -1,2 +1,3 @@
+* Updates for Android 15
 * Fix issue with Rest Period alarm time
 * Adjust translations

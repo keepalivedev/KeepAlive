@@ -1,2 +1,3 @@
+* Mises à jour pour Android 15
 * Correction d'un problème avec l'heure de l'alarme de la période de repos
 * Ajustement des traductions
