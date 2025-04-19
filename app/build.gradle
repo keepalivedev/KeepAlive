@@ -57,13 +57,16 @@ android {
     productFlavors {
         // we don't need to define anything else
         create("googlePlay") {}
-        create("fDroid") {}
-    }
-    dependenciesInfo {
-        // Disables dependency metadata when building APKs.
-        includeInApk = false
-        // Disables dependency metadata when building Android App Bundles.
-        includeInBundle = false
+
+        // only disable metadata for f-droid builds
+        create("fDroid") {
+            dependenciesInfo {
+                // Disables dependency metadata when building APKs.
+                includeInApk = false
+                // Disables dependency metadata when building Android App Bundles.
+                includeInBundle = false
+            }
+        }
     }
 }
 
