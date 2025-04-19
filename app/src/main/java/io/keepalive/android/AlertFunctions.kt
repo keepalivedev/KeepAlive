@@ -473,6 +473,7 @@ fun getLastDeviceActivity(context: Context, startTimestamp: Long, monitoredApps:
                     getDateTimeStrFromTimestamp(lastInteractiveEvent.timeStamp)))
 
         } else {
+            // todo make this a debuglogger message
             Log.d(
                 "getLastDeviceActivity",
                 "No usage events found since ${getDateTimeStrFromTimestamp(startTimestamp)}"
@@ -494,12 +495,14 @@ fun doAlertCheck(context: Context, alarmStage: String) {
 
     // get the necessary preferences
     val checkPeriodHours = prefs.getString("time_period_hours", "12")!!.toFloat()
-    val followupPeriodMinutes = prefs.getString("followup_time_period_minutes", "60")!!.toLong()
+    val followupPeriodMinutes = prefs.getString("followup_time_period_minutes", "60")!!.toInt()
     val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(prefs,"REST_PERIODS")
     val appsToMonitor: MutableList<MonitoredAppDetails> = loadJSONSharedPreference(prefs,"APPS_TO_MONITOR")
 
     // time in the system default timezone, which is what the rest period will be in
     val nowCalendar = Calendar.getInstance()
+
+    Log.d("doAlertCheck", "current local time is ${getDateTimeStrFromTimestamp(nowCalendar.timeInMillis, nowCalendar.timeZone.id)}")
 
     // time in milliseconds since epoch, store this so we use the same time for everything
     val nowTimestamp = System.currentTimeMillis()
@@ -529,8 +532,8 @@ fun doAlertCheck(context: Context, alarmStage: String) {
 
         // get a date in the past that is checkPeriodHours ago while excluding any rest periods
         //  and then convert it to a timestamp
-        activitySearchStartTimestamp = calculatePastDateTimeExcludingRestPeriod(
-            nowCalendar, checkPeriodHours, restPeriods[0]
+        activitySearchStartTimestamp = calculateOffsetDateTimeExcludingRestPeriod(
+            nowCalendar, (checkPeriodHours * 60).toInt(), restPeriods[0], "backward"
         ).timeInMillis
 
         Log.d("doAlertCheck", "updating activity search start timestamp to " +
@@ -567,9 +570,15 @@ fun doAlertCheck(context: Context, alarmStage: String) {
 
             // we can't set the alarm using last activity otherwise it would immediately fire an
             //  'are you there?' check so just base it on the checkPeriodHours and the rest periods
-            setAlarm(context, (checkPeriodHours * 60 * 60 * 1000).toLong(), "periodic", restPeriods)
+            //setAlarm(context, (checkPeriodHours * 60 * 60 * 1000).toLong(), "periodic", restPeriods)
+            setAlarm(context, nowTimestamp, (checkPeriodHours * 60).toInt(), "periodic", restPeriods)
         }
         return
+    }
+
+    // todo make this a debuglogger message
+    if (lastInteractiveEvent == null && isInRestPeriod) {
+        Log.d("doAlertCheck", "No events found but we are in a rest period, not sending alert")
     }
 
     // if no events were found then we need to send the followup notification and set a final alarm
@@ -590,9 +599,9 @@ fun doAlertCheck(context: Context, alarmStage: String) {
             AppController.ARE_YOU_THERE_NOTIFICATION_ID
         )
 
-        // if no events are found then set the alarm so we follow up
-        // do not adjust the followup time based on the rest periods
-        setAlarm(context, (followupPeriodMinutes * 60 * 1000), "final", null)
+        // if no events are found then set the alarm so we follow up; do not adjust the followup
+        //  time based on the rest periods
+        setAlarm(context, nowTimestamp, followupPeriodMinutes, "final", null)
 
     } else {
         // use the last event timestamp if we found one, otherwise it means we are in a rest period
@@ -604,14 +613,8 @@ fun doAlertCheck(context: Context, alarmStage: String) {
         val lastEventMsAgo = nowTimestamp - lastInteractiveEventTimestamp
         Log.d("doAlertCheck", "last event was ${lastEventMsAgo / 1000} seconds ago")
 
-        // since now know when the last activity was we can set our next alarm for the
-        //  exact time we need to check again
-        val newAlarmTimestamp = lastInteractiveEventTimestamp + (checkPeriodHours * 60 * 60 * 1000)
-
-        // the milliseconds until our alarm would fire
-        val newAlarmInMs = (newAlarmTimestamp - nowTimestamp).toLong()
-
         // set a new alarm so we can check again in the future
-        setAlarm(context, newAlarmInMs, "periodic", restPeriods)
+        setAlarm(context, lastInteractiveEventTimestamp, (checkPeriodHours * 60).toInt(),
+            "periodic", restPeriods)
     }
 }
