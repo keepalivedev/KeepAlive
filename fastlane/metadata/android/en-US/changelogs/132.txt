@@ -1,0 +1,2 @@
+* Update dependencies
+* Fix issue with Rest Period alarm time

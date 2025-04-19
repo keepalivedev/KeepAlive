@@ -1,0 +1,2 @@
+* Mettre à jour les dépendances
+* Résoudre le problème avec l'heure d'alarme de la période de repos
