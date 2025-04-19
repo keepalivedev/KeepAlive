@@ -102,7 +102,7 @@ class UtilityFunctionsTest {
             val expectedDateTime: Calendar = targetDateTime.clone() as Calendar
             expectedDateTime.add(Calendar.MINUTE, -(checkPeriodMinutes + totalRestMinutes).toInt())
 
-            val result = calculatePastDateTimeExcludingRestPeriod(targetDateTime, checkPeriodHours, restPeriod)
+            val result = calculateOffsetDateTimeExcludingRestPeriod(targetDateTime, (checkPeriodHours * 60).toInt(), restPeriod, "backward")
             assertEquals(expectedDateTime.timeInMillis, result.timeInMillis)
             //assertEquals(ZonedDateTime.of(expectedDateTime, ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC")), result)
         }
@@ -125,7 +125,7 @@ class UtilityFunctionsTest {
             val expectedDateTime: Calendar = targetDateTime.clone() as Calendar
             expectedDateTime.add(Calendar.MINUTE, -(checkPeriodMinutes + totalRestMinutes).toInt())
 
-            val result = calculatePastDateTimeExcludingRestPeriod(targetDateTime, checkPeriodHours, restPeriod)
+            val result = calculateOffsetDateTimeExcludingRestPeriod(targetDateTime, (checkPeriodHours * 60).toInt(), restPeriod, "backward")
 
             assertEquals(expectedDateTime.timeInMillis, result.timeInMillis)
         }
@@ -149,7 +149,7 @@ class UtilityFunctionsTest {
             val expectedDateTime: Calendar = targetDateTime.clone() as Calendar
             expectedDateTime.add(Calendar.MINUTE, -(checkPeriodMinutes + totalRestMinutes).toInt())
 
-            val result = calculatePastDateTimeExcludingRestPeriod(targetDateTime, checkPeriodHours, restPeriod)
+            val result = calculateOffsetDateTimeExcludingRestPeriod(targetDateTime, (checkPeriodHours * 60).toInt(), restPeriod, "backward")
             assertEquals(expectedDateTime.timeInMillis, result.timeInMillis)
         }
 
@@ -173,7 +173,7 @@ class UtilityFunctionsTest {
             val expectedDateTime: Calendar = targetDateTime.clone() as Calendar
             expectedDateTime.add(Calendar.MINUTE, -(checkPeriodMinutes + totalRestMinutes).toInt())
 
-            val result = calculatePastDateTimeExcludingRestPeriod(targetDateTime, checkPeriodHours, restPeriod)
+            val result = calculateOffsetDateTimeExcludingRestPeriod(targetDateTime, (checkPeriodHours * 60).toInt(), restPeriod, "backward")
             assertEquals(expectedDateTime.timeInMillis, result.timeInMillis)
         }
 
@@ -197,7 +197,7 @@ class UtilityFunctionsTest {
             val expectedDateTime: Calendar = targetDateTime.clone() as Calendar
             expectedDateTime.add(Calendar.MINUTE, -(checkPeriodMinutes + totalRestMinutes).toInt())
 
-            val result = calculatePastDateTimeExcludingRestPeriod(targetDateTime, checkPeriodHours, restPeriod)
+            val result = calculateOffsetDateTimeExcludingRestPeriod(targetDateTime, (checkPeriodHours * 60).toInt(), restPeriod, "backward")
             assertEquals(expectedDateTime.timeInMillis, result.timeInMillis)
         }
     }
