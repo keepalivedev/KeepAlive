@@ -225,9 +225,11 @@ class MainActivity : AppCompatActivity() {
             restartMonitoringButton.isClickable = false
 
             // set the alarm
-            val timePeriodHours = sharedPrefs.getString("time_period_hours", "12")!!.toFloat()
+            val checkPeriodHours = sharedPrefs.getString("time_period_hours", "12")!!.toFloat()
             val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(sharedPrefs,"REST_PERIODS")
-            setAlarm(this, (timePeriodHours * 60 * 60 * 1000).toLong(), "periodic", restPeriods)
+
+            // if they are hitting the restart button then use now as the last activity time
+            setAlarm(this, System.currentTimeMillis(), (checkPeriodHours * 60).toInt(), "periodic", restPeriods)
 
             // wait a second for the alarm to be set and then update the text views
             Handler(Looper.getMainLooper()).postDelayed({
@@ -686,7 +688,8 @@ class MainActivity : AppCompatActivity() {
 
                 // if the user clicked on the notification we can assume they are active so
                 //  regardless of the last activity, just re-set the alarm
-                setAlarm(this, (checkPeriodHours * 60 * 60 * 1000).toLong(), "periodic", restPeriods)
+                setAlarm(this, System.currentTimeMillis(), (checkPeriodHours * 60).toInt(),
+                    "periodic", restPeriods)
 
                 // let the user know that the alert was cancelled
                 binding.root.findViewById<TextView>(R.id.textviewMonitoringMessage).text =

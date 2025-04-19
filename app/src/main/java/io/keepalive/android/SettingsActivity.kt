@@ -344,7 +344,7 @@ class SettingsActivity : AppCompatActivity() {
             val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(sharedPrefs!!,"REST_PERIODS")
 
             // don't need to cancel the existing alarm, just set a new one
-            setAlarm(this, (newValue * 60 * 60 * 1000).toLong(), "periodic", restPeriods)
+            setAlarm(this, System.currentTimeMillis(), (newValue * 60).toInt(), "periodic", restPeriods)
         }
     }
 
