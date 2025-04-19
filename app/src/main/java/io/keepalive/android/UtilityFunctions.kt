@@ -146,41 +146,41 @@ fun getDateTimeStrFromTimestamp(timestamp: Long, timeZoneId: String = "UTC"): St
 // set an alarm so that we can check up on the user in the future
 fun setAlarm(
     context: Context,
-    alarmInMs: Long,
+    lastActivityTimestamp: Long,
+    desiredAlarmInMinutes: Int,
     alarmStage: String,
     restPeriods: MutableList<RestPeriod>? = null
 ) {
 
-    // when the alarm is supposed to go off
-    var alarmTimestamp = System.currentTimeMillis() + alarmInMs
+    // calendar object set to the last activity time
+    val baseCalendar = Calendar.getInstance().apply {
+        timeInMillis = lastActivityTimestamp
+    }
 
-    // if we have any rest periods; this will be null for final stage alarms
-    //  so that it ignores rest periods
-    if (!restPeriods.isNullOrEmpty()) {
+    // if there are any rest periods then calculate the new alarm time based on the
+    //  last activity time and the rest periods
+    // this will be null for final stage alarms so that it ignores rest periods
+    val newAlarmCalendar = if (!restPeriods.isNullOrEmpty()) {
+        calculateOffsetDateTimeExcludingRestPeriod(baseCalendar, desiredAlarmInMinutes,
+            restPeriods[0], "forward")
+    } else {
 
-        // if the future alert time would be during a rest period then delay it
-        //  until the end of the rest period
-        val adjustedAlarmTimestamp = adjustTimestampIfInRestPeriod(alarmTimestamp, restPeriods[0])
-
-        // informational check so we know if the timestamp was adjusted
-        if (adjustedAlarmTimestamp != alarmTimestamp) {
-
-            Log.d(
-                "setAlarm", "Original alarm set for " +
-                        "${getDateTimeStrFromTimestamp(alarmTimestamp)} which would " +
-                        "be during rest period ${restPeriods[0]}, adjusting to " +
-                        getDateTimeStrFromTimestamp(adjustedAlarmTimestamp)
-            )
-
-            alarmTimestamp = adjustedAlarmTimestamp
+        // if there are no rest periods then just add the alarm minutes to the last activity
+        baseCalendar.apply {
+            add(Calendar.MINUTE, desiredAlarmInMinutes)
         }
     }
 
-    // in case the timestamp was adjusted for a rest period, create a new alarmInMs value in case
-    //  we need to use it with SystemClock.elapsedRealtime() later
-    // although it shouldn't happen, ensure that the time is at least 1 minute so that we aren't
-    //  setting an alarm in the past
-    val adjustedAlarmInMs = (alarmTimestamp - System.currentTimeMillis()).coerceAtLeast(60000L)
+    var alarmTimestamp = newAlarmCalendar.timeInMillis
+
+    // check to make sure our alarm isn't in the past; this shouldn't happen though?
+    if (alarmTimestamp < System.currentTimeMillis()) {
+        Log.d("setAlarm", "Alarm is in the past?! Forcing to 1 minute from now")
+        alarmTimestamp = System.currentTimeMillis() + 60000
+    }
+
+    // the milliseconds until our alarm would fire
+    val newAlarmInMs = alarmTimestamp - System.currentTimeMillis()
 
     // convert the timestamp to a string for use in logging
     val alarmDtStr = getDateTimeStrFromTimestamp(alarmTimestamp)
@@ -234,7 +234,7 @@ fun setAlarm(
                 AlarmManager.ELAPSED_REALTIME_WAKEUP,
 
                 // this uses system time instead of RTC time
-                SystemClock.elapsedRealtime() + adjustedAlarmInMs,
+                SystemClock.elapsedRealtime() + newAlarmInMs,
                 pendingIntent
             )
         } else {
@@ -282,7 +282,7 @@ fun setAlarm(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 alarmManager.setAndAllowWhileIdle(
                     AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    SystemClock.elapsedRealtime() + adjustedAlarmInMs,
+                    SystemClock.elapsedRealtime() + newAlarmInMs,
                     pendingIntent
                 )
             } else {
@@ -293,7 +293,7 @@ fun setAlarm(
                 //  have to use...
                 alarmManager.set(
                     AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    SystemClock.elapsedRealtime() + adjustedAlarmInMs,
+                    SystemClock.elapsedRealtime() + newAlarmInMs,
                     pendingIntent
                 )
             }
@@ -367,21 +367,22 @@ fun adjustTimestampIfInRestPeriod(
     return utcTimestampMillis
 }
 
-
-// we need to look for activity over a certain time range while making sure to exclude rest periods
-fun calculatePastDateTimeExcludingRestPeriod(
-    targetDtCalendar: Calendar, checkPeriodHours: Float, restPeriod: RestPeriod
+// calculate a datetime in the past or future while skipping over any rest periods
+fun calculateOffsetDateTimeExcludingRestPeriod(
+    targetDtCalendar: Calendar, offsetMinutes: Int, restPeriod: RestPeriod, direction: String
 ): Calendar {
 
     // make a copy of the target date time so we don't modify the original
     val thisTargetDtCalendar = targetDtCalendar.clone() as Calendar
 
-    // at a minimum, the amount of time that needs to be subtracted based on the check period
-    var minutesToSubtract = (checkPeriodHours * 60).toLong()
+    // at a minimum, the amount of time that needs to be offset based on the check period
+    var minutesToOffset = offsetMinutes
 
     // track how many minutes were skipped for informational purposes, should either be 0 or
     //  equal to the # of minutes in the rest period?
     var skippedMinutes = 0
+
+    val minuteStep = if (direction == "forward") 1 else -1
 
     // special case to check if the rest period start and end times are the same to prevent
     //  an infinite loop in the code below; assume we have no rest period in this case
@@ -389,22 +390,22 @@ fun calculatePastDateTimeExcludingRestPeriod(
     //  leave this check here just in case...
     if (restPeriod.startHour == restPeriod.endHour && restPeriod.startMinute == restPeriod.endMinute) {
         Log.d("calcPastDtExcRestPeriod", "Invalid rest period? $restPeriod")
-        thisTargetDtCalendar.add(Calendar.MINUTE, -minutesToSubtract.toInt())
+        thisTargetDtCalendar.add(Calendar.MINUTE, minuteStep * -minutesToOffset)
     } else {
-        while (minutesToSubtract > 0) {
+        while (minutesToOffset > 0) {
 
             // every minute, check whether the current time is within the rest period and, if not,
-            //  subtract another minute until we get to 0 minutes, i.e. the end of the check period
+            //  offset another minute until we get to 0 minutes, i.e. the end of the check period
 
-            thisTargetDtCalendar.add(Calendar.MINUTE, -1)
+            thisTargetDtCalendar.add(Calendar.MINUTE, minuteStep)
 
-            // if the current time isn't within the rest period, subtract another minute
+            // if the current time isn't within the rest period, offset another minute
             if (!isWithinRestPeriod(
                     thisTargetDtCalendar.get(Calendar.HOUR_OF_DAY),
                     thisTargetDtCalendar.get(Calendar.MINUTE),
                     restPeriod
             )) {
-                minutesToSubtract--
+                minutesToOffset--
             } else {
                 skippedMinutes++
             }
@@ -417,8 +418,9 @@ fun calculatePastDateTimeExcludingRestPeriod(
 
     Log.d(
         "calcPastDtExcRestPeriod",
-        "Returning local DT $thisTargetDtCalendar, $utcCalendar UTC, " +
-                "skipped $skippedMinutes minutes, check period hours was $checkPeriodHours"
+        "Returning local DT ${getDateTimeStrFromTimestamp(thisTargetDtCalendar.timeInMillis, thisTargetDtCalendar.timeZone.id)}, " +
+                "${getDateTimeStrFromTimestamp(utcCalendar.timeInMillis, utcCalendar.timeZone.id)} UTC, " +
+                "skipped $skippedMinutes minutes, offset minutes was $offsetMinutes"
     )
 
     return utcCalendar

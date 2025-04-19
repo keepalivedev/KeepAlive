@@ -1,0 +1,2 @@
+* Aktualizacja zależności
+* Napraw problem z czasem alarmu Okresu Odpoczynku

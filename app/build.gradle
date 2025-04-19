@@ -10,8 +10,8 @@ android {
         applicationId "io.keepalive.android"
         minSdk 22
         targetSdk 35
-        versionCode 131
-        versionName "1.3.1"
+        versionCode 132
+        versionName "1.3.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -57,13 +57,16 @@ android {
     productFlavors {
         // we don't need to define anything else
         create("googlePlay") {}
-        create("fDroid") {}
-    }
-    dependenciesInfo {
-        // Disables dependency metadata when building APKs.
-        includeInApk = false
-        // Disables dependency metadata when building Android App Bundles.
-        includeInBundle = false
+
+        // only disable metadata for f-droid builds
+        create("fDroid") {
+            dependenciesInfo {
+                // Disables dependency metadata when building APKs.
+                includeInApk = false
+                // Disables dependency metadata when building Android App Bundles.
+                includeInBundle = false
+            }
+        }
     }
 }
 
@@ -72,9 +75,9 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 
     // next versions require compile sdk 34+
-    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.core:core-ktx:1.16.0'
     implementation 'androidx.activity:activity-ktx:1.10.1'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.8.8'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.8.9'
 
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'com.google.code.gson:gson:2.11.0'
