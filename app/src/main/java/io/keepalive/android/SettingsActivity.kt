@@ -10,6 +10,7 @@ import android.text.Html
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
@@ -353,6 +354,10 @@ class SettingsActivity : AppCompatActivity() {
             LayoutInflater.from(this).inflate(R.layout.dialog_edit_settings, null)
         val dialogEditText: EditText = dialogView.findViewById(R.id.customDialogEditText)
         val dialogDescription: TextView = dialogView.findViewById(R.id.customDialogTextView)
+        val exactAlarmSwitch: SwitchCompat = dialogView.findViewById(R.id.exactAlarmSwitch)
+        val exactAlarmNoteTextView: TextView = dialogView.findViewById(R.id.exactAlarmNoteTextView)
+        exactAlarmSwitch.visibility = View.GONE
+        exactAlarmNoteTextView.visibility = View.GONE
 
         // configure the dialog based on which setting this is
         var dialogTitle = ""
@@ -370,6 +375,11 @@ class SettingsActivity : AppCompatActivity() {
                 dialogEditText.inputType =
                     EditorInfo.TYPE_CLASS_NUMBER or EditorInfo.TYPE_NUMBER_FLAG_DECIMAL
                 dialogEditText.setText(sharedPrefs!!.getString("time_period_hours", "12"))
+
+                // show the exact alarm switch and explanatory note for this setting
+                exactAlarmSwitch.visibility = View.VISIBLE
+                exactAlarmSwitch.isChecked = sharedPrefs!!.getBoolean("use_exact_alarms", false)
+                exactAlarmNoteTextView.visibility = View.VISIBLE
             }
 
             "followup_time_period_minutes" -> {
@@ -406,6 +416,9 @@ class SettingsActivity : AppCompatActivity() {
                 // all of the settings we are editing in a dialog are strings
                 with(sharedPrefs!!.edit()) {
                     putString(preferenceKey, dialogEditText.text.toString())
+                    if (preferenceKey == "time_period_hours") {
+                        putBoolean("use_exact_alarms", exactAlarmSwitch.isChecked)
+                    }
                     apply()
                 }
 

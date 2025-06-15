@@ -22,5 +22,22 @@
         android:autofillHints="none"
         android:textColorHint="@color/dialogHintTextColor" />
 
+    <TextView
+        android:id="@+id/exactAlarmNoteTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/exact_alarm_note"
+        android:visibility="gone" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/exactAlarmSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/exact_alarm_toggle_title"
+        android:visibility="gone" />
+
+
 
 </LinearLayout>
