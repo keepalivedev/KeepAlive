@@ -114,6 +114,7 @@ class AlertService : Service() {
     }
 
     private fun scheduleTimeout() {
+        cancelTimeout()
         timeoutRunnable = Runnable {
             Log.d("AlertService", "sendAlert timed out after 2 minutes, stopping service")
             stopService()

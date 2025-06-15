@@ -144,8 +144,9 @@ class AlertNotificationHelper(private val context: Context) {
                 "Sending notification: $title, $content"
             )
 
-            // make sure we have notification permissions
-            if (ContextCompat.checkSelfPermission(
+            // make sure we have notification permissions on Android 13+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                ContextCompat.checkSelfPermission(
                     context,
                     Manifest.permission.POST_NOTIFICATIONS
                 ) != PackageManager.PERMISSION_GRANTED

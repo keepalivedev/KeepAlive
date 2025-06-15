@@ -222,7 +222,9 @@ class PermissionManager(private val context: Context, private val activity: AppC
 
                 // request the permission
                 Log.d(tag, "Requesting permission: $permission")
-                ActivityCompat.requestPermissions(activity!!, arrayOf(permission), 0)
+                activity?.let {
+                    ActivityCompat.requestPermissions(it, arrayOf(permission), 0)
+                } ?: Log.e(tag, "Activity reference is null, cannot request $permission")
             }
             .setNegativeButton(context.getString(R.string.cancel), null)
             .show()
@@ -240,7 +242,10 @@ class PermissionManager(private val context: Context, private val activity: AppC
                 // request the permission by taking the user to the settings page
                 Log.d(tag, "Requesting setting permission: $permission")
                 val myIntent = Intent(permission)
-                activity!!.startActivity(myIntent)
+                activity?.startActivity(myIntent) ?: run {
+                    myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(myIntent)
+                }
             }
             .setNegativeButton(context.getString(R.string.cancel), null)
             .show()
@@ -373,7 +378,7 @@ class PermissionManager(private val context: Context, private val activity: AppC
 
     fun checkUsageStatsPermissions(requestPermissions: Boolean): Boolean {
         Log.d(tag, "checking usage stats permissions")
-        val opsMan = context.getSystemService(AppCompatActivity.APP_OPS_SERVICE) as AppOpsManager
+        val opsMan = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
 
         // the function used to check whether we have permissions was changed in API 29
         val opsPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

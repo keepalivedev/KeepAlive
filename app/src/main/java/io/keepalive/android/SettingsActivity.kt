@@ -335,7 +335,7 @@ class SettingsActivity : AppCompatActivity() {
 
         // if we need to update the alarm
         if (updateAlarm) {
-            val newValue = sharedPrefs!!.getString("time_period_hours", "12")!!.toFloat()
+            val newValue = sharedPrefs!!.getString("time_period_hours", "12")?.toFloatOrNull() ?: 12f
 
             Log.d(
                 "processSettingChange",
@@ -535,7 +535,6 @@ class SettingsActivity : AppCompatActivity() {
                     @Suppress("DEPRECATION")
                     endMinute = dialogEndTimePicker.currentMinute
                 }
-
 
                 // if the start and end times are the same then this is not a valid time range so
                 //  show a toast and don't save the rest period
@@ -759,7 +758,6 @@ class SettingsActivity : AppCompatActivity() {
                 // try to convert the string to a float
                 val timeValue = value.toFloat()
 
-                // if we confirm its a valid value, make sure it is not too small
                 val minutes = if (preferenceKey == "time_period_hours") {
                     timeValue * 60
                 } else {
