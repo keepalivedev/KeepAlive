@@ -378,7 +378,7 @@ class SettingsActivity : AppCompatActivity() {
 
                 // show the exact alarm switch and explanatory note for this setting
                 exactAlarmSwitch.visibility = View.VISIBLE
-                exactAlarmSwitch.isChecked = sharedPrefs!!.getBoolean("exact_alarm", false)
+                exactAlarmSwitch.isChecked = sharedPrefs!!.getBoolean("use_exact_alarms", false)
                 exactAlarmNoteTextView.visibility = View.VISIBLE
             }
 
@@ -417,7 +417,7 @@ class SettingsActivity : AppCompatActivity() {
                 with(sharedPrefs!!.edit()) {
                     putString(preferenceKey, dialogEditText.text.toString())
                     if (preferenceKey == "time_period_hours") {
-                        putBoolean("exact_alarm", exactAlarmSwitch.isChecked)
+                        putBoolean("use_exact_alarms", exactAlarmSwitch.isChecked)
                     }
                     apply()
                 }

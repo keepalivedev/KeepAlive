@@ -303,6 +303,7 @@
     <string name="debug_log_failed_getting_shared_prefs">Failed getting shared preferences?!</string>
     <string name="debug_log_failed_getting_alarm_manager">Failed to get AlarmManager?!</string>
     <string name="debug_log_setting_periodic_alarm">Setting new periodic alarm for approximately %1$s UTC</string>
+    <string name="debug_log_setting_periodic_exact_alarm">Setting new periodic exact alarm for %1$s UTC</string>
     <string name="debug_log_setting_final_exact_alarm">Setting final exact alarm to go off at %1$s UTC</string>
     <string name="debug_log_unable_to_set_exact_alarm">Unable to set exact alarm?!  Setting normal final alarm to go off at %1$s UTC</string>
     <string name="debug_log_api_22_unable_to_set_exact_alarm">This is API 22 but we weren\'t able to set an exact alarm?!</string>
