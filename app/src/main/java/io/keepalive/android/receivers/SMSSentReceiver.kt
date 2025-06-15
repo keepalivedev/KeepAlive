@@ -14,7 +14,11 @@ class SMSSentReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
 
         // unregister the receiver so it doesn't get called again
-        context.unregisterReceiver(this)
+        try {
+            context.unregisterReceiver(this)
+        } catch (e: IllegalArgumentException) {
+            DebugLogger.d("SMSSentReceiver", "Receiver not registered", e)
+        }
 
         val result = when (resultCode) {
             Activity.RESULT_OK -> "SMS Sent"

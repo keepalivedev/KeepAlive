@@ -494,8 +494,8 @@ fun doAlertCheck(context: Context, alarmStage: String) {
     val prefs = getEncryptedSharedPreferences(context)
 
     // get the necessary preferences
-    val checkPeriodHours = prefs.getString("time_period_hours", "12")!!.toFloat()
-    val followupPeriodMinutes = prefs.getString("followup_time_period_minutes", "60")!!.toInt()
+    val checkPeriodHours = prefs.getString("time_period_hours", "12")?.toFloatOrNull() ?: 12f
+    val followupPeriodMinutes = prefs.getString("followup_time_period_minutes", "60")?.toIntOrNull() ?: 60
     val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(prefs,"REST_PERIODS")
     val appsToMonitor: MutableList<MonitoredAppDetails> = loadJSONSharedPreference(prefs,"APPS_TO_MONITOR")
 
