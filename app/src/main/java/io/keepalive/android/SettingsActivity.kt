@@ -509,7 +509,7 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        AlertDialog.Builder(this, R.style.AlertDialogTheme)
+        val dialog = AlertDialog.Builder(this, R.style.AlertDialogTheme)
             .setTitle(getString(R.string.rest_period_dialog_title))
             .setView(dialogView)
             .setPositiveButton(getString(R.string.save)) { _, _ ->
@@ -581,7 +581,46 @@ class SettingsActivity : AppCompatActivity() {
                 updateTextViewsFromPreferences()
             }
             .setNegativeButton(getString(R.string.cancel), null)
-            .show()
+            .create()
+
+        dialog.setOnShowListener {
+            val saveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+
+            fun updateSaveButtonState() {
+                val sHour: Int
+                val sMinute: Int
+                val eHour: Int
+                val eMinute: Int
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    sHour = dialogStartTimePicker.hour
+                    sMinute = dialogStartTimePicker.minute
+                    eHour = dialogEndTimePicker.hour
+                    eMinute = dialogEndTimePicker.minute
+                } else {
+                    @Suppress("DEPRECATION")
+                    sHour = dialogStartTimePicker.currentHour
+                    @Suppress("DEPRECATION")
+                    sMinute = dialogStartTimePicker.currentMinute
+                    @Suppress("DEPRECATION")
+                    eHour = dialogEndTimePicker.currentHour
+                    @Suppress("DEPRECATION")
+                    eMinute = dialogEndTimePicker.currentMinute
+                }
+
+                val enabled = !(sHour == eHour && sMinute == eMinute)
+                saveButton.isEnabled = enabled
+                val colorRes = if (enabled) R.color.primary else android.R.color.darker_gray
+                saveButton.setTextColor(ContextCompat.getColor(this, colorRes))
+            }
+
+            dialogStartTimePicker.setOnTimeChangedListener { _, _, _ -> updateSaveButtonState() }
+            dialogEndTimePicker.setOnTimeChangedListener { _, _, _ -> updateSaveButtonState() }
+
+            updateSaveButtonState()
+        }
+
+        dialog.show()
     }
 
     private fun showAddOrEditSMSContactDialog(
