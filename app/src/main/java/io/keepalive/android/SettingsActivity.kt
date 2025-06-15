@@ -509,7 +509,7 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        AlertDialog.Builder(this, R.style.AlertDialogTheme)
+        val dialog = AlertDialog.Builder(this, R.style.AlertDialogTheme)
             .setTitle(getString(R.string.rest_period_dialog_title))
             .setView(dialogView)
             .setPositiveButton(getString(R.string.save)) { _, _ ->
@@ -581,7 +581,46 @@ class SettingsActivity : AppCompatActivity() {
                 updateTextViewsFromPreferences()
             }
             .setNegativeButton(getString(R.string.cancel), null)
-            .show()
+            .create()
+
+        dialog.setOnShowListener {
+            val saveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+
+            fun updateSaveButtonState() {
+                val sHour: Int
+                val sMinute: Int
+                val eHour: Int
+                val eMinute: Int
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    sHour = dialogStartTimePicker.hour
+                    sMinute = dialogStartTimePicker.minute
+                    eHour = dialogEndTimePicker.hour
+                    eMinute = dialogEndTimePicker.minute
+                } else {
+                    @Suppress("DEPRECATION")
+                    sHour = dialogStartTimePicker.currentHour
+                    @Suppress("DEPRECATION")
+                    sMinute = dialogStartTimePicker.currentMinute
+                    @Suppress("DEPRECATION")
+                    eHour = dialogEndTimePicker.currentHour
+                    @Suppress("DEPRECATION")
+                    eMinute = dialogEndTimePicker.currentMinute
+                }
+
+                val enabled = !(sHour == eHour && sMinute == eMinute)
+                saveButton.isEnabled = enabled
+                val colorRes = if (enabled) R.color.primary else android.R.color.darker_gray
+                saveButton.setTextColor(ContextCompat.getColor(this, colorRes))
+            }
+
+            dialogStartTimePicker.setOnTimeChangedListener { _, _, _ -> updateSaveButtonState() }
+            dialogEndTimePicker.setOnTimeChangedListener { _, _, _ -> updateSaveButtonState() }
+
+            updateSaveButtonState()
+        }
+
+        dialog.show()
     }
 
     private fun showAddOrEditSMSContactDialog(
@@ -704,133 +743,114 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         override fun afterTextChanged(s: Editable?) {
+            s ?: return
 
-            if (s != null) {
+            when (preferenceKey) {
+                "time_period_hours", "followup_time_period_minutes" -> handleTimeInput(s.toString())
+                "contact_phone", "contact_sms_phone" -> handlePhoneInput(s.toString())
+                "alert_message" -> handleAlertMessage(s)
+            }
 
-                // make sure these values are valid floats
-                if (preferenceKey == "time_period_hours" || preferenceKey == "followup_time_period_minutes") {
+            updateSubmitButtonColor()
+        }
 
-                    // try to convert the string to a float
-                    try {
-                        val timeValue = s.toString().toFloat()
-                        submitButton.isEnabled = true
+        private fun handleTimeInput(value: String) {
+            try {
+                // try to convert the string to a float
+                val timeValue = value.toFloat()
 
-                        // if we confirm its a valid value, make sure it is not too small
-                        var valueInMinutes = timeValue
-
-                        if (preferenceKey == "time_period_hours") {
-                            valueInMinutes = timeValue * 60
-                        }
-
-                        // for either of these settings, make sure the value doesn't result
-                        //  in a minute value of less than 9 as we can't make alarms
-                        //  that frequently
-                        if (valueInMinutes < AppController.ALARM_MINIMUM_TIME_PERIOD_MINUTES) {
-                            submitButton.isEnabled = false
-
-                            showToast(context.getString(R.string.time_period_too_short_message))
-                        }
-                    } catch (e: Exception) {
-                        submitButton.isEnabled = false
-                    }
-                }
-
-                // if this is a phone number make sure it is valid before
-                //  enabling the submit button
-                else if (preferenceKey == "contact_phone" || preferenceKey == "contact_sms_phone") {
-
-                    // remove everything except numbers and the plus sign
-                    //  no reason to allow #, *, comma, or anything else right?
-                    val thisPhoneNumber = s.toString().filter { char ->
-                        char.isDigit() || char == '+'
-                    }
-
-                    // update EditText only if necessary to avoid infinite loop
-                    if (thisPhoneNumber != s.toString()) {
-
-                        // update the text and set cursor to the end
-                        editText.setText(thisPhoneNumber)
-                        editText.setSelection(thisPhoneNumber.length)
-                    }
-
-                    // this just checks a regex of "[\\+]?[0-9.-]+"...
-                    val isPhoneNumber = PhoneNumberUtils.isGlobalPhoneNumber(thisPhoneNumber)
-
-                    // SMS contact can't be blank but phone contact can be
-                    if (preferenceKey == "contact_sms_phone") {
-
-                        val shouldEnable = isPhoneNumber && thisPhoneNumber.isNotEmpty() && thisPhoneNumber.length > 1
-
-                        // if the phone number is valid and the alert message is valid then
-                        //  enable the button
-                        if (shouldEnable && alertMessageValid) {
-                            submitButton.isEnabled = true
-                            contactSMSPhoneValid = true
-
-                            // if just the phone number is valid then set this to true
-                        } else if (shouldEnable) {
-                            contactSMSPhoneValid = true
-
-                            // otherwise neither are valid
-                        } else {
-                            submitButton.isEnabled = false
-                            contactSMSPhoneValid = false
-                        }
-                    } else {
-
-                        // the phone contact number is simpler but make sure that it is at
-                        //  least 2 characters otherwise the formatting won't work
-                        // also let it be blank as a way for users to clear the setting
-                        submitButton.isEnabled = (isPhoneNumber && thisPhoneNumber.length > 1) || thisPhoneNumber.isEmpty()
-                    }
-
-                    // if the submit button isn't enabled then show a toast to let the user know
-                    //  that their input is invalid
-                    if (!submitButton.isEnabled) {
-
-                        Log.d("InputTextWatcher", "$thisPhoneNumber is not a valid phone number?!")
-
-                        // notify user that the phone number is invalid
-                        showToast(context.getString(R.string.phone_number_invalid_message))
-                    }
-                }
-
-                // if this is the alert message then we want to make sure it
-                //  not more than 160 characters
-                else if (preferenceKey == "alert_message") {
-
-                    // make sure the alert message is not too long or empty
-                    val shouldEnable = s.length <= AppController.SMS_MESSAGE_MAX_LENGTH && s.isNotEmpty()
-
-                    // if the current alert message is valid and so is the SMS phone number
-                    if (shouldEnable && contactSMSPhoneValid) {
-                        submitButton.isEnabled = true
-                        alertMessageValid = true
-
-                        // if just the alert message is valid
-                    } else if (shouldEnable) {
-                        alertMessageValid = true
-
-                        // otherwise if neither is valid
-                    } else {
-                        submitButton.isEnabled = false
-                        alertMessageValid = false
-                    }
-
-                    // if the length of the alert message is too long then show a toast
-                    if (s.length > AppController.SMS_MESSAGE_MAX_LENGTH) {
-                        showToast(context.getString(R.string.alarm_message_too_long_message))
-                    }
-                }
-
-                // regardless of the setting, if the submit button isn't enabled then
-                //  change the text color to gray to indicate that
-                if (submitButton.isEnabled) {
-                    submitButton.setTextColor(ContextCompat.getColor(context, R.color.primary))
+                // if we confirm its a valid value, make sure it is not too small
+                val minutes = if (preferenceKey == "time_period_hours") {
+                    timeValue * 60
                 } else {
-                    submitButton.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
+                    timeValue
+                }
+
+                // for either of these settings, make sure the value doesn't result
+                //  in a minute value of less than 9 as we can't make alarms
+                //  that frequently
+                val valid = minutes >= AppController.ALARM_MINIMUM_TIME_PERIOD_MINUTES
+                submitButton.isEnabled = valid
+
+                if (!valid) {
+                    showToast(context.getString(R.string.time_period_too_short_message))
+                }
+            } catch (_: Exception) {
+                submitButton.isEnabled = false
+            }
+        }
+
+        private fun handlePhoneInput(raw: String) {
+            // remove everything except numbers and the plus sign
+            //  no reason to allow #, *, comma, or anything else right?
+            val sanitized = raw.filter { it.isDigit() || it == '+' }
+
+            // update EditText only if necessary to avoid infinite loop
+            if (sanitized != raw) {
+                // update the text and set cursor to the end
+                editText.setText(sanitized)
+                editText.setSelection(sanitized.length)
+            }
+
+            // this just checks a regex of "[\\+]?[0-9.-]+"...
+            val isNumber = PhoneNumberUtils.isGlobalPhoneNumber(sanitized)
+
+            // SMS contact can't be blank but phone contact can be
+            if (preferenceKey == "contact_sms_phone") {
+                contactSMSPhoneValid = isNumber && sanitized.length > 1
+                // if the phone number is valid and the alert message is valid then
+                //  enable the button
+                submitButton.isEnabled = contactSMSPhoneValid && alertMessageValid
+                if (!contactSMSPhoneValid) {
+                    showToast(context.getString(R.string.phone_number_invalid_message))
+                }
+            } else {
+
+                // the phone contact number is simpler but make sure that it is at
+                //  least 2 characters otherwise the formatting won't work
+                // also let it be blank as a way for users to clear the setting
+                val phoneValid = sanitized.isEmpty() || (isNumber && sanitized.length > 1)
+                submitButton.isEnabled = phoneValid
+
+                // if the phone number isn't valid then show a toast to let the user know
+                //  that their input is invalid
+                if (!phoneValid && sanitized.isNotEmpty()) {
+                    showToast(context.getString(R.string.phone_number_invalid_message))
                 }
             }
+        }
+
+        private fun handleAlertMessage(s: Editable) {
+
+            // if this is the alert message then we want to make sure it
+            //  not more than 160 characters or empty
+            val validMessage = s.length <= AppController.SMS_MESSAGE_MAX_LENGTH && s.isNotEmpty()
+
+            // if the current alert message is valid and so is the SMS phone number
+            if (validMessage && contactSMSPhoneValid) {
+                submitButton.isEnabled = true
+            } else if (!validMessage) {
+                submitButton.isEnabled = false
+            }
+
+            alertMessageValid = validMessage
+
+            // if the length of the alert message is too long then show a toast
+            if (s.length > AppController.SMS_MESSAGE_MAX_LENGTH) {
+                showToast(context.getString(R.string.alarm_message_too_long_message))
+            }
+        }
+
+        private fun updateSubmitButtonColor() {
+
+            // regardless of the setting, if the submit button isn't enabled then
+            //  change the text color to gray to indicate that
+            val colorRes = if (submitButton.isEnabled) {
+                R.color.primary
+            } else {
+                android.R.color.darker_gray
+            }
+            submitButton.setTextColor(ContextCompat.getColor(context, colorRes))
         }
     }
 
