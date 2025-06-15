@@ -37,7 +37,6 @@ android {
         debug {
             // Append an identifier to the applicationId when debugging
             applicationIdSuffix ".debug"
-            buildDir = "D:\\build\\${rootProject.name}\\${project.name}"
         }
     }
     compileOptions {
