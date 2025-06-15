@@ -602,3 +602,12 @@ fun getColorCompat(context: Context, @ColorRes colorResId: Int): Int {
         context.resources.getColor(colorResId)
     }
 }
+
+fun maskPhoneNumber(phoneNumber: String): String {
+    if (phoneNumber.length <= 2) {
+        return phoneNumber
+    }
+
+    val maskedPart = "*".repeat(phoneNumber.length - 2)
+    return maskedPart + phoneNumber.takeLast(2)
+}
