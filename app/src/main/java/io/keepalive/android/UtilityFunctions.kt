@@ -228,19 +228,27 @@ fun setAlarm(
 
         // if the user has enabled exact alarms or if the API level is below M (API 23)
         // on API 22 we have to use setAlarmClock because there isn't a setAndAllowWhileIdle()
-        //  and .set() wouldn't be guaranteed to fire?
-        // note that this will cause an alarm clock icon to show up on the status bar
-        val useAlarmClock = shouldUseExactAlarms || Build.VERSION.SDK_INT < Build.VERSION_CODES.M
+        //  and .set() wouldn't be guaranteed to fire? no we can use setExact()...
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
 
-        if (useAlarmClock) {
+            DebugLogger.d("setAlarm", context.getString(R.string.debug_log_setting_periodic_exact_alarm, alarmDtStr))
+
+            alarmManager.setExact(
+                AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime() + newAlarmInMs,
+                pendingIntent
+            )
+
+            // if we should use an exact alarm and are on API 23+ then use setExactAndAllowWhileIdle
+        } else if (shouldUseExactAlarms) {
+
             DebugLogger.d("setAlarm", context.getString(R.string.debug_log_setting_periodic_exact_alarm, alarmDtStr))
 
             // Use exact alarm scheduling so the alarm will not be delayed by the OS
-            alarmManager.setAlarmClock(
-                AlarmManager.AlarmClockInfo(
-                    alarmTimestamp,
-                    pendingIntent
-                ), pendingIntent
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime() + newAlarmInMs,
+                pendingIntent
             )
         } else {
             DebugLogger.d("setAlarm", context.getString(R.string.debug_log_setting_periodic_alarm, alarmDtStr))
