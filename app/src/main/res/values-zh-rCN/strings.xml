@@ -90,24 +90,24 @@
 
     <!-- MainActivity textview and button messages -->
     <string name="monitoring_active_message">上一次检测到活动: %1$s\n下一次活动检测: %2$s小时%3$s分钟后</string>
-    <string name="monitoring_active_title">监测正常运行</string>
-    <string name="monitoring_impaired_title">监测正在运行\n但可能受损</string>
-    <string name="monitoring_inactive_message">监测已停止。\n点击按钮重新启动。</string>
-    <string name="monitoring_disabled_title">监测已禁用</string>
-    <string name="monitoring_disabled_message">点击设置以启用监测</string>
-    <string name="monitoring_no_activity_detected_title">无法进行监测</string>
+    <string name="monitoring_active_title">监测器正常运行</string>
+    <string name="monitoring_impaired_title">监测器正在运行\n但可能受损</string>
+    <string name="monitoring_inactive_message">监测器已停止。\n点击按钮重新启动。</string>
+    <string name="monitoring_disabled_title">监测器已禁用</string>
+    <string name="monitoring_disabled_message">点击设置以启用监测器</string>
+    <string name="monitoring_no_activity_detected_title">无法进行监测器</string>
     <string name="monitoring_permissions_required_title">需要授予权限</string>
-    <string name="monitoring_no_activity_detected_message">监测已启用，但在过去 %1$s 小时内未检测到任何活动。 请确保您已启用屏幕锁定并授予了使用情况访问权限。</string>
-    <string name="monitoring_permissions_required_message">监测已启用，但尚未授予所有权限。 请点击下面的授予权限按钮。</string>
+    <string name="monitoring_no_activity_detected_message">监测器已启用，但在过去 %1$s 小时内未检测到任何活动。 请确保您已启用屏幕锁定并授予了使用情况访问权限。</string>
+    <string name="monitoring_permissions_required_message">监测器已启用，但尚未授予所有权限。 请点击下面的授予权限按钮。</string>
     <string name="alarm_message_too_long_message">信息不得超过 160 个字符。</string>
     <string name="phone_number_invalid_message">请输入一个有效的电话号码。</string>
     <string name="time_period_too_short_message">时间间隔必须至少为 10 分钟。</string>
     <string name="test_phone_call_message">将至电:\n%1$s</string>
     <string name="test_sms_message">短信将发送至:\n%1$s</string>
-    <string name="unable_to_send_sms_message">无法发送短信/n请确认您已插入有效的SIM卡</string>
+    <string name="unable_to_send_sms_message">无法发送短信/n请插入有效的SIM卡</string>
     <string name="no_configured_contacts_message">没有设置联系人</string>
     <string name="permissions_button_text">授予权限</string>
-    <string name="restart_monitoring_button_text">重新启动监测</string>
+    <string name="restart_monitoring_button_text">重新启动监测器</string>
     <string name="check_app_restrictions_button_text">解除App限制</string>
     <string name="test_sms_alert_button_text">测试短信发送</string>
     <string name="test_phone_alert_button_text">测试电话拨号</string>
@@ -139,7 +139,7 @@
     <string name="sms_alert_failure_notification_text">尝试发送提醒短信时发生错误</string>
     <string name="sms_alert_failure_notification_text_with_error">尝试发送提醒短信时发生错误: %1$s</string>
     <string name="sms_service_failure_notification_title">无法发送提醒短信</string>
-    <string name="sms_service_failure_notification_text">在尝试发送提醒短信时发生错误，请确认是否插入有效的SIM卡</string>
+    <string name="sms_service_failure_notification_text">在尝试发送提醒短信时发生错误，请插入有效的SIM卡</string>
     <string name="sms_sent_toast_text">KeepAlive提醒短信已发送！</string>
     <string name="sms_failure_toast_text">发送KeepAlive提醒短信失败？！</string>
     <string name="alert_service_notification_title">正在发送提醒…</string>
@@ -167,7 +167,7 @@
 
     <!-- rest period dialog strings -->
     <string name="rest_period_dialog_title">设置休眠期</string>
-    <string name="rest_period_dialog_message">设置一个忽略闲置时间的时间范围。例如，将闲置多少小时触发提醒设置为6小时，休眠期为22:00–6:00，如果最后一次使用设备是在18:00，那么在8:00之前不会弹出\'Are you there?\'的通知。注意：如果\'Are you there?\'是在休眠期之前弹出的，那么提醒仍然可以在休眠期内发出。</string>
+    <string name="rest_period_dialog_message">设置一个不计算闲置时间的时间范围。例如，将闲置时间设置为6小时，休眠期为22:00–6:00，如果最后一次使用设备是在18:00，那么在8:00之前不会弹出\'Are you there?\'的通知。注意：如果\'Are you there?\'是在休眠期结束前弹出的，那么提醒仍会在休眠期内发出。</string>
     <string name="rest_period_dialog_time_zone_message"><![CDATA[使用系统默认时区: <b>%1$s</b>]]></string>
     <string name="rest_period_not_set_message">未设置</string>
     <string name="rest_period_start_time">开始时间</string>
@@ -175,14 +175,14 @@
     <string name="rest_period_invalid_range_message">开始时间和结束时间不能相同</string>
 
     <!-- Main Settings -->
-    <string name="enabled_title">启用监测</string>
-    <string name="disabled_title">监测已禁用</string>
-    <string name="auto_restart_title">发出提醒后继续监测</string>
-    <string name="time_period_title">闲置多少小时后触发提醒</string>
+    <string name="enabled_title">启用监测器</string>
+    <string name="disabled_title">监测器已禁用</string>
+    <string name="auto_restart_title">发出提醒后继续监测器</string>
+    <string name="time_period_title">闲置多久后触发提醒</string>
     <string name="time_period_description">设备超过 # 小时不活动，系统将发出 \'Are you there?\' 的通知。\n\n注意：此时间并不精确，系统可能会将此通知延迟最多 1 小时。</string>
-    <string name="followup_time_period_title">等待多少分钟后发出提醒</string>
+    <string name="followup_time_period_title">等待多久后发出提醒</string>
     <string name="rest_period_title">休眠期的时间范围</string>
-    <string name="followup_time_period_description">弹出 \'Are you there?\' 的通知后，要等待 # 分钟才会向您的联系人发出提醒。</string>
+    <string name="followup_time_period_description">弹出 \'Are you there?\' 的通知后，等待 # 分钟无人响应才会向您的联系人发出提醒。</string>
     <string name="contact_sms_phone_title">短信号码</string>
     <string name="contact_phone_title">电话拨号（可选）</string>
     <string name="add_sms_contact_button_text">短信发送</string>
@@ -206,7 +206,7 @@
     <string name="monitored_apps_not_configured_message">您的设备运行的是Android 8或更早版本。要使用KeepAlive，您必须首先选中其他应用程序。请单击监控方式进行设置。</string>
     <string name="monitored_apps_warning_dialog_title">App监测</string>
     <string name="monitored_apps_warning_dialog_message">该功能尚未完工，其行为可能因所选应用程序的不同而有所差异。KeepAlive会寻找来自应用程序的MOVE_TO_FOREGROUND事件，而这并不总是人类用户交互的结果。不应使用可能唤醒设备的应用程序，如闹钟、电话或媒体应用程序。</string>
-    <string name="monitored_apps_warning_dialog_message_alt">\n\n注意：该设备运行的是Android 9或更高版本，强烈建议使用屏幕锁定/屏幕解锁事件来代替APP监测。</string>
+    <string name="monitored_apps_warning_dialog_message_alt">\n\n注意：该设备运行的是Android 9或更高版本，强烈建议使用屏幕锁定/屏幕解锁事件来代替APP监测器。</string>
     <string name="monitored_apps_view_history_text">查看历史</string>
     <string name="monitored_apps_view_history_title">App History: %1$s</string>
     <string name="monitored_apps_history_date_header">Used At</string>
