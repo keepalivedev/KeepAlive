@@ -95,7 +95,7 @@
     <string name="monitoring_inactive_message">监测器已停止。\n点击按钮重新启动。</string>
     <string name="monitoring_disabled_title">监测器已禁用</string>
     <string name="monitoring_disabled_message">点击设置以启用监测器</string>
-    <string name="monitoring_no_activity_detected_title">无法进行监测器</string>
+    <string name="monitoring_no_activity_detected_title">无法进行监测</string>
     <string name="monitoring_permissions_required_title">需要授予权限</string>
     <string name="monitoring_no_activity_detected_message">监测器已启用，但在过去 %1$s 小时内未检测到任何活动。 请确保您已启用屏幕锁定并授予了使用情况访问权限。</string>
     <string name="monitoring_permissions_required_message">监测器已启用，但尚未授予所有权限。 请点击下面的授予权限按钮。</string>
