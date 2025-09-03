@@ -177,7 +177,7 @@
     <!-- Main Settings -->
     <string name="enabled_title">启用监测器</string>
     <string name="disabled_title">监测器已禁用</string>
-    <string name="auto_restart_title">发出提醒后继续监测器</string>
+    <string name="auto_restart_title">发出提醒后自动重启监测器</string>
     <string name="time_period_title">闲置多久后触发提醒</string>
     <string name="time_period_description">设备超过 # 小时不活动，系统将发出 \'Are you there?\' 的通知。\n\n注意：此时间并不精确，系统可能会将此通知延迟最多 1 小时。</string>
     <string name="followup_time_period_title">等待多久后发出提醒</string>
