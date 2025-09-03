@@ -129,7 +129,7 @@
     <string name="call_sent_notification_channel_description">触发电话提醒时发送</string>
     <string name="webhook_sent_notification_channel_description">触发Webhook提醒时发送</string>
     <string name="alert_service_notification_channel_description">发出提醒时显示</string>
-    <string name="activity_notification_message">Glad to see you are still alive! Cancelling Alert.</string>
+    <string name="activity_notification_message">很高兴看到你还活着！取消提醒。</string>
     <string name="initial_check_notification_title">Are you still there?</string>
     <string name="initial_check_notification_text">Click here if you are still alive! Otherwise an alert will be sent in %1$s minutes.</string>
     <string name="alert_notification_title">KeepAlive提醒已触发！</string>
