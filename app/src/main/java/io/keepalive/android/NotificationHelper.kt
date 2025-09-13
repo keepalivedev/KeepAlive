@@ -54,12 +54,14 @@ class AlertNotificationHelper(private val context: Context) {
                 context.getString(R.string.alert_service_notification_channel_description)
             )
 
-            // notification sent when a Webhook Alert is sent
-            createNotificationChannel(
-                AppController.WEBHOOK_SENT_NOTIFICATION_CHANNEL_ID,
-                context.getString(R.string.webhook_sent_notification_channel_title),
-                context.getString(R.string.webhook_sent_notification_channel_description)
-            )
+            if (BuildConfig.INCLUDE_WEBHOOK) {
+                // notification sent when a Webhook Alert is sent
+                createNotificationChannel(
+                    AppController.WEBHOOK_SENT_NOTIFICATION_CHANNEL_ID,
+                    context.getString(R.string.webhook_sent_notification_channel_title),
+                    context.getString(R.string.webhook_sent_notification_channel_description)
+                )
+            }
         }
     }
 
