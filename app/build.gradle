@@ -20,6 +20,9 @@ android {
         // "pm clear" command after each test invocation. This command ensures
         // that the app's state is completely cleared between tests.
         testInstrumentationRunnerArguments clearPackageData: 'true'
+
+        // by default include the webhook functionality
+        buildConfigField "boolean", "INCLUDE_WEBHOOK", "true"
     }
 
     // add a debug manifest
@@ -66,6 +69,27 @@ android {
                 includeInBundle = false
             }
         }
+
+        create("fDroidLite") {
+
+            // disable the webhook functionality
+            buildConfigField "boolean", "INCLUDE_WEBHOOK", "false"
+
+            // use a different application id so fDroid knows it is a different app
+            applicationId = "io.keepalive.lite.android"
+
+            dependenciesInfo {
+                // Disables dependency metadata when building APKs.
+                includeInApk = false
+                // Disables dependency metadata when building Android App Bundles.
+                includeInBundle = false
+            }
+        }
+    }
+
+    // fDroidLite uses the same platform-specific code as fDroid (like LocationHelper)
+    sourceSets.named("fDroidLite") {
+        java.srcDirs("src/fDroid/java")
     }
 }
 

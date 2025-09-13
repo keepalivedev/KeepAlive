@@ -147,11 +147,17 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         val alertWebhookRowLayout: LinearLayout = findViewById(R.id.alertWebhookRow)
-        alertWebhookRowLayout.setOnClickListener {
-            val webhookConfigManager = WebhookConfigManager(this, this)
 
-            // show the dialog and then update the text views after it is closed
-            webhookConfigManager.showWebhookConfigDialog(::updateTextViewsFromPreferences)
+        // only show the webhook row if this build includes webhook support
+        if (BuildConfig.INCLUDE_WEBHOOK) {
+            alertWebhookRowLayout.setOnClickListener {
+                val webhookConfigManager = WebhookConfigManager(this, this)
+
+                // show the dialog and then update the text views after it is closed
+                webhookConfigManager.showWebhookConfigDialog(::updateTextViewsFromPreferences)
+            }
+        } else {
+            alertWebhookRowLayout.visibility = View.GONE
         }
 
         val monitoredAppsRowLayout: LinearLayout = findViewById(R.id.monitoredAppsRow)
@@ -286,22 +292,24 @@ class SettingsActivity : AppCompatActivity() {
             restPeriodValueTextView.text = getString(R.string.rest_period_not_set_message)
         }
 
-        // update the alert webhook settings
-        val alertWebhookValueTextView: TextView = findViewById(R.id.edit_webhook)
+        // update the alert webhook settings if enabled
+        if (BuildConfig.INCLUDE_WEBHOOK) {
+            val alertWebhookValueTextView: TextView = findViewById(R.id.edit_webhook)
 
-        // make sure the webhook url isn't blank and limit the # of characters
-        val webhookUrl = sharedPrefs!!.getString("webhook_url", "")!!
+            // make sure the webhook url isn't blank and limit the # of characters
+            val webhookUrl = sharedPrefs!!.getString("webhook_url", "")!!
 
-        // if configured, limit the displayed webhook to 150 characters (arbitrary...)
-        // otherwise show a 'Not Configured' message
-        val webhookUrlDisplay = if (webhookUrl.length > 150) {
-            webhookUrl.substring(0, 150) + "..."
-        } else if (webhookUrl.isEmpty()) {
-            this.getString(R.string.webhook_not_configured)
-        } else {
-            webhookUrl
+            // if configured, limit the displayed webhook to 150 characters (arbitrary...)
+            // otherwise show a 'Not Configured' message
+            val webhookUrlDisplay = if (webhookUrl.length > 150) {
+                webhookUrl.substring(0, 150) + "..."
+            } else if (webhookUrl.isEmpty()) {
+                this.getString(R.string.webhook_not_configured)
+            } else {
+                webhookUrl
+            }
+            alertWebhookValueTextView.text = webhookUrlDisplay
         }
-        alertWebhookValueTextView.text = webhookUrlDisplay
     }
 
     private fun processSettingChange(preferenceKey: String) {
