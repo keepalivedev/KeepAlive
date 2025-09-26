@@ -81,7 +81,7 @@
     <string name="main_scroll_view_content_description">Scrollable Main Page</string>
 
     <!-- app hibernation/restriction stuff -->
-    <string name="hibernation_dialog_title">关闭App限制</string>
+    <string name="hibernation_dialog_title">解除App限制</string>
     <string name="hibernation_dialog_message"><![CDATA[Android会自动清除长期未使用App的隐私权限。  KeepAlive一旦完成初次设置，无需任何进一步的交互操作，权限可能被撤销并导致提醒无法发送。<br/><br/>为了确保权限不被撤销, 请禁用 <b>暂停闲置应用的活动</b> 的选项。]]></string>
     <string name="hibernation_dialog_message_api35"><![CDATA[Android会自动清除长期未使用App的隐私权限。  KeepAlive一旦完成初次设置，无需任何进一步的交互操作，权限可能被撤销并导致提醒无法发送。<br/><br/>为了确保权限不被撤销, 请禁用 <b>管理闲置应用</b> 的选项。]]></string>
     <string name="hibernation_dialog_message_api30"><![CDATA[Android会自动清除长期未使用App的隐私权限。  KeepAlive一旦设置完成，除非触发提醒，否则无需任何进一步的交互操作。<br/><br/>为了确保权限不被撤销, 请打开 <b>权限</b> 设置并禁用 <b>如果未使用此应用，则移除相关权限</b> 的选项。]]></string>
@@ -89,7 +89,7 @@
     <string name="hibernation_dialog_message_api_backport"><![CDATA[Android会自动清除长期未使用App的隐私权限。  KeepAlive一旦设置完成，除非触发提醒，否则无需任何进一步的交互操作。<br/><br/>为了确保权限不被撤销， 请禁用 <b>如果未使用此应用，则移除相关权限</b> 的选项。]]></string>
 
     <!-- MainActivity textview and button messages -->
-    <string name="monitoring_active_message">上一次检测到活动: %1$s\n下一次活动检测: %2$s小时%3$s分钟后</string>
+    <string name="monitoring_active_message">上一次检测: %1$s\n下一次活动: %2$s小时%3$s分钟后</string>
     <string name="monitoring_active_title">监测器正常运行</string>
     <string name="monitoring_impaired_title">监测器正在运行\n但可能受损</string>
     <string name="monitoring_inactive_message">监测器已停止。\n点击按钮重新启动。</string>
@@ -157,7 +157,7 @@
     <!-- SMS settings layout text view strings, some are just placeholders -->
     <string name="phone_number_title">电话号码</string>
     <string name="alert_message_title">提醒文本</string>
-    <string name="include_location_title">附带地理位置</string>
+    <string name="include_location_title">附带位置信息</string>
     <string name="sample_alert_message">提醒文本示例</string>
     <string name="include_location_information">附带位置信息</string>
     <string name="phone_number_hint">输入短信号码</string>
@@ -178,10 +178,10 @@
     <string name="enabled_title">启用监测器</string>
     <string name="disabled_title">监测器已禁用</string>
     <string name="auto_restart_title">发出提醒后自动重启监测器</string>
-    <string name="time_period_title">闲置多久后触发提醒</string>
+    <string name="time_period_title">闲置多久后弹出通知</string>
     <string name="time_period_description">设备超过 # 小时不活动，系统将发出 \'Are you there?\' 的通知。\n\n注意：此时间并不精确，系统可能会将此通知延迟最多 1 小时。</string>
     <string name="followup_time_period_title">等待多久后发出提醒</string>
-    <string name="rest_period_title">休眠期的时间范围</string>
+    <string name="rest_period_title">休眠期</string>
     <string name="followup_time_period_description">弹出 \'Are you there?\' 的通知后，等待 # 分钟无人响应才会向您的联系人发出提醒。</string>
     <string name="contact_sms_phone_title">短信号码</string>
     <string name="contact_phone_title">电话拨号（可选）</string>
@@ -248,7 +248,7 @@
 
     <!-- POST_NOTIFICATIONS Permission (For TIRAMISU and above) -->
     <string name="permission_post_notifications_title">需要授予权限: 发送通知</string>
-    <string name="permission_post_notifications_description">只有触发提醒时才会发送通知</string>
+    <string name="permission_post_notifications_description">只有检测到设备长期闲置时才会发送通知</string>
 
     <!-- ACCESS_BACKGROUND_LOCATION Permission (For Q and above) -->
     <string name="permission_access_background_location_title">需要授予权限: 在后台访问位置信息</string>
