@@ -200,7 +200,7 @@
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Monitoring Method</string>
     <string name="monitored_apps_dialog_title">Select 1 or more apps on your device</string>
-    <string name="monitored_apps_dialog_message">Usage of the selected app(s) will be used to determine when your device was last interacted with</string>
+    <string name="monitored_apps_dialog_message">Usage of the selected app(s) will be used to determine when your device was last interacted with. To revert to Device Lock/Unlock press \'Delete\'.</string>
     <string name="monitored_apps_chosen_title">Selected App(s)</string>
     <string name="monitored_apps_usage_history_dialog_title">App Usage History (72 hours)</string>
     <string name="monitored_apps_usage_history_message">These events may not always be a result of user activity. Please review them carefully before choosing this app.</string>

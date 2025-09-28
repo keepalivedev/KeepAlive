@@ -188,7 +188,7 @@
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Überwachungsmethode</string>
     <string name="monitored_apps_dialog_title">Wählen Sie 1 oder mehrere Apps auf Ihrem Gerät aus</string>
-    <string name="monitored_apps_dialog_message">Die Nutzung der ausgewählten App(s) wird verwendet, um festzustellen, wann zuletzt mit Ihrem Gerät interagiert wurde</string>
+    <string name="monitored_apps_dialog_message">Die Nutzung der ausgewählten App(s) wird verwendet, um festzustellen, wann Ihr Gerät zuletzt verwendet wurde. Um zur Gerätesperre/-entsperrung zurückzukehren, drücken Sie \'Löschen\'.</string>
     <string name="monitored_apps_chosen_title">Ausgewählte App(s)</string>
     <string name="monitored_apps_usage_history_dialog_title">App-Nutzungsverlauf (72 Stunden)</string>
     <string name="monitored_apps_usage_history_message">Diese Ereignisse können nicht immer auf Benutzeraktivität zurückzuführen sein. Bitte überprüfen Sie sie sorgfältig, bevor Sie diese App auswählen.</string>

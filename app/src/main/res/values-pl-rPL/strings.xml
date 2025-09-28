@@ -188,7 +188,7 @@
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Metoda monitorowania</string>
     <string name="monitored_apps_dialog_title">Wybierz 1 lub więcej aplikacji na swoim urządzeniu</string>
-    <string name="monitored_apps_dialog_message">Użycie wybranych aplikacji będzie wykorzystywane do określenia, kiedy ostatnio korzystano z urządzenia</string>
+    <string name="monitored_apps_dialog_message">Korzystanie z wybranych aplikacji będzie używane do określenia, kiedy ostatnio korzystano z urządzenia. Aby wrócić do blokady/odblokowania urządzenia, naciśnij \'Usuń\'.</string>
     <string name="monitored_apps_chosen_title">Wybrane aplikacje</string>
     <string name="monitored_apps_usage_history_dialog_title">Historia użycia aplikacji (72 godziny)</string>
     <string name="monitored_apps_usage_history_message">Te zdarzenia nie zawsze są wynikiem aktywności użytkownika. Przejrzyj je dokładnie przed wyborem tej aplikacji.</string>
