@@ -178,8 +178,8 @@
     <string name="rest_period_title">休眠期</string>
     <string name="followup_time_period_description">弹出 \'Are you there?\' 的通知后，等待 # 分钟无人响应才会向您的联系人发出提醒。</string>
     <string name="contact_sms_phone_title">短信号码</string>
-    <string name="contact_phone_title">电话拨号（可选）</string>
-    <string name="add_sms_contact_button_text">短信发送</string>
+    <string name="contact_phone_title">电话联系（可选）</string>
+    <string name="add_sms_contact_button_text">短信联系</string>
     <string name="contact_phone_description">触发提醒后，将向该电话号码拨打语音电话并启用免提功能。\n\n请注意，这需要授予额外的权限以便从后台拨打电话。</string>
     <string name="default_alert_message">Hello! I have not used my phone in a while and may be in need of assistance. Please send help!</string>
     <string name="default_alert_message_alt">Hey I may be dead, if I do not contact you in the next 24 hours, you know what to do.</string>
@@ -231,7 +231,7 @@
 
     <!-- USAGE_ACCESS_SETTINGS Permission -->
     <string name="permission_usage_access_title">需要授予权限: 使用情况访问</string>
-    <string name="permission_usage_access_description">为了确定最后一次使用设备的时间，需要授予一个名为使用访问统计的特殊权限。\n\n请为 Keep Alive 启用该权限。</string>
+    <string name="permission_usage_access_description">为了确定设备的最后一次使用时间，需要授予使用访问统计的特殊权限。\n\n请为 Keep Alive 启用该权限。</string>
 
     <!-- MANAGE_OVERLAY_PERMISSION Permission -->
     <string name="permission_manage_overlay_title">需要授予权限: 显示在其他应用的上层</string>
