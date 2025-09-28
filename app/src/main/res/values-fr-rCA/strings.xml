@@ -188,7 +188,7 @@
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Méthode de surveillance</string>
     <string name="monitored_apps_dialog_title">Sélectionnez 1 ou plusieurs applications sur votre appareil</string>
-    <string name="monitored_apps_dialog_message">L\'utilisation de l\'application ou des applications sélectionnées sera utilisée pour déterminer quand votre appareil a été utilisé pour la dernière fois</string>
+    <string name="monitored_apps_dialog_message">L\'utilisation des applications sélectionnées sera utilisée pour déterminer la dernière interaction avec votre appareil. Pour revenir au verrouillage/déverrouillage de l\'appareil, appuyez sur \'Supprimer\'.</string>
     <string name="monitored_apps_chosen_title">Application(s) sélectionnée(s)</string>
     <string name="monitored_apps_usage_history_dialog_title">Historique d\'utilisation des applications (72 heures)</string>
     <string name="monitored_apps_usage_history_message">Ces événements ne sont pas toujours le résultat de l\'activité de l\'utilisateur. Veuillez les examiner attentivement avant de choisir cette application.</string>
