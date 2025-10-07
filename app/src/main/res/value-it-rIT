@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>  
 <resources>  
       
-        <!-- Common strings -->  
-        <string name="yes">Sì</string>  
-        <string name="no">No</string>  
-        <string name="ok">OK</string>  
-        <string name="save">Salva</string>  
-        <string name="add">Aggiungi</string>  
-        <string name="delete">Elimina</string>  
-        <string name="close">Chiudi</string>  
-        <string name="cancel">Annulla</string>  
-        <string name="confirm">Conferma</string>  
-        <string name="back">Indietro</string>  
-        <string name="go_to_settings">Impostazioni</string>  
-        <string name="enabled">Attivato</string>  
-        <string name="disabled">Disattivato</string>  
+      <!-- Common strings -->  
+      <string name="yes">Sì</string>  
+      <string name="no">No</string>  
+      <string name="ok">OK</string>  
+      <string name="save">Salva</string>  
+      <string name="add">Aggiungi</string>                                                                        
+      <string name="delete">Elimina</string>  
+      <string name="close">Chiudi</string>  
+      <string name="cancel">Annulla</string>  
+      <string name="confirm">Conferma</string>  
+      <string name="back">Indietro</string>  
+      <string name="go_to_settings">Impostazioni</string>  
+      <string name="enabled">Attivato</string>  
+      <string name="disabled">Disattivato</string>  
       
-        <!-- webhook layout strings -->  
-        <string name="webhook_url_hint">URL del webhook</string>  
-        <string name="webhook_http_method_hint">Metodo HTTP</string>  
-        <string name="webhook_verify_certificate_label">Verifica il certificato</string>  
-        <string name="webhook_timeout_hint">Timeout (secondi)</string>  
-        <string name="webhook_retries_hint">Tentativi</string>  
-        <string name="webhook_include_location_hint">Includi la posizione nella richiesta?</string>  
-        <string name="webhook_headers_title">Intestazioni</string>  
-        <string name="webhook_add_header_button">Aggiungi intestazione</string>  
-        <string name="webhook_remove_header_button">Rimuovi intestazione</string>  
+      <!-- webhook layout strings -->  
+      <string name="webhook_url_hint">URL del webhook</string>  
+      <string name="webhook_http_method_hint">Metodo HTTP</string>  
+      <string name="webhook_verify_certificate_label">Verifica il certificato</string>  
+      <string name="webhook_timeout_hint">Timeout (secondi)</string>  
+      <string name="webhook_retries_hint">Tentativi</string>  
+      <string name="webhook_include_location_hint">Includi la posizione nella richiesta?</string>  
+      <string name="webhook_headers_title">Intestazioni</string>  
+      <string name="webhook_add_header_button">Aggiungi intestazione</string>  
+      <string name="webhook_remove_header_button">Rimuovi intestazione</string>  
         <string name="webhook_test_button">Testa il webhook</string>  
         <string name="webhook_toast_max_headers">Raggiunto il numero massimo di intestazioni (%1$s)</string>  
         <string name="webhook_dialog_title">Configurazione del webhook</string>  
