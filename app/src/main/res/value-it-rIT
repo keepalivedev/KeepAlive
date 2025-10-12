@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>  
+<resources>  
+      
+      <!-- Common strings -->  
+      <string name="yes">Sì</string>  
+      <string name="no">No</string>  
+      <string name="ok">OK</string>  
+      <string name="save">Salva</string>  
+      <string name="add">Aggiungi</string>                                                                        
+      <string name="delete">Elimina</string>  
+      <string name="close">Chiudi</string>  
+      <string name="cancel">Annulla</string>  
+      <string name="confirm">Conferma</string>  
+      <string name="back">Indietro</string>  
+      <string name="go_to_settings">Impostazioni</string>  
+      <string name="enabled">Attivato</string>  
+      <string name="disabled">Disattivato</string>  
+      
+      <!-- webhook layout strings -->  
+      <string name="webhook_url_hint">URL del webhook</string>  
+      <string name="webhook_http_method_hint">Metodo HTTP</string>  
+      <string name="webhook_verify_certificate_label">Verifica il certificato</string>  
+      <string name="webhook_timeout_hint">Timeout (secondi)</string>  
+      <string name="webhook_retries_hint">Tentativi</string>  
+      <string name="webhook_include_location_hint">Includi la posizione nella richiesta?</string>  
+      <string name="webhook_headers_title">Intestazioni</string>  
+      <string name="webhook_add_header_button">Aggiungi intestazione</string>  
+      <string name="webhook_remove_header_button">Rimuovi intestazione</string>  
+        <string name="webhook_test_button">Testa il webhook</string>  
+        <string name="webhook_toast_max_headers">Raggiunto il numero massimo di intestazioni (%1$s)</string>  
+        <string name="webhook_dialog_title">Configurazione del webhook</string>  
+        <string name="webhook_dialog_description">Quando viene attivato un avviso, verrà inviata una richiesta HTTP utilizzando le impostazioni sottostanti. Per impostazione predefinita, nessun altro dato è incluso nella richiesta. Se abilitato, i dati di posizione vengono inviati nel seguente formato:\n{\"lat\": latitudine, \"lon\": longitudine, \"acc\": precisione, \"address\": \"indirizzo\", \"loc_message\": \"messaggio di posizione\"}.</string>  
+        <string name="webhook_not_configured">Non configurato</string>  
+        <string name="webhook_location_do_not_include">Non includere</string>  
+        <string name="webhook_location_body_json">Corpo - JSON</string>  
+        <string name="webhook_location_body_form">Corpo - Formulario</string>  
+        <string name="webhook_location_query_parameters">Parametri di query</string>  
+        <string name="webhook_url_empty_error">Si prega di inserire un URL webhook</string>  
+        <string name="webhook_url_invalid_error">URL non valido</string>  
+        <string name="webhook_url_invalid_error_with_url">URL non valido: %1$s</string>  
+        <string name="webhook_timeout_invalid_error">Valore di timeout non valido</string>  
+        <string name="webhook_retries_invalid_error">Valore di tentativi non valido</string>  
+        <string name="webhook_timeout_max_error">Il timeout massimo è %1$s</string>  
+        <string name="webhook_retries_max_error">Il numero massimo di tentativi è %1$s</string>  
+        <string name="webhook_header_name">Nome</string>  
+        <string name="webhook_header_value">Valore</string>  
+        <string name="webhook_header_name_empty_error">Il nome non può essere vuoto</string>  
+        <string name="webhook_header_name_length_error">La lunghezza massima del nome è %1$s</string>  
+        <string name="webhook_header_value_length_error">La lunghezza massima del valore è %1$s</string>  
+        <string name="webhook_header_name_invalid_error">Il nome contiene caratteri non validi</string>  
+        <string name="webhook_header_value_invalid_error">Il valore contiene caratteri non validi</string>  
+        <string name="webhook_request_success_toast_text">Successo! Il codice di risposta era %1$d</string>  
+        <string name="webhook_request_error_code_toast_text">Fallito! Il codice di risposta era %1$d</string>  
+        <string name="webhook_request_failure_toast_text">Fallito! L\'errore era %1$s</string>  
+        <string name="webhook_request_success_notification_title">Webhook Keep Alive riuscito!</string>  
+        <string name="webhook_request_success_notification_text">Il codice di risposta era %1$d</string>  
+        <string name="webhook_request_failure_notification_title">Webhook Keep Alive fallito!</string>  
+        <string name="webhook_request_failure_code_notification_text">Il codice di risposta era %1$d</string>  
+        <string name="webhook_request_failure_error_notification_text">Errore: %1$s</string>  
+      
+        <!-- action settings -->  
+        <string name="action_settings">Impostazioni</string>  
+        <string name="action_about">Informazioni</string>  
+        <string name="action_logdisplay">Log di debug</string>  
+        <string name="about_dialog_title">Informazioni su Keep Alive</string>  
+      
+        <!-- item_phone_number content descriptions that are set based on the item position -->  
+        <string name="enable_switch_enabled_content_desc">Voce %1$s abilitata</string>  
+        <string name="location_switch_enabled_content_desc">Voce %1$s Posizione abilitata</string>  
+        <string name="main_scroll_view_content_description">Pagina principale scorrevole</string>  
+      
+        <!-- app hibernation/restriction stuff -->  
+        <string name="hibernation_dialog_title">Disattiva la limitazione dell'app</string>  
+        <string name="hibernation_dialog_message"><![CDATA[Android ora rimuove automaticamente le autorizzazioni per le app che non sono state utilizzate di recente. Keep Alive, una volta configurato, non richiede ulteriori interazioni e potrebbe vedersi revocare le autorizzazioni.<br/><br/>Per garantire che Keep Alive possa funzionare, disattivare l'opzione <b>Sospendi l'attività dell'app se non utilizzata</b> per l'applicazione Keep Alive.]]></string>  
+        <string name="hibernation_dialog_message_api35"><![CDATA[Android ora rimuove automaticamente le autorizzazioni per le app che non sono state utilizzate di recente. Keep Alive, una volta configurato, non richiede ulteriori interazioni e potrebbe vedersi revocare le autorizzazioni.<br/><br/>Per assicurarsi che le autorizzazioni non vengano revocate, disattivare l'opzione <b>"Gestisci l'app se non utilizzata"</b> per l'applicazione Keep Alive.]]></string>  
+        <string name="hibernation_dialog_message_api30"><![CDATA[Android ora rimuove automaticamente le autorizzazioni per le app che non sono state utilizzate di recente. Keep Alive, una volta configurato, non richiede ulteriori interazioni a meno che non venga attivato un avviso.<br/><br/>Per assicurarsi che le autorizzazioni non vengano revocate, accedere alla sezione <b>Autorizzazioni</b> per Keep Alive e disattivare l'opzione <b>Rimuovi autorizzazioni se l'app non viene utilizzata</b>.]]></string>  
+        <string name="hibernation_dialog_message_api31"><![CDATA[Android ora rimuove automaticamente le autorizzazioni per le app che non sono state utilizzate di recente. Keep Alive, una volta configurato, non richiede ulteriori interazioni a meno che non venga attivato un avviso.<br/><br/>Per garantire che le autorizzazioni non vengano revocate, disattivare l'opzione <b>Rimuovi autorizzazioni e libera spazio</b> per l'applicazione Keep Alive.]]></string>  
+        <string name="hibernation_dialog_message_api_backport"><![CDATA[Android ora rimuove automaticamente le autorizzazioni per le app che non sono state utilizzate di recente. Keep Alive, una volta configurato, non richiede ulteriori interazioni a meno che non venga attivato un avviso.<br/><br/>Per garantire che le autorizzazioni non vengano revocate, disattivare l'opzione <b>Rimuovi le autorizzazioni se l'app non viene utilizzata</b>.]]></string>  
+      
+        <!-- MainActivity textview and button messages -->  
+        <string name="monitoring_active_message">Ultima attività rilevata a: %1$s\nProssima registrazione attività: %2$s ore e %3$s minuti</string>  
+        <string name="monitoring_active_title">Monitoraggio attivo</string>  
+        <string name="monitoring_impaired_title">Monitoraggio attivo\nMa potrebbe essere compromesso</string>  
+        <string name="monitoring_inactive_message">Il monitoraggio non è attivo.\nFare clic sul pulsante per riavviarlo.</string>  
+        <string name="monitoring_disabled_title">Monitoraggio disattivato</string>  
+        <string name="monitoring_disabled_message">Utilizza le impostazioni per attivare</string>  
+        <string name="monitoring_no_activity_detected_title">Monitoraggio impossibile</string>  
+        <string name="monitoring_permissions_required_title">Autorizzazioni richieste</string>  
+        <string name="monitoring_no_activity_detected_message">Il monitoraggio è attivato, ma non è stata rilevata alcuna attività nelle ultime %1$s ore. Assicurati che il tuo blocco schermo sia attivo e di aver concesso le autorizzazioni di accesso all'utilizzo.</string>  
+        <string name="monitoring_permissions_required_message">Il monitoraggio è attivato, ma non tutte le autorizzazioni sono state concesse. Fare clic sul pulsante "Concedi autorizzazioni" sottostante.</string>  
+        <string name="alarm_message_too_long_message">Il messaggio non può contenere più di 160 caratteri.</string>  
+        <string name="phone_number_invalid_message">Si prega di inserire un numero di telefono valido.</string>  
+        <string name="time_period_too_short_message">L'intervallo deve essere di almeno 10 minuti.</string>  
+        <string name="test_phone_call_message">Verrà effettuata una telefonata a:\n%1$s</string>  
+        <string name="test_sms_message">Il/i messaggio/i SMS verranno inviati a:\n%1$s</string>  
+        <string name="unable_to_send_sms_message">Impossibile inviare SMS\nVerifica di avere una SIM attiva</string>  
+        <string name="no_configured_contacts_message">Nessun contatto di emergenza configurato</string>  
+        <string name="permissions_button_text">Concedi autorizzazioni</string>  
+        <string name="restart_monitoring_button_text">Riavvia il monitoraggio</string>  
+        <string name="check_app_restrictions_button_text">Disattiva le restrizioni dell'app</string>  
+        <string name="test_sms_alert_button_text">Test di avviso: SMS</string>  
+        <string name="test_phone_alert_button_text">Test di avviso: Chiamata</string>  
+        <string name="test_alert_confirmation_title">Conferma l'avviso di test via SMS</string>  
+        <string name="test_alert_switch_include_warning_text">Includi un messaggio di avviso</string>  
+        <string name="test_sms_configured_contacts_message">Questo invierà un avviso di test via SMS ai tuoi contatti di emergenza configurati: %1$s.</string>  
+        <string name="test_alert_confirmation_message_with_count"><![CDATA[Verranno inviati un totale di <b>%1$d</b> SMS. Vuoi continuare?]]></string>  
+        <string name="test_alert_sms_default_message">I messaggi seguenti sono un test dell'applicazione Keep Alive. Si prega di confermare la ricezione!</string>  
+        <string name="test_alert_warning_message_explanation">Il messaggio sottostante verrà inviato a ciascun contatto abilitato prima dell'invio del messaggio di avviso configurato.</string>  
+      
+        <!-- notification strings -->  
+        <string name="default_notification_channel_title">Notifiche di avviso</string>  
+        <string name="sms_sent_notification_channel_title">Notifiche di invio SMS</string>  
+        <string name="call_sent_notification_channel_title">Notifiche di chiamata inviata</string>  
+        <string name="webhook_sent_notification_channel_title">Notifiche di invio webhook</string>  
+        <string name="alert_service_notification_channel_title">Notifiche del servizio di avviso</string>  
+        <string name="default_notification_channel_description">Ci sei?</string>  
+        <string name="sms_sent_notification_channel_description">Inviato quando viene attivato un avviso SMS</string>  
+        <string name="call_sent_notification_channel_description">Inviato quando viene attivato un avviso di chiamata telefonica</string>  
+        <string name="webhook_sent_notification_channel_description">Inviato quando viene attivato un avviso webhook</string>  
+        <string name="alert_service_notification_channel_description">Visualizzato durante l'invio di un avviso</string>  
+        <string name="activity_notification_message">Contento di vedere che sei ancora vivo! Annullamento dell'avviso.</string>  
+        <string name="initial_check_notification_title">Ci sei ancora?</string>  
+        <string name="initial_check_notification_text">Clicca qui se sei ancora vivo! Altrimenti, un avviso verrà inviato tra %1$s minuti.</string>  
+        <string name="alert_notification_title">Avviso Keep Alive attivato!</string>  
+        <string name="call_alert_notification_text">Una telefonata è stata effettuata al tuo contatto di emergenza: %1$s</string>  
+        <string name="sms_alert_notification_text">Un SMS è stato inviato al/i tuo/i contatto/i di emergenza!</string>  
+        <string name="sms_alert_failure_notification_title">Fallito l'invio dell'avviso SMS</string>  
+        <string name="sms_alert_failure_notification_text">Si è verificato un errore durante il tentativo di invio di un SMS di avviso</string>  
+        <string name="sms_alert_failure_notification_text_with_error">Si è verificato un errore durante il tentativo di invio di un SMS di avviso: %1$s</string>  
+        <string name="sms_service_failure_notification_title">Impossibile trasmettere l'avviso SMS</string>  
+        <string name="sms_service_failure_notification_text">Si è verificato un errore durante il tentativo di invio di un SMS di avviso, si prega di verificare di avere una SIM attiva</string>  
+        <string name="sms_sent_toast_text">Avviso SMS Keep Alive inviato!</string>  
+        <string name="sms_failure_toast_text">Fallito l'invio dell'SMS di avviso Keep Alive?!</string>  
+        <string name="alert_service_notification_title">Invio dell'avviso in corso...</string>  
+        <string name="alert_service_notification_message">L'avviso (o gli avvisi) è in corso di invio ai tuoi contatti configurati, si prega di attendere.</string>  
+      
+        <!-- alert location strings -->  
+        <string name="location_invalid_message">Impossibile determinare la posizione.</string>  
+        <string name="geocode_invalid_message">Impossibile geocodificare la posizione. Le coordinate GPS sono (%1$s, %2$s). Precisione (m): %3$s.</string>  
+        <string name="geocode_valid_message">Coordinate GPS: (%1$s, %2$s). Precisione (m): %3$s. Indirizzo possibile: %4$s</string>  
+      
+        <!-- Preference Titles -->  
+        <string name="main_header">Impostazioni principali</string>  
+        <string name="contact_header">Numeri di contatto di emergenza</string>  
+      
+        <!-- SMS settings layout text view strings, some are just placeholders -->  
+        <string name="phone_number_title">Numero di telefono</string>  
+        <string name="alert_message_title">Messaggio di avviso</string>  
+        <string name="include_location_title">Includi la posizione</string>  
+        <string name="sample_alert_message">Esempio di messaggio di avviso</string>  
+        <string name="include_location_information">Includi le informazioni sulla posizione</string>  
+        <string name="phone_number_hint">Inserire il numero di telefono</string>  
+        <string name="alert_message_hint">Inserire un messaggio di avviso</string>  
+        <string name="delete_phone_number_dialog_title">Elimina il contatto di emergenza</string>  
+        <string name="delete_phone_number_dialog_description">Sei sicuro di voler eliminare questa voce?</string>  
+      
+        <!-- rest period dialog strings -->  
+        <string name="rest_period_dialog_title">Configura il periodo di riposo</string>  
+        <string name="rest_period_dialog_message">Definisci un intervallo di tempo durante il quale l'inattività non verrà conteggiata. Ad esempio, con le "Ore di inattività" impostate su 6 ore e un Periodo di riposo dalle 22:00 alle 6:00, se il dispositivo viene utilizzato per l'ultima volta alle 18:00, il controllo "Ci sei?" verrà inviato solo alle 8:00.\n\nNOTA: Un avviso può comunque essere inviato durante un periodo di riposo se il controllo "Ci sei?" è stato inviato PRIMA dell'inizio di un periodo di riposo.</string>  
+        <string name="rest_period_dialog_time_zone_message"><![CDATA[Gli orari utilizzano il fuso orario predefinito del sistema: <b>%1$s</b>]]></string>  
+        <string name="rest_period_not_set_message">Non ancora impostato</string>  
+        <string name="rest_period_start_time">Ora di inizio</string>  
+        <string name="rest_period_end_time">Ora di fine</string>  
+        <string name="rest_period_invalid_range_message">L'ora di inizio e di fine non possono essere le stesse</string>  
+      
+        <!-- Main Settings -->  
+        <string name="enabled_title">Monitoraggio attivato</string>  
+        <string name="disabled_title">Monitoraggio disattivato</string>  
+        <string name="auto_restart_title">Monitoraggio di riavvio automatico dopo l'avviso</string>  
+        <string name="time_period_title">Ore di inattività prima della notifica</string>  
+        <string name="time_period_description">Il numero di ore di inattività prima di ricevere una notifica "Ci sei?".\n\nNOTA: Questo ritardo non è esatto e il sistema potrebbe ritardare questa notifica fino a un'ora.</string>  
+        <string name="followup_time_period_title">Minuti di attesa per la conferma</string>  
+        <string name="rest_period_title">Intervallo di tempo del periodo di riposo</string>  
+        <string name="followup_time_period_description">Il numero di minuti da attendere dopo l'invio di una notifica "Ci sei?" prima che un avviso venga inviato ai tuoi contatti di emergenza</string>  
+        <string name="contact_sms_phone_title">Numero di telefono SMS</string>  
+        <string name="contact_phone_title">Numero di telefono da chiamare (facoltativo)</string>  
+        <string name="add_sms_contact_button_text">Aggiungi un contatto di emergenza SMS</string>  
+        <string name="contact_phone_description">Quando viene attivato un avviso, verrà effettuata una telefonata a questo numero di telefono con l'altoparlante attivato.\n\nSi prega di notare che ciò richiede autorizzazioni aggiuntive affinché le telefonate possano essere effettuate in background.</string>  
+        <string name="default_alert_message">Ciao! Non uso il mio telefono da un po' e potrei aver bisogno di aiuto. Per favore, mandate aiuto!</string>  
+        <string name="default_alert_message_alt">Ehi, potrei essere morto, se non ti contatto nelle prossime 24 ore, sai cosa fare.</string>  
+        <string name="add_emergency_contact_title">Aggiungi un contatto di emergenza</string>  
+        <string name="edit_emergency_contact_title">Modifica un contatto di emergenza</string>  
+        <string name="webhook_title">Webhook di avviso</string>  
+        <string name="webhook_url_title">URL del webhook</string>  
+      
+        <!-- Monitored Apps strings -->  
+        <string name="monitored_apps_title">Metodo di monitoraggio</string>  
+        <string name="monitored_apps_dialog_title">Seleziona 1 o più applicazioni sul tuo dispositivo</string>  
+        <string name="monitored_apps_dialog_message">L'utilizzo dell'applicazione o delle applicazioni selezionate verrà utilizzato per determinare quando il tuo dispositivo è stato utilizzato l'ultima volta</string>  
+        <string name="monitored_apps_chosen_title">Applicazione/i selezionata/e</string>  
+        <string name="monitored_apps_usage_history_dialog_title">Cronologia di utilizzo delle app (72 ore)</string>  
+        <string name="monitored_apps_usage_history_message">Questi eventi non sono sempre il risultato dell'attività dell'utente. Si prega di esaminarli attentamente prima di scegliere questa applicazione.</string>  
+        <string name="monitored_apps_recently_used_title">Applicazioni utilizzate di recente (ultime 72 ore)</string>  
+        <string name="monitored_apps_not_configured_title">Metodo di monitoraggio non configurato</string>  
+        <string name="monitored_apps_not_configured_message">Il tuo dispositivo funziona con Android 8 o una versione precedente. Per poter utilizzare Keep Alive, devi prima selezionare l'altra/e applicazione/i che verranno utilizzate per monitorare l'attività. Si prega di fare clic sull'impostazione Metodo di monitoraggio per configurare.</string>  
+        <string name="monitored_apps_warning_dialog_title">Monitoraggio delle applicazioni</string>  
+        <string name="monitored_apps_warning_dialog_message">Questa funzionalità è in fase di sviluppo e il comportamento può variare a seconda dell'applicazione o delle applicazioni selezionate. Keep Alive cerca un evento MOVE_TO_FOREGROUND dell'applicazione o delle applicazioni, che non è sempre il risultato di un'interazione dell'utente. Le applicazioni che possono riattivare il tuo dispositivo, come le applicazioni di allarme, telefono o media, non devono essere utilizzate.</string>  
+        <string name="monitored_apps_warning_dialog_message_alt">\n\nNOTA: Questo dispositivo funziona con Android 9 o versioni successive, si consiglia vivamente di utilizzare gli eventi di blocco/sblocco del dispositivo invece del monitoraggio delle applicazioni.</string>  
+        <string name="monitored_apps_view_history_text">Visualizza la cronologia</string>  
+        <string name="monitored_apps_view_history_title">Cronologia dell'app: %1$s</string>  
+        <string name="monitored_apps_history_date_header">Utilizzato a</string>  
+        <string name="monitored_apps_history_name_header">Nome dell'attività</string>  
+        <string name="monitored_apps_no_usage_stats_permissions_dialog_title">Autorizzazioni richieste</string>  
+        <string name="monitored_apps_no_usage_stats_permissions_dialog_message">Per configurare questa impostazione, devi prima concedere l'autorizzazione Statistiche di utilizzo. Fare clic sul pulsante Indietro per tornare alla pagina principale e fare clic sul pulsante "Concedi autorizzazioni".</string>  
+      
+        <!-- Log Display strings -->  
+        <string name="log_display_increase_size_button_text">Dimensione +</string>  
+        <string name="log_display_decrease_size_button_text">Dimensione -</string>  
+        <string name="log_display_copy_button_text">Copia</string>  
+        <string name="log_display_copy_button_toast">Testo copiato</string>  
+        <string name="log_display_delete_dialog_title">Eliminare i log?</string>  
+        <string name="log_display_delete_dialog_message">Sei sicuro di voler eliminare tutti i log salvati?</string>  
+      
+        <!-- SEND_SMS Permission -->  
+        <string name="permission_send_sms_title">Autorizzazione richiesta: Inviare messaggi SMS</string>  
+        <string name="permission_send_sms_description">L'SMS è utilizzato come metodo di notifica principale quando viene attivato un avviso.</string>  
+      
+        <!-- CALL_PHONE Permission -->  
+        <string name="permission_call_phone_title">Autorizzazione richiesta: Effettuare telefonate</string>  
+        <string name="permission_call_phone_description">È stato fornito un numero di telefono per un contatto di emergenza, il che richiede la possibilità di effettuare una telefonata.</string>  
+      
+        <!-- READ_PHONE_STATE Permission -->  
+        <string name="permission_read_phone_state_title">Autorizzazione richiesta: Gestire le chiamate telefoniche</string>  
+        <string name="permission_read_phone_state_description">A causa di un bug in Android 8, l'autorizzazione per gestire le chiamate telefoniche è necessaria per inviare SMS.</string>  
+      
+        <!-- USAGE_ACCESS_SETTINGS Permission -->  
+        <string name="permission_usage_access_title">Autorizzazione richiesta: Accesso alle statistiche di utilizzo</string>  
+        <string name="permission_usage_access_description">Per determinare quando il tuo dispositivo è stato utilizzato l'ultima volta, è richiesta un'autorizzazione speciale chiamata "Usage Access Stats" (Accesso alle statistiche di utilizzo).\n\nSi prega di attivare questa autorizzazione per l'applicazione Keep Alive.</string>  
+      
+        <!-- MANAGE_OVERLAY_PERMISSION Permission -->  
+        <string name="permission_manage_overlay_title">Autorizzazione richiesta: Gestire la sovrapposizione</string>  
+        <string name="permission_manage_overlay_description">È stato fornito un numero di telefono di chiamata di emergenza, il che richiede la possibilità di effettuare una telefonata in background.\n\nSi prega di attivare l'autorizzazione Gestisci la sovrapposizione per l'applicazione Keep Alive nelle impostazioni del tuo dispositivo.</string>  
+      
+        <!-- ACCESS_FINE_LOCATION Permission -->  
+        <string name="permission_access_fine_location_title">Autorizzazione richiesta: Accedere alla posizione precisa</string>  
+        <string name="permission_access_fine_location_description">"Includi le informazioni sulla posizione" è attivato, il che richiede la possibilità di ottenere informazioni sulla posizione precise in modo che siano il più accurate possibile, il che può aiutare il tuo contatto di emergenza a localizzarti.</string>  
+      
+        <!-- POST_NOTIFICATIONS Permission (For TIRAMISU and above) -->  
+        <string name="permission_post_notifications_title">Autorizzazione richiesta: Inviare notifiche</string>  
+        <string name="permission_post_notifications_description">Le notifiche vengono inviate solo quando viene attivato un avviso</string>  
+      
+        <!-- ACCESS_BACKGROUND_LOCATION Permission (For Q and above) -->  
+        <string name="permission_access_background_location_title">Autorizzazione richiesta: Accesso alla posizione in background</string>  
+        <string name="permission_access_background_location_description">"Includi le informazioni sulla posizione" è attivato, il che richiede la possibilità di ottenere informazioni sulla posizione durante l'esecuzione in background. La posizione viene ottenuta solo quando viene attivato un avviso, le cui condizioni dovrebbero verificarsi solo quando l'applicazione è in background e il dispositivo è inattivo. Si prega di attivare questa autorizzazione per l'applicazione Keep Alive nelle impostazioni del tuo dispositivo selezionando "Consenti sempre".</string>  
+      
+        <!-- REQUEST_SCHEDULE_EXACT_ALARM Permission (For S and above) -->  
+        <string name="permission_schedule_alarms_title">Autorizzazione richiesta: Pianificare allarmi</string>  
+        <string name="permission_schedule_alarms_description">La pianificazione degli allarmi è richiesta affinché l'avviso possa attivarsi anche quando il tuo dispositivo è inattivo o in modalità Non disturbare.\n\nSi prega di attivare questa autorizzazione per l'applicazione KeepAlive nelle impostazioni del tuo dispositivo.</string>  
+      
+        <!-- AlertFunctions.kt -->  
+        <string name="debug_log_doing_alert_check">Esecuzione di una verifica periodica, il passaggio di avviso è %1$s</string>  
+        <string name="debug_log_sending_alert_sms">Invio di un SMS di avviso!</string>  
+        <string name="debug_log_getting_sms_manager_with_sub_id">Ottenimento del gestore SMS con context.getSystemService e l'ID di abbonamento %1$d</string>  
+        <string name="debug_log_getting_sms_manager_with_context">Ottenimento del gestore SMS con context.getSystemService</string>  
+        <string name="debug_log_getting_default_sms_manager">Ottenimento del gestore SMS predefinito</string>  
+        <string name="debug_log_getting_default_sms_manager_for_sub_id">Ottenimento del gestore SMS predefinito per l'ID di abbonamento %1$d</string>  
+        <string name="debug_log_exception_while_getting_sms_manager">Eccezione durante l'ottenimento del gestore SMS: %1$s</string>  
+        <string name="debug_log_failed_getting_sms_manager">Fallito l'ottenimento del gestore SMS?!</string>  
+        <string name="debug_log_sending_text_message_to">Invio di un messaggio di testo a: %1$s</string>  
+        <string name="debug_log_sending_multipart_sms">Invio di un messaggio SMS multipartite con %1$d parti</string>  
+        <string name="debug_log_sending_single_sms">Invio di un singolo messaggio SMS</string>  
+        <string name="debug_log_failed_sending_sms">Fallito l'invio del messaggio SMS a %1$s!? %2$s</string>  
+        <string name="debug_log_sms_phone_blank">Il numero di telefono SMS era vuoto?!</string>  
+        <string name="debug_log_sending_location_message_to">Invio di un messaggio di posizione a: %1$s</string>  
+        <string name="debug_log_failed_sending_location_sms">Fallito l'invio del messaggio SMS di posizione a %1$s!?</string>  
+        <string name="debug_log_placing_alert_phone_call">Effettuare una telefonata di avviso a %1$s</string>  
+        <string name="debug_log_no_call_phone_permission">Impossibile effettuare la chiamata, non le autorizzazioni?!</string>  
+        <string name="debug_log_checking_for_activity">verifica dell'attività da %1$s ora locale</string>  
+        <string name="debug_log_checking_for_system_events">Verifica degli eventi di blocco/sblocco del sistema</string>  
+        <string name="debug_log_failed_getting_last_phone_activity">Fallito l'ottenimento dell'ultima attività del telefono?!</string>  
+        <string name="debug_log_no_events_sending_notification">nessun evento trovato nelle ultime %1$.2f ore, invio della notifica Ci sei?</string>  
+        <string name="debug_log_sending_alert">Invio dell'avviso!</string>  
+        <string name="debug_log_sending_alert_failed">Fallito durante il tentativo di ottenimento e invio dell'avviso di posizione</string>  
+        <string name="debug_log_last_device_activity">L'ultimo evento di utilizzo è stato %1$s di %2$s a %3$s UTC</string>  
+        <string name="debug_log_location_power_mode_warning">La modalità di risparmio energetico della posizione potrebbe impedirci di ottenere la posizione: %1$s</string>  
+        <string name="debug_log_power_and_idle_status">In modalità di risparmio energetico? %1$b. Il dispositivo è inattivo? %2$b</string>  
+        <string name="debug_log_failed_registering_sms_sent_receiver">Fallito la registrazione del ricevitore SMS inviato.</string>  
+        <string name="debug_log_failed_getting_sms_sub_id">Fallito l'ottenimento dell'ID di abbonamento SMS predefinito.</string>  
+        <string name="debug_log_alert_service_start">Avvio del servizio di avviso</string>  
+        <string name="debug_log_alert_service_stop">Arresto del servizio di avviso</string>  
+        <string name="debug_log_alert_service_error">Si è verificato un errore nel servizio di avviso: %1$s</string>  
+        <string name="debug_log_auto_restart_monitoring">Il monitoraggio di riavvio automatico è attivato, riavvio dell'allarme...</string>  
+        <string name="debug_log_sending_warning_sms">Invio di un SMS di avviso a %1$s</string>  
+      
+        <!-- AppController.kt -->  
+        <string name="debug_log_starting_up">KeepAlive si sta avviando!</string>  
+      
+        <!-- UtilityFunctions.kt -->  
+        <string name="debug_log_failed_getting_shared_prefs">Fallito l'ottenimento delle preferenze condivise?!</string>  
+        <string name="debug_log_failed_getting_alarm_manager">Fallito l'ottenimento dell'AlarmManager?!</string>  
+        <string name="debug_log_setting_periodic_alarm">Definizione di un nuovo allarme periodico per circa %1$s UTC</string>  
+       <string name="debug_log_setting_final_exact_alarm">Impostazione dell'allarme esatto finale per l'attivazione a %1$s UTC</string>  
+<string name="debug_log_unable_to_set_exact_alarm">Impossibile impostare l'allarme esatto?! Impostazione dell'allarme finale normale per l'attivazione a %1$s UTC</string>  
+<string name="debug_log_api_22_unable_to_set_exact_alarm">API 22, ma non è stato possibile impostare un allarme esatto?!</string>  
+<string name="debug_log_returning_logs">Restituzione di %1$d log</string>  
+  
+<!-- LogDisplayActivity.kt -->  
+<string name="debug_log_log_display_activity_started">Attività di visualizzazione del log di debug avviata</string>  
+<string name="debug_log_logs_deleted">Log di debug eliminati</string>  
+<string name="debug_log_logs_copied_to_clipboard">Log di debug copiati negli appunti</string>  
+  
+<!-- LocationHelperBase.kt -->  
+<string name="debug_log_timeout_reached_getting_location">Timeout raggiunto durante l'ottenimento della posizione?!</string>  
+<string name="debug_log_attempting_to_get_location">Tentativo di ottenimento della posizione…</string>  
+<string name="debug_log_device_idle_not_getting_current_location">Dispositivo in modalità inattiva, non si ottiene la posizione corrente</string>  
+<string name="debug_log_no_location_permission_executing_callback">Nessun permesso di localizzazione, esecuzione del callback</string>  
+<string name="debug_log_failed_getting_current_location">Impossibile ottenere la posizione corrente?!</string>  
+<string name="debug_log_geocoding_timeout_reached">Timeout di geocodifica raggiunto, locationString è %1$s</string>  
+<string name="debug_log_failed_geocoding_gps_coordinates">Impossibile geocodificare le coordinate GPS?!</string>  
+<string name="debug_log_no_address_results">Nessun risultato di indirizzo</string>  
+<string name="debug_log_location_helper_init_error">Errore durante la verifica del GPS o del provider di rete</string>  
+  
+<!-- LocationHelper.kt -->  
+<string name="debug_log_attempting_to_get_last_location">Tentativo di ottenimento dell'ultima posizione…</string>  
+<string name="debug_log_best_last_known_location">l'ultima posizione nota migliore è del provider %1$s con una precisione di %2$f</string>  
+<string name="debug_log_unable_to_determine_location">Impossibile determinare la posizione</string>  
+<string name="debug_log_failed_getting_last_location">Impossibile ottenere l'ultima posizione:</string>  
+<string name="debug_log_unable_to_get_current_location">Impossibile ottenere la posizione corrente</string>  
+<string name="debug_log_location_timeout_reached">Timeout di localizzazione raggiunto</string>  
+<string name="debug_log_timeout_reached_getting_location_from_google_play">Timeout raggiunto durante l'ottenimento della posizione da Google Play?!</string>  
+<string name="debug_log_failed_getting_location_from_source">Impossibile ottenere la posizione da %1$s</string>  
+  
+<!-- MainActivity.kt -->  
+<string name="debug_log_no_alarm_or_monitoring_disabled">Nessun allarme trovato o monitoraggio disabilitato</string>  
+<string name="debug_log_no_events_found_lock_screen">Nessun evento trovato, forse nessuna schermata di blocco?</string>  
+<string name="debug_log_no_active_alarm_showing_restart_button">Nessun allarme attivo trovato, visualizzazione del pulsante di riavvio</string>  
+<string name="debug_log_failed_getting_sms_manager_disable_button">Impossibile ottenere il gestore SMS? Disabilitazione del pulsante di test SMS</string>  
+<string name="debug_log_current_alarm_time">Allarme attuale impostato per le %1$s ora locale</string>  
+  
+<!-- PermissionManager.kt -->  
+<string name="debug_log_still_need_some_permissions">Ho ancora bisogno di alcuni permessi</string>  
+<string name="debug_log_have_all_permissions">Ho tutti i permessi</string>  
+<string name="debug_log_finished_requesting_permissions">Richiesta di permessi completata</string>  
+  
+<!-- AlarmReceiver.kt -->  
+<string name="debug_log_alarm_just_fired">L'allarme è appena scattato!</string>  
+<string name="debug_log_app_not_enabled_alarm_went_off">L'applicazione non è abilitata, perché l'allarme è scattato?!</string>  
+<string name="debug_log_alarm_time_comparison">L'ora è %1$s UTC, l'allarme doveva scattare a %2$s UTC, ovvero %3$d secondi fa</string>  
+<string name="debug_log_failed_processing_alarm">Impossibile elaborare l'allarme:</string>  
+<string name="debug_log_app_in_foreground">KeepAlive è attualmente in primo piano</string>  
+<string name="debug_log_app_in_background">KeepAlive è attualmente in background</string>  
+<string name="debug_log_flag_receiver_true">FLAG_RECEIVER_FOREGROUND è vero</string>  
+<string name="debug_log_flag_receiver_false">FLAG_RECEIVER_FOREGROUND è falso</string>  
+  
+<!-- AlertService.kt -->  
+<string name="debug_log_wake_lock_acquired">Acquisizione del wakelock</string>  
+<string name="debug_log_wake_lock_released">Rilascio del wakelock</string>  
+  
+<!-- SMSSentReceiver.kt -->  
+<string name="debug_log_sms_sent">SMS inviato!</string>  
+<string name="debug_log_sms_send_error">Errore di invio SMS: %1$s</string>  
+  
+<!-- BootBroadcastReceiver.kt -->  
+<string name="debug_log_boot_completed">Avvio completato!?</string>  
+<string name="debug_log_app_is_disabled">L'applicazione è disabilitata?</string>  
+<string name="debug_log_boot_receiver_exception">Eccezione in BootBroadcastReceiver: %1$s</string>  
+  
+<!-- WebhookConfigManager.kt -->  
+<string name="debug_log_webhook_config_saved">Configurazione webhook salvata</string>  
+<string name="debug_log_webhook_config_deleted">Configurazione webhook eliminata</string>  
+<string name="debug_log_webhook_config_load_error">Errore durante il caricamento della configurazione webhook</string>  
+  
+<!-- WebhookSender.kt -->  
+<string name="debug_log_disable_certificate_verification">Disabilitazione della verifica del certificato webhook!</string>  
+<string name="debug_log_request_successful">Richiesta completata con codice: %1$d</string>  
+<string name="debug_log_request_failed">Richiesta fallita con codice: %1$d</string>  
+<string name="debug_log_request_failed_no_retry">Richiesta fallita con codice %1$d, nessun tentativo di ripetizione.</string>  
+<string name="debug_log_unknown_exception_sending_webhook">Eccezione sconosciuta durante l'invio del webhook: %1$s</string>  
+<string name="debug_log_io_exception_sending_webhook">IOException durante l'invio del webhook: %1$s</string>  
+<string name="debug_log_webhook_attempt">Tentativo n. %1$d di %2$d</string>  
+<string name="debug_log_failed_max_retries">Impossibile inviare il webhook, numero massimo di tentativi raggiunto</string>  
+<string name="debug_log_sending_request">Invio della richiesta a: %1$s. La posizione è %2$s</string>  
+<string name="debug_log_webhook_test_error">Errore durante il test del webhook: %1$s</string>  
+<string name="debug_log_sending_webhook_failed">Impossibile inviare il webhook: %1$s</string>  
+</resources>  
