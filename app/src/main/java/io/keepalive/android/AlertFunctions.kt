@@ -194,7 +194,7 @@ class AlertMessageSender(private val context: Context) {
                     continue
                 }
 
-                DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_text_message_to, contact.phoneNumber))
+                DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_text_message_to, maskPhoneNumber(contact.phoneNumber)))
 
                 // add try/catch here to be extra safe in case there is an issue
                 //  registering the receiver...
@@ -230,7 +230,7 @@ class AlertMessageSender(private val context: Context) {
 
                     // if there is a test message, send it first
                     if (testWarningMessage != "") {
-                        DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_warning_sms, contact.phoneNumber))
+                        DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_warning_sms, maskPhoneNumber(contact.phoneNumber)))
 
                         // don't include a sentIntent for the test message
                         smsManager.sendTextMessage(contact.phoneNumber, null, testWarningMessage, null, null)
@@ -264,7 +264,7 @@ class AlertMessageSender(private val context: Context) {
                     }
 
                 } catch (e: Exception) {
-                    DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_failed_sending_sms, contact.phoneNumber, e.localizedMessage), e)
+                    DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_failed_sending_sms, maskPhoneNumber(contact.phoneNumber), e.localizedMessage), e)
 
                     // if we failed while sending the SMS then send a notification
                     //  to let the user know
@@ -302,7 +302,7 @@ class AlertMessageSender(private val context: Context) {
                     // if enabled, send the location details
                     if (contact.includeLocation) {
 
-                        DebugLogger.d("sendLocationAlertMsg", context.getString(R.string.debug_log_sending_location_message_to, contact.phoneNumber))
+                        DebugLogger.d("sendLocationAlertMsg", context.getString(R.string.debug_log_sending_location_message_to, maskPhoneNumber(contact.phoneNumber)))
 
                         // send the location message
                         smsManager.sendTextMessage(
@@ -311,7 +311,7 @@ class AlertMessageSender(private val context: Context) {
                     }
 
                 } catch (e: Exception) {
-                    DebugLogger.d("sendLocationAlertMsg", context.getString(R.string.debug_log_failed_sending_location_sms, contact.phoneNumber), e)
+                    DebugLogger.d("sendLocationAlertMsg", context.getString(R.string.debug_log_failed_sending_location_sms, maskPhoneNumber(contact.phoneNumber)), e)
                 }
 
             } else {
@@ -343,7 +343,7 @@ fun makeAlertCall(context: Context) {
                     "makeAlarmCall",
                     context.getString(
                         R.string.debug_log_placing_alert_phone_call,
-                        phoneContactNumber
+                        maskPhoneNumber(phoneContactNumber)
                     )
                 )
 
@@ -494,8 +494,8 @@ fun doAlertCheck(context: Context, alarmStage: String) {
     val prefs = getEncryptedSharedPreferences(context)
 
     // get the necessary preferences
-    val checkPeriodHours = prefs.getString("time_period_hours", "12")!!.toFloat()
-    val followupPeriodMinutes = prefs.getString("followup_time_period_minutes", "60")!!.toInt()
+    val checkPeriodHours = prefs.getString("time_period_hours", "12")?.toFloatOrNull() ?: 12f
+    val followupPeriodMinutes = prefs.getString("followup_time_period_minutes", "60")?.toIntOrNull() ?: 60
     val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(prefs,"REST_PERIODS")
     val appsToMonitor: MutableList<MonitoredAppDetails> = loadJSONSharedPreference(prefs,"APPS_TO_MONITOR")
 

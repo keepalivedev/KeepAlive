@@ -180,8 +180,10 @@
     <string name="disabled_title">Monitoring Disabled</string>
     <string name="auto_restart_title">Auto-Restart Monitoring After Alert</string>
     <string name="time_period_title">Hours of Inactivity Before Prompt</string>
-    <string name="time_period_description">The # of hours of inactivity before you will be prompted with an \'Are you there?\' notification.\n\nNOTE: This timing is not exact and the system may delay this notification by up to 1 hour.</string>
+    <string name="time_period_description">The # of hours of inactivity before you will be prompted with an \'Are you there?\' notification.</string>
     <string name="followup_time_period_title">Minutes to Wait for Confirmation</string>
+    <string name="exact_alarm_toggle_title">Use Exact Alarm Timing</string>
+    <string name="exact_alarm_note">NOTE: This timing is not exact and the system may delay this notification by up to 1 hour.\n\nEnable \'Use Exact Alarm Timing\' below if you require precise checks, which may slightly increase battery usage.</string>
     <string name="rest_period_title">Rest Period Time Range</string>
     <string name="followup_time_period_description">The # of minutes to wait after sending a \'Are you there?\' notification before an Alert will be sent to your Emergency Contact(s)</string>
     <string name="contact_sms_phone_title">SMS Phone Number</string>
@@ -198,7 +200,7 @@
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Monitoring Method</string>
     <string name="monitored_apps_dialog_title">Select 1 or more apps on your device</string>
-    <string name="monitored_apps_dialog_message">Usage of the selected app(s) will be used to determine when your device was last interacted with</string>
+    <string name="monitored_apps_dialog_message">Usage of the selected app(s) will be used to determine when your device was last interacted with. To revert to Device Lock/Unlock press \'Delete\'.</string>
     <string name="monitored_apps_chosen_title">Selected App(s)</string>
     <string name="monitored_apps_usage_history_dialog_title">App Usage History (72 hours)</string>
     <string name="monitored_apps_usage_history_message">These events may not always be a result of user activity. Please review them carefully before choosing this app.</string>
@@ -301,6 +303,7 @@
     <string name="debug_log_failed_getting_shared_prefs">Failed getting shared preferences?!</string>
     <string name="debug_log_failed_getting_alarm_manager">Failed to get AlarmManager?!</string>
     <string name="debug_log_setting_periodic_alarm">Setting new periodic alarm for approximately %1$s UTC</string>
+    <string name="debug_log_setting_periodic_exact_alarm">Setting new periodic exact alarm for %1$s UTC</string>
     <string name="debug_log_setting_final_exact_alarm">Setting final exact alarm to go off at %1$s UTC</string>
     <string name="debug_log_unable_to_set_exact_alarm">Unable to set exact alarm?!  Setting normal final alarm to go off at %1$s UTC</string>
     <string name="debug_log_api_22_unable_to_set_exact_alarm">This is API 22 but we weren\'t able to set an exact alarm?!</string>

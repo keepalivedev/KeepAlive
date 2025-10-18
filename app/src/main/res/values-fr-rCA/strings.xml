@@ -168,8 +168,10 @@
     <string name="disabled_title">Surveillance désactivée</string>
     <string name="auto_restart_title">Surveillance de redémarrage automatique après alerte</string>
     <string name="time_period_title">Heures d\'inactivité avant la notification</string>
-    <string name="time_period_description">Le nombre d\'heures d\'inactivité avant de recevoir une notification «Êtes-vous là?».\n\nREMARQUE : Ce délai n\'est pas exact et le système peut retarder cette notification jusqu\'à une heure.</string>
-    <string name="followup_time_period_title">Minutes d\'attente pour confirmation</string>
+    <string name="time_period_description">Le nombre d\'heures d\'inactivité avant qu\'une notification «Êtes-vous là?» ne soit affichée.</string>
+    <string name="followup_time_period_title">Minutes à attendre pour la confirmation</string>
+    <string name="exact_alarm_toggle_title">Utiliser le minutage exact de l\'alarme</string>
+    <string name="exact_alarm_note">REMARQUE : Ce minutage n\'est pas exact et le système peut retarder cette notification jusqu\'à 1 heure.\n\nActivez «Utiliser le minutage exact de l\'alarme» ci-dessous si vous avez besoin de vérifications précises, ce qui peut légèrement augmenter l\'utilisation de la batterie.</string>
     <string name="rest_period_title">Plage de temps de la période de repos</string>
     <string name="followup_time_period_description">Le nombre de minutes à attendre après l\'envoi d\'une notification «Êtes-vous là?» avant qu\'une alerte ne soit envoyée à vos contacts d\'urgence</string>
     <string name="contact_sms_phone_title">Numéro de téléphone SMS</string>
@@ -186,7 +188,7 @@
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Méthode de surveillance</string>
     <string name="monitored_apps_dialog_title">Sélectionnez 1 ou plusieurs applications sur votre appareil</string>
-    <string name="monitored_apps_dialog_message">L\'utilisation de l\'application ou des applications sélectionnées sera utilisée pour déterminer quand votre appareil a été utilisé pour la dernière fois</string>
+    <string name="monitored_apps_dialog_message">L\'utilisation des applications sélectionnées sera utilisée pour déterminer la dernière interaction avec votre appareil. Pour revenir au verrouillage/déverrouillage de l\'appareil, appuyez sur \'Supprimer\'.</string>
     <string name="monitored_apps_chosen_title">Application(s) sélectionnée(s)</string>
     <string name="monitored_apps_usage_history_dialog_title">Historique d\'utilisation des applications (72 heures)</string>
     <string name="monitored_apps_usage_history_message">Ces événements ne sont pas toujours le résultat de l\'activité de l\'utilisateur. Veuillez les examiner attentivement avant de choisir cette application.</string>
@@ -289,6 +291,7 @@
     <string name="debug_log_failed_getting_shared_prefs">Échec de l\'obtention des préférences partagées?!</string>
     <string name="debug_log_failed_getting_alarm_manager">Échec de l\'obtention de l\'AlarmManager?!</string>
     <string name="debug_log_setting_periodic_alarm">Définition d\'une nouvelle alarme périodique pour environ %1$s UTC</string>
+    <string name="debug_log_setting_periodic_exact_alarm">Configuration d\'une nouvelle alarme périodique exacte pour %1$s UTC</string>
     <string name="debug_log_setting_final_exact_alarm">Définition de l\'alarme exacte finale pour se déclencher à %1$s UTC</string>
     <string name="debug_log_unable_to_set_exact_alarm">Impossible de définir l\'alarme exacte?! Définition de l\'alarme finale normale pour se déclencher à %1$s UTC</string>
     <string name="debug_log_api_22_unable_to_set_exact_alarm">C\'est l\'API 22 mais nous n\'avons pas pu définir une alarme exacte?!</string>

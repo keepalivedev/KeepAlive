@@ -211,25 +211,60 @@ fun setAlarm(
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
 
+    // Check if user has enabled the "Use Exact Alarm Timing" setting
+    val useExactAlarms = getEncryptedSharedPreferences(context).getBoolean("use_exact_alarms", false)
+
+    // API 31+ added new permissions for setting exact alarms so we need to make sure we have them
+    var canScheduleExactAlarms = true
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        canScheduleExactAlarms = alarmManager.canScheduleExactAlarms()
+    }
+
+    // User preference for exact alarms is only effective if the system allows it
+    val shouldUseExactAlarms = useExactAlarms && canScheduleExactAlarms
+
     // these alarms are not super time sensitive so as long as they happen eventually it's fine?
     if (alarmStage == "periodic") {
 
-        DebugLogger.d("setAlarm", context.getString(R.string.debug_log_setting_periodic_alarm, alarmDtStr))
+        // if the user has enabled exact alarms or if the API level is below M (API 23)
+        // on API 22 we have to use setAlarmClock because there isn't a setAndAllowWhileIdle()
+        //  and .set() wouldn't be guaranteed to fire? no we can use setExact()...
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
 
-        // we are not using setExactAndAllowWhileIdle() because it could lead to more
-        //  battery usage but can ultimately still get delayed or ignored by the OS?
-        // the alternative is to use setAlarmClock() for every alarm but that would definitely
-        //  lead to more battery usage...
-        // from the docs: To perform work while the device is in Doze, create an inexact alarm
-        //                 using setAndAllowWhileIdle(), and start a job from the alarm.
-        // will never go off before, but may be delayed up to an hour??
-        // also, if viewing the alarms in the Background Task Inspector, the 'Trigger time'
-        //  that is displayed is based on SystemClock.elapsedRealtime() so can be misleading...
-        // furthermore, emulators can exhibit weird behavior when using ELAPSED_REALTIME_WAKEUP
-        //  alarms because their internal time is off, potentially causing an alarm to go off
-        //  and be re-set continuously because the emulator's time is in the future...
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            DebugLogger.d("setAlarm", context.getString(R.string.debug_log_setting_periodic_exact_alarm, alarmDtStr))
 
+            alarmManager.setExact(
+                AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime() + newAlarmInMs,
+                pendingIntent
+            )
+
+            // if we should use an exact alarm and are on API 23+ then use setExactAndAllowWhileIdle
+        } else if (shouldUseExactAlarms) {
+
+            DebugLogger.d("setAlarm", context.getString(R.string.debug_log_setting_periodic_exact_alarm, alarmDtStr))
+
+            // Use exact alarm scheduling so the alarm will not be delayed by the OS
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime() + newAlarmInMs,
+                pendingIntent
+            )
+        } else {
+            DebugLogger.d("setAlarm", context.getString(R.string.debug_log_setting_periodic_alarm, alarmDtStr))
+
+            // we are not using setExactAndAllowWhileIdle() because it could lead to more
+            //  battery usage but can ultimately still get delayed or ignored by the OS?
+            // the alternative is to use setAlarmClock() for every alarm but that would definitely
+            //  lead to more battery usage...
+            // from the docs: To perform work while the device is in Doze, create an inexact alarm
+            //                 using setAndAllowWhileIdle(), and start a job from the alarm.
+            // will never go off before, but may be delayed up to an hour??
+            // also, if viewing the alarms in the Background Task Inspector, the 'Trigger time'
+            //  that is displayed is based on SystemClock.elapsedRealtime() so can be misleading...
+            // furthermore, emulators can exhibit weird behavior when using ELAPSED_REALTIME_WAKEUP
+            //  alarms because their internal time is off, potentially causing an alarm to go off
+            //  and be re-set continuously because the emulator's time is in the future...
             alarmManager.setAndAllowWhileIdle(
                 AlarmManager.ELAPSED_REALTIME_WAKEUP,
 
@@ -237,31 +272,11 @@ fun setAlarm(
                 SystemClock.elapsedRealtime() + newAlarmInMs,
                 pendingIntent
             )
-        } else {
-
-            // on API 22 we have to use setAlarmClock because there isn't a setAndAllowWhileIdle()
-            //  and .set() wouldn't be guaranteed to fire?
-            // note that this will cause an alarm clock icon to show up on the status bar
-            alarmManager.setAlarmClock(
-                AlarmManager.AlarmClockInfo(
-                    alarmTimestamp,
-                    pendingIntent
-                ), pendingIntent
-            )
         }
-
     } else {
 
-        // assume we can use exact alarms by default
-        var useExact = true
-
-        // API 31+ added new permissions for setting exact alarms so we need to
-        //  make sure we have them
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            useExact = alarmManager.canScheduleExactAlarms()
-        }
-
-        if (useExact) {
+        // final alarms should always be exact, if possible
+        if (canScheduleExactAlarms) {
             DebugLogger.d("setAlarm", context.getString(R.string.debug_log_setting_final_exact_alarm, alarmDtStr))
 
             // according to the docs, this is the only thing that won't get delayed by the OS?
@@ -390,7 +405,7 @@ fun calculateOffsetDateTimeExcludingRestPeriod(
     //  leave this check here just in case...
     if (restPeriod.startHour == restPeriod.endHour && restPeriod.startMinute == restPeriod.endMinute) {
         Log.d("calcPastDtExcRestPeriod", "Invalid rest period? $restPeriod")
-        thisTargetDtCalendar.add(Calendar.MINUTE, minuteStep * -minutesToOffset)
+        thisTargetDtCalendar.add(Calendar.MINUTE, minuteStep * minutesToOffset)
     } else {
         while (minutesToOffset > 0) {
 
@@ -594,4 +609,13 @@ fun getColorCompat(context: Context, @ColorRes colorResId: Int): Int {
         @Suppress("DEPRECATION")
         context.resources.getColor(colorResId)
     }
+}
+
+fun maskPhoneNumber(phoneNumber: String): String {
+    if (phoneNumber.length <= 2) {
+        return phoneNumber
+    }
+
+    val maskedPart = "*".repeat(phoneNumber.length - 2)
+    return maskedPart + phoneNumber.takeLast(2)
 }

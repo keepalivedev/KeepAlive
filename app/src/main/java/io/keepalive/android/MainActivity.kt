@@ -225,7 +225,7 @@ class MainActivity : AppCompatActivity() {
             restartMonitoringButton.isClickable = false
 
             // set the alarm
-            val checkPeriodHours = sharedPrefs.getString("time_period_hours", "12")!!.toFloat()
+            val checkPeriodHours = sharedPrefs.getString("time_period_hours", "12")?.toFloatOrNull() ?: 12f
             val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(sharedPrefs,"REST_PERIODS")
 
             // if they are hitting the restart button then use now as the last activity time
@@ -425,7 +425,7 @@ class MainActivity : AppCompatActivity() {
                 restartMonitoringButton.visibility = View.INVISIBLE
                 monitoringStatusTextView.visibility = View.VISIBLE
 
-                var checkPeriodHours = sharedPrefs.getString("time_period_hours", "12")!!.toFloat()
+                var checkPeriodHours = sharedPrefs.getString("time_period_hours", "12")?.toFloatOrNull() ?: 12f
                 checkPeriodHours =
                     maxOf(checkPeriodHours, AppController.LAST_ACTIVITY_MAX_PERIOD_CHECK_HOURS)
 
@@ -683,7 +683,7 @@ class MainActivity : AppCompatActivity() {
 
                 Log.d(tag, "Alert notification was clicked on!")
 
-                val checkPeriodHours = sharedPrefs.getString("time_period_hours", "12")!!.toFloat()
+                val checkPeriodHours = sharedPrefs.getString("time_period_hours", "12")?.toFloatOrNull() ?: 12f
                 val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(sharedPrefs,"REST_PERIODS")
 
                 // if the user clicked on the notification we can assume they are active so

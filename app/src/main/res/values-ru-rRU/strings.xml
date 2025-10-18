@@ -168,8 +168,10 @@
     <string name="disabled_title">Мониторинг выключен</string>
     <string name="auto_restart_title">Перезапускать мониторинг после срабатывания оповещения</string>
     <string name="time_period_title">Часов неактивности до проверки</string>
-    <string name="time_period_description">Количество часов бездействия до того, как вам будет предложено уведомление \'Вы здесь?\'.\n\nПРИМЕЧАНИЕ: Это время не точно, и система может задержать это уведомление на срок до одного часа.</string>
+    <string name="time_period_description">Количество часов бездействия перед появлением уведомления \'Вы здесь?\'</string>
     <string name="followup_time_period_title">Сколько минут ожидать подтверждения</string>
+    <string name="exact_alarm_toggle_title">Использовать точное время сигнала</string>
+    <string name="exact_alarm_note">ПРИМЕЧАНИЕ: Это время неточное, и система может задержать уведомление до 1 часа.\n\nВключите \'Использовать точное время сигнала\' ниже, если вам нужны точные проверки — это может немного увеличить расход батареи.</string>
     <string name="rest_period_title">Период отдыха</string>
     <string name="followup_time_period_description">Количество минут ожидания после отправки уведомления \'Вы здесь?\', прежде чем оповещение будет отправлено вашим контактам для экстренных случаев.</string>
     <string name="contact_sms_phone_title">Номер телефона для SMS</string>
@@ -186,7 +188,7 @@
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Метод мониторинга</string>
     <string name="monitored_apps_dialog_title">Выберите 1 или несколько приложений на вашем устройстве</string>
-    <string name="monitored_apps_dialog_message">Использование выбранных приложений будет использоваться для определения последнего взаимодействия с устройством</string>
+    <string name="monitored_apps_dialog_message">Использование выбранных приложений будет учитываться для определения времени последнего взаимодействия с устройством. Чтобы вернуться к блокировке/разблокировке устройства, нажмите \'Удалить\'.</string>
     <string name="monitored_apps_chosen_title">Выбранные приложения</string>
     <string name="monitored_apps_usage_history_dialog_title">История использования приложений (72 часа)</string>
     <string name="monitored_apps_usage_history_message">Эти события не всегда являются результатом действий пользователя. Пожалуйста, внимательно просмотрите их перед выбором этого приложения.</string>
@@ -289,6 +291,7 @@
     <string name="debug_log_failed_getting_shared_prefs">Не удалось получить общие настройки?!</string>
     <string name="debug_log_failed_getting_alarm_manager">Не удалось получить AlarmManager?!</string>
     <string name="debug_log_setting_periodic_alarm">Установка нового периодического будильника примерно на %1$s UTC</string>
+    <string name="debug_log_setting_periodic_exact_alarm">Установка нового периодического точного сигнала на %1$s UTC</string>
     <string name="debug_log_setting_final_exact_alarm">Установка окончательного точного будильника на %1$s UTC</string>
     <string name="debug_log_unable_to_set_exact_alarm">Невозможно установить точный будильник?! Установка обычного окончательного будильника на %1$s UTC</string>
     <string name="debug_log_api_22_unable_to_set_exact_alarm">Это API 22, но мы не смогли установить точный будильник?!</string>

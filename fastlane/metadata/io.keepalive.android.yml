@@ -11,6 +11,10 @@ Description: Notify others if you haven't used your device in a given period of 
 
 RepoType: git
 Repo: https://github.com/keepalivedev/KeepAlive
+Binaries: https://github.com/keepalivedev/KeepAlive/releases/download/%v/app-fDroid-release.apk
+
+Donate: https://ko-fi.com/keepalivedev
+Bitcoin: bc1q756uyj9d4alkqxk5y9t7jex568qzkeekqflryv
 
 Builds:
   - versionName: 1.0.6
@@ -25,8 +29,9 @@ Builds:
       - fDroid
 
 
+AllowedAPKSigningKeys: c45567b712d6fd7979df14f66f8a5c25859ee223e1f07e915a7eee201c14baef
 
 AutoUpdateMode: Version
-UpdateCheckMode: Tags
+UpdateCheckMode: Tags ^[0-9.]+$
 CurrentVersion: 1.0.6
 CurrentVersionCode: 106

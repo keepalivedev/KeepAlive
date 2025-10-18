@@ -31,21 +31,32 @@ class PhoneNumberAdapter(
         init {
 
             // set edit button click listener on the entire view
-            itemView.setOnClickListener { onEdit(adapterPosition) }
+            itemView.setOnClickListener {
+                val pos = adapterPosition
+                if (pos != RecyclerView.NO_POSITION) {
+                    onEdit(pos)
+                }
+            }
 
             // if the user changes the enabled switch from the main screen, save the settings
             enabledSwitch.setOnCheckedChangeListener { _, _ ->
                 if (!isInitializing) {
-                    phoneNumberList[adapterPosition].isEnabled = enabledSwitch.isChecked
-                    saveSMSEmergencyContactSettings(sharedPrefs, phoneNumberList, gson)
+                    val pos = adapterPosition
+                    if (pos != RecyclerView.NO_POSITION) {
+                        phoneNumberList[pos].isEnabled = enabledSwitch.isChecked
+                        saveSMSEmergencyContactSettings(sharedPrefs, phoneNumberList, gson)
+                    }
                 }
             }
 
             // if the user changes the location switch from the main screen, save the settings
             locationSwitch.setOnCheckedChangeListener { _, _ ->
                 if (!isInitializing) {
-                    phoneNumberList[adapterPosition].includeLocation = locationSwitch.isChecked
-                    saveSMSEmergencyContactSettings(sharedPrefs, phoneNumberList, gson)
+                    val pos = adapterPosition
+                    if (pos != RecyclerView.NO_POSITION) {
+                        phoneNumberList[pos].includeLocation = locationSwitch.isChecked
+                        saveSMSEmergencyContactSettings(sharedPrefs, phoneNumberList, gson)
+                    }
                 }
             }
         }

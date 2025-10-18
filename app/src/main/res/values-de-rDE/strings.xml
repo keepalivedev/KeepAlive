@@ -168,8 +168,10 @@
     <string name="disabled_title">Überwachung inaktiv</string>
     <string name="auto_restart_title">Automatischer Neustart der Überwachung nach Alarmierung</string>
     <string name="time_period_title">Stunden Inaktivität bis zur Aufforderung</string>
-    <string name="time_period_description">Stunden Inaktivität, bevor Sie eine Benachrichtigung \"Sind Sie da?\" erhalten.\n\nHINWEIS: Diese Zeitangabe ist nicht exakt, und das System kann diese Benachrichtigung um bis zu eine Stunde verzögern.</string>
-    <string name="followup_time_period_title">Minuten warten auf Bestätigung</string>
+    <string name="time_period_description">Anzahl der Stunden der Inaktivität, bevor eine \"Bist du noch da?\"-Benachrichtigung erscheint.</string>
+    <string name="followup_time_period_title">Minuten bis zur Bestätigung warten</string>
+    <string name="exact_alarm_toggle_title">Exakte Alarmzeit verwenden</string>
+    <string name="exact_alarm_note">HINWEIS: Diese Zeitangabe ist nicht exakt und das System kann die Benachrichtigung um bis zu 1 Stunde verzögern.\n\nAktivieren Sie unten \"Exakte Alarmzeit verwenden\", wenn Sie präzise Überprüfungen benötigen. Dies kann den Akkuverbrauch leicht erhöhen.</string>
     <string name="rest_period_title">Ruhezeit</string>
     <string name="followup_time_period_description">Die Anzahl Minuten, die nach einer \"Sind Sie da?\"-Benachrichtigung gewartet wird, bevor ein Alarm an Ihre Notfallkontakte gesendet wird.</string>
     <string name="contact_sms_phone_title">SMS-Telefonnummer</string>
@@ -186,7 +188,7 @@
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Überwachungsmethode</string>
     <string name="monitored_apps_dialog_title">Wählen Sie 1 oder mehrere Apps auf Ihrem Gerät aus</string>
-    <string name="monitored_apps_dialog_message">Die Nutzung der ausgewählten App(s) wird verwendet, um festzustellen, wann zuletzt mit Ihrem Gerät interagiert wurde</string>
+    <string name="monitored_apps_dialog_message">Die Nutzung der ausgewählten App(s) wird verwendet, um festzustellen, wann Ihr Gerät zuletzt verwendet wurde. Um zur Gerätesperre/-entsperrung zurückzukehren, drücken Sie \'Löschen\'.</string>
     <string name="monitored_apps_chosen_title">Ausgewählte App(s)</string>
     <string name="monitored_apps_usage_history_dialog_title">App-Nutzungsverlauf (72 Stunden)</string>
     <string name="monitored_apps_usage_history_message">Diese Ereignisse können nicht immer auf Benutzeraktivität zurückzuführen sein. Bitte überprüfen Sie sie sorgfältig, bevor Sie diese App auswählen.</string>
@@ -289,6 +291,7 @@
     <string name="debug_log_failed_getting_shared_prefs">Fehler beim Abrufen der gemeinsamen Einstellungen?!</string>
     <string name="debug_log_failed_getting_alarm_manager">Fehler beim Abrufen des AlarmManagers?!</string>
     <string name="debug_log_setting_periodic_alarm">Setze neuen periodischen Alarm für ungefähr %1$s UTC</string>
+    <string name="debug_log_setting_periodic_exact_alarm">Neue periodische exakte Alarmzeit für %1$s UTC festgelegt</string>
     <string name="debug_log_setting_final_exact_alarm">Setze endgültigen exakten Alarm, der um %1$s UTC ausgelöst wird</string>
     <string name="debug_log_unable_to_set_exact_alarm">Exakten Alarm nicht setzen können?! Setze normalen endgültigen Alarm, der um %1$s UTC ausgelöst wird</string>
     <string name="debug_log_api_22_unable_to_set_exact_alarm">Dies ist API 22, aber wir konnten keinen exakten Alarm setzen?!</string>

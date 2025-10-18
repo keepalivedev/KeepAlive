@@ -18,8 +18,10 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.switchmaterial.SwitchMaterial
 import org.json.JSONObject
+import org.json.JSONException
 import kotlinx.coroutines.*
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+
 
 class WebhookConfigManager(private val context: Context, private val activity: AppCompatActivity?) {
 
@@ -381,10 +383,15 @@ class WebhookConfigManager(private val context: Context, private val activity: A
         val retries = sharedPref.getInt("webhook_retries", 0)
         val verifyCertificate = sharedPref.getBoolean("webhook_verify_certificate", true)
 
-        val headersJson = JSONObject(sharedPref.getString("webhook_headers", "{}")!!)
         val headers = mutableMapOf<String, String>()
-        headersJson.keys().forEach { key ->
-            headers[key] = headersJson.getString(key)
+        val headersStr = sharedPref.getString("webhook_headers", "{}")
+        try {
+            val headersJson = JSONObject(headersStr ?: "{}")
+            headersJson.keys().forEach { key ->
+                headers[key] = headersJson.getString(key)
+            }
+        } catch (e: JSONException) {
+            DebugLogger.d("WebhookConfigManager", "Invalid header JSON", e)
         }
 
         return WebhookConfig(webhookUrl, webhookMethod, includeLocation, timeout, retries, verifyCertificate, headers)

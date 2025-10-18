@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Common strings -->
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ok">OK</string>
+    <string name="save">保存</string>
+    <string name="add">添加</string>
+    <string name="delete">删除</string>
+    <string name="close">关闭</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确认</string>
+    <string name="back">后退</string>
+    <string name="go_to_settings">去设置</string>
+    <string name="enabled">启用</string>
+    <string name="disabled">禁用</string>
+    <string name="placeholder" translatable="false">PLACEHOLDER TEXT</string>
+
+    <!-- webhook layout strings -->
+    <string name="webhook_get" translatable="false">GET</string>
+    <string name="webhook_post" translatable="false">POST</string>
+    <string name="webhook_url_hint">Webhook URL</string>
+    <string name="webhook_http_method_hint">HTTP Method</string>
+    <string name="webhook_verify_certificate_label">Verify Certificate</string>
+    <string name="webhook_timeout_hint">Timeout (seconds)</string>
+    <string name="webhook_retries_hint">Retries</string>
+    <string name="webhook_include_location_hint">Include Location in Request?</string>
+    <string name="webhook_headers_title">Headers</string>
+    <string name="webhook_add_header_button">Add Header</string>
+    <string name="webhook_remove_header_button">Remove Header</string>
+    <string name="webhook_test_button">Test Webhook</string>
+    <string name="webhook_toast_max_headers">Maximum number of headers reached (%1$s)</string>
+    <string name="webhook_dialog_title">Webhook Configuration</string>
+    <string name="webhook_dialog_description">When an Alert is triggered an HTTP request will be sent using the settings below. By default, no other data is included in the request. If enabled, location data is sent in the following format:\n{\"lat\": latitude, \"lon\": longitude, \"acc\": accuracy, \"address\": \"address\", \"loc_message\": \"location message\"}.</string>
+    <string name="webhook_not_configured">Not Configured</string>
+    <string name="webhook_location_do_not_include">Do Not Include</string>
+    <string name="webhook_location_body_json">Body - JSON</string>
+    <string name="webhook_location_body_form">Body - Form</string>
+    <string name="webhook_location_query_parameters">Query Parameters</string>
+    <string name="webhook_url_empty_error">Please enter a webhook URL</string>
+    <string name="webhook_url_invalid_error">URL Invalid</string>
+    <string name="webhook_url_invalid_error_with_url">URL Invalid: %1$s</string>
+    <string name="webhook_timeout_invalid_error">Invalid timeout value</string>
+    <string name="webhook_retries_invalid_error">Invalid retries value</string>
+    <string name="webhook_timeout_max_error">Maximum timeout is %1$s</string>
+    <string name="webhook_retries_max_error">Maximum retries is %1$s</string>
+    <string name="webhook_header_name">Name</string>
+    <string name="webhook_header_value">Value</string>
+    <string name="webhook_header_name_empty_error">Name cannot be blank</string>
+    <string name="webhook_header_name_length_error">Max Name length is %1$s</string>
+    <string name="webhook_header_value_length_error">Max Value length is %1$s</string>
+    <string name="webhook_header_name_invalid_error">Name has invalid characters</string>
+    <string name="webhook_header_value_invalid_error">Value has invalid characters</string>
+    <string name="webhook_request_success_toast_text">Success! Response code was %1$d</string>
+    <string name="webhook_request_error_code_toast_text">Failed! Response code was %1$d</string>
+    <string name="webhook_request_failure_toast_text">Failed! Error was %1$s</string>
+    <string name="webhook_request_success_notification_title">Keep Alive Webhook Successful!</string>
+    <string name="webhook_request_success_notification_text">Response code was %1$d</string>
+    <string name="webhook_request_failure_notification_title">Keep Alive Webhook Failed!</string>
+    <string name="webhook_request_failure_code_notification_text">Response code was %1$d</string>
+    <string name="webhook_request_failure_error_notification_text">Error: %1$s</string>
+
+    <!-- action settings -->
+    <string name="action_settings">设置</string>
+    <string name="action_about">关于</string>
+    <string name="action_logdisplay">Debug Logs</string>
+    <string name="about_dialog_title">About Keep Alive</string>
+
+    <!-- item_phone_number content descriptions that are set based on the item position -->
+    <string name="enable_switch_enabled_content_desc">Entry %1$s Enabled</string>
+    <string name="location_switch_enabled_content_desc">Entry %1$s Location Enabled</string>
+    <string name="main_scroll_view_content_description">Scrollable Main Page</string>
+
+    <!-- app hibernation/restriction stuff -->
+    <string name="hibernation_dialog_title">解除App限制</string>
+    <string name="hibernation_dialog_message"><![CDATA[Android会自动清除长期未使用App的隐私权限。  KeepAlive一旦完成初次设置，无需任何进一步的交互操作，权限可能被撤销并导致提醒无法发送。<br/><br/>为了确保权限不被撤销, 请禁用 <b>暂停闲置应用的活动</b> 的选项。]]></string>
+    <string name="hibernation_dialog_message_api35"><![CDATA[Android会自动清除长期未使用App的隐私权限。  KeepAlive一旦完成初次设置，无需任何进一步的交互操作，权限可能被撤销并导致提醒无法发送。<br/><br/>为了确保权限不被撤销, 请禁用 <b>管理闲置应用</b> 的选项。]]></string>
+    <string name="hibernation_dialog_message_api30"><![CDATA[Android会自动清除长期未使用App的隐私权限。  KeepAlive一旦设置完成，除非触发提醒，否则无需任何进一步的交互操作。<br/><br/>为了确保权限不被撤销, 请打开 <b>权限</b> 设置并禁用 <b>如果未使用此应用，则移除相关权限</b> 的选项。]]></string>
+    <string name="hibernation_dialog_message_api31"><![CDATA[Android会自动清除长期未使用App的隐私权限。  KeepAlive一旦设置完成，除非触发提醒，否则无需任何进一步的交互操作。<br/><br/>为了确保权限不被撤销, 请禁用 <b>移除权限并释放空间</b> 的选项。]]></string>
+    <string name="hibernation_dialog_message_api_backport"><![CDATA[Android会自动清除长期未使用App的隐私权限。  KeepAlive一旦设置完成，除非触发提醒，否则无需任何进一步的交互操作。<br/><br/>为了确保权限不被撤销， 请禁用 <b>如果未使用此应用，则移除相关权限</b> 的选项。]]></string>
+
+    <!-- MainActivity textview and button messages -->
+    <string name="monitoring_active_message">上一次活动: %1$s\n下一次检测: %2$s小时%3$s分钟后</string>
+    <string name="monitoring_active_title">监测器正常运行</string>
+    <string name="monitoring_impaired_title">监测器正在运行\n但受损</string>
+    <string name="monitoring_inactive_message">监测器已停止。\n点击按钮重新启动。</string>
+    <string name="monitoring_disabled_title">监测器已禁用</string>
+    <string name="monitoring_disabled_message">点击设置以启用监测器</string>
+    <string name="monitoring_no_activity_detected_title">无法进行监测</string>
+    <string name="monitoring_permissions_required_title">需要授予权限</string>
+    <string name="monitoring_no_activity_detected_message">监测器已启用，但在过去 %1$s 小时内未检测到任何活动。 请确保屏幕锁定已启用并授予了使用情况访问权限。</string>
+    <string name="monitoring_permissions_required_message">监测器已启用，但尚未授予必要权限。 请点击下面的“授予权限”按钮。</string>
+    <string name="alarm_message_too_long_message">短信不得超过 160 个字符。</string>
+    <string name="phone_number_invalid_message">请输入一个有效的电话号码。</string>
+    <string name="time_period_too_short_message">时间间隔不应小于 10 分钟。</string>
+    <string name="test_phone_call_message">将至电:\n%1$s</string>
+    <string name="test_sms_message">短信将发送至:\n%1$s</string>
+    <string name="unable_to_send_sms_message">无法发送短信\n请插入有效的SIM卡</string>
+    <string name="no_configured_contacts_message">未设置联系人</string>
+    <string name="permissions_button_text">授予权限</string>
+    <string name="restart_monitoring_button_text">重启监测器</string>
+    <string name="check_app_restrictions_button_text">解除App限制</string>
+    <string name="test_sms_alert_button_text">测试短信发送</string>
+    <string name="test_phone_alert_button_text">测试电话拨号</string>
+    <string name="test_alert_confirmation_title">确认发送测试短信</string>
+    <string name="test_alert_switch_include_warning_text">额外发送 1 条提醒短信</string>
+    <string name="test_sms_configured_contacts_message">这将向您的联系人 %1$s 发送测试短信。</string>
+    <string name="test_alert_confirmation_message_with_count"><![CDATA[总共将发送 <b>%1$d</b> 条短信。 您想继续吗？]]></string>
+    <string name="test_alert_sms_default_message">The following messages are a test from the Keep Alive app. Please confirm receipt!</string>
+    <string name="test_alert_warning_message_explanation">在发送提醒消息之前，以下内容将发送给每位已启用的联系人。</string>
+
+    <!-- notification strings -->
+    <string name="default_notification_channel_title">进入等待期</string>
+    <string name="sms_sent_notification_channel_title">短信发送</string>
+    <string name="call_sent_notification_channel_title">电话拨号</string>
+    <string name="webhook_sent_notification_channel_title">Webhook Sent Notifications</string>
+    <string name="alert_service_notification_channel_title">提醒服务</string>
+    <string name="default_notification_channel_description">Are you there? Prompts</string>
+    <string name="sms_sent_notification_channel_description">触发短信提醒时发送</string>
+    <string name="call_sent_notification_channel_description">触发电话提醒时发送</string>
+    <string name="webhook_sent_notification_channel_description">Sent when a Webhook alert is triggered</string>
+    <string name="alert_service_notification_channel_description">发出提醒时显示</string>
+    <string name="activity_notification_message">很高兴看到你还活着！取消提醒。</string>
+    <string name="initial_check_notification_title">Are you still there?</string>
+    <string name="initial_check_notification_text">Click here if you are still alive! Otherwise an alert will be sent in %1$s minutes.</string>
+    <string name="alert_notification_title">提醒已触发！</string>
+    <string name="call_alert_notification_text">已致电您的联系人: %1$s</string>
+    <string name="sms_alert_notification_text">已向您的联系人发送短信！</string>
+    <string name="sms_alert_failure_notification_title">短信发送失败</string>
+    <string name="sms_alert_failure_notification_text">发送短信时发生错误</string>
+    <string name="sms_alert_failure_notification_text_with_error">发送短信时发生错误: %1$s</string>
+    <string name="sms_service_failure_notification_title">无法发送提醒短信</string>
+    <string name="sms_service_failure_notification_text">发送提醒短信时发生错误，请插入有效的SIM卡。</string>
+    <string name="sms_sent_toast_text">提醒短信已发送！</string>
+    <string name="sms_failure_toast_text">提醒短信发送失败？！</string>
+    <string name="alert_service_notification_title">正在发送提醒…</string>
+    <string name="alert_service_notification_message">提醒消息正在发送给您的联系人，请稍候。</string>
+
+    <!-- alert location strings -->
+    <string name="location_invalid_message">Unable to determine location.</string>
+    <string name="geocode_invalid_message">Unable to geocode location. GPS coordinates are (%1$s, %2$s). Accuracy (m): %3$s.</string>
+    <string name="geocode_valid_message">GPS Coordinates: (%1$s, %2$s). Accuracy (m): %3$s. Possible address: %4$s</string>
+
+    <!-- Preference Titles -->
+    <string name="main_header">主要设置</string>
+    <string name="contact_header">联系人</string>
+
+    <!-- SMS settings layout text view strings, some are just placeholders -->
+    <string name="phone_number_title">电话号码</string>
+    <string name="alert_message_title">提醒文本</string>
+    <string name="include_location_title">附带位置信息</string>
+    <string name="sample_alert_message">提醒文本示例</string>
+    <string name="include_location_information">附带位置信息</string>
+    <string name="phone_number_hint">输入短信号码</string>
+    <string name="alert_message_hint">输入短信内容</string>
+    <string name="delete_phone_number_dialog_title">删除联系人</string>
+    <string name="delete_phone_number_dialog_description">您确定要删除此条目吗？</string>
+
+    <!-- rest period dialog strings -->
+    <string name="rest_period_dialog_title">设置休眠期</string>
+    <string name="rest_period_dialog_message">设置一个不计算闲置时间的时间范围。例如，将闲置时间设置为6小时，休眠期为22:00–6:00，如果最后一次使用设备是在18:00，那么在8:00之前不会弹出\'Are you there?\'的通知。注意：提醒有可能在休眠期内发出。</string>
+    <string name="rest_period_dialog_time_zone_message"><![CDATA[使用系统默认时区: <b>%1$s</b>]]></string>
+    <string name="rest_period_not_set_message">未设置</string>
+    <string name="rest_period_start_time">开始时间</string>
+    <string name="rest_period_end_time">结束时间</string>
+    <string name="rest_period_invalid_range_message">开始时间和结束时间不能相同</string>
+
+    <!-- Main Settings -->
+    <string name="enabled_title">启用监测器</string>
+    <string name="disabled_title">监测器已禁用</string>
+    <string name="auto_restart_title">发出提醒后自动重启监测器</string>
+    <string name="time_period_title">闲置多久后弹出通知</string>
+    <string name="time_period_description">设备超过 # 小时不活动，系统将弹出 \'Are you there?\' 的通知。</string>
+    <string name="followup_time_period_title">等待多久后发出提醒</string>
+    <string name="exact_alarm_toggle_title">使用精确闹钟计时</string>
+    <string name="exact_alarm_note">注意：此时间并非精确值，系统可能延迟最多1小时发送通知。\n\n若需精确检测，请启用下方的“使用精确闹钟计时”功能，可能略微增加电池电量消耗。</string>
+    <string name="rest_period_title">休眠期</string>
+    <string name="followup_time_period_description">弹出 \'Are you there?\' 的通知后，等待 # 分钟无人响应才会向您的联系人发出提醒。</string>
+    <string name="contact_sms_phone_title">短信号码</string>
+    <string name="contact_phone_title">电话联系（可选）</string>
+    <string name="add_sms_contact_button_text">短信联系</string>
+    <string name="contact_phone_description">触发提醒后，将向该电话号码拨打语音电话并启用免提功能。\n\n请注意，这需要授予额外的权限以便从后台拨打电话。</string>
+    <string name="default_alert_message">Hello! I have not used my phone in a while and may be in need of assistance. Please send help!</string>
+    <string name="default_alert_message_alt">Hey I may be dead, if I do not contact you in the next 24 hours, you know what to do.</string>
+    <string name="add_emergency_contact_title">添加联系人</string>
+    <string name="edit_emergency_contact_title">编辑联系人</string>
+    <string name="webhook_title">Alert Webhook</string>
+    <string name="webhook_url_title">Webhook URL</string>
+    <string name="silent_panic_alert_title">默默提醒</string>
+
+    <!-- Monitored Apps strings -->
+    <string name="monitored_apps_title">监测方式</string>
+    <string name="monitored_apps_dialog_title">选择 1 个或多个App</string>
+    <string name="monitored_apps_dialog_message">所选App的使用情况将用于确定您最后一次活动的时间</string>
+    <string name="monitored_apps_chosen_title">已选中的App</string>
+    <string name="monitored_apps_usage_history_dialog_title">App使用历史 (72 小时)</string>
+    <string name="monitored_apps_usage_history_message">这些事件不一定都是用户活动造成的。请在选择此App前仔细考虑清楚。</string>
+    <string name="monitored_apps_recently_used_title">最近被使用过的App (过去 72 小时)</string>
+    <string name="monitored_apps_not_configured_title">未设置</string>
+    <string name="monitored_apps_not_configured_message">您的设备是Android 8或更早的版本。 您必须要选中 1 个或多个App。 请点击“监测方式”进行设置。</string>
+    <string name="monitored_apps_warning_dialog_title">App监测</string>
+    <string name="monitored_apps_warning_dialog_message">该功能尚未完工，监测效果可能因所选App的不同而有所差异。KeepAlive会寻找App的 MOVE_TO_FOREGROUND 事件，而这不一定是用户操作造成的。不应选择能自动唤醒设备的App，如闹钟、日历、电话或多媒体播放器。</string>
+    <string name="monitored_apps_warning_dialog_message_alt">\n\n注意：该设备是Android 9或更高版本，强烈建议您选择 device lock/unlock 事件来代替App监测。</string>
+    <string name="monitored_apps_view_history_text">View History</string>
+    <string name="monitored_apps_view_history_title">App History: %1$s</string>
+    <string name="monitored_apps_history_date_header">Used At</string>
+    <string name="monitored_apps_history_name_header">Activity Name</string>
+    <string name="monitored_apps_no_usage_stats_permissions_dialog_title">需要授予权限</string>
+    <string name="monitored_apps_no_usage_stats_permissions_dialog_message">要完成设置，您必须先授予使用情况访问权限。请点击返回按钮返回主页，然后点击“授予权限”的按钮。</string>
+
+    <!-- Log Display strings -->
+    <string name="log_display_increase_size_button_text">Size +</string>
+    <string name="log_display_decrease_size_button_text">Size -</string>
+    <string name="log_display_copy_button_text">Copy</string>
+    <string name="log_display_copy_button_toast">Text Copied</string>
+    <string name="log_display_delete_dialog_title">Delete Logs?</string>
+    <string name="log_display_delete_dialog_message">Are you sure you want to delete all saved logs?</string>
+
+    <!-- SEND_SMS Permission -->
+    <string name="permission_send_sms_title">需要授予权限: 发送短信</string>
+    <string name="permission_send_sms_description">当触发提醒时，短信将作为主要通知方式。</string>
+
+    <!-- CALL_PHONE Permission -->
+    <string name="permission_call_phone_title">需要授予权限: 拨打电话</string>
+    <string name="permission_call_phone_description">提供了一个联系电话号码时，需要具备拨打电话的能力。</string>
+
+    <!-- READ_PHONE_STATE Permission -->
+    <string name="permission_read_phone_state_title">需要授予权限: 管理通话</string>
+    <string name="permission_read_phone_state_description">由于Android 8中的一个Bug，发送短信需要授予管理通话的权限。</string>
+
+    <!-- USAGE_ACCESS_SETTINGS Permission -->
+    <string name="permission_usage_access_title">需要授予权限: 使用情况访问</string>
+    <string name="permission_usage_access_description">为了确定设备的最后一次使用时间，需要授予使用访问统计的特殊权限。\n\n请为 Keep Alive 启用该权限。</string>
+
+    <!-- MANAGE_OVERLAY_PERMISSION Permission -->
+    <string name="permission_manage_overlay_title">需要授予权限: 显示在其他应用的上层</string>
+    <string name="permission_manage_overlay_description">提供了一个联系电话号码时，需要具备在后台拨打电话的能力。\n\n请为 Keep Alive 启用该权限。</string>
+
+    <!-- ACCESS_FINE_LOCATION Permission -->
+    <string name="permission_access_fine_location_title">需要授予权限: 访问精确位置信息</string>
+    <string name="permission_access_fine_location_description">启用“附带位置信息”后，需要获取精确的位置信息，使其尽可能准确，以帮助联系人找到你。</string>
+
+    <!-- POST_NOTIFICATIONS Permission (For TIRAMISU and above) -->
+    <string name="permission_post_notifications_title">需要授予权限: 发送通知</string>
+    <string name="permission_post_notifications_description">仅在触发提醒时发送通知</string>
+
+    <!-- ACCESS_BACKGROUND_LOCATION Permission (For Q and above) -->
+    <string name="permission_access_background_location_title">需要授予权限: 在后台访问位置信息</string>
+     <string name="permission_access_background_location_description">启用“附带位置信息”后，这需要在后台运行时获取位置信息的能力。 只有在触发提醒时才会获取位置信息。只有在App处于后台且设备处于闲置状态时，提醒才会被触发。 请在设置中选择“总是允许”，为 Keep Alive 应用程序启用此权限。</string>
+
+    <!-- REQUEST_SCHEDULE_EXACT_ALARM Permission (For S and above) -->
+    <string name="permission_schedule_alarms_title">需要授予权限: 闹钟和提醒</string>
+    <string name="permission_schedule_alarms_description">需要授予闹钟和提醒权限，这样即使设备处于睡眠或勿扰模式，提醒也能触发。\n\n请在设置中为 KeepAlive 启用此权限。</string>
+
+    <!-- AlertFunctions.kt -->
+    <string name="debug_log_doing_alert_check">Doing periodic check, alarm stage is %1$s</string>
+    <string name="debug_log_sending_alert_sms">Sending alert SMS!</string>
+    <string name="debug_log_getting_sms_manager_with_sub_id">Getting SMS manager with context.getSystemService and sub id %1$d</string>
+    <string name="debug_log_getting_sms_manager_with_context">Getting SMS manager with context.getSystemService</string>
+    <string name="debug_log_getting_default_sms_manager">Getting default SMS manager</string>
+    <string name="debug_log_getting_default_sms_manager_for_sub_id">Getting default SMS manager for sub id %1$d</string>
+    <string name="debug_log_exception_while_getting_sms_manager">Exception while getting SMS manager: %1$s</string>
+    <string name="debug_log_failed_getting_sms_manager">Failed getting SMS manager?!</string>
+    <string name="debug_log_sending_text_message_to">Sending text message to: %1$s</string>
+    <string name="debug_log_sending_multipart_sms">Sending multipart SMS message with %1$d parts</string>
+    <string name="debug_log_sending_single_sms">Sending single SMS message</string>
+    <string name="debug_log_failed_sending_sms">Failed sending SMS message to %1$s!? %2$s</string>
+    <string name="debug_log_sms_phone_blank">SMS phone # was blank?!</string>
+    <string name="debug_log_sending_location_message_to">Sending location message to: %1$s</string>
+    <string name="debug_log_failed_sending_location_sms">Failed sending location SMS message to %1$s!?</string>
+    <string name="debug_log_placing_alert_phone_call">Placing Alert phone call to %1$s</string>
+    <string name="debug_log_no_call_phone_permission">Unable to place call, don\'t have permissions?!</string>
+    <string name="debug_log_checking_for_activity">checking for activity starting at %1$s local time</string>
+    <string name="debug_log_checking_for_system_events">Checking for system lock/unlock events</string>
+    <string name="debug_log_failed_getting_last_phone_activity">Failed getting last phone activity?!</string>
+    <string name="debug_log_no_events_sending_notification">no events found in the last %1$.2f hours, sending Are you there? notification</string>
+    <string name="debug_log_sending_alert">Sending alert!</string>
+    <string name="debug_log_sending_alert_failed">Failed while attempting to get and send location alert</string>
+    <string name="debug_log_last_device_activity">Last usage event was %1$s from %2$s at %3$s UTC</string>
+    <string name="debug_log_location_power_mode_warning">Location power save mode may prevent us from obtaining location: %1$s</string>
+    <string name="debug_log_power_and_idle_status">In power save mode? %1$b. Is device idle? %2$b</string>
+    <string name="debug_log_failed_registering_sms_sent_receiver">Failed to register SMS Sent receiver.</string>
+    <string name="debug_log_failed_getting_sms_sub_id">Failed to get default SMS subscription ID.</string>
+    <string name="debug_log_alert_service_start">Starting Alert Service</string>
+    <string name="debug_log_alert_service_stop">Stopping Alert Service</string>
+    <string name="debug_log_alert_service_error">Error occurred in the Alert Service: %1$s</string>
+    <string name="debug_log_auto_restart_monitoring">Auto-Restart Monitoring is enabled, restarting alarm…</string>
+    <string name="debug_log_sending_warning_sms">Sending warning SMS to %1$s</string>
+
+    <!-- AppController.kt -->
+    <string name="debug_log_starting_up">KeepAlive starting up!</string>
+
+    <!-- UtilityFunctions.kt -->
+    <string name="debug_log_failed_getting_shared_prefs">Failed getting shared preferences?!</string>
+    <string name="debug_log_failed_getting_alarm_manager">Failed to get AlarmManager?!</string>
+    <string name="debug_log_setting_periodic_alarm">Setting new periodic alarm for approximately %1$s UTC</string>
+    <string name="debug_log_setting_periodic_exact_alarm">Setting new periodic exact alarm for %1$s UTC</string>
+    <string name="debug_log_setting_final_exact_alarm">Setting final exact alarm to go off at %1$s UTC</string>
+    <string name="debug_log_unable_to_set_exact_alarm">Unable to set exact alarm?!  Setting normal final alarm to go off at %1$s UTC</string>
+    <string name="debug_log_api_22_unable_to_set_exact_alarm">This is API 22 but we weren\'t able to set an exact alarm?!</string>
+    <string name="debug_log_returning_logs">Returning %1$d logs</string>
+
+    <!-- LogDisplayActivity.kt -->
+    <string name="debug_log_log_display_activity_started">Debug Log Display Activity started</string>
+    <string name="debug_log_logs_deleted">Debug logs deleted</string>
+    <string name="debug_log_logs_copied_to_clipboard">Debug logs copied to clipboard</string>
+
+    <!-- LocationHelperBase.kt -->
+    <string name="debug_log_timeout_reached_getting_location">Timeout reached while getting location?!</string>
+    <string name="debug_log_attempting_to_get_location">Attempting to get location…</string>
+    <string name="debug_log_device_idle_not_getting_current_location">Device is in idle mode, not getting current location</string>
+    <string name="debug_log_no_location_permission_executing_callback">Don\'t have location permission, executing callback</string>
+    <string name="debug_log_failed_getting_current_location">Failed getting current location?!</string>
+    <string name="debug_log_geocoding_timeout_reached">Timeout reached, locationString is %1$s</string>
+    <string name="debug_log_failed_geocoding_gps_coordinates">Failed geocoding GPS coordinates?!</string>
+    <string name="debug_log_no_address_results">No address results</string>
+    <string name="debug_log_location_helper_init_error">Error checking GPS or network provider</string>
+
+    <!-- LocationHelper.kt -->
+    <string name="debug_log_attempting_to_get_last_location">Attempting to get lastLocation…</string>
+    <string name="debug_log_best_last_known_location">best lastKnownLocation is from provider %1$s with accuracy %2$f</string>
+    <string name="debug_log_unable_to_determine_location">Unable to determine location</string>
+    <string name="debug_log_failed_getting_last_location">Failed while getting last location:</string>
+    <string name="debug_log_unable_to_get_current_location">Unable to get current location</string>
+    <string name="debug_log_location_timeout_reached">Timeout reached</string>
+    <string name="debug_log_timeout_reached_getting_location_from_google_play">Timeout reached while getting location from google play?!</string>
+    <string name="debug_log_failed_getting_location_from_source">Failed while trying to get the %1$s location</string>
+
+    <!-- MainActivity.kt -->
+    <string name="debug_log_no_alarm_or_monitoring_disabled">No alarm found or monitoring is disabled</string>
+    <string name="debug_log_no_events_found_lock_screen">No events found, may not have lock screen?</string>
+    <string name="debug_log_no_active_alarm_showing_restart_button">No active alarm found, showing button to restart</string>
+    <string name="debug_log_failed_getting_sms_manager_disable_button">Failed to get SMS manager? Disabling SMS test button</string>
+    <string name="debug_log_current_alarm_time">Current alarm set for %1$s local time</string>
+
+    <!-- PermissionManager.kt -->
+    <string name="debug_log_still_need_some_permissions">Still need some permissions</string>
+    <string name="debug_log_have_all_permissions">Have all permissions</string>
+    <string name="debug_log_finished_requesting_permissions">Finished requesting permissions</string>
+
+    <!-- AlarmReceiver.kt -->
+    <string name="debug_log_alarm_just_fired">Alarm just fired!</string>
+    <string name="debug_log_app_not_enabled_alarm_went_off">App is not enabled, why did the alarm go off?!</string>
+    <string name="debug_log_alarm_time_comparison">Time is %1$s UTC, alarm was supposed to go off at %2$s UTC, which was %3$d seconds ago</string>
+    <string name="debug_log_failed_processing_alarm">Failed while processing alarm:</string>
+    <string name="debug_log_app_in_foreground">KeepAlive is currently in the foreground</string>
+    <string name="debug_log_app_in_background">KeepAlive is currently in the background</string>
+    <string name="debug_log_flag_receiver_true">FLAG_RECEIVER_FOREGROUND is true</string>
+    <string name="debug_log_flag_receiver_false">FLAG_RECEIVER_FOREGROUND is false</string>
+
+    <!-- AlertService.kt -->
+    <string name="debug_log_wake_lock_acquired">Acquiring wake lock</string>
+    <string name="debug_log_wake_lock_released">Releasing wake lock</string>
+
+    <!-- SMSSentReceiver.kt -->
+    <string name="debug_log_sms_sent">SMS sent!</string>
+    <string name="debug_log_sms_send_error">SMS send error: %1$s</string>
+
+    <!-- BootBroadcastReceiver.kt -->
+    <string name="debug_log_boot_completed">Boot completed!?</string>
+    <string name="debug_log_app_is_disabled">App is disabled?</string>
+    <string name="debug_log_boot_receiver_exception">Exception in BootBroadcastReceiver: %1$s</string>
+
+    <!-- WebhookConfigManager.kt -->
+    <string name="debug_log_webhook_config_saved">Webhook configuration saved</string>
+    <string name="debug_log_webhook_config_deleted">Webhook configuration deleted</string>
+    <string name="debug_log_webhook_config_load_error">Error loading webhook configuration</string>
+
+    <!-- WebhookSender.kt -->
+    <string name="debug_log_disable_certificate_verification">Disabling webhook certificate verification!</string>
+    <string name="debug_log_request_successful">Request successful with code: %1$d</string>
+    <string name="debug_log_request_failed">Request failed with code: %1$d</string>
+    <string name="debug_log_request_failed_no_retry">Request failed with code %1$d, not retrying.</string>
+    <string name="debug_log_unknown_exception_sending_webhook">Unknown Exception while sending webhook: %1$s</string>
+    <string name="debug_log_io_exception_sending_webhook">IOException while sending webhook: %1$s</string>
+    <string name="debug_log_webhook_attempt">Attempt # %1$d of %2$d</string>
+    <string name="debug_log_failed_max_retries">Failed sending webhook, max retries exceeded</string>
+    <string name="debug_log_sending_request">Sending request to: %1$s. Location is %2$s</string>
+    <string name="debug_log_webhook_test_error">Error testing webhook: %1$s</string>
+    <string name="debug_log_sending_webhook_failed">Failed while sending webhook: %1$s</string>
+
+</resources>

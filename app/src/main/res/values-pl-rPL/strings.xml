@@ -168,8 +168,10 @@
     <string name="disabled_title">Monitorowanie Wyłączone</string>
     <string name="auto_restart_title">Auto-Restart Monitorowania Po Alercie</string>
     <string name="time_period_title">Godziny Nieaktywności przed Zapytaniem</string>
-    <string name="time_period_description">Ile godzin nieaktywności musi minąć zanim aplikacja wyśle pytanie \'Jesteś tam?\'.\n\nUWAGA: Czas ten nie jest dokładny i system może opóźnić to powiadomienie o maksymalnie jedną godzinę.</string>
-    <string name="followup_time_period_title">Ilość minut na Potwierdzenie Pytania</string>
+    <string name="time_period_description">Liczba godzin bezczynności przed wyświetleniem powiadomienia \'Jesteś tam?\'</string>
+    <string name="followup_time_period_title">Minuty oczekiwania na potwierdzenie</string>
+    <string name="exact_alarm_toggle_title">Użyj dokładnego czasu alarmu</string>
+    <string name="exact_alarm_note">UWAGA: Ten czas nie jest dokładny, a system może opóźnić powiadomienie nawet o 1 godzinę.\n\nWłącz \"Użyj dokładnego czasu alarmu\" poniżej, jeśli potrzebujesz precyzyjnych kontroli — może to nieznacznie zwiększyć zużycie baterii.</string>
     <string name="rest_period_title">Zakres Czasu Odpoczynku</string>
     <string name="followup_time_period_description">Ile minut należy poczekać na odpowiedź do pytania \'Jesteś tam?\' zanim Alert wysłany zostanie do Twoich Kontaktów Alarmowych.</string>
     <string name="contact_sms_phone_title">Numer Alertów SMS</string>
@@ -186,7 +188,7 @@
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Metoda monitorowania</string>
     <string name="monitored_apps_dialog_title">Wybierz 1 lub więcej aplikacji na swoim urządzeniu</string>
-    <string name="monitored_apps_dialog_message">Użycie wybranych aplikacji będzie wykorzystywane do określenia, kiedy ostatnio korzystano z urządzenia</string>
+    <string name="monitored_apps_dialog_message">Korzystanie z wybranych aplikacji będzie używane do określenia, kiedy ostatnio korzystano z urządzenia. Aby wrócić do blokady/odblokowania urządzenia, naciśnij \'Usuń\'.</string>
     <string name="monitored_apps_chosen_title">Wybrane aplikacje</string>
     <string name="monitored_apps_usage_history_dialog_title">Historia użycia aplikacji (72 godziny)</string>
     <string name="monitored_apps_usage_history_message">Te zdarzenia nie zawsze są wynikiem aktywności użytkownika. Przejrzyj je dokładnie przed wyborem tej aplikacji.</string>
@@ -289,6 +291,7 @@
     <string name="debug_log_failed_getting_shared_prefs">Nie udało się pobrać wspólnych preferencji?!</string>
     <string name="debug_log_failed_getting_alarm_manager">Nie udało się pobrać AlarmManager?!</string>
     <string name="debug_log_setting_periodic_alarm">Ustawianie nowego okresowego alarmu na około %1$s UTC</string>
+    <string name="debug_log_setting_periodic_exact_alarm">Ustawianie nowego dokładnego alarmu cyklicznego na %1$s UTC</string>
     <string name="debug_log_setting_final_exact_alarm">Ustawianie ostatecznego dokładnego alarmu na %1$s UTC</string>
     <string name="debug_log_unable_to_set_exact_alarm">Nie można ustawić dokładnego alarmu?! Ustawianie normalnego ostatecznego alarmu na %1$s UTC</string>
     <string name="debug_log_api_22_unable_to_set_exact_alarm">To jest API 22, ale nie udało się ustawić dokładnego alarmu?!</string>

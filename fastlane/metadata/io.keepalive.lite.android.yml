@@ -1,0 +1,37 @@
+Categories:
+  - Phone & SMS
+  - Sports & Health
+License: Apache-2.0
+AuthorEmail: dev@keep-alive.io
+SourceCode: https://github.com/keepalivedev/KeepAlive
+IssueTracker: https://github.com/keepalivedev/KeepAlive/issues
+
+AutoName: Keep Alive Lite
+Description: Notify others if you haven't used your device in a given period of time.
+
+RepoType: git
+Repo: https://github.com/keepalivedev/KeepAlive
+Binaries: https://github.com/keepalivedev/KeepAlive/releases/download/%v/app-fDroidLite-release.apk
+
+Donate: https://ko-fi.com/keepalivedev
+Bitcoin: bc1q756uyj9d4alkqxk5y9t7jex568qzkeekqflryv
+
+Builds:
+  - versionName: 1.4.0
+    versionCode: 140
+    commit: 1.4.0
+    subdir: app
+    sudo:
+      - apt-get update || apt-get update
+      - apt-get install -y openjdk-17-jdk-headless
+      - update-alternatives --auto java
+    gradle:
+      - fDroidLite
+
+
+AllowedAPKSigningKeys: c45567b712d6fd7979df14f66f8a5c25859ee223e1f07e915a7eee201c14baef
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+CurrentVersion: 1.4.0
+CurrentVersionCode: 140

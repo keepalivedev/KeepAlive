@@ -326,7 +326,7 @@ open class LocationHelperBase(
 
                 // the synchronous version is deprecated but nothing else available in <33
                 val addresses: List<Address> =
-                    geocoder.getFromLocation(loc.latitude, loc.longitude, 1)!!
+                    geocoder.getFromLocation(loc.latitude, loc.longitude, 1) ?: emptyList()
 
                 Log.d("geocodeLocAndExecute", "geocode result: $addresses")
                 val addressString = processGeocodeResult(addresses)

@@ -54,12 +54,14 @@ class AlertNotificationHelper(private val context: Context) {
                 context.getString(R.string.alert_service_notification_channel_description)
             )
 
-            // notification sent when a Webhook Alert is sent
-            createNotificationChannel(
-                AppController.WEBHOOK_SENT_NOTIFICATION_CHANNEL_ID,
-                context.getString(R.string.webhook_sent_notification_channel_title),
-                context.getString(R.string.webhook_sent_notification_channel_description)
-            )
+            if (BuildConfig.INCLUDE_WEBHOOK) {
+                // notification sent when a Webhook Alert is sent
+                createNotificationChannel(
+                    AppController.WEBHOOK_SENT_NOTIFICATION_CHANNEL_ID,
+                    context.getString(R.string.webhook_sent_notification_channel_title),
+                    context.getString(R.string.webhook_sent_notification_channel_description)
+                )
+            }
         }
     }
 
@@ -144,8 +146,9 @@ class AlertNotificationHelper(private val context: Context) {
                 "Sending notification: $title, $content"
             )
 
-            // make sure we have notification permissions
-            if (ContextCompat.checkSelfPermission(
+            // make sure we have notification permissions on Android 13+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                ContextCompat.checkSelfPermission(
                     context,
                     Manifest.permission.POST_NOTIFICATIONS
                 ) != PackageManager.PERMISSION_GRANTED
