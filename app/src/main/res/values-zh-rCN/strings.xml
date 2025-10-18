@@ -187,7 +187,6 @@
     <string name="edit_emergency_contact_title">编辑联系人</string>
     <string name="webhook_title">Alert Webhook</string>
     <string name="webhook_url_title">Webhook URL</string>
-    <string name="silent_panic_alert_title">默默提醒</string>
 
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">监测方式</string>
