@@ -1,0 +1,6 @@
+* Ajouter un paramètre d'alarme exact
+* Masquer le numéro de téléphone dans les journaux de débogage
+* Ajouter la prise en charge des icônes thématiques
+* Ajouter une traduction chinoise (merci @jondome)
+* Ajouter une traduction italienne (merci @albanobattistella)
+* Créer une version « Lite » qui supprime la fonctionnalité Webhook et l'autorisation Internet

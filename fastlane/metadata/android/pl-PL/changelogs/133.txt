@@ -1,0 +1,6 @@
+* Dodaj dokładne ustawienie alarmu
+* Maskuj numer telefonu w dziennikach debugowania
+* Dodaj obsługę ikon tematycznych
+* Dodaj tłumaczenie chińskie (dzięki @jondome)
+* Dodaj tłumaczenie na język włoski (dzięki @albanobattistella)
+* Utwórz wersję „Lite”, która usuwa funkcjonalność webhooka i uprawnienia do Internetu
