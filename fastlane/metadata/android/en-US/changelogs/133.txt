@@ -1,0 +1,6 @@
+* Add Exact Alarm Setting
+* Mask Phone Number in Debug Logs
+* Add Support for Themed Icons
+* Add Chinese Translation (thanks @jondome)
+* Add Italian Translation (thanks @albanobattistella)
+* Create 'Lite' Version That Removes Webhook Functionality and Internet Permission

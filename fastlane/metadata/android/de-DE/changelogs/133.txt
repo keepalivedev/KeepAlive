@@ -1,0 +1,6 @@
+* Genaue Alarmeinstellung hinzufügen
+* Telefonnummer in Debug-Protokollen maskieren
+* Unterstützung für thematische Symbole hinzufügen
+* Chinesische Übersetzung hinzufügen (danke @jodome)
+* Italienische Übersetzung hinzufügen (danke @albanobattistella)
+* Erstellen Sie eine „Lite“-Version, die die Webhook-Funktionalität und die Internetberechtigung entfernt

@@ -1,0 +1,6 @@
+* Aggiungi l'impostazione esatta dell'allarme
+* Maschera il numero di telefono nei registri di debug
+* Aggiungi il supporto per le icone a tema
+* Aggiungi la traduzione cinese (grazie @jondome)
+* Aggiungi la traduzione in italiano (grazie @albanobattistella)
+* Crea una versione 'Lite' che rimuove la funzionalità webhook e l'autorizzazione Internet
