@@ -1,40 +1,41 @@
-Keep Alive enverra un message personnalisé par SMS à une ou plusieurs personnes si vous n'avez pas utilisé votre appareil pendant une période de temps donnée. Destiné à être utilisé comme sécurité intégrée pour ceux vivant seuls afin d'alerter les proches en cas d'accident ou autre urgence. Une fois les paramètres configurés, aucune autre interaction n’est requise.
+Keep Alive enverra un message personnalisé par SMS à une ou plusieurs personnes si vous n’avez pas utilisé votre appareil pendant une certaine période. Conçu comme une mesure de sécurité pour les personnes vivant seules en cas d’accident ou d’urgence. Une fois la configuration terminée, aucune autre interaction n’est nécessaire.
 
-- 100% géré par l'appareil, aucun service cloud ou compte requis
-- Gratuit, sans publicité ni trackeur
-- Code Ouvert (Open Source) (https://github.com/keepalivedev/KeepAlive)
+- 100 % basé sur l’appareil, aucun service ou compte infonuagique requis
+- Gratuit, sans publicité ni traqueurs
+- Code source ouvert (https://github.com/keepalivedev/KeepAlive)
 - Utilisation minimale de la batterie
-- Plusieurs destinataires SMS simultanés
-- Message d'alerte personnalisé
-- Facultatif: inclure les informations de localisation dans les SMS
-- Facultatif: passez un appel téléphonique avec le haut-parleur activé
-- Optionnel : Envoyer une requête HTTP à une URL personnalisée
+- Plusieurs destinataires SMS
+- Message d’alerte personnalisé
+- Optionnel : inclure l’emplacement dans le SMS
+- Optionnel : effectuer un appel téléphonique avec le haut-parleur activé
+- Optionnel : envoyer une requête HTTP vers une URL personnalisée
 
 Exigences
-   Keep Alive nécessite que votre appareil dispose d'un forfait cellulaire actif. Les appels et la messagerie WiFi seront utilisés si l'appareil le prend en charge.
+  Keep Alive nécessite que votre appareil dispose d’un forfait cellulaire actif. Les appels et messages Wi‑Fi seront utilisés si l’appareil les prend en charge.
 
-Comment ça fonctionne
-   Keep Alive utilise soit l'écran de verrouillage de votre appareil, soit une ou plusieurs autres applications pour détecter l'activité. Si votre appareil n'a pas été verrouillé ou déverrouillé pendant une période de temps définie, ou si vous n'avez pas accédé aux applications sélectionnées, un message « Êtes-vous là ? » vous sera demandé. notification. Si cette notification n'est pas reconnue, une alerte sera déclenchée. En fonction des paramètres de contact d'urgence configurés, un ou plusieurs messages SMS et/ou un appel téléphonique seront passés pour informer les autres que vous pourriez avoir besoin d'aide.
+Fonctionnement
+  Keep Alive utilise soit l’écran de verrouillage de votre appareil, soit une ou plusieurs applications pour détecter l’activité. Si votre appareil n’a pas été verrouillé ou déverrouillé pendant une période déterminée, ou si vous n’avez pas utilisé les applications sélectionnées, une notification « Êtes-vous là? » apparaîtra. Si cette notification n’est pas confirmée, une alerte sera déclenchée. Selon les paramètres de contact d’urgence configurés, un ou plusieurs messages SMS et/ou un appel téléphonique seront effectués pour informer vos contacts que vous pourriez avoir besoin d’aide.
 
-Réglages principaux
-- Méthode de surveillance - Choisissez entre utiliser l'écran de verrouillage ou une ou plusieurs autres applications pour détecter l'activité. Si vous utilisez une ou plusieurs autres applications, vous serez invité à sélectionner la ou les applications à surveiller.
-- Heures d'inactivité avant la notification : combien d'heures se sont écoulées depuis le dernier verrouillage ou déverrouillage de votre téléphone avant que le message « Êtes-vous là ? » vous soit demandé? La valeur par défaut est 12 heures
-- Minutes d'attente pour confirmation : si la notification d'inactivité n'est pas acquittée dans ce délai, une alerte sera envoyée en fonction des paramètres de contact d'urgence préconfigurés. La valeur par défaut est 60 minutes
-- Plage de temps de période de repos - une plage de temps pendant laquelle l'inactivité ne sera pas comptée. Par exemple, avec des « Heures d'inactivité » définies sur 6 heures et une Période de repos de 22h00 à 6h00, si l'appareil est utilisé pour la dernière fois à 18h00, le message Êtes-vous là ? le chèque ne serait envoyé qu'à 8h00. A noter qu'une alerte peut toujours être envoyée pendant une période de repos si le message Êtes-vous là ? le chèque a été envoyé AVANT le début d’une période de repos
-- Surveillance de redémarrage automatique après alerte - Si elle est activée, la surveillance sera automatiquement redémarrée après l'envoi d'une alerte.
-- Webhook d'alerte - Configurer une requête HTTP à envoyer lorsqu'une alerte est déclenchée
+Paramètres principaux
+- Méthode de surveillance : choisissez entre l’écran de verrouillage ou d’autres applications pour détecter l’activité. Si vous choisissez des applications, vous serez invité à les sélectionner.
+- Heures d’inactivité avant l’avertissement : durée (en heures) depuis le dernier verrouillage/déverrouillage avant l’envoi d’une notification « Êtes-vous là? » (par défaut : 12 h).
+- Minutes d’attente : délai avant qu’une alerte soit envoyée si la notification n’est pas confirmée (par défaut : 60 min).
+- Plage horaire de repos : période pendant laquelle l’inactivité n’est pas comptabilisée. Par exemple, avec 6 h d’inactivité et une période de repos de 22 h à 6 h, si l’appareil est utilisé à 18 h, l’alerte ne sera pas envoyée avant 8 h.
+- Redémarrage automatique après alerte : si activé, la surveillance redémarre automatiquement après l’envoi d’une alerte.
+- Webhook d’alerte : permet d’envoyer une requête HTTP lorsqu’une alerte est déclenchée.
 
-Paramètres des contacts d'urgence
-- Numéro d'appel téléphonique (facultatif) - lorsqu'une alerte est déclenchée, un appel téléphonique sera passé à ce numéro avec le haut-parleur activé
+Contacts d’urgence
+- Numéro d’appel téléphonique (optionnel) : lorsqu’une alerte est déclenchée, un appel est effectué à ce numéro avec le haut-parleur activé.
 
-Un ou plusieurs destinataires SMS peuvent être configurés avec:
-- Numéro de téléphone - le numéro de téléphone où envoyer le SMS d'alerte
-- Message d'alerte - le message qui sera envoyé lorsqu'une alerte est déclenchée
-- Inclure l'emplacement - si activé, votre emplacement sera inclus dans un deuxième SMS
 
-Confidentialité/Collecte de données
-Aucune donnée n'est collectée autre que les paramètres configurés. Ces données ne sont pas partagées avec les développeurs ou des tiers. Les seules données transmises sont destinées aux contacts d'urgence préconfigurés. Cette application ne demande pas d'accès au réseau ou au stockage et aucune donnée n'est envoyée aux développeurs ou à des tiers
+Un ou plusieurs destinataires SMS peuvent être configurés :
+- Numéro de téléphone : le numéro auquel le SMS d’alerte sera envoyé
+- Message d’alerte : texte envoyé lors d’une alerte
+- Inclure l’emplacement : si activé, un second SMS inclura votre position
 
-Clause de non-responsabilité
-- Non responsable des frais de SMS ou d'appels téléphoniques encourus par l'utilisation de l'application Keep Alive
-- Le fonctionnement de l'application Keep Alive dépend de l'appareil, du logiciel et de la connectivité réseau. Les développeurs ne sont pas responsables de toute panne due à des dysfonctionnements de l'appareil, des incompatibilités logicielles ou des problèmes de réseau
+Confidentialité et collecte de données
+  Aucune donnée n’est collectée autre que vos paramètres. Ces données ne sont partagées avec personne, y compris les développeurs. Les seules données transmises sont celles destinées à vos contacts d’urgence. L’application ne demande aucun accès au réseau ni au stockage.
+
+Avertissement
+- L’utilisateur est responsable de tout coût lié aux SMS ou aux appels effectués par Keep Alive.
+- Le bon fonctionnement de Keep Alive dépend de l’appareil, du logiciel et de la connectivité réseau. Les développeurs ne sont pas responsables des défaillances dues à des problèmes matériels, logiciels ou de réseau.
