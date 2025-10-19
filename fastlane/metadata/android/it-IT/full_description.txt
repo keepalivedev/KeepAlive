@@ -1,39 +1,40 @@
-Keep Alive invierà un messaggio personalizzato via SMS a una o più persone se non hai utilizzato il tuo dispositivo per un determinato periodo di tempo. Pensato per essere utilizzato come misura di sicurezza per chi vive da solo in caso di incidente o altra emergenza. Una volta configurate le impostazioni, non sono necessarie ulteriori interazioni.
+Keep Alive invia un messaggio personalizzato via SMS a una o più persone se non utilizzi il dispositivo per un determinato periodo di tempo. Pensata come misura di sicurezza per chi vive da solo, utile in caso di incidente o emergenza. Una volta configurata, non richiede ulteriori interazioni.
 
-- Basato al 100% sul dispositivo, non sono richiesti servizi o account cloud
-- Gratuito, senza pubblicità o tracker
+- 100% basata sul dispositivo, senza servizi o account cloud
+- Gratuita, senza pubblicità né tracker
 - Open Source (https://github.com/keepalivedev/KeepAlive)
 - Consumo minimo della batteria
-- Più destinatari SMS
+- Destinatari SMS multipli
 - Messaggio di avviso personalizzato
-- Facoltativo: includi le informazioni sulla posizione nell'SMS
-- Facoltativo: effettua una chiamata telefonica con il vivavoce abilitato
+- Facoltativo: includi la posizione nell’SMS
+- Facoltativo: effettua una chiamata con vivavoce attivo
 - Facoltativo: invia una richiesta HTTP a un URL personalizzato
 
 Requisiti
-Keep Alive richiede che il tuo dispositivo abbia un piano cellulare attivo. Le chiamate e i messaggi Wi-Fi verranno utilizzati se il dispositivo li supporta.
+  Keep Alive richiede un piano cellulare attivo. Le chiamate e i messaggi Wi-Fi verranno utilizzati se supportati dal dispositivo.
 
 Come funziona
-Keep Alive utilizza la schermata di blocco del dispositivo o altre app per rilevare l'attività. Se il tuo dispositivo non è stato bloccato o sbloccato per un determinato periodo di tempo, o se non hai effettuato l'accesso alle app selezionate, ti verrà inviata una notifica "Sei lì?". Se questa notifica non viene confermata, verrà attivato un avviso. In base alle impostazioni dei contatti di emergenza configurate, verranno inviati uno o più SMS e/o una chiamata telefonica per avvisare gli altri che potresti aver bisogno di assistenza.
+  Keep Alive rileva l’attività tramite la schermata di blocco o altre app. Se il dispositivo non viene bloccato o sbloccato per un periodo prestabilito, o se non apri le app selezionate, comparirà una notifica “Ci sei?”. Se non rispondi, verrà attivato un Avviso. In base alle impostazioni dei Contatti di Emergenza, verranno inviati uno o più SMS e/o effettuata una chiamata per avvisare che potresti aver bisogno di aiuto.
 
 Impostazioni principali
-- Metodo di monitoraggio - Scegli se utilizzare la schermata di blocco o un'altra/e app per rilevare l'attività. Se utilizzi un'altra/e app, ti verrà chiesto di selezionare l'app/le app da monitorare.
-- Ore di inattività prima della notifica - quante ore dall'ultimo blocco o sblocco del telefono prima di ricevere la notifica "Sei lì?". Il valore predefinito è 12 ore.
-- Minuti di attesa - se la notifica non viene confermata entro questo intervallo di tempo, verrà inviato un avviso in base alle impostazioni dei contatti di emergenza configurate. Il valore predefinito è 60 minuti.
-- Intervallo di tempo del periodo di riposo: intervallo di tempo durante il quale l'inattività non verrà conteggiata. Ad esempio, con "Ore di inattività" impostato su 6 ore e un periodo di riposo dalle 22:00 alle 6:00, se il dispositivo viene utilizzato l'ultima volta alle 18:00, il controllo "Sei lì?" non verrà inviato prima delle 8:00. Si noti che è comunque possibile inviare un avviso durante un periodo di riposo se il controllo "Sei lì?" è stato inviato PRIMA dell'inizio del periodo di riposo.
-- Riavvio automatico del monitoraggio dopo l'avviso: se abilitato, il monitoraggio verrà riavviato automaticamente dopo l'invio di un avviso. - Webhook di avviso - Configura una richiesta HTTP da inviare quando viene attivato un avviso
+- Metodo di monitoraggio: scegli tra schermata di blocco o app selezionate per rilevare l’attività.
+- Ore di inattività prima del promemoria: quante ore devono passare dall’ultimo blocco/sblocco prima della notifica “Ci sei?”. (Predefinito: 12 ore)
+- Minuti di attesa: tempo per rispondere alla notifica prima dell’invio dell’Avviso. (Predefinito: 60 minuti)
+- Intervallo di riposo: fascia oraria in cui l’inattività non viene conteggiata (es. 22:00-6:00). Gli avvisi già iniziati prima del periodo di riposo possono comunque essere inviati.
+- Riavvio automatico dopo l’avviso: se attivo, il monitoraggio riparte automaticamente dopo l’invio di un Avviso.
+- Webhook di avviso: consente di inviare una richiesta HTTP quando un Avviso viene attivato.
 
-Impostazioni dei contatti di emergenza
-- Numero di telefono (facoltativo) - quando viene attivato un avviso, verrà effettuata una chiamata a questo numero con il vivavoce abilitato
+Contatti di emergenza
+- Numero di chiamata (facoltativo): alla ricezione di un Avviso verrà effettuata una chiamata a questo numero con vivavoce attivo.
 
-È possibile configurare uno o più destinatari SMS con:
-- Numero di telefono - il numero di telefono a cui inviare l'SMS di avviso
-- Messaggio di avviso - il messaggio che verrà inviato quando viene attivato un avviso
-- Includi posizione - se abilitato, la tua posizione verrà inclusa in un secondo SMS
+È possibile configurare uno o più destinatari SMS:
+- Numero di telefono: numero a cui inviare l’SMS di avviso
+- Messaggio di avviso: testo inviato quando viene attivato un Avviso
+- Includi posizione: se attivo, verrà inviato un secondo SMS con la posizione
 
-Privacy/Raccolta dati
-Non vengono raccolti dati diversi dalle impostazioni configurate. Questi dati non vengono condivisi con gli sviluppatori o terze parti. Gli unici dati trasmessi sono ai contatti di emergenza configurati. Questa app non richiede l'accesso alla rete o all'archiviazione e nessun dato viene inviato agli sviluppatori o a terze parti.
+Privacy / Raccolta dati
+Non vengono raccolti dati diversi dalle impostazioni configurate. Tali dati non vengono condivisi con gli sviluppatori né con terze parti. L’unica comunicazione avviene verso i contatti di emergenza configurati. L’app non richiede accesso a rete o archiviazione e non trasmette dati agli sviluppatori o a terzi.
 
-Disclaimer
-- Non si assume alcuna responsabilità per i costi di SMS o chiamate telefoniche sostenuti dall'utilizzo dell'app Keep Alive
-- Il funzionamento dell'app Keep Alive dipende dal dispositivo, dal software e dalla connettività di rete. Gli sviluppatori non sono responsabili per eventuali guasti dovuti a malfunzionamenti del dispositivo, incompatibilità del software o problemi di rete.
+Avvertenze
+- L’utente è responsabile di eventuali costi per SMS o chiamate generati dall’app.
+- Il corretto funzionamento dipende dal dispositivo, dal software e dalla connessione di rete. Gli sviluppatori non sono responsabili di eventuali malfunzionamenti o incompatibilità.

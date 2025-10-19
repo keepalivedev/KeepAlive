@@ -1,3 +1,7 @@
-Avvisa amici o persone care se non hai utilizzato il tuo dispositivo per un determinato periodo di tempo tramite SMS e/o una chiamata telefonica.
+Notifica amici o persone care se non hai
+usato il tuo dispositivo di recente tramite
+SMS o una chiamata telefonica
 
-Progettato per fungere da sistema di sicurezza per chi vive da solo in caso di incidente o altra emergenza.
+Progettato per fungere da sicurezza per
+chi vive da solo in caso di incidente o<
+altra emergenza
