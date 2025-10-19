@@ -1,41 +1,40 @@
-Keep Alive sendet eine benutzerdefinierte Nachricht per SMS an eine oder mehrere Personen, wenn Sie Ihr Gerät innerhalb eines bestimmten Zeitraums nicht benutzt haben. Diese Funktion ist als Ausfallsicherung für Alleinlebende im Falle eines Unfalls oder eines anderen Notfalls gedacht. Sobald die Einstellungen konfiguriert sind, ist keine weitere Interaktion erforderlich.
+Keep Alive sendet eine benutzerdefinierte SMS an eine oder mehrere Personen, wenn Sie Ihr Gerät für einen bestimmten Zeitraum nicht verwendet haben. Gedacht als Sicherheitsnetz für alleinlebende Personen im Falle eines Unfalls oder Notfalls. Nach der Einrichtung ist keine weitere Interaktion erforderlich.
 
-- 100% gerätebasiert, keine Cloud-Dienste oder Konten erforderlich
+- 100% gerätebasiert, keine Cloud‑Dienste oder Konten erforderlich
 - Kostenlos, ohne Werbung oder Tracker
 - Open Source (https://github.com/keepalivedev/KeepAlive)
 - Minimaler Batterieverbrauch
-- Mehrere SMS-Empfänger
-- Benutzerdefinierte Alarm-Meldung
-- Wahlweise: Standortinformationen in SMS einfügen
-- Wahlweise: Telefonanrufe mit aktivierter Freisprecheinrichtung
-- Wahlweise: Eine HTTP-Anfrage an eine benutzerdefinierte URL senden
+- Mehrere SMS‑Empfänger
+- Anpassbare Warnnachricht
+- Optional: Standortinformationen in SMS einfügen
+- Optional: Anruf mit eingeschalteter Freisprecheinrichtung tätigen
+- Optional: HTTP‑Anfrage an benutzerdefinierte URL senden
 
 Anforderungen
-  Keep Alive erfordert, dass Ihr Gerät über einen aktiven Mobilfunktarif verfügt. WiFi-Anrufe und -Nachrichten werden verwendet, wenn das Gerät dies unterstützt.
+  Keep Alive erfordert einen aktiven Mobilfunktarif. WLAN‑Anrufe und ‑Nachrichten werden genutzt, wenn Ihr Gerät dies unterstützt.
 
 Funktionsweise
-  Keep Alive verwendet entweder den Sperrbildschirm Ihres Geräts oder eine oder mehrere andere Apps, um Aktivitäten zu erkennen. Wenn Ihr Gerät für einen festgelegten Zeitraum nicht gesperrt oder entsperrt wurde oder Sie nicht auf die ausgewählten Apps zugegriffen haben, wird Ihnen die Meldung „Sind Sie da?“ angezeigt. Wenn diese Meldung nicht bestätigt wird, wird ein Alarm ausgelöst. Basierend auf den konfigurierten Notfallkontakteinstellungen werden eine oder mehrere SMS-Nachrichten und/oder ein Telefonanruf gesendet, um andere zu benachrichtigen, dass Sie möglicherweise Hilfe benötigen.
+  Keep Alive erkennt Aktivität über den Sperrbildschirm oder andere ausgewählte Apps. Wenn Ihr Gerät über einen festgelegten Zeitraum nicht gesperrt oder entsperrt wurde oder die gewählten Apps nicht verwendet wurden, erscheint eine „Bist du da?“-Benachrichtigung. Wird diese nicht bestätigt, wird ein Alarm ausgelöst. Entsprechend der Notfallkontakteinstellungen werden eine oder mehrere SMS‑Nachrichten und/oder ein Anruf gesendet, um andere zu benachrichtigen, dass Sie möglicherweise Hilfe benötigen.
 
-Haupt-Einstellungen
-- Überwachungsmethode – Wählen Sie zwischen der Verwendung des Sperrbildschirms oder einer oder mehrerer anderer Apps zur Aktivitätserkennung. Wenn Sie andere Apps verwenden, werden Sie aufgefordert, die zu überwachenden Apps auszuwählen.
-- Stunden Inaktivität bis zur Aufforderung - Stunden Inaktivität, bevor Sie eine Benachrichtigung "Sind Sie da?" erhalten. Standardwert: 12 Stunden
-- Minuten warten auf Bestätigung - wenn die Aufforderung nicht innerhalb dieser Zeitspanne bestätigt wird, wird ein Alarm gemäß den konfigurierten Notfallkontakteinstellungen gesendet. 
-Standardwert: 60 Minuten
-- Ruhezeit - Zeitspanne, in der Inaktivität nicht gezählt wird. Wenn zum Beispiel \"Stunden Inaktivität\" auf 6 Stunden und eine Ruhezeit von 22:00 – 6:00 Uhr eingestellt ist und das Gerät zum letzten Mal um 18:00 Uhr verwendet wurde, wird die Meldung \"Sind Sie da?\" erst um 8:00 Uhr erscheinen.  HINWEIS: Ein Alarm kann auch während einer Ruhezeit gesendet werden, wenn die Meldung \"Sind Sie da?\" VOR Beginn der Ruhezeit angezeigt wurde.
-- Automatischer Neustart der Überwachung nach Alarmierung - Wenn diese Option aktiviert ist, wird die Überwachung automatisch neu gestartet, nachdem ein Alarm gesendet wurde.
-- Alarm-Webhook - Konfigurieren Sie eine HTTP-Anfrage, die bei Auslösung eines Alarms gesendet wird
+Haupteinstellungen
+- Überwachungsmethode: Wählen Sie zwischen Sperrbildschirm oder Apps zur Aktivitätserkennung.
+- Inaktivitätsstunden vor Aufforderung: Zeitspanne bis zur „Bist du da?“-Benachrichtigung (Standard: 12 Stunden).
+- Wartezeit in Minuten: Wenn die Aufforderung nicht bestätigt wird, wird nach Ablauf dieser Zeit ein Alarm gesendet (Standard: 60 Minuten).
+- Ruhezeitraum: Zeitraum, in dem Inaktivität nicht gezählt wird (z. B. 22:00–6:00). Alarme, die vor Beginn des Ruhezeitraums ausgelöst wurden, bleiben aktiv.
+- Automatischer Neustart nach Alarm: Wenn aktiviert, wird die Überwachung nach einem Alarm automatisch fortgesetzt.
+- Alarm‑Webhook: HTTP‑Anfrage, die bei einem Alarm gesendet wird.
 
-Einstellungen für Notfallkontakte
-- Telefonnummer (optional) - wenn ein Alarm ausgelöst wird, wird diese Nummer mit aktivierter Freisprecheinrichtung angerufen.
+Notfallkontakteinstellungen
+- Telefonnummer für Anruf (optional): Bei einem Alarm wird automatisch ein Anruf mit aktivierter Freisprecheinrichtung getätigt.
 
 Es können ein oder mehrere SMS-Empfänger konfiguriert werden:
 - Telefonnummer - die Telefonnummer, an die die Alarm-SMS gesendet werden soll
 - Alarm-Meldung - die Nachricht, die bei Auslösung eines Alarms gesendet wird
 - incl. Standort - wenn aktiviert, wird Ihr Standort in einer zweiten SMS gesendet
 
-Datenschutz/Datenerfassung
-Außer den konfigurierten Einstellungen werden keine weiteren Daten erfasst.  Diese Daten werden weder an die Entwickler noch an Dritte weitergegeben. Die einzigen Daten, die übertragen werden, sind die der konfigurierten Notfallkontakte. Diese App fordert keinen Netzwerk- oder Speicherzugriff an und es werden keine Daten an die Entwickler oder Dritte gesendet.
+Datenschutz
+Es werden keinerlei Daten außer den konfigurierten Einstellungen gespeichert. Diese Daten werden weder an Entwickler noch an Dritte übermittelt. Die App hat keinen Netzwerk‑ oder Speicherzugriff; alle gesendeten Daten gehen nur an die angegebenen Notfallkontakte.
 
 Haftungsausschluss
-- Nicht verantwortlich für SMS- oder Telefongebühren, die durch die Nutzung der Keep Alive-App entstehen.
-- Der Betrieb der Keep Alive-App hängt vom Gerät, der Software und der Netzwerkkonnektivität ab. Die Entwickler sind nicht verantwortlich für Ausfälle aufgrund von Gerätefehlfunktionen, Software-Inkompatibilitäten oder Netzwerkproblemen.
+- Der Nutzer trägt die Kosten für SMS‑ oder Anrufgebühren.
+- Die Funktionsweise hängt von Gerät, Software und Netzwerkverbindung ab. Die Entwickler übernehmen keine Verantwortung für Fehlfunktionen, Inkompatibilitäten oder Verbindungsprobleme.
