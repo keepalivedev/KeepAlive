@@ -33,7 +33,7 @@ One or more SMS recipients can be configured with:
 - Include Location - if enabled, your location will be included in a second SMS
 
 Privacy/Data Collection
-No data is collected other than the configured settings.  This data is not shared with the developers or any 3rd parties. The only data transmitted is to the configured emergency contacts. This app does not request network or storage access and no data is sent to the developers or any 3rd parties.
+No data is collected other than the configured settings and nothing is shared with the developers or any 3rd parties. The only data transmitted is to the configured emergency contacts.
 
 Disclaimer
 - Not responsible for SMS or phone call charges incurred by the use of the Keep Alive app

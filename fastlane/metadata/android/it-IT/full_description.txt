@@ -32,8 +32,8 @@ Contatti di emergenza
 - Messaggio di avviso: testo inviato quando viene attivato un Avviso
 - Includi posizione: se attivo, verrà inviato un secondo SMS con la posizione
 
-Privacy / Raccolta dati
-Non vengono raccolti dati diversi dalle impostazioni configurate. Tali dati non vengono condivisi con gli sviluppatori né con terze parti. L’unica comunicazione avviene verso i contatti di emergenza configurati. L’app non richiede accesso a rete o archiviazione e non trasmette dati agli sviluppatori o a terzi.
+Privacy/Raccolta dati
+Non vengono raccolti dati ad eccezione delle impostazioni configurate e nulla viene condiviso con gli sviluppatori o terze parti. Gli unici dati trasmessi sono destinati ai contatti di emergenza configurati.
 
 Avvertenze
 - L’utente è responsabile di eventuali costi per SMS o chiamate generati dall’app.
