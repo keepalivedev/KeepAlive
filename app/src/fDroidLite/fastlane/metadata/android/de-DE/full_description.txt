@@ -1,0 +1,42 @@
+Keep Alive sendet eine benutzerdefinierte SMS an eine oder mehrere Personen, wenn Sie Ihr Gerät für einen bestimmten Zeitraum nicht verwendet haben. Gedacht als Sicherheitsnetz für alleinlebende Personen im Falle eines Unfalls oder Notfalls. Nach der Einrichtung ist keine weitere Interaktion erforderlich.
+
+Dies ist die 'Lite'-Version, die die Internet-Berechtigung und die Webhook-Funktionalität entfernt.
+
+- 100% gerätebasiert, keine Cloud‑Dienste oder Konten erforderlich
+- Kostenlos, ohne Werbung oder Tracker
+- Open Source (https://github.com/keepalivedev/KeepAlive)
+- Minimaler Batterieverbrauch
+- Mehrere SMS‑Empfänger
+- Anpassbare Warnnachricht
+- Optional: Standortinformationen in SMS einfügen
+- Optional: Anruf mit eingeschalteter Freisprecheinrichtung tätigen
+- Optional: HTTP‑Anfrage an benutzerdefinierte URL senden
+
+Anforderungen
+  Keep Alive erfordert einen aktiven Mobilfunktarif. WLAN‑Anrufe und ‑Nachrichten werden genutzt, wenn Ihr Gerät dies unterstützt.
+
+Funktionsweise
+  Keep Alive erkennt Aktivität über den Sperrbildschirm oder andere ausgewählte Apps. Wenn Ihr Gerät über einen festgelegten Zeitraum nicht gesperrt oder entsperrt wurde oder die gewählten Apps nicht verwendet wurden, erscheint eine „Bist du da?“-Benachrichtigung. Wird diese nicht bestätigt, wird ein Alarm ausgelöst. Entsprechend der Notfallkontakteinstellungen werden eine oder mehrere SMS‑Nachrichten und/oder ein Anruf gesendet, um andere zu benachrichtigen, dass Sie möglicherweise Hilfe benötigen.
+
+Haupteinstellungen
+- Überwachungsmethode: Wählen Sie zwischen Sperrbildschirm oder Apps zur Aktivitätserkennung.
+- Inaktivitätsstunden vor Aufforderung: Zeitspanne bis zur „Bist du da?“-Benachrichtigung (Standard: 12 Stunden).
+- Wartezeit in Minuten: Wenn die Aufforderung nicht bestätigt wird, wird nach Ablauf dieser Zeit ein Alarm gesendet (Standard: 60 Minuten).
+- Ruhezeitraum: Zeitraum, in dem Inaktivität nicht gezählt wird (z. B. 22:00–6:00). Alarme, die vor Beginn des Ruhezeitraums ausgelöst wurden, bleiben aktiv.
+- Automatischer Neustart nach Alarm: Wenn aktiviert, wird die Überwachung nach einem Alarm automatisch fortgesetzt.
+- Alarm‑Webhook: HTTP‑Anfrage, die bei einem Alarm gesendet wird.
+
+Notfallkontakteinstellungen
+- Telefonnummer für Anruf (optional): Bei einem Alarm wird automatisch ein Anruf mit aktivierter Freisprecheinrichtung getätigt.
+
+Es können ein oder mehrere SMS-Empfänger konfiguriert werden:
+- Telefonnummer - die Telefonnummer, an die die Alarm-SMS gesendet werden soll
+- Alarm-Meldung - die Nachricht, die bei Auslösung eines Alarms gesendet wird
+- incl. Standort - wenn aktiviert, wird Ihr Standort in einer zweiten SMS gesendet
+
+Datenschutz
+Es werden keinerlei Daten außer den konfigurierten Einstellungen gespeichert. Diese Daten werden weder an Entwickler noch an Dritte übermittelt. Die App hat keinen Netzwerk‑ oder Speicherzugriff; alle gesendeten Daten gehen nur an die angegebenen Notfallkontakte.
+
+Haftungsausschluss
+- Der Nutzer trägt die Kosten für SMS‑ oder Anrufgebühren.
+- Die Funktionsweise hängt von Gerät, Software und Netzwerkverbindung ab. Die Entwickler übernehmen keine Verantwortung für Fehlfunktionen, Inkompatibilitäten oder Verbindungsprobleme.

@@ -1,0 +1,42 @@
+Keep Alive invia un messaggio personalizzato via SMS a una o più persone se non utilizzi il dispositivo per un determinato periodo di tempo. Pensata come misura di sicurezza per chi vive da solo, utile in caso di incidente o emergenza. Una volta configurata, non richiede ulteriori interazioni.
+
+Questa è la versione 'Lite' che rimuove il permesso di accesso a Internet e la funzionalità Webhook.
+
+- 100% basata sul dispositivo, senza servizi o account cloud
+- Gratuita, senza pubblicità né tracker
+- Open Source (https://github.com/keepalivedev/KeepAlive)
+- Consumo minimo della batteria
+- Destinatari SMS multipli
+- Messaggio di avviso personalizzato
+- Facoltativo: includi la posizione nell’SMS
+- Facoltativo: effettua una chiamata con vivavoce attivo
+- Facoltativo: invia una richiesta HTTP a un URL personalizzato
+
+Requisiti
+  Keep Alive richiede un piano cellulare attivo. Le chiamate e i messaggi Wi-Fi verranno utilizzati se supportati dal dispositivo.
+
+Come funziona
+  Keep Alive rileva l’attività tramite la schermata di blocco o altre app. Se il dispositivo non viene bloccato o sbloccato per un periodo prestabilito, o se non apri le app selezionate, comparirà una notifica “Ci sei?”. Se non rispondi, verrà attivato un Avviso. In base alle impostazioni dei Contatti di Emergenza, verranno inviati uno o più SMS e/o effettuata una chiamata per avvisare che potresti aver bisogno di aiuto.
+
+Impostazioni principali
+- Metodo di monitoraggio: scegli tra schermata di blocco o app selezionate per rilevare l’attività.
+- Ore di inattività prima del promemoria: quante ore devono passare dall’ultimo blocco/sblocco prima della notifica “Ci sei?”. (Predefinito: 12 ore)
+- Minuti di attesa: tempo per rispondere alla notifica prima dell’invio dell’Avviso. (Predefinito: 60 minuti)
+- Intervallo di riposo: fascia oraria in cui l’inattività non viene conteggiata (es. 22:00-6:00). Gli avvisi già iniziati prima del periodo di riposo possono comunque essere inviati.
+- Riavvio automatico dopo l’avviso: se attivo, il monitoraggio riparte automaticamente dopo l’invio di un Avviso.
+- Webhook di avviso: consente di inviare una richiesta HTTP quando un Avviso viene attivato.
+
+Contatti di emergenza
+- Numero di chiamata (facoltativo): alla ricezione di un Avviso verrà effettuata una chiamata a questo numero con vivavoce attivo.
+
+È possibile configurare uno o più destinatari SMS:
+- Numero di telefono: numero a cui inviare l’SMS di avviso
+- Messaggio di avviso: testo inviato quando viene attivato un Avviso
+- Includi posizione: se attivo, verrà inviato un secondo SMS con la posizione
+
+Privacy / Raccolta dati
+Non vengono raccolti dati diversi dalle impostazioni configurate. Tali dati non vengono condivisi con gli sviluppatori né con terze parti. L’unica comunicazione avviene verso i contatti di emergenza configurati. L’app non richiede accesso a rete o archiviazione e non trasmette dati agli sviluppatori o a terzi.
+
+Avvertenze
+- L’utente è responsabile di eventuali costi per SMS o chiamate generati dall’app.
+- Il corretto funzionamento dipende dal dispositivo, dal software e dalla connessione di rete. Gli sviluppatori non sono responsabili di eventuali malfunzionamenti o incompatibilità.

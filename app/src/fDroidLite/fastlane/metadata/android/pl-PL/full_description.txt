@@ -1,0 +1,42 @@
+Keep Alive wyśle ustaloną wiadomość SMS do jednej lub więcej osób, jeśli przez dany czas nie używałeś swojego telefonu. Aplikacja ma na celu powiadomić o wypadku osoby żyjącej samotnie. Po konfiguracji wstępnej nie wymaga już żadnej interakcji.
+
+To jest wersja 'Lite', która usuwa uprawnienia do Internetu i funkcjonalność Webhook.
+
+- 100% Na urządzeniu, bez serwisów chmurowych i zakładania kont
+- Bez reklam i skryptów śledzących
+- Otwartoźródłowa (https://github.com/keepalivedev/KeepAlive)
+- Małe zużycie baterii
+- Wiele odbiorców SMS
+- Własna treść ostrzeżenia
+- Opcjonalnie: Lokalizacja GPS w wiadomości SMS
+- Opcjonalnie: Połączenie telefoniczne z trybem głośnomówiącym
+- Opcjonalnie: Wyślij żądanie HTTP na niestandardowy adres URL
+
+Wymagania
+   Funkcja Keep Alive wymaga, aby Twoje urządzenie miało aktywny plan sieci komórkowej. Połączenia i wiadomości Wi-Fi będą używane, jeśli urządzenie je obsługuje.
+
+Jak to działa
+   Keep Alive wykorzystuje ekran blokady urządzenia lub inną aplikację do wykrywania aktywności. Jeśli Twoje urządzenie nie było zablokowane ani odblokowane przez określony czas lub jeśli nie miałeś dostępu do wybranych aplikacji, zostanie wyświetlony monit „Czy tam jesteś?” powiadomienie. Jeśli to powiadomienie nie zostanie potwierdzone, zostanie uruchomiony alert. W oparciu o skonfigurowane ustawienia kontaktu alarmowego zostanie wykonana jedna lub więcej wiadomości SMS i/lub połączenie telefoniczne, aby powiadomić inne osoby, że możesz potrzebować pomocy.
+
+Główne ustawienia
+- Metoda monitorowania - wybierz pomiędzy użyciem ekranu blokady lub innej aplikacji do wykrywania aktywności. Jeśli używasz innych aplikacji, zostaniesz poproszony o wybranie aplikacji do monitorowania.
+- Godziny Nieaktywności przed Zapytaniem - ile godzin od ostatniego odblokowania/zablokowania musi minąć, żeby aplikacja zapytała Cię 'Jesteś tam?'. Domyślnie 12 godzin
+- Minuty na Potwierdzenie - jeśli pytanie nie zostanie potwierdzone przez ten czas, Alert będzie wysłany do skonfigurowanych Kontaktów Alarmowych. Domyślnie 60 minut
+- Czas Odpoczynku - zakres czasu podczas którego nieaktywność urządzenia nie będzie liczona. Na przykład, przy 6 'Godzinach Nieaktywności Przed Zapytaniem' i Czasie Odpoczynku między 22:00 a 6:00, urządzenie użyte ostatnio o 18:00 wyśle Alertu aż do godziny 8:00.  Warto zauważyć, że Alert może zadziałać podczas Czasu Odpoczynku jeśli wiadomość 'Jesteś tam?' wysłana PRZED początkiem okresu odpoczynku.
+- Auto-Restart Monitorowania Po Alercie - jeśli włączone, monitorowanie będzie automatycznie wznowione po wysłanym Alercie.
+- Webhook alertów - Skonfiguruj żądanie HTTP, które zostanie wysłane po uruchomieniu alertu
+
+Ustawienia Kontaktów Alarmowych
+- Numer Połączenia Telefonicznego (Opcjonalne) - kiedy aktywuje się Alert, urządzenie automatycznie zadzwoni na ten numer z włączonym trybem głośnomówiącym
+
+Można skonfigurować jednego lub więcej odbiorców SMS z:
+- Numerem telefonu - na niego wysłany zostanie Alert SMS
+- Wiadomością Alertu - wiadomość, którą wysłać kiedy Alert się aktywuje
+- Dodaj lokalizację - jeśli włączone, lokalizacja Twojego urządzenia zostanie wysłana jako oddzielny SMS
+
+Prywatność/Zbieranie Danych
+Żadne dane oprócz konfiguracji nie są zbierane.  Te dane nie są dzielone z twórcami aplikacji ani z reklamodawcami. Jedyne dane wysyłane są do Kontaktów Alarmowych w razie aktywowania Alertu. Aplikacja ta nie potrzebuje internetu ani dostępu do plików i żadne dane nie są wysyłane do twórców lub stron trzecich.
+
+Zastrzeżenia
+- Nie jestem odpowiedzialny za ewentualne opłaty za wiadomości SMS lub rozmowy telefoniczne wywołane przez aplikację Keep Alive.
+- Działanie aplikacji Keep Alive jest zależne od urządzenia, oprogramowania i połączenia sieci telefonicznej. Twórcy aplikacji nie są odpowiedzialni za problemy spowodowane nieprawidłowym funkcjonowaniem urządzenia, niekompatybilności oprogramowania lub błędy sieci.
