@@ -10,7 +10,12 @@ height="80">](https://play.google.com/store/apps/details?id=io.keepalive.android
      alt="Get it on F-Droid"
      height="80">](https://f-droid.org/packages/io.keepalive.android/)
 
-Available Translations: French (CA), German (DE), Polish (PL), Russian (RU)<br/>
+There is also a 'Lite' version available for F-Droid that removes the Internet permission and Webhook functionality. 
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+alt="Get it on F-Droid (Lite)"
+height="80">](https://f-droid.org/packages/io.keepalive.lite.android/)
+
+Available Translations: French (CA), German (DE), Polish (PL), Russian (RU), Chinese (CN), Italian (IT) <br/>
 Supports Android 5.1 (API 22) and up
 
 ## How it Works

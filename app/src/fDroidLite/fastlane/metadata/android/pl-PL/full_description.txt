@@ -1,5 +1,7 @@
 Keep Alive wyśle ustaloną wiadomość SMS do jednej lub więcej osób, jeśli przez dany czas nie używałeś swojego telefonu. Aplikacja ma na celu powiadomić o wypadku osoby żyjącej samotnie. Po konfiguracji wstępnej nie wymaga już żadnej interakcji.
 
+To jest wersja 'Lite', która usuwa uprawnienia do Internetu i funkcjonalność Webhook.
+
 - 100% Na urządzeniu, bez serwisów chmurowych i zakładania kont
 - Bez reklam i skryptów śledzących
 - Otwartoźródłowa (https://github.com/keepalivedev/KeepAlive)
@@ -32,8 +34,8 @@ Można skonfigurować jednego lub więcej odbiorców SMS z:
 - Wiadomością Alertu - wiadomość, którą wysłać kiedy Alert się aktywuje
 - Dodaj lokalizację - jeśli włączone, lokalizacja Twojego urządzenia zostanie wysłana jako oddzielny SMS
 
-Prywatność/Gromadzenie danych
-Nie są zbierane żadne dane poza skonfigurowanymi ustawieniami i nic nie jest udostępniane deweloperom ani żadnym stronom trzecim. Jedyne przesyłane dane trafiają do skonfigurowanych kontaktów alarmowych.
+Prywatność/Zbieranie Danych
+Żadne dane oprócz konfiguracji nie są zbierane.  Te dane nie są dzielone z twórcami aplikacji ani z reklamodawcami. Jedyne dane wysyłane są do Kontaktów Alarmowych w razie aktywowania Alertu. Aplikacja ta nie potrzebuje internetu ani dostępu do plików i żadne dane nie są wysyłane do twórców lub stron trzecich.
 
 Zastrzeżenia
 - Nie jestem odpowiedzialny za ewentualne opłaty za wiadomości SMS lub rozmowy telefoniczne wywołane przez aplikację Keep Alive.

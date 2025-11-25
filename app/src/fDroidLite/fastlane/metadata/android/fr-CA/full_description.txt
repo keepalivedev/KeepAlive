@@ -1,5 +1,7 @@
 Keep Alive enverra un message personnalisé par SMS à une ou plusieurs personnes si vous n’avez pas utilisé votre appareil pendant une certaine période. Conçu comme une mesure de sécurité pour les personnes vivant seules en cas d’accident ou d’urgence. Une fois la configuration terminée, aucune autre interaction n’est nécessaire.
 
+Il s'agit de la version 'Lite' qui supprime l'autorisation d'accès à Internet et la fonctionnalité de Webhook.
+
 - 100 % basé sur l’appareil, aucun service ou compte infonuagique requis
 - Gratuit, sans publicité ni traqueurs
 - Code source ouvert (https://github.com/keepalivedev/KeepAlive)
@@ -34,7 +36,7 @@ Un ou plusieurs destinataires SMS peuvent être configurés :
 - Inclure l’emplacement : si activé, un second SMS inclura votre position
 
 Confidentialité et collecte de données
-Aucune donnée n'est collectée à l'exception des paramètres configurés et rien n'est partagé avec les développeurs ou des tiers. Les seules données transmises sont celles destinées aux contacts d'urgence configurés.
+  Aucune donnée n’est collectée autre que vos paramètres. Ces données ne sont partagées avec personne, y compris les développeurs. Les seules données transmises sont celles destinées à vos contacts d’urgence. L’application ne demande aucun accès au réseau ni au stockage.
 
 Avertissement
 - L’utilisateur est responsable de tout coût lié aux SMS ou aux appels effectués par Keep Alive.

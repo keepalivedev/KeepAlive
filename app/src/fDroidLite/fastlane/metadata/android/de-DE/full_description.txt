@@ -1,5 +1,7 @@
 Keep Alive sendet eine benutzerdefinierte SMS an eine oder mehrere Personen, wenn Sie Ihr Gerät für einen bestimmten Zeitraum nicht verwendet haben. Gedacht als Sicherheitsnetz für alleinlebende Personen im Falle eines Unfalls oder Notfalls. Nach der Einrichtung ist keine weitere Interaktion erforderlich.
 
+Dies ist die 'Lite'-Version, die die Internet-Berechtigung und die Webhook-Funktionalität entfernt.
+
 - 100% gerätebasiert, keine Cloud‑Dienste oder Konten erforderlich
 - Kostenlos, ohne Werbung oder Tracker
 - Open Source (https://github.com/keepalivedev/KeepAlive)
@@ -32,8 +34,8 @@ Es können ein oder mehrere SMS-Empfänger konfiguriert werden:
 - Alarm-Meldung - die Nachricht, die bei Auslösung eines Alarms gesendet wird
 - incl. Standort - wenn aktiviert, wird Ihr Standort in einer zweiten SMS gesendet
 
-Datenschutz/Datenerhebung
-Es werden keine anderen Daten als die konfigurierten Einstellungen erfasst und nichts wird mit den Entwicklern oder Dritten geteilt. Die einzigen übermittelten Daten gehen an die konfigurierten Notfallkontakte.
+Datenschutz
+Es werden keinerlei Daten außer den konfigurierten Einstellungen gespeichert. Diese Daten werden weder an Entwickler noch an Dritte übermittelt. Die App hat keinen Netzwerk‑ oder Speicherzugriff; alle gesendeten Daten gehen nur an die angegebenen Notfallkontakte.
 
 Haftungsausschluss
 - Der Nutzer trägt die Kosten für SMS‑ oder Anrufgebühren.
