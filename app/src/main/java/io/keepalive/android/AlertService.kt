@@ -211,6 +211,9 @@ class AlertService : Service() {
             AppController.ARE_YOU_THERE_NOTIFICATION_ID
         )
 
+        // dismiss any 'Are you there?' overlay if it's showing
+        AreYouThereOverlay.dismiss(context)
+
         // send the alert messages
         val alertSender = AlertMessageSender(context)
         alertSender.sendAlertMessage()

@@ -23,6 +23,7 @@
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
@@ -69,6 +70,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="io.keepalive.android.MainActivity" />
         </activity>
+
+        <service
+            android:name="io.keepalive.android.AreYouThereOverlayService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
 
         <service
             android:name="io.keepalive.android.AlertService"

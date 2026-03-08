@@ -17,6 +17,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         try {
+            Log.d(tag, "AlarmReceiver.onReceive() called")
             DebugLogger.d(tag, context.getString(R.string.debug_log_alarm_just_fired))
 
             // for extra debugging, check to see if the app is in the foreground or background

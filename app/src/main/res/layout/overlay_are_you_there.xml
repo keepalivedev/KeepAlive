@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/areYouThereRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E6000000"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/textAreYouThereTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/holo_red_light"
+            android:textStyle="bold"
+            android:textSize="36sp"
+            android:gravity="center"
+            android:text="Are you still there?" />
+
+        <TextView
+            android:id="@+id/textAreYouThereMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="Tap I'M OK to cancel the alert." />
+
+        <TextView
+            android:id="@+id/textAreYouThereCountdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/holo_orange_light"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:layout_marginTop="14dp"
+            android:gravity="center"
+            android:text="Alert will be sent in …" />
+
+        <Button
+            android:id="@+id/buttonImOk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:textAllCaps="true"
+            android:text="I'm OK" />
+
+        <Button
+            android:id="@+id/buttonOpenApp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textAllCaps="true"
+            android:text="Open app" />
+
+        <Button
+            android:id="@+id/buttonDismiss"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textAllCaps="true"
+            android:text="Dismiss" />
+
+    </LinearLayout>
+
+</FrameLayout>

@@ -683,13 +683,8 @@ class MainActivity : AppCompatActivity() {
 
                 Log.d(tag, "Alert notification was clicked on!")
 
-                val checkPeriodHours = sharedPrefs.getString("time_period_hours", "12")?.toFloatOrNull() ?: 12f
-                val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(sharedPrefs,"REST_PERIODS")
-
-                // if the user clicked on the notification we can assume they are active so
-                //  regardless of the last activity, just re-set the alarm
-                setAlarm(this, System.currentTimeMillis(), (checkPeriodHours * 60).toInt(),
-                    "periodic", restPeriods)
+                // Centralized behavior so notification tap behaves the same.
+                AcknowledgeAreYouThere.acknowledge(this)
 
                 // let the user know that the alert was cancelled
                 binding.root.findViewById<TextView>(R.id.textviewMonitoringMessage).text =
@@ -868,6 +863,18 @@ class MainActivity : AppCompatActivity() {
 
         } catch (e: Exception) {
             Log.e("checkAppBattRestriction", "Failed checking app battery restrictions?!", e)
+        }
+    }
+
+    companion object {
+        /**
+         * Used to open the app in the same way as tapping the "Are you there?" notification.
+         */
+        fun createAlertCheckIntent(context: Context): Intent {
+            return Intent(context, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                putExtra("AlertCheck", true)
+            }
         }
     }
 }
