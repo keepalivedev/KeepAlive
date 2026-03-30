@@ -599,6 +599,16 @@ fun doAlertCheck(context: Context, alarmStage: String) {
             AppController.ARE_YOU_THERE_NOTIFICATION_ID
         )
 
+        // If we have overlay permission, also show a full-screen warning over other apps.
+        // This makes the prompt effectively impossible to miss (e.g., while watching video).
+        AreYouThereOverlay.show(
+            context,
+            String.format(
+                context.getString(R.string.initial_check_notification_text),
+                followupPeriodMinutes.toString()
+            )
+        )
+
         // if no events are found then set the alarm so we follow up; do not adjust the followup
         //  time based on the rest periods
         setAlarm(context, nowTimestamp, followupPeriodMinutes, "final", null)

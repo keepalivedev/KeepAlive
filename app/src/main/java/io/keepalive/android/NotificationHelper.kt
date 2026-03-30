@@ -162,15 +162,15 @@ class AlertNotificationHelper(private val context: Context) {
                 return
             }
 
-            // start MainActivity if they click on the notification
-            val intent = Intent(context, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            }
+            val isAreYouThere = notificationId == AppController.ARE_YOU_THERE_NOTIFICATION_ID
 
-            // if this is the 'Are you there?; notification,  put an extra on the intent
-            //  so if the notification is clicked on we can take the appropriate action
-            if (notificationId == AppController.ARE_YOU_THERE_NOTIFICATION_ID) {
-                intent.putExtra("AlertCheck", true)
+            // Default tap action: open MainActivity
+            val intent = if (isAreYouThere) {
+                MainActivity.createAlertCheckIntent(context)
+            } else {
+                Intent(context, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
             }
 
             // need to have FLAG_UPDATE_CURRENT or the extras won't be updated
@@ -200,7 +200,8 @@ class AlertNotificationHelper(private val context: Context) {
                 //  set whatever we need to here
                 Notification.Builder(context)
                     .setPriority(Notification.PRIORITY_HIGH)
-                    .setVibrate(longArrayOf(100, 200, 300, 400, 500))
+                    .setDefaults(Notification.DEFAULT_ALL)
+                    .setVibrate(longArrayOf(0, 800, 250, 800, 250, 800))
                     .setLights(Color.RED, 300, 100)
             }
 
@@ -215,8 +216,21 @@ class AlertNotificationHelper(private val context: Context) {
                 // Set the intent that will fire when the user taps the notification
                 .setContentIntent(pendingIntent)
 
+            if (isAreYouThere) {
+                builder
+                    .setCategory(Notification.CATEGORY_ALARM)
+                    .setVisibility(Notification.VISIBILITY_PUBLIC)
+                    .setOngoing(true)
+
+
+                // Don't auto dismiss just because they tapped the notification.
+                // We cancel it explicitly on acknowledgement.
+                builder.setAutoCancel(false)
+
+            } else {
                 // auto close the notification when it is touched
-                .setAutoCancel(true)
+                builder.setAutoCancel(true)
+            }
 
             notificationManager.notify(notificationId, builder.build())
 
