@@ -164,23 +164,29 @@ class AlertNotificationHelper(private val context: Context) {
 
             val isAreYouThere = notificationId == AppController.ARE_YOU_THERE_NOTIFICATION_ID
 
-            // Default tap action: open MainActivity
-            val intent = if (isAreYouThere) {
-                MainActivity.createAlertCheckIntent(context)
-            } else {
-                Intent(context, MainActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                }
-            }
+            // during Direct Boot, MainActivity isn't accessible so skip creating the
+            // PendingIntent for the tap action. the notification will still show and alert
+            // the user with sound/vibration - it just won't be tappable until unlock.
+            var pendingIntent: PendingIntent? = null
 
-            // need to have FLAG_UPDATE_CURRENT or the extras won't be updated
-            val pendingIntent: PendingIntent =
-                PendingIntent.getActivity(
+            if (isUserUnlocked(context)) {
+                // Default tap action: open MainActivity
+                val intent = if (isAreYouThere) {
+                    MainActivity.createAlertCheckIntent(context)
+                } else {
+                    Intent(context, MainActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                }
+
+                // need to have FLAG_UPDATE_CURRENT or the extras won't be updated
+                pendingIntent = PendingIntent.getActivity(
                     context,
                     0,
                     intent,
                     PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                 )
+            }
 
             // get the correct channel id based on which notification id this is
             val notificationChannelId = when (notificationId) {
@@ -213,8 +219,10 @@ class AlertNotificationHelper(private val context: Context) {
                 // regardless, we can set this everytime and it will only expand if needed?
                 .setStyle(Notification.BigTextStyle().bigText(content))
 
-                // Set the intent that will fire when the user taps the notification
-                .setContentIntent(pendingIntent)
+            // only set the tap action if we have a valid pending intent (not during Direct Boot)
+            if (pendingIntent != null) {
+                builder.setContentIntent(pendingIntent)
+            }
 
             if (isAreYouThere) {
                 builder

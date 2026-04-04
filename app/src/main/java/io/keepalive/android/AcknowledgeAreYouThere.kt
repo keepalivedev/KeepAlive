@@ -1,6 +1,9 @@
 package io.keepalive.android
 
 import android.content.Context
+import android.os.Build
+import android.util.Log
+import androidx.core.content.edit
 
 /**
  * Shared acknowledgement behavior for the "Are you still there?" prompt.
@@ -15,6 +18,21 @@ object AcknowledgeAreYouThere {
 
         // If we showed the over-other-apps overlay, remove it.
         AreYouThereOverlay.dismiss(context)
+
+        // Clear the Direct Boot notification flag in case it's still set.
+        // NOTE: must use getDeviceProtectedPreferences directly, not
+        // getEncryptedSharedPreferences, because after unlock the latter returns
+        // credential-encrypted prefs (a different backing store) while the flag
+        // was written to device-protected storage during Direct Boot.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            try {
+                getDeviceProtectedPreferences(context).edit {
+                    putBoolean("direct_boot_notification_pending", false)
+                }
+            } catch (e: Exception) {
+                Log.e("AcknowledgeAreYouThere", "Error clearing Direct Boot notification flag", e)
+            }
+        }
 
         // Re-set periodic monitoring.
         val checkPeriodHours = sharedPrefs.getString("time_period_hours", "12")?.toFloatOrNull() ?: 12f
