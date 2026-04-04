@@ -212,7 +212,10 @@ class AlertService : Service() {
         )
 
         // dismiss any 'Are you there?' overlay if it's showing
-        AreYouThereOverlay.dismiss(context)
+        // skip during Direct Boot since AreYouThereOverlayService is not directBootAware
+        if (isUserUnlocked(context)) {
+            AreYouThereOverlay.dismiss(context)
+        }
 
         // send the alert messages
         val alertSender = AlertMessageSender(context)
