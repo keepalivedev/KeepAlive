@@ -4,15 +4,13 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import androidx.core.content.edit
-import io.keepalive.android.AlertNotificationHelper
-import io.keepalive.android.AppController
-import io.keepalive.android.AreYouThereOverlay
+import io.keepalive.android.AcknowledgeAreYouThere
 import io.keepalive.android.DebugLogger
 import io.keepalive.android.R
 import io.keepalive.android.doAlertCheck
 import io.keepalive.android.getDeviceProtectedPreferences
 import io.keepalive.android.getEncryptedSharedPreferences
+import io.keepalive.android.isUserUnlocked
 
 
 class BootBroadcastReceiver : BroadcastReceiver() {
@@ -29,10 +27,14 @@ class BootBroadcastReceiver : BroadcastReceiver() {
             )
             Log.d(tag, "Intent action is ${intent.action}.")
 
+            // note that logcat may not show all logs from this receiver during Direct Boot
+            //  but you should be able to view the DebugLogger logs in the app
+
             // if this is a boot intent
             if (intent.action in bootActions) {
 
-                DebugLogger.d(tag, context.getString(R.string.debug_log_boot_completed))
+                DebugLogger.d(tag, context.getString(R.string.debug_log_boot_completed,
+                    intent.action ?: "unknown"))
 
                 // getEncryptedSharedPreferences will automatically use device-protected
                 //  storage during Direct Boot (LOCKED_BOOT_COMPLETED) since credential-
@@ -41,18 +43,18 @@ class BootBroadcastReceiver : BroadcastReceiver() {
                 val enabled = prefs.getBoolean("enabled", false)
 
                 if (enabled) {
-                    Log.d(tag, "boot intent is {${intent.action}}")
+                    Log.d(tag, "boot intent is ${intent.action}")
 
                     // When BOOT_COMPLETED fires after Direct Boot, check if an "Are you there?"
-                    // notification was posted during Direct Boot. If so, re-post it with a
-                    // working PendingIntent (now that credential storage and MainActivity are
-                    // accessible) and show the overlay.
+                    // notification was posted during Direct Boot. If the flag is set, the user
+                    // just unlocked the device — which IS proof of activity — so we simply
+                    // cancel the notification and reset to a fresh periodic alarm cycle.
                     //
-                    // We MUST skip doAlertCheck() here because the saved alarm stage is "final"
-                    // at this point (set when the notification was sent during Direct Boot).
-                    // Calling doAlertCheck("final") would be wrong in either case:
-                    //  - If the unlock IS detected as activity: it resets to periodic, cancelling
-                    //    the final countdown and leaving the notification without a PendingIntent.
+                    // We MUST skip doAlertCheck() when the flag is set because the saved alarm
+                    // stage is "final" at this point. Calling doAlertCheck("final") would be
+                    // wrong in either case:
+                    //  - If the unlock IS detected as activity: it resets to periodic, but the
+                    //    stale notification remains.
                     //  - If the unlock is NOT detected (race condition with UsageStatsManager,
                     //    or API < 28 with no monitored apps): it sees no activity + stage "final"
                     //    and immediately sends the alert before the user can acknowledge.
@@ -63,43 +65,28 @@ class BootBroadcastReceiver : BroadcastReceiver() {
                         // while the flag was written to device-protected storage during
                         // Direct Boot.
                         val devicePrefs = getDeviceProtectedPreferences(context)
+                        val flagValue = devicePrefs.getBoolean("direct_boot_notification_pending", false)
+                        val userUnlocked = isUserUnlocked(context)
 
-                        if (devicePrefs.getBoolean("direct_boot_notification_pending", false)) {
-                            Log.d(tag, "BOOT_COMPLETED: Direct Boot notification pending, re-posting with PendingIntent")
+                        DebugLogger.d(tag, "BOOT_COMPLETED: direct_boot_notification_pending=$flagValue, isUserUnlocked=$userUnlocked")
 
-                            // clear the flag
-                            devicePrefs.edit { putBoolean("direct_boot_notification_pending", false) }
+                        if (flagValue) {
+                            // The user just unlocked the device — that IS proof of activity.
+                            // Cancel the "Are you there?" notification and reset to a fresh
+                            // periodic alarm cycle. No need to re-post or show the overlay.
+                            DebugLogger.d(tag, "BOOT_COMPLETED: User unlocked device - treating as activity, " +
+                                    "cancelling notification and resetting alarm")
 
-                            // re-post the notification - now isUserUnlocked() returns true so
-                            // it will include the PendingIntent for tapping
-                            val followupPeriodMinutes = prefs.getString(
-                                "followup_time_period_minutes", "60"
-                            )?.toIntOrNull() ?: 60
+                            AcknowledgeAreYouThere.acknowledge(context)
 
-                            val alertNotificationHelper = AlertNotificationHelper(context)
-                            alertNotificationHelper.sendNotification(
-                                context.getString(R.string.initial_check_notification_title),
-                                String.format(
-                                    context.getString(R.string.initial_check_notification_text),
-                                    followupPeriodMinutes.toString()
-                                ),
-                                AppController.ARE_YOU_THERE_NOTIFICATION_ID,
-                                overwrite = true
-                            )
-
-                            // show the overlay now that the screen is accessible
-                            AreYouThereOverlay.show(
-                                context,
-                                String.format(
-                                    context.getString(R.string.initial_check_notification_text),
-                                    followupPeriodMinutes.toString()
-                                )
-                            )
-
-                            // don't call doAlertCheck() - the final alarm set during Direct
-                            // Boot is still active and we want to preserve it
+                            // acknowledge() already clears the flag, cancels the notification,
+                            // dismisses any overlay, and sets a fresh periodic alarm.
                             return
+                        } else {
+                            DebugLogger.d(tag, "BOOT_COMPLETED: No Direct Boot notification pending, proceeding normally")
                         }
+                    } else {
+                        DebugLogger.d(tag, "LOCKED_BOOT_COMPLETED received, skipping Direct Boot notification check. ${intent.action}")
                     }
 
                     // restore the alarm stage that was saved before the reboot so we don't
@@ -107,7 +94,7 @@ class BootBroadcastReceiver : BroadcastReceiver() {
                     val devicePrefs = getDeviceProtectedPreferences(context)
                     val savedAlarmStage = devicePrefs.getString("last_alarm_stage", "periodic") ?: "periodic"
 
-                    Log.d(tag, "Restored alarm stage from device-protected storage: $savedAlarmStage")
+                    DebugLogger.d(tag, "Restored alarm stage from device-protected storage: $savedAlarmStage, calling doAlertCheck()")
 
                     // since we can't assume that the user initiated the reboot, run the alert
                     //  check using the saved alarm stage and last detected activity

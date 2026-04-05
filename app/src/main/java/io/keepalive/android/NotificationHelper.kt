@@ -164,12 +164,16 @@ class AlertNotificationHelper(private val context: Context) {
 
             val isAreYouThere = notificationId == AppController.ARE_YOU_THERE_NOTIFICATION_ID
 
-            // during Direct Boot, MainActivity isn't accessible so skip creating the
-            // PendingIntent for the tap action. the notification will still show and alert
-            // the user with sound/vibration - it just won't be tappable until unlock.
+            // Always try to create the PendingIntent, even during Direct Boot.
+            // PendingIntent.getActivity() creates a system-level token that doesn't
+            // resolve the target activity at creation time. Normally the "Are you there?"
+            // notification sent during Direct Boot gets cancelled by BOOT_COMPLETED
+            // (unlock = proof of activity), so this PendingIntent won't be tapped.
+            // But it serves as a safety net: if BOOT_COMPLETED doesn't fire for any
+            // reason, the notification persists after unlock and the PendingIntent works.
             var pendingIntent: PendingIntent? = null
 
-            if (isUserUnlocked(context)) {
+            try {
                 // Default tap action: open MainActivity
                 val intent = if (isAreYouThere) {
                     MainActivity.createAlertCheckIntent(context)
@@ -186,6 +190,9 @@ class AlertNotificationHelper(private val context: Context) {
                     intent,
                     PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                 )
+                Log.d("sendNotification", "PendingIntent created successfully (isUserUnlocked=${isUserUnlocked(context)})")
+            } catch (e: Exception) {
+                Log.w("sendNotification", "Failed to create PendingIntent (Direct Boot?), notification will not be tappable", e)
             }
 
             // get the correct channel id based on which notification id this is
@@ -219,9 +226,11 @@ class AlertNotificationHelper(private val context: Context) {
                 // regardless, we can set this everytime and it will only expand if needed?
                 .setStyle(Notification.BigTextStyle().bigText(content))
 
-            // only set the tap action if we have a valid pending intent (not during Direct Boot)
+            // set the tap action if we have a valid pending intent
             if (pendingIntent != null) {
                 builder.setContentIntent(pendingIntent)
+            } else {
+                Log.w("sendNotification", "No PendingIntent for notification $notificationId — notification will not be tappable!")
             }
 
             if (isAreYouThere) {
