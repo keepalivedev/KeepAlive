@@ -328,13 +328,16 @@ class AreYouThereOverlayService : Service() {
         }
 
         fun dismiss(context: Context) {
-            val i = Intent(context, AreYouThereOverlayService::class.java).apply {
-                action = ACTION_DISMISS
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(i)
-            } else {
-                context.startService(i)
+            // Use stopService() instead of startForegroundService(ACTION_DISMISS).
+            // startForegroundService() requires the service to call startForeground()
+            // within 5 seconds, but dismiss just needs the service to stop — and
+            // onDestroy() already calls dismissOverlay() for cleanup.
+            // If the service isn't running, stopService() is a harmless no-op.
+            try {
+                val i = Intent(context, AreYouThereOverlayService::class.java)
+                context.stopService(i)
+            } catch (t: Throwable) {
+                Log.w(TAG, "Failed to stop overlay service", t)
             }
         }
     }

@@ -26,7 +26,7 @@ object AcknowledgeAreYouThere {
         // was written to device-protected storage during Direct Boot.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             try {
-                getDeviceProtectedPreferences(context).edit {
+                getDeviceProtectedPreferences(context).edit(commit = true) {
                     putBoolean("direct_boot_notification_pending", false)
                 }
             } catch (e: Exception) {
