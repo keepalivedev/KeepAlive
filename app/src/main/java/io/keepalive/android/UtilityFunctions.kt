@@ -421,6 +421,7 @@ fun setAlarm(
     // track when the next alarm is set to go off in our preferences
     with(prefs.edit()) {
         putLong("NextAlarmTimestamp", alarmTimestamp)
+        apply()
     }
 
     // also save the alarm stage to device-protected storage so it can be
