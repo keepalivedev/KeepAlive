@@ -68,14 +68,13 @@ class BootBroadcastReceiver : BroadcastReceiver() {
                         val flagValue = devicePrefs.getBoolean("direct_boot_notification_pending", false)
                         val userUnlocked = isUserUnlocked(context)
 
-                        DebugLogger.d(tag, "BOOT_COMPLETED: direct_boot_notification_pending=$flagValue, isUserUnlocked=$userUnlocked")
+                        DebugLogger.d(tag, context.getString(R.string.debug_log_boot_completed_flag_status, flagValue, userUnlocked))
 
                         if (flagValue) {
                             // The user just unlocked the device — that IS proof of activity.
                             // Cancel the "Are you there?" notification and reset to a fresh
                             // periodic alarm cycle. No need to re-post or show the overlay.
-                            DebugLogger.d(tag, "BOOT_COMPLETED: User unlocked device - treating as activity, " +
-                                    "cancelling notification and resetting alarm")
+                            DebugLogger.d(tag, context.getString(R.string.debug_log_boot_completed_user_unlocked))
 
                             AcknowledgeAreYouThere.acknowledge(context)
 
@@ -83,10 +82,10 @@ class BootBroadcastReceiver : BroadcastReceiver() {
                             // dismisses any overlay, and sets a fresh periodic alarm.
                             return
                         } else {
-                            DebugLogger.d(tag, "BOOT_COMPLETED: No Direct Boot notification pending, proceeding normally")
+                            DebugLogger.d(tag, context.getString(R.string.debug_log_boot_completed_no_pending_notification))
                         }
                     } else {
-                        DebugLogger.d(tag, "LOCKED_BOOT_COMPLETED received, skipping Direct Boot notification check. ${intent.action}")
+                        DebugLogger.d(tag, context.getString(R.string.debug_log_locked_boot_completed_skipping, intent.action))
                     }
 
                     // restore the alarm stage that was saved before the reboot so we don't
@@ -94,7 +93,7 @@ class BootBroadcastReceiver : BroadcastReceiver() {
                     val devicePrefs = getDeviceProtectedPreferences(context)
                     val savedAlarmStage = devicePrefs.getString("last_alarm_stage", "periodic") ?: "periodic"
 
-                    DebugLogger.d(tag, "Restored alarm stage from device-protected storage: $savedAlarmStage, calling doAlertCheck()")
+                    DebugLogger.d(tag, context.getString(R.string.debug_log_restored_alarm_stage, savedAlarmStage))
 
                     // since we can't assume that the user initiated the reboot, run the alert
                     //  check using the saved alarm stage and last detected activity

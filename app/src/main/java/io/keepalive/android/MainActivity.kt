@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
             val pending = devicePrefs.getBoolean("direct_boot_notification_pending", false)
             if (pending) {
                 Log.d(tag, "Direct Boot notification still pending — user opened app manually, acknowledging")
-                DebugLogger.d(tag, "Direct Boot notification still pending on app open — acknowledging")
+                DebugLogger.d(tag, getString(R.string.debug_log_direct_boot_notification_pending_app_open))
 
                 AcknowledgeAreYouThere.acknowledge(this)
 

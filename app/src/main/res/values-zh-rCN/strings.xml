@@ -332,6 +332,7 @@
     <string name="debug_log_no_active_alarm_showing_restart_button">No active alarm found, showing button to restart</string>
     <string name="debug_log_failed_getting_sms_manager_disable_button">Failed to get SMS manager? Disabling SMS test button</string>
     <string name="debug_log_current_alarm_time">Current alarm set for %1$s local time</string>
+    <string name="debug_log_direct_boot_notification_pending_app_open">应用打开时 Direct Boot 通知仍在等待中 — 正在确认</string>
 
     <!-- PermissionManager.kt -->
     <string name="debug_log_still_need_some_permissions">Still need some permissions</string>
@@ -347,6 +348,7 @@
     <string name="debug_log_app_in_background">KeepAlive is currently in the background</string>
     <string name="debug_log_flag_receiver_true">FLAG_RECEIVER_FOREGROUND is true</string>
     <string name="debug_log_flag_receiver_false">FLAG_RECEIVER_FOREGROUND is false</string>
+    <string name="debug_log_final_alarm_stale">最终闹钟已过时：延迟 %1$ds 触发（阈值：%2$ds）。降级为 \'periodic\' 以避免误报。</string>
 
     <!-- AlertService.kt -->
     <string name="debug_log_wake_lock_acquired">Acquiring wake lock</string>
@@ -355,16 +357,23 @@
     <!-- SMSSentReceiver.kt -->
     <string name="debug_log_sms_sent">SMS sent!</string>
     <string name="debug_log_sms_send_error">SMS send error: %1$s</string>
+    <string name="debug_log_sms_receiver_not_registered">接收器未注册</string>
 
     <!-- BootBroadcastReceiver.kt -->
-    <string name="debug_log_boot_completed">Boot completed!?</string>
+    <string name="debug_log_boot_completed">Boot completed!? %1$s</string>
     <string name="debug_log_app_is_disabled">App is disabled?</string>
     <string name="debug_log_boot_receiver_exception">Exception in BootBroadcastReceiver: %1$s</string>
+    <string name="debug_log_boot_completed_flag_status">BOOT_COMPLETED: direct_boot_notification_pending=%1$b, isUserUnlocked=%2$b</string>
+    <string name="debug_log_boot_completed_user_unlocked">BOOT_COMPLETED: 用户已解锁设备 — 视为活动，取消通知并重置闹钟</string>
+    <string name="debug_log_boot_completed_no_pending_notification">BOOT_COMPLETED: 没有待处理的 Direct Boot 通知，正常继续</string>
+    <string name="debug_log_locked_boot_completed_skipping">收到 LOCKED_BOOT_COMPLETED，跳过 Direct Boot 通知检查。%1$s</string>
+    <string name="debug_log_restored_alarm_stage">从设备保护存储中恢复了闹钟阶段：%1$s，调用 doAlertCheck()</string>
 
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Webhook configuration saved</string>
     <string name="debug_log_webhook_config_deleted">Webhook configuration deleted</string>
     <string name="debug_log_webhook_config_load_error">Error loading webhook configuration</string>
+    <string name="debug_log_invalid_header_json">无效的标头 JSON</string>
 
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Disabling webhook certificate verification!</string>
@@ -378,5 +387,10 @@
     <string name="debug_log_sending_request">Sending request to: %1$s. Location is %2$s</string>
     <string name="debug_log_webhook_test_error">Error testing webhook: %1$s</string>
     <string name="debug_log_sending_webhook_failed">Failed while sending webhook: %1$s</string>
+
+    <!-- AlertFunctions.kt (Direct Boot) -->
+    <string name="debug_log_direct_boot_final_alarm_due">Direct Boot: 最终闹钟已到期 — 正在发送提醒</string>
+    <string name="debug_log_direct_boot_cleared_pending_flag">Direct Boot: 已清除 direct_boot_notification_pending</string>
+    <string name="debug_log_direct_boot_set_pending_flag">Direct Boot: 已设置 direct_boot_notification_pending=true</string>
 
 </resources>

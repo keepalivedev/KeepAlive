@@ -391,7 +391,7 @@ class WebhookConfigManager(private val context: Context, private val activity: A
                 headers[key] = headersJson.getString(key)
             }
         } catch (e: JSONException) {
-            DebugLogger.d("WebhookConfigManager", "Invalid header JSON", e)
+            DebugLogger.d("WebhookConfigManager", context.getString(R.string.debug_log_invalid_header_json), e)
         }
 
         return WebhookConfig(webhookUrl, webhookMethod, includeLocation, timeout, retries, verifyCertificate, headers)

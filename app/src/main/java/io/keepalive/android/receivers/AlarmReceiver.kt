@@ -104,9 +104,7 @@ class AlarmReceiver : BroadcastReceiver() {
                     // if the delay is longer than the followup then it means that the
                     //  final alarm time would be in the past?
                     if (delaySeconds > maxAcceptableDelaySeconds) {
-                        DebugLogger.d(tag, "Final alarm is stale: fired ${delaySeconds}s late " +
-                                "(threshold: ${maxAcceptableDelaySeconds}s). " +
-                                "Downgrading to 'periodic' to avoid false alert.")
+                        DebugLogger.d(tag, context.getString(R.string.debug_log_final_alarm_stale, delaySeconds, maxAcceptableDelaySeconds))
                         alarmStage = "periodic"
                     }
                 }

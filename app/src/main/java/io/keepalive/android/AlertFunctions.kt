@@ -603,11 +603,11 @@ fun doAlertCheck(context: Context, alarmStage: String) {
             // the "Are you there?" notification was already sent (by the periodic alarm
             // that scheduled this final alarm) and the followup period has elapsed.
             // send the real alert.
-            DebugLogger.d("doAlertCheck", "Direct Boot: Final alarm is due — sending alert")
+            DebugLogger.d("doAlertCheck", context.getString(R.string.debug_log_direct_boot_final_alarm_due))
 
             try {
                 devicePrefs.edit(commit = true) { putBoolean("direct_boot_notification_pending", false) }
-                DebugLogger.d("doAlertCheck", "Direct Boot: Cleared direct_boot_notification_pending")
+                DebugLogger.d("doAlertCheck", context.getString(R.string.debug_log_direct_boot_cleared_pending_flag))
             } catch (e: Exception) {
                 Log.e("doAlertCheck", "Error clearing Direct Boot notification flag", e)
             }
@@ -643,7 +643,7 @@ fun doAlertCheck(context: Context, alarmStage: String) {
             // be killed after onReceive() returns, losing the write.
             try {
                 devicePrefs.edit(commit = true) { putBoolean("direct_boot_notification_pending", true) }
-                DebugLogger.d("doAlertCheck", "Direct Boot: Set direct_boot_notification_pending=true")
+                DebugLogger.d("doAlertCheck", context.getString(R.string.debug_log_direct_boot_set_pending_flag))
             } catch (e: Exception) {
                 Log.e("doAlertCheck", "Error saving Direct Boot notification flag", e)
             }
