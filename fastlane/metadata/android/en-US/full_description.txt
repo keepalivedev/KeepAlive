@@ -16,6 +16,8 @@ Requirements
 How it Works
   Keep Alive uses either your device's lock screen or another app(s) to detect activity. If your device hasn't been lock or unlocked for a set period of time, or if you haven't accessed the selected app(s), you will be prompted with an 'Are you there?' notification. If this notification is not acknowledged an Alert will be triggered. Based on the configured Emergency Contact Settings, one or more SMS messages and/or a phone call will be placed to notify others that you may be in need of assistance.
 
+WARNING: If your device restarts, Keep Alive will not be able to check for recent activity until the screen is unlocked. On Android 7.0+, Keep Alive can still send an alert before the screen is unlocked but must assume you have been inactive based on its last saved state. On older Android versions, Keep Alive cannot run at all until the screen is unlocked and alerts will not be sent.
+
 Main Settings
 - Monitoring Method - Choose between using the lock screen or another app(s) to detect activity. If using another app(s), you will be prompted to select the app(s) to monitor.
 - Hours of Inactivity Before Prompt - how many hours since your phone was last locked or unlocked before you are prompted with an 'Are you there?' notification. Defaults to 12 hours
