@@ -270,7 +270,7 @@
     <string name="debug_log_checking_for_activity">проверка активности, начиная с %1$s по местному времени</string>
     <string name="debug_log_checking_for_system_events">Проверка событий блокировки/разблокировки системы</string>
     <string name="debug_log_failed_getting_last_phone_activity">Не удалось получить последнюю активность телефона?!</string>
-    <string name="debug_log_no_events_sending_notification">за последние %1$.2f часа не найдено событий, отправка уведомления "Ты здесь?""</string>
+    <string name="debug_log_no_events_sending_notification">за последние %1$.2f часа не найдено событий, отправка уведомления "Ты здесь?"</string>
     <string name="debug_log_sending_alert">Отправка оповещения!</string>
     <string name="debug_log_sending_alert_failed">Не удалось получить и отправить оповещение о местоположении</string>
     <string name="debug_log_last_device_activity">Последнее событие использования было %1$s из %2$s в %3$s UTC</string>
