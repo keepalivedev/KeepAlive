@@ -501,6 +501,10 @@ private fun sendFinalAlert(
     restPeriods: MutableList<RestPeriod>
 ) {
     Intent(context, AlertService::class.java).also { intent ->
+        // stamp each alert with the current time so that AlertService can detect
+        // redelivered (duplicate) intents and avoid sending the alert twice
+        intent.putExtra(AlertService.EXTRA_ALERT_TRIGGER_TIMESTAMP, System.currentTimeMillis())
+
         DebugLogger.d("doAlertCheck", context.getString(R.string.debug_log_alert_service_start))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(intent)
