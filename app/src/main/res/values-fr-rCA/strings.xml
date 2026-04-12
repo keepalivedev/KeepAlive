@@ -329,6 +329,7 @@
     <string name="debug_log_no_active_alarm_showing_restart_button">Aucune alarme active trouvée, affichage du bouton de redémarrage</string>
     <string name="debug_log_failed_getting_sms_manager_disable_button">Échec de l\'obtention du gestionnaire de SMS? Désactivation du bouton de test SMS</string>
     <string name="debug_log_current_alarm_time">Alarme actuelle définie pour %1$s heure locale</string>
+    <string name="debug_log_direct_boot_notification_pending_app_open">Notification Direct Boot toujours en attente à l\'ouverture de l\'application — prise en compte</string>
 
     <!-- PermissionManager.kt -->
     <string name="debug_log_still_need_some_permissions">J\'ai encore besoin de certaines autorisations</string>
@@ -344,6 +345,7 @@
     <string name="debug_log_app_in_background">KeepAlive est actuellement en arrière-plan</string>
     <string name="debug_log_flag_receiver_true">FLAG_RECEIVER_FOREGROUND est vrai</string>
     <string name="debug_log_flag_receiver_false">FLAG_RECEIVER_FOREGROUND est faux</string>
+    <string name="debug_log_final_alarm_stale">L\'alarme finale est obsolète : déclenchée avec %1$ds de retard (seuil : %2$ds). Rétrogradation à \'periodic\' pour éviter une fausse alerte.</string>
 
     <!-- AlertService.kt -->
     <string name="debug_log_wake_lock_acquired">Acquisition du verrou d\'éveil</string>
@@ -352,16 +354,23 @@
     <!-- SMSSentReceiver.kt -->
     <string name="debug_log_sms_sent">SMS envoyé!</string>
     <string name="debug_log_sms_send_error">Erreur d\'envoi du SMS: %1$s</string>
+    <string name="debug_log_sms_receiver_not_registered">Récepteur non enregistré</string>
 
     <!-- BootBroadcastReceiver.kt -->
-    <string name="debug_log_boot_completed">Démarrage terminé!?</string>
+    <string name="debug_log_boot_completed">Démarrage terminé!? %1$s</string>
     <string name="debug_log_app_is_disabled">L\'application est désactivée?</string>
     <string name="debug_log_boot_receiver_exception">Exception dans BootBroadcastReceiver: %1$s</string>
+    <string name="debug_log_boot_completed_flag_status">BOOT_COMPLETED : direct_boot_notification_pending=%1$b, isUserUnlocked=%2$b</string>
+    <string name="debug_log_boot_completed_user_unlocked">BOOT_COMPLETED : L\'utilisateur a déverrouillé l\'appareil — traité comme une activité, annulation de la notification et réinitialisation de l\'alarme</string>
+    <string name="debug_log_boot_completed_no_pending_notification">BOOT_COMPLETED : Aucune notification Direct Boot en attente, poursuite normale</string>
+    <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED reçu, vérification de la notification Direct Boot ignorée. %1$s</string>
+    <string name="debug_log_restored_alarm_stage">Étape d\'alarme restaurée depuis le stockage protégé de l\'appareil : %1$s, appel de doAlertCheck()</string>
 
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Configuration du webhook enregistrée</string>
     <string name="debug_log_webhook_config_deleted">Configuration du webhook supprimée</string>
     <string name="debug_log_webhook_config_load_error">Erreur lors du chargement de la configuration du webhook</string>
+    <string name="debug_log_invalid_header_json">JSON d\'en-tête invalide</string>
 
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Désactivation de la vérification du certificat du webhook !</string>
@@ -375,4 +384,9 @@
     <string name="debug_log_sending_request">Envoi de la requête à : %1$s. Localisation est %2$s</string>
     <string name="debug_log_webhook_test_error">Erreur lors du test du webhook : %1$s</string>
     <string name="debug_log_sending_webhook_failed">Échec lors de l\'envoi du webhook : %1$s</string>
+
+    <!-- AlertFunctions.kt (Direct Boot) -->
+    <string name="debug_log_direct_boot_final_alarm_due">Direct Boot : L\'alarme finale est arrivée à échéance — envoi de l\'alerte</string>
+    <string name="debug_log_direct_boot_cleared_pending_flag">Direct Boot : direct_boot_notification_pending effacé</string>
+    <string name="debug_log_direct_boot_set_pending_flag">Direct Boot : direct_boot_notification_pending=true défini</string>
 </resources>

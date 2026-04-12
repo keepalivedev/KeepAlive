@@ -17,7 +17,7 @@ class SMSSentReceiver : BroadcastReceiver() {
         try {
             context.unregisterReceiver(this)
         } catch (e: IllegalArgumentException) {
-            DebugLogger.d("SMSSentReceiver", "Receiver not registered", e)
+            DebugLogger.d("SMSSentReceiver", context.getString(R.string.debug_log_sms_receiver_not_registered), e)
         }
 
         val result = when (resultCode) {

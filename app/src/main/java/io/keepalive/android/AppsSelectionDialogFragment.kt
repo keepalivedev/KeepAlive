@@ -184,6 +184,7 @@ class AppsSelectionDialogFragment(val callback: () -> Unit) : DialogFragment() {
                             putBoolean("enabled", false)
                             apply()
                         }
+                        syncPrefsToDeviceProtectedStorage(requireContext())
                     }
                 }
 
@@ -203,6 +204,7 @@ class AppsSelectionDialogFragment(val callback: () -> Unit) : DialogFragment() {
                         putBoolean("enabled", false)
                         apply()
                     }
+                    syncPrefsToDeviceProtectedStorage(requireContext())
                 }
 
                 callback()

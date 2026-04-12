@@ -227,7 +227,7 @@
 
     <!-- USAGE_ACCESS_SETTINGS Permission -->
     <string name="permission_usage_access_title">Berechtigung erforderlich: Zugriff auf Nutzungsdaten</string>
-    <string name="permission_usage_access_description">Um festzustellen, wann Ihr Gerät zuletzt benutzt wurde, ist eine spezielle Berechtigung namens \"Zugriff auf Nutzungsdaten\" erforderlich.\n\nBitte aktivieren Sie diese Berechtigung für die Keep Alive-App.</string>
+    <string name="permission_usage_access_description">Um festzustellen, wann Ihr Gerät zuletzt benutzt wurde, ist eine spezielle Berechtigung namens "Zugriff auf Nutzungsdaten" erforderlich.\n\nBitte aktivieren Sie diese Berechtigung für die Keep Alive-App.</string>
 
     <!-- MANAGE_OVERLAY_PERMISSION Permission -->
     <string name="permission_manage_overlay_title">Erlaubnis erforderlich: Am Anfang anzeigen (Manage Overlay)</string>
@@ -329,6 +329,7 @@
     <string name="debug_log_no_active_alarm_showing_restart_button">Kein aktiver Alarm gefunden, Schaltfläche zum Neustart wird angezeigt</string>
     <string name="debug_log_failed_getting_sms_manager_disable_button">Fehler beim Abrufen des SMS-Managers? SMS-Testschaltfläche deaktivieren</string>
     <string name="debug_log_current_alarm_time">Aktueller Alarm für %1$s Ortszeit eingestellt</string>
+    <string name="debug_log_direct_boot_notification_pending_app_open">Direct-Boot-Benachrichtigung steht noch aus bei App-Öffnung — wird bestätigt</string>
 
     <!-- PermissionManager.kt -->
     <string name="debug_log_still_need_some_permissions">Benötige noch einige Berechtigungen</string>
@@ -344,6 +345,7 @@
     <string name="debug_log_app_in_background">KeepAlive ist derzeit im Hintergrund</string>
     <string name="debug_log_flag_receiver_true">FLAG_RECEIVER_FOREGROUND ist wahr</string>
     <string name="debug_log_flag_receiver_false">FLAG_RECEIVER_FOREGROUND ist falsch</string>
+    <string name="debug_log_final_alarm_stale">Letzter Alarm ist veraltet: %1$ds zu spät ausgelöst (Schwellenwert: %2$ds). Herabstufung auf \'periodic\' um Fehlalarm zu vermeiden.</string>
 
     <!-- AlertService.kt -->
     <string name="debug_log_wake_lock_acquired">Wake-Lock wird erworben</string>
@@ -352,16 +354,23 @@
     <!-- SMSSentReceiver.kt -->
     <string name="debug_log_sms_sent">SMS gesendet!</string>
     <string name="debug_log_sms_send_error">SMS-Sendefehler: %1$s</string>
+    <string name="debug_log_sms_receiver_not_registered">Empfänger nicht registriert</string>
 
     <!-- BootBroadcastReceiver.kt -->
-    <string name="debug_log_boot_completed">Start abgeschlossen!?</string>
+    <string name="debug_log_boot_completed">Start abgeschlossen!? %1$s</string>
     <string name="debug_log_app_is_disabled">App ist deaktiviert?</string>
     <string name="debug_log_boot_receiver_exception">Ausnahme im BootBroadcastReceiver: %1$s</string>
+    <string name="debug_log_boot_completed_flag_status">BOOT_COMPLETED: direct_boot_notification_pending=%1$b, isUserUnlocked=%2$b</string>
+    <string name="debug_log_boot_completed_user_unlocked">BOOT_COMPLETED: Benutzer hat Gerät entsperrt — wird als Aktivität behandelt, Benachrichtigung wird abgebrochen und Alarm wird zurückgesetzt</string>
+    <string name="debug_log_boot_completed_no_pending_notification">BOOT_COMPLETED: Keine ausstehende Direct-Boot-Benachrichtigung, normaler Fortgang</string>
+    <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED empfangen, Direct-Boot-Benachrichtigungsprüfung wird übersprungen. %1$s</string>
+    <string name="debug_log_restored_alarm_stage">Alarmstufe aus gerätegeschütztem Speicher wiederhergestellt: %1$s, doAlertCheck() wird aufgerufen</string>
 
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Webhook-Konfiguration gespeichert</string>
     <string name="debug_log_webhook_config_deleted">Webhook-Konfiguration gelöscht</string>
     <string name="debug_log_webhook_config_load_error">Fehler beim Laden der Webhook-Konfiguration</string>
+    <string name="debug_log_invalid_header_json">Ungültiges Header-JSON</string>
 
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Webhook-Zertifikatsüberprüfung deaktivieren!</string>
@@ -375,4 +384,9 @@
     <string name="debug_log_sending_request">Anfrage wird gesendet an: %1$s. Standort ist %2$s</string>
     <string name="debug_log_webhook_test_error">Fehler beim Testen des Webhooks: %1$s</string>
     <string name="debug_log_sending_webhook_failed">Fehler beim Senden des Webhooks: %1$s</string>
+
+    <!-- AlertFunctions.kt -->
+    <string name="debug_log_direct_boot_final_alarm_due">Direct Boot: Letzter Alarm ist fällig — Alarm wird gesendet</string>
+    <string name="debug_log_direct_boot_cleared_pending_flag">Direct Boot: direct_boot_notification_pending gelöscht</string>
+    <string name="debug_log_direct_boot_set_pending_flag">Direct Boot: direct_boot_notification_pending=true gesetzt</string>
 </resources>

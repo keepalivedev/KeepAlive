@@ -84,9 +84,30 @@ class AlarmReceiver : BroadcastReceiver() {
 
                 val alarmDtStr = getDateTimeStrFromTimestamp(alarmTimestamp)
                 val currentDtStr = getDateTimeStrFromTimestamp(System.currentTimeMillis())
-                val timeAgo = (System.currentTimeMillis() - alarmTimestamp) / 1000
+                val delaySeconds = (System.currentTimeMillis() - alarmTimestamp) / 1000
 
-                DebugLogger.d(tag, context.getString(R.string.debug_log_alarm_time_comparison, currentDtStr, alarmDtStr, timeAgo))
+                DebugLogger.d(tag, context.getString(R.string.debug_log_alarm_time_comparison, currentDtStr, alarmDtStr, delaySeconds))
+
+                // todo ensure that there are no edge cases where this behavior would prevent
+                //  a real alert from firing when it should
+                // If a "final" alarm fires significantly later than scheduled, it's likely
+                // stale — e.g., from an app update/redeploy, extended device-off, or process
+                // death. Downgrade to "periodic" to give the user a fresh "Are you there?"
+                // prompt instead of immediately sending the real alert.
+                // Threshold: if the delay exceeds the followup period, treat it as stale.
+                if (alarmStage == "final" && delaySeconds > 0) {
+                    val prefs = getEncryptedSharedPreferences(context)
+                    val followupMinutes = prefs.getString("followup_time_period_minutes", "60")?.toIntOrNull() ?: 60
+
+                    val maxAcceptableDelaySeconds = followupMinutes * 60L
+
+                    // if the delay is longer than the followup then it means that the
+                    //  final alarm time would be in the past?
+                    if (delaySeconds > maxAcceptableDelaySeconds) {
+                        DebugLogger.d(tag, context.getString(R.string.debug_log_final_alarm_stale, delaySeconds, maxAcceptableDelaySeconds))
+                        alarmStage = "periodic"
+                    }
+                }
             }
         }
         return alarmStage

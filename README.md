@@ -35,6 +35,20 @@ Supports Android 5.1 (API 22) and up
 - Optional: Place a phone call with speakerphone enabled
 - Optional: Send an HTTP request to a custom URL
 
+## Device Reboot Behavior
+  If your device restarts, Keep Alive will not be able to check for recent activity until the screen is unlocked. 
+  This is an Android limitation that affects all apps.
+
+  **On Android 7.0+**, Keep Alive can still send an alert before the screen is unlocked but must rely on its last saved alarm 
+  state to decide what to do. If an alarm was already due or comes due while the device is still locked, Keep Alive 
+  will assume you have been inactive and send the 'Are you there?' notification. If that notification is not 
+  acknowledged, the alert will be sent — even if you were using the device right before the reboot. Unlocking the 
+  device after an 'Are you there?' notification is treated as proof of activity and the notification will be canceled.
+
+  **On Android versions below 7.0**, Keep Alive **cannot run at all** until the screen is unlocked. If you are unable 
+  to unlock your device after a reboot, the alert will **not** be sent.
+
+
 ## Requirements
   - **Active SIM** - used to send SMS and place phone calls
     - WiFi calling and messaging will be used if the device supports it

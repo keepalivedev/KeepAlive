@@ -171,7 +171,7 @@
     <string name="time_period_description">Liczba godzin bezczynności przed wyświetleniem powiadomienia \'Jesteś tam?\'</string>
     <string name="followup_time_period_title">Minuty oczekiwania na potwierdzenie</string>
     <string name="exact_alarm_toggle_title">Użyj dokładnego czasu alarmu</string>
-    <string name="exact_alarm_note">UWAGA: Ten czas nie jest dokładny, a system może opóźnić powiadomienie nawet o 1 godzinę.\n\nWłącz \"Użyj dokładnego czasu alarmu\" poniżej, jeśli potrzebujesz precyzyjnych kontroli — może to nieznacznie zwiększyć zużycie baterii.</string>
+    <string name="exact_alarm_note">UWAGA: Ten czas nie jest dokładny, a system może opóźnić powiadomienie nawet o 1 godzinę.\n\nWłącz "Użyj dokładnego czasu alarmu" poniżej, jeśli potrzebujesz precyzyjnych kontroli — może to nieznacznie zwiększyć zużycie baterii.</string>
     <string name="rest_period_title">Zakres Czasu Odpoczynku</string>
     <string name="followup_time_period_description">Ile minut należy poczekać na odpowiedź do pytania \'Jesteś tam?\' zanim Alert wysłany zostanie do Twoich Kontaktów Alarmowych.</string>
     <string name="contact_sms_phone_title">Numer Alertów SMS</string>
@@ -329,6 +329,7 @@
     <string name="debug_log_no_active_alarm_showing_restart_button">Nie znaleziono aktywnego alarmu, pokazywanie przycisku ponownego uruchomienia</string>
     <string name="debug_log_failed_getting_sms_manager_disable_button">Nie udało się pobrać menedżera SMS? Wyłączanie przycisku testowego SMS</string>
     <string name="debug_log_current_alarm_time">Bieżący alarm ustawiony na %1$s czasu lokalnego</string>
+    <string name="debug_log_direct_boot_notification_pending_app_open">Powiadomienie Direct Boot nadal oczekuje przy otwarciu aplikacji — potwierdzanie</string>
 
     <!-- PermissionManager.kt -->
     <string name="debug_log_still_need_some_permissions">Nadal potrzebuję niektórych uprawnień</string>
@@ -344,6 +345,7 @@
     <string name="debug_log_app_in_background">KeepAlive jest obecnie w tle</string>
     <string name="debug_log_flag_receiver_true">FLAG_RECEIVER_FOREGROUND jest prawdziwe</string>
     <string name="debug_log_flag_receiver_false">FLAG_RECEIVER_FOREGROUND jest fałszywe</string>
+    <string name="debug_log_final_alarm_stale">Alarm końcowy jest nieaktualny: uruchomiony z opóźnieniem %1$ds (próg: %2$ds). Obniżenie do \'periodic\' w celu uniknięcia fałszywego alarmu.</string>
 
     <!-- AlertService.kt -->
     <string name="debug_log_wake_lock_acquired">Uzyskiwanie blokady wybudzenia</string>
@@ -352,16 +354,23 @@
     <!-- SMSSentReceiver.kt -->
     <string name="debug_log_sms_sent">SMS wysłany!</string>
     <string name="debug_log_sms_send_error">Błąd wysyłania SMS: %1$s</string>
+    <string name="debug_log_sms_receiver_not_registered">Odbiornik nie jest zarejestrowany</string>
 
     <!-- BootBroadcastReceiver.kt -->
-    <string name="debug_log_boot_completed">Uruchamianie zakończone!?</string>
+    <string name="debug_log_boot_completed">Uruchamianie zakończone!? %1$s</string>
     <string name="debug_log_app_is_disabled">Aplikacja jest wyłączona?</string>
     <string name="debug_log_boot_receiver_exception">Wyjątek w BootBroadcastReceiver: %1$s</string>
+    <string name="debug_log_boot_completed_flag_status">BOOT_COMPLETED: direct_boot_notification_pending=%1$b, isUserUnlocked=%2$b</string>
+    <string name="debug_log_boot_completed_user_unlocked">BOOT_COMPLETED: Użytkownik odblokował urządzenie — traktowane jako aktywność, anulowanie powiadomienia i resetowanie alarmu</string>
+    <string name="debug_log_boot_completed_no_pending_notification">BOOT_COMPLETED: Brak oczekującego powiadomienia Direct Boot, kontynuowanie normalnie</string>
+    <string name="debug_log_locked_boot_completed_skipping">Otrzymano LOCKED_BOOT_COMPLETED, pomijanie sprawdzania powiadomienia Direct Boot. %1$s</string>
+    <string name="debug_log_restored_alarm_stage">Przywrócono etap alarmu z chronionego magazynu urządzenia: %1$s, wywołanie doAlertCheck()</string>
 
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Konfiguracja webhooka zapisana</string>
     <string name="debug_log_webhook_config_deleted">Konfiguracja webhooka usunięta</string>
     <string name="debug_log_webhook_config_load_error">Błąd podczas ładowania konfiguracji webhooka</string>
+    <string name="debug_log_invalid_header_json">Nieprawidłowy JSON nagłówka</string>
 
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Wyłączanie weryfikacji certyfikatu webhooka!</string>
@@ -375,4 +384,9 @@
     <string name="debug_log_sending_request">Wysyłanie żądania do: %1$s. Lokalizacja to %2$s</string>
     <string name="debug_log_webhook_test_error">Błąd testowania webhooka: %1$s</string>
     <string name="debug_log_sending_webhook_failed">Nie udało się wysłać webhooka: %1$s</string>
+
+    <!-- AlertFunctions.kt (Direct Boot) -->
+    <string name="debug_log_direct_boot_final_alarm_due">Direct Boot: Alarm końcowy jest wymagalny — wysyłanie alertu</string>
+    <string name="debug_log_direct_boot_cleared_pending_flag">Direct Boot: Wyczyszczono direct_boot_notification_pending</string>
+    <string name="debug_log_direct_boot_set_pending_flag">Direct Boot: Ustawiono direct_boot_notification_pending=true</string>
 </resources>

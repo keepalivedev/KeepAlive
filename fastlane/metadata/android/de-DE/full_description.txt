@@ -14,7 +14,9 @@ Anforderungen
   Keep Alive erfordert einen aktiven Mobilfunktarif. WLAN‑Anrufe und ‑Nachrichten werden genutzt, wenn Ihr Gerät dies unterstützt.
 
 Funktionsweise
-  Keep Alive erkennt Aktivität über den Sperrbildschirm oder andere ausgewählte Apps. Wenn Ihr Gerät über einen festgelegten Zeitraum nicht gesperrt oder entsperrt wurde oder die gewählten Apps nicht verwendet wurden, erscheint eine „Bist du da?“-Benachrichtigung. Wird diese nicht bestätigt, wird ein Alarm ausgelöst. Entsprechend der Notfallkontakteinstellungen werden eine oder mehrere SMS‑Nachrichten und/oder ein Anruf gesendet, um andere zu benachrichtigen, dass Sie möglicherweise Hilfe benötigen.
+  Keep Alive erkennt Aktivität über den Sperrbildschirm oder andere ausgewählte Apps. Wenn Ihr Gerät über einen festgelegten Zeitraum nicht gesperrt oder entsperrt wurde oder die gewählten Apps nicht verwendet wurden, erscheint eine „Bist du da?"-Benachrichtigung. Wird diese nicht bestätigt, wird ein Alarm ausgelöst. Entsprechend der Notfallkontakteinstellungen werden eine oder mehrere SMS‑Nachrichten und/oder ein Anruf gesendet, um andere zu benachrichtigen, dass Sie möglicherweise Hilfe benötigen.
+
+WARNUNG: Wenn Ihr Gerät neu startet, kann Keep Alive die letzte Aktivität nicht überprüfen, bis der Bildschirm entsperrt wird. Ab Android 7.0 kann Keep Alive zwar vor dem Entsperren weiterhin Alarme senden, muss dabei aber anhand des zuletzt gespeicherten Zustands annehmen, dass Sie inaktiv waren. Bei älteren Android-Versionen kann Keep Alive überhaupt nicht ausgeführt werden, bis der Bildschirm entsperrt wird, und es werden keine Alarme gesendet.
 
 Haupteinstellungen
 - Überwachungsmethode: Wählen Sie zwischen Sperrbildschirm oder Apps zur Aktivitätserkennung.

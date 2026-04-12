@@ -7,25 +7,19 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.SystemClock
+import android.os.UserManager
 import android.util.Log
 import androidx.annotation.ColorRes
 import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.keepalive.android.receivers.AlarmReceiver
-import java.io.BufferedReader
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStreamReader
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Collections
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
-import java.util.concurrent.ConcurrentLinkedQueue
-import java.util.concurrent.Executors
-import kotlin.math.log
+import androidx.core.content.edit
 
 
 // data class used to represent an SMS emergency contact setting
@@ -105,11 +99,29 @@ fun saveSMSEmergencyContactSettings(
 
 // originally implemented because I thought one of the questions in the play store asked about it
 //  but that wasn't the case.  to reduce complexity and the chances of this failing, just
-//  use the default shared preferences as we aren't really store anything sensitive anyway
+//  use the default shared preferences as we aren't really store anything sensitive anyway.
+// if the user hasn't unlocked the device yet (Direct Boot mode), credential-encrypted
+//  storage is not available so we fall back to device-protected storage which was synced
+//  from the main prefs whenever settings were changed.
 fun getEncryptedSharedPreferences(context: Context): SharedPreferences {
     return try {
+
+        // check if we're in Direct Boot mode (user hasn't unlocked the device yet)
+        // Direct Boot only exists on API 24+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val userManager = context.getSystemService(Context.USER_SERVICE) as? UserManager
+
+            // if UserManager is null or user is locked, use device-protected storage.
+            // defaulting to device-protected when we can't determine lock state is safer
+            // than crashing on inaccessible credential-encrypted storage.
+            if (userManager == null || !userManager.isUserUnlocked) {
+                Log.d("getEncryptedSP", "User not unlocked or UserManager unavailable, using device-protected storage")
+                return getDeviceProtectedPreferences(context)
+            }
+        }
+
         /*
-        Log.d("getEncryptedSharedPreferences", "Getting encrypted shared preferences")
+        Log.d("getEncryptedSP", "Getting encrypted shared preferences")
         // this gets a system generated master key that is stored in the android keystore?
         // by default this won't require that the device be unlocked?
         val masterKey = MasterKey.Builder(context)
@@ -129,9 +141,90 @@ fun getEncryptedSharedPreferences(context: Context): SharedPreferences {
 
     } catch (e: Exception) {
 
-        // fall back to the default shared preferences...
-        DebugLogger.d("getSharedPrefs", context.getString(R.string.debug_log_failed_getting_shared_prefs), e)
+        // credential-encrypted storage failed. on API 24+ always fall back to device-protected
+        // storage because if we got here, credential storage is clearly not working regardless
+        // of what UserManager.isUserUnlocked reports (there can be brief race conditions where
+        // isUserUnlocked returns true but CE storage is not yet ready).
+        // NOTE: do NOT call DebugLogger.d() here — it may also fail during Direct Boot,
+        //  creating a cascading error chain. use Log.e() for logcat-only logging instead.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Log.e("getEncryptedSP", "Fallback to device-protected storage after exception", e)
+            return getDeviceProtectedPreferences(context)
+        }
+
+        // pre-API 24: no device-protected storage, try default prefs as last resort
+        Log.e("getEncryptedSP", "Falling back to default shared preferences", e)
+        try {
+            PreferenceManager.getDefaultSharedPreferences(context)
+        } catch (e2: Exception) {
+            Log.e("getEncryptedSP", "Default shared preferences also failed!", e2)
+            throw e2
+        }
+    }
+}
+
+// device-protected storage is available before the user unlocks the device (Direct Boot mode).
+// this is needed for the BootBroadcastReceiver to run doAlertCheck when it receives
+// LOCKED_BOOT_COMPLETED, since credential-encrypted storage is not yet accessible.
+// Note: Direct Boot and device-protected storage require API 24+.
+private const val DEVICE_PROTECTED_PREFS_NAME = "device_protected_prefs"
+
+fun getDeviceProtectedPreferences(context: Context): SharedPreferences {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        val deviceProtectedContext = context.createDeviceProtectedStorageContext()
+        deviceProtectedContext.getSharedPreferences(DEVICE_PROTECTED_PREFS_NAME, Context.MODE_PRIVATE)
+    } else {
+        // Direct Boot doesn't exist before API 24, so just use regular prefs
         PreferenceManager.getDefaultSharedPreferences(context)
+    }
+}
+
+// top-level helper to check if the user has unlocked the device.
+// during Direct Boot (LOCKED_BOOT_COMPLETED), credential-encrypted storage and some
+// system services (UsageStatsManager, etc.) are not available.
+// defaults to false (locked) when UserManager is null so callers err on the safe side.
+fun isUserUnlocked(context: Context): Boolean {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        val userManager = context.getSystemService(Context.USER_SERVICE) as? UserManager
+        userManager?.isUserUnlocked ?: false
+    } else {
+        true
+    }
+}
+
+// copy all preferences into device-protected storage so that
+// the app can fully function during Direct Boot (before user unlock).
+// this should be called whenever settings are changed.
+// note: we use PreferenceManager directly here to always read from
+//  credential-encrypted storage, since this is only called when the user is unlocked.
+fun syncPrefsToDeviceProtectedStorage(context: Context) {
+    try {
+        val credentialPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val devicePrefs = getDeviceProtectedPreferences(context)
+
+        // Bulk-copy every credential-encrypted preference into device-protected storage.
+        // This is safe because runtime-only keys that live exclusively in device-protected
+        // storage (last_activity_timestamp, last_check_timestamp, last_alarm_stage,
+        // direct_boot_notification_pending) don't exist in credential prefs, so they
+        // won't be overwritten.
+        devicePrefs.edit(commit = true) {
+            for ((key, value) in credentialPrefs.all) {
+                @Suppress("UNCHECKED_CAST")
+                when (value) {
+                    is Boolean -> putBoolean(key, value)
+                    is Int -> putInt(key, value)
+                    is Long -> putLong(key, value)
+                    is Float -> putFloat(key, value)
+                    is String -> putString(key, value)
+                    is Set<*> -> putStringSet(key, value as Set<String>)
+                    else -> Log.w("DeviceProtectedStorage", "Skipping unsupported type for key: $key")
+                }
+            }
+        }
+
+        Log.d("DeviceProtectedStorage", "Successfully synced ${credentialPrefs.all.size} prefs to device-protected storage")
+    } catch (e: Exception) {
+        Log.e("DeviceProtectedStorage", "Error syncing prefs to device-protected storage", e)
     }
 }
 
@@ -175,7 +268,7 @@ fun setAlarm(
 
     // check to make sure our alarm isn't in the past; this shouldn't happen though?
     if (alarmTimestamp < System.currentTimeMillis()) {
-        Log.d("setAlarm", "Alarm is in the past?! Forcing to 1 minute from now")
+        Log.d("setAlarm", "Alarm is in the past?! $alarmTimestamp Forcing to 1 minute from now")
         alarmTimestamp = System.currentTimeMillis() + 60000
     }
 
@@ -330,6 +423,23 @@ fun setAlarm(
         putLong("NextAlarmTimestamp", alarmTimestamp)
         apply()
     }
+
+    // also save the alarm stage to device-protected storage so it can be
+    // restored after a reboot during Direct Boot.
+    // use commit=true because this often runs inside a BroadcastReceiver where the
+    // process can be killed after onReceive() returns — apply() is async and may not
+    // flush to disk in time.
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        try {
+            val devicePrefs = getDeviceProtectedPreferences(context)
+            devicePrefs.edit(commit = true) {
+                putString("last_alarm_stage", alarmStage)
+                putLong("NextAlarmTimestamp", alarmTimestamp)
+            }
+        } catch (e: Exception) {
+            Log.e("setAlarm", "Error saving alarm stage to device-protected storage", e)
+        }
+    }
 }
 
 // cancelling alarm usually not necessary as setting a new one will overwrite any existing ones
@@ -463,144 +573,6 @@ fun isWithinRestPeriod(
     }
 }
 
-// store logs in memory as well as on the device
-object DebugLogger {
-    private val logBuffer = Collections.synchronizedList(mutableListOf<String>())
-
-    // 1024 should be plenty right?
-    private const val MAX_BUFFER_SIZE = 1024
-    private const val MAX_LINES = 1024
-
-    private lateinit var appContext: Context
-
-    // gets stored in /data/data/io.keepalive.android/files
-    private const val LOG_FILE_NAME = "app_debug_logs.txt"
-
-    fun initialize(context: Context) {
-        if (!::appContext.isInitialized) {
-            appContext = context.applicationContext
-        }
-    }
-
-    @Synchronized
-    fun d(tag: String, message: String, ex: Exception? = null) {
-
-        Log.d(tag, message, ex)
-
-        // build the log message; the timestamp will be stored as UTC
-        val dtStr = getDateTimeStrFromTimestamp(System.currentTimeMillis())
-        val logMessage = "$dtStr: $message" + (ex?.let { ". Exception: ${it.localizedMessage}" } ?: "")
-
-        // keep tracking logs in memory in case there is some issue writing logs to file?
-        addLogToMemory(logMessage)
-
-        if (!::appContext.isInitialized) {
-
-            // don't throw an exception so that the logger doesn't crash the app
-            // throw IllegalStateException("DebugLogger is not initialized. Call initialize(context) before logging.")
-            return
-        }
-
-        // limit the # of lines in the log file
-        trimLog()
-
-        try {
-            // this will create the file if it doesn't exist
-            appContext.openFileOutput(LOG_FILE_NAME, Context.MODE_APPEND).use { fos ->
-                fos.write((logMessage + "\n").toByteArray())
-            }
-        } catch (e: IOException) {
-            Log.e("DebugLogger", "Error writing log entry to file", e)
-        }
-    }
-
-    private fun trimLog() {
-        try {
-            val file = appContext.getFileStreamPath(LOG_FILE_NAME)
-            if (!file.exists()) return
-
-            // get the line count
-            val lines = file.readLines()
-            if (lines.size > MAX_LINES) {
-
-                // lines are appended so the most recent are at the bottom, so take
-                //  the last MAX_LINES lines
-                val trimmedLines = lines.takeLast(MAX_LINES)
-
-                // rewrite the log file...
-                appContext.openFileOutput(LOG_FILE_NAME, Context.MODE_PRIVATE).use { fos ->
-                    trimmedLines.forEach { line ->
-                        fos.write((line + "\n").toByteArray())
-                    }
-                }
-            }
-        } catch (e: IOException) {
-            Log.e("DebugLogger", "Error trimming log file", e)
-        }
-    }
-
-    private fun addLogToMemory(log: String) {
-        synchronized(logBuffer) {
-            logBuffer.add(0, log) // Add new log at the beginning
-            if (logBuffer.size > MAX_BUFFER_SIZE) {
-                logBuffer.removeAt(logBuffer.size - 1) // Remove oldest log
-            }
-        }
-    }
-
-    fun getLogs(): List<String> {
-
-        // if there is an error return the logs in memory instead
-        if (!::appContext.isInitialized) {
-            return logBuffer.toList()
-        }
-
-        val logs = mutableListOf<String>()
-        try {
-
-            // check if the file exists, if not then return the logs in memory
-            if (!appContext.getFileStreamPath(LOG_FILE_NAME).exists()) {
-                return logBuffer.toList()
-            }
-
-            appContext.openFileInput(LOG_FILE_NAME).use { fis ->
-                BufferedReader(InputStreamReader(fis)).use { br ->
-                    var line = br.readLine()
-                    while (line != null) {
-                        logs.add(line)
-                        line = br.readLine()
-                    }
-                }
-            }
-        } catch (e: IOException) {
-            Log.e("DebugLogger", "Error reading log file", e)
-        }
-
-        Log.d("DebugLogger", "Returning ${logs.size} logs")
-
-        // return the logs in reverse order so that the newest logs are at the top
-        // if there are issues with the logs saved to file then return the memory logs instead
-        return if (logs.size > 0) logs.toList().reversed() else logBuffer.toList()
-    }
-
-    fun deleteLogs() {
-        if (!::appContext.isInitialized) {
-            return
-        }
-        try {
-            // clear the logs in memory
-            logBuffer.clear()
-
-            // delete the logfile
-            val fileDeleted = appContext.deleteFile(LOG_FILE_NAME)
-            if (!fileDeleted) {
-                Log.e("DebugLogger", "Log file could not be deleted.")
-            }
-        } catch (e: Exception) {
-            Log.e("DebugLogger", "Error deleting log file", e)
-        }
-    }
-}
 
 fun getColorCompat(context: Context, @ColorRes colorResId: Int): Int {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

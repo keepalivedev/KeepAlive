@@ -270,7 +270,7 @@
     <string name="debug_log_checking_for_activity">проверка активности, начиная с %1$s по местному времени</string>
     <string name="debug_log_checking_for_system_events">Проверка событий блокировки/разблокировки системы</string>
     <string name="debug_log_failed_getting_last_phone_activity">Не удалось получить последнюю активность телефона?!</string>
-    <string name="debug_log_no_events_sending_notification">за последние %1$.2f часа не найдено событий, отправка уведомления \"Ты здесь?\"</string>
+    <string name="debug_log_no_events_sending_notification">за последние %1$.2f часа не найдено событий, отправка уведомления "Ты здесь?"</string>
     <string name="debug_log_sending_alert">Отправка оповещения!</string>
     <string name="debug_log_sending_alert_failed">Не удалось получить и отправить оповещение о местоположении</string>
     <string name="debug_log_last_device_activity">Последнее событие использования было %1$s из %2$s в %3$s UTC</string>
@@ -329,6 +329,7 @@
     <string name="debug_log_no_active_alarm_showing_restart_button">Активный будильник не найден, отображение кнопки перезапуска</string>
     <string name="debug_log_failed_getting_sms_manager_disable_button">Не удалось получить менеджер SMS? Отключение кнопки тестирования SMS</string>
     <string name="debug_log_current_alarm_time">Текущий будильник установлен на %1$s местного времени</string>
+    <string name="debug_log_direct_boot_notification_pending_app_open">Уведомление Direct Boot всё ещё ожидает при открытии приложения — подтверждение</string>
 
     <!-- PermissionManager.kt -->
     <string name="debug_log_still_need_some_permissions">Мне все еще нужны некоторые разрешения</string>
@@ -344,6 +345,7 @@
     <string name="debug_log_app_in_background">KeepAlive сейчас в фоновом режиме</string>
     <string name="debug_log_flag_receiver_true">FLAG_RECEIVER_FOREGROUND истинно</string>
     <string name="debug_log_flag_receiver_false">FLAG_RECEIVER_FOREGROUND ложно</string>
+    <string name="debug_log_final_alarm_stale">Финальный будильник устарел: сработал с опозданием %1$ds (порог: %2$ds). Понижение до \'periodic\' во избежание ложного срабатывания.</string>
 
     <!-- AlertService.kt -->
     <string name="debug_log_wake_lock_acquired">Получение блокировки пробуждения</string>
@@ -352,16 +354,23 @@
     <!-- SMSSentReceiver.kt -->
     <string name="debug_log_sms_sent">SMS отправлено!</string>
     <string name="debug_log_sms_send_error">Ошибка отправки SMS: %1$s</string>
+    <string name="debug_log_sms_receiver_not_registered">Приёмник не зарегистрирован</string>
 
     <!-- BootBroadcastReceiver.kt -->
-    <string name="debug_log_boot_completed">Загрузка завершена!?</string>
+    <string name="debug_log_boot_completed">Загрузка завершена!? %1$s</string>
     <string name="debug_log_app_is_disabled">Приложение отключено?</string>
     <string name="debug_log_boot_receiver_exception">Исключение в BootBroadcastReceiver: %1$s</string>
+    <string name="debug_log_boot_completed_flag_status">BOOT_COMPLETED: direct_boot_notification_pending=%1$b, isUserUnlocked=%2$b</string>
+    <string name="debug_log_boot_completed_user_unlocked">BOOT_COMPLETED: Пользователь разблокировал устройство — расцениваем как активность, отменяем уведомление и сбрасываем будильник</string>
+    <string name="debug_log_boot_completed_no_pending_notification">BOOT_COMPLETED: Нет ожидающего уведомления Direct Boot, продолжаем в обычном режиме</string>
+    <string name="debug_log_locked_boot_completed_skipping">Получен LOCKED_BOOT_COMPLETED, пропускаем проверку уведомления Direct Boot. %1$s</string>
+    <string name="debug_log_restored_alarm_stage">Восстановлен этап будильника из защищённого хранилища устройства: %1$s, вызываем doAlertCheck()</string>
 
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Конфигурация вебхука сохранена</string>
     <string name="debug_log_webhook_config_deleted">Конфигурация вебхука удалена</string>
     <string name="debug_log_webhook_config_load_error">Ошибка загрузки конфигурации вебхука</string>
+    <string name="debug_log_invalid_header_json">Недопустимый JSON заголовка</string>
 
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Отключение проверки сертификата вебхука!</string>
@@ -375,4 +384,9 @@
     <string name="debug_log_sending_request">Отправка запроса на: %1$s. Местоположение: %2$s</string>
     <string name="debug_log_webhook_test_error">Ошибка тестирования вебхука: %1$s</string>
     <string name="debug_log_sending_webhook_failed">Не удалось отправить вебхук: %1$s</string>
+
+    <!-- AlertFunctions.kt (Direct Boot) -->
+    <string name="debug_log_direct_boot_final_alarm_due">Direct Boot: Финальный будильник наступил — отправляем оповещение</string>
+    <string name="debug_log_direct_boot_cleared_pending_flag">Direct Boot: Флаг direct_boot_notification_pending сброшен</string>
+    <string name="debug_log_direct_boot_set_pending_flag">Direct Boot: Установлен direct_boot_notification_pending=true</string>
 </resources>

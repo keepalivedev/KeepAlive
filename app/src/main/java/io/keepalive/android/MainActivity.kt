@@ -66,8 +66,39 @@ class MainActivity : AppCompatActivity() {
 
         Log.d(tag, "onResume, updating text views and checking permissions")
 
+        // Safety net: if an "Are you there?" notification was posted during Direct Boot
+        // and BOOT_COMPLETED failed to re-post it with a working PendingIntent (race
+        // condition, process death, etc.), the user may have opened the app manually.
+        // Check the flag and treat it as an acknowledgement.
+        checkDirectBootNotificationPending()
+
         val needPermissions = PermissionManager(this, this).checkNeedAnyPermissions()
         updateMainContent(needPermissions)
+    }
+
+    /**
+     * If a Direct Boot "Are you there?" notification is still pending, treat the
+     * user opening the app as an implicit acknowledgement — they're clearly alive.
+     */
+    private fun checkDirectBootNotificationPending() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) return
+
+        try {
+            val devicePrefs = getDeviceProtectedPreferences(this)
+            val pending = devicePrefs.getBoolean("direct_boot_notification_pending", false)
+            if (pending) {
+                Log.d(tag, "Direct Boot notification still pending — user opened app manually, acknowledging")
+                DebugLogger.d(tag, getString(R.string.debug_log_direct_boot_notification_pending_app_open))
+
+                AcknowledgeAreYouThere.acknowledge(this)
+
+                // show the user that the alert was cancelled
+                binding.root.findViewById<TextView>(R.id.textviewMonitoringMessage).text =
+                    getString(R.string.activity_notification_message)
+            }
+        } catch (e: Exception) {
+            Log.e(tag, "Error checking Direct Boot notification flag", e)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

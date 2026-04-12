@@ -170,7 +170,9 @@
         <string name="time_period_title">Ore di inattività prima della notifica</string>  
         <string name="time_period_description">Il numero di ore di inattività prima di ricevere una notifica "Ci sei?".\n\nNOTA: Questo ritardo non è esatto e il sistema potrebbe ritardare questa notifica fino a un\'ora.</string>  
         <string name="followup_time_period_title">Minuti di attesa per la conferma</string>  
-        <string name="rest_period_title">Intervallo di tempo del periodo di riposo</string>  
+        <string name="exact_alarm_toggle_title">Usa Temporizzazione Allarme Esatta</string>
+        <string name="exact_alarm_note">NOTA: Questa temporizzazione non è esatta e il sistema potrebbe ritardare questa notifica fino a 1 ora.\n\nAbilita \'Usa Temporizzazione Allarme Esatta\' qui sotto se hai bisogno di controlli precisi, il che potrebbe aumentare leggermente il consumo della batteria.</string>
+        <string name="rest_period_title">Intervallo di tempo del periodo di riposo</string>
         <string name="followup_time_period_description">Il numero di minuti da attendere dopo l\'invio di una notifica "Ci sei?" prima che un avviso venga inviato ai tuoi contatti di emergenza</string>  
         <string name="contact_sms_phone_title">Numero di telefono SMS</string>  
         <string name="contact_phone_title">Numero di telefono da chiamare (facoltativo)</string>  
@@ -289,7 +291,8 @@
         <string name="debug_log_failed_getting_shared_prefs">Fallito l\'ottenimento delle preferenze condivise?!</string>  
         <string name="debug_log_failed_getting_alarm_manager">Fallito l\'ottenimento dell\'AlarmManager?!</string>  
         <string name="debug_log_setting_periodic_alarm">Definizione di un nuovo allarme periodico per circa %1$s UTC</string>  
-       <string name="debug_log_setting_final_exact_alarm">Impostazione dell\'allarme esatto finale per l\'attivazione a %1$s UTC</string>  
+        <string name="debug_log_setting_periodic_exact_alarm">Impostazione di un nuovo allarme esatto periodico per %1$s UTC</string>
+       <string name="debug_log_setting_final_exact_alarm">Impostazione dell\'allarme esatto finale per l\'attivazione a %1$s UTC</string>
 <string name="debug_log_unable_to_set_exact_alarm">Impossibile impostare l\'allarme esatto?! Impostazione dell\'allarme finale normale per l\'attivazione a %1$s UTC</string>  
 <string name="debug_log_api_22_unable_to_set_exact_alarm">API 22, ma non è stato possibile impostare un allarme esatto?!</string>  
 <string name="debug_log_returning_logs">Restituzione di %1$d log</string>  
@@ -326,7 +329,8 @@
 <string name="debug_log_no_active_alarm_showing_restart_button">Nessun allarme attivo trovato, visualizzazione del pulsante di riavvio</string>  
 <string name="debug_log_failed_getting_sms_manager_disable_button">Impossibile ottenere il gestore SMS? Disabilitazione del pulsante di test SMS</string>  
 <string name="debug_log_current_alarm_time">Allarme attuale impostato per le %1$s ora locale</string>  
-  
+<string name="debug_log_direct_boot_notification_pending_app_open">Notifica Direct Boot ancora in sospeso all\'apertura dell\'app — conferma in corso</string>
+
 <!-- PermissionManager.kt -->  
 <string name="debug_log_still_need_some_permissions">Ho ancora bisogno di alcuni permessi</string>  
 <string name="debug_log_have_all_permissions">Ho tutti i permessi</string>  
@@ -341,7 +345,8 @@
 <string name="debug_log_app_in_background">KeepAlive è attualmente in background</string>  
 <string name="debug_log_flag_receiver_true">FLAG_RECEIVER_FOREGROUND è vero</string>  
 <string name="debug_log_flag_receiver_false">FLAG_RECEIVER_FOREGROUND è falso</string>  
-  
+<string name="debug_log_final_alarm_stale">L\'allarme finale è obsoleto: scattato con %1$ds di ritardo (soglia: %2$ds). Declassamento a \'periodic\' per evitare un falso allarme.</string>
+
 <!-- AlertService.kt -->  
 <string name="debug_log_wake_lock_acquired">Acquisizione del wakelock</string>  
 <string name="debug_log_wake_lock_released">Rilascio del wakelock</string>  
@@ -349,17 +354,24 @@
 <!-- SMSSentReceiver.kt -->  
 <string name="debug_log_sms_sent">SMS inviato!</string>  
 <string name="debug_log_sms_send_error">Errore di invio SMS: %1$s</string>  
-  
+<string name="debug_log_sms_receiver_not_registered">Ricevitore non registrato</string>
+
 <!-- BootBroadcastReceiver.kt -->  
-<string name="debug_log_boot_completed">Avvio completato!?</string>  
-<string name="debug_log_app_is_disabled">L\'applicazione è disabilitata?</string>  
+<string name="debug_log_boot_completed">Avvio completato!? %1$s</string>
+<string name="debug_log_app_is_disabled">L\'applicazione è disabilitata?</string>
 <string name="debug_log_boot_receiver_exception">Eccezione in BootBroadcastReceiver: %1$s</string>  
-  
+<string name="debug_log_boot_completed_flag_status">BOOT_COMPLETED: direct_boot_notification_pending=%1$b, isUserUnlocked=%2$b</string>
+<string name="debug_log_boot_completed_user_unlocked">BOOT_COMPLETED: L\'utente ha sbloccato il dispositivo — trattato come attività, annullamento della notifica e reimpostazione dell\'allarme</string>
+<string name="debug_log_boot_completed_no_pending_notification">BOOT_COMPLETED: Nessuna notifica Direct Boot in sospeso, proseguendo normalmente</string>
+<string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED ricevuto, salto del controllo notifica Direct Boot. %1$s</string>
+<string name="debug_log_restored_alarm_stage">Fase dell\'allarme ripristinata dall\'archivio protetto del dispositivo: %1$s, chiamata a doAlertCheck()</string>
+
 <!-- WebhookConfigManager.kt -->  
 <string name="debug_log_webhook_config_saved">Configurazione webhook salvata</string>  
 <string name="debug_log_webhook_config_deleted">Configurazione webhook eliminata</string>  
 <string name="debug_log_webhook_config_load_error">Errore durante il caricamento della configurazione webhook</string>  
-  
+<string name="debug_log_invalid_header_json">JSON dell\'intestazione non valido</string>
+
 <!-- WebhookSender.kt -->  
 <string name="debug_log_disable_certificate_verification">Disabilitazione della verifica del certificato webhook!</string>  
 <string name="debug_log_request_successful">Richiesta completata con codice: %1$d</string>  
@@ -372,4 +384,9 @@
 <string name="debug_log_sending_request">Invio della richiesta a: %1$s. La posizione è %2$s</string>  
 <string name="debug_log_webhook_test_error">Errore durante il test del webhook: %1$s</string>  
 <string name="debug_log_sending_webhook_failed">Impossibile inviare il webhook: %1$s</string>  
-</resources>  
+
+<!-- AlertFunctions.kt (Direct Boot) -->
+<string name="debug_log_direct_boot_final_alarm_due">Direct Boot: L\'allarme finale è scaduto — invio dell\'avviso</string>
+<string name="debug_log_direct_boot_cleared_pending_flag">Direct Boot: direct_boot_notification_pending cancellato</string>
+<string name="debug_log_direct_boot_set_pending_flag">Direct Boot: Impostato direct_boot_notification_pending=true</string>
+</resources>

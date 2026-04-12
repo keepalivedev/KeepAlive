@@ -14,12 +14,14 @@ Exigences
   Keep Alive nécessite que votre appareil dispose d’un forfait cellulaire actif. Les appels et messages Wi‑Fi seront utilisés si l’appareil les prend en charge.
 
 Fonctionnement
-  Keep Alive utilise soit l’écran de verrouillage de votre appareil, soit une ou plusieurs applications pour détecter l’activité. Si votre appareil n’a pas été verrouillé ou déverrouillé pendant une période déterminée, ou si vous n’avez pas utilisé les applications sélectionnées, une notification « Êtes-vous là? » apparaîtra. Si cette notification n’est pas confirmée, une alerte sera déclenchée. Selon les paramètres de contact d’urgence configurés, un ou plusieurs messages SMS et/ou un appel téléphonique seront effectués pour informer vos contacts que vous pourriez avoir besoin d’aide.
+  Keep Alive utilise l'écran de verrouillage ou des applications sélectionnées pour détecter l'activité. Si votre appareil n'a pas été verrouillé ou déverrouillé pendant une période déterminée, une notification « Êtes-vous là? » apparaîtra. Si elle n'est pas confirmée, une alerte sera déclenchée : SMS et/ou appel téléphonique à vos contacts d'urgence.
+
+AVERTISSEMENT : Si votre appareil redémarre, Keep Alive ne pourra pas vérifier votre activité récente tant que l'écran n'aura pas été déverrouillé. Sur Android 7.0+, Keep Alive peut toujours envoyer une alerte avant le déverrouillage, mais doit supposer que vous avez été inactif en se basant sur son dernier état sauvegardé. Sur les versions Android plus anciennes, Keep Alive ne peut pas fonctionner du tout tant que l'écran n'est pas déverrouillé et les alertes ne seront pas envoyées.
 
 Paramètres principaux
-- Méthode de surveillance : choisissez entre l’écran de verrouillage ou d’autres applications pour détecter l’activité. Si vous choisissez des applications, vous serez invité à les sélectionner.
-- Heures d’inactivité avant l’avertissement : durée (en heures) depuis le dernier verrouillage/déverrouillage avant l’envoi d’une notification « Êtes-vous là? » (par défaut : 12 h).
-- Minutes d’attente : délai avant qu’une alerte soit envoyée si la notification n’est pas confirmée (par défaut : 60 min).
+- Méthode de surveillance : écran de verrouillage ou applications sélectionnées.
+- Heures d'inactivité avant l'avertissement : durée depuis le dernier verrouillage/déverrouillage avant la notification « Êtes-vous là? » (par défaut : 12 h).
+- Minutes d'attente : délai avant l'envoi d'une alerte si la notification n'est pas confirmée (par défaut : 60 min).
 - Plage horaire de repos : période pendant laquelle l’inactivité n’est pas comptabilisée. Par exemple, avec 6 h d’inactivité et une période de repos de 22 h à 6 h, si l’appareil est utilisé à 18 h, l’alerte ne sera pas envoyée avant 8 h.
 - Redémarrage automatique après alerte : si activé, la surveillance redémarre automatiquement après l’envoi d’une alerte.
 - Webhook d’alerte : permet d’envoyer une requête HTTP lorsqu’une alerte est déclenchée.

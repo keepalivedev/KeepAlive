@@ -13,8 +13,28 @@ import android.os.Looper
 import android.os.PowerManager
 import android.util.Log
 import androidx.core.app.ServiceCompat
+import androidx.core.content.edit
 
 class AlertService : Service() {
+
+    companion object {
+        /** Intent extra key used to stamp each alert with a unique trigger time. */
+        const val EXTRA_ALERT_TRIGGER_TIMESTAMP = "alert_trigger_timestamp"
+
+        // Bitmask constants for idempotent step tracking.
+        // Each bit represents one discrete step in the alert flow.
+        private const val STEP_SMS_SENT = 1       // SMS messages dispatched to all contacts
+        private const val STEP_CALL_MADE = 2      // Phone call placed
+        private const val STEP_LOCATION_DONE = 4  // Location SMS sent (or not needed / failed)
+        private const val STEP_WEBHOOK_DONE = 8   // Webhook request sent (or not needed / failed)
+        private const val ALL_STEPS_COMPLETE =
+            STEP_SMS_SENT or STEP_CALL_MADE or STEP_LOCATION_DONE or STEP_WEBHOOK_DONE
+
+        // SharedPreferences keys for the step tracker.
+        // The trigger timestamp identifies *which* alert cycle the steps belong to.
+        private const val PREF_ALERT_TRIGGER_TIMESTAMP = "AlertTriggerTimestamp"
+        private const val PREF_ALERT_STEPS_COMPLETED = "AlertStepsCompleted"
+    }
 
     private lateinit var prefs: SharedPreferences
     private lateinit var wakeLock: PowerManager.WakeLock
@@ -24,6 +44,12 @@ class AlertService : Service() {
     private val wakeLockTag = "KeepAlive::AlertWakeLock"
     private val wakeLockTimeout = 120 * 1000L
     private val serviceTimeout = 120 * 1000L
+
+    /** Trigger timestamp from the current intent; used to key step-tracking. */
+    private var currentTriggerTimestamp = 0L
+
+    /** Lock protecting the read-modify-write on [PREF_ALERT_STEPS_COMPLETED]. */
+    private val stepLock = Any()
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -71,13 +97,68 @@ class AlertService : Service() {
                 foregroundServiceTypes = foregroundServiceTypes or ServiceInfo.FOREGROUND_SERVICE_TYPE_SHORT_SERVICE
             }
 
-            // start the service
+            // Always call startForeground() immediately. Android requires this shortly
+            // after startForegroundService() — even if we're about to stop due to dedup.
             ServiceCompat.startForeground(
                 this,
                 AppController.ALERT_SERVICE_NOTIFICATION_ID,
                 notification,
                 foregroundServiceTypes
             )
+
+            // --- Idempotent step-tracking guard ---
+            // Each alert intent carries a trigger timestamp that identifies the alert
+            // cycle.  We track which discrete steps (SMS, call, location, webhook) have
+            // been completed for that timestamp as a bitmask in SharedPreferences.
+            //
+            //  • New trigger → reset the bitmask to 0, run all steps.
+            //  • Same trigger, some steps remaining → resume from where we left off.
+            //  • Same trigger, all steps complete → duplicate / redelivery, bail out.
+            //  • Older trigger → a newer alert already started, bail out.
+            //
+            // Each step marks its bit (via synchronous commit()) only AFTER the work
+            // finishes, so a process-kill before completion leaves the bit unset and
+            // the step will be retried on the next delivery.
+            val triggerTimestamp = intent?.getLongExtra(EXTRA_ALERT_TRIGGER_TIMESTAMP, 0L) ?: 0L
+
+            if (triggerTimestamp > 0L) {
+                val savedTrigger = prefs.getLong(PREF_ALERT_TRIGGER_TIMESTAMP, 0L)
+                val savedSteps = prefs.getInt(PREF_ALERT_STEPS_COMPLETED, 0)
+
+                when {
+                    // All steps already done for this trigger → skip
+                    triggerTimestamp == savedTrigger &&
+                            savedSteps and ALL_STEPS_COMPLETE == ALL_STEPS_COMPLETE -> {
+                        DebugLogger.d("AlertService",
+                            "All alert steps already complete for trigger=$triggerTimestamp, skipping")
+                        stopService()
+                        return START_REDELIVER_INTENT
+                    }
+                    // An even newer alert was already started → skip the stale intent
+                    triggerTimestamp < savedTrigger -> {
+                        DebugLogger.d("AlertService",
+                            "Skipping stale trigger=$triggerTimestamp " +
+                            "(newer=$savedTrigger exists)")
+                        stopService()
+                        return START_REDELIVER_INTENT
+                    }
+                    // Same trigger, some steps remaining → resume
+                    triggerTimestamp == savedTrigger -> {
+                        DebugLogger.d("AlertService",
+                            "Resuming alert trigger=$triggerTimestamp " +
+                            "(completedSteps=$savedSteps)")
+                    }
+                    // Brand-new trigger → initialize the step tracker
+                    else -> {
+                        prefs.edit(commit = true) {
+                            putLong(PREF_ALERT_TRIGGER_TIMESTAMP, triggerTimestamp)
+                            putInt(PREF_ALERT_STEPS_COMPLETED, 0)
+                        }
+                    }
+                }
+            }
+
+            currentTriggerTimestamp = triggerTimestamp
 
             DebugLogger.d("AlertService", getString(R.string.debug_log_wake_lock_acquired))
             wakeLock.acquire(wakeLockTimeout)
@@ -91,6 +172,7 @@ class AlertService : Service() {
                 try {
 
                     // send the alert; this may return before all processing is completed
+                    //  (the location callback is async)
                     sendAlert(this, prefs)
 
                 } catch (e: Exception) {
@@ -108,8 +190,10 @@ class AlertService : Service() {
             stopService()
         }
 
-        // restart the service if it is killed; this shouldn't happen though because we have
-        //  a wake lock and the OS should be temporarily whitelisting us?
+        // Use START_REDELIVER_INTENT so the OS will restart the service and redeliver
+        // the intent if the process is killed mid-alert (e.g., OOM, app update).
+        // The step tracker ensures every step runs exactly once: completed steps are
+        // skipped and incomplete steps are retried.
         return START_REDELIVER_INTENT
     }
 
@@ -135,6 +219,27 @@ class AlertService : Service() {
     private fun stopService() {
         DebugLogger.d("AlertService", getString(R.string.debug_log_alert_service_stop))
         stopSelf()
+    }
+
+    /**
+     * Atomically set [step] in the completed-steps bitmask and persist via commit().
+     * Synchronized to prevent lost updates when the alert thread and the location
+     * callback thread mark different steps concurrently.
+     */
+    private fun markStepComplete(step: Int) {
+        if (currentTriggerTimestamp <= 0L) return
+        synchronized(stepLock) {
+            val current = prefs.getInt(PREF_ALERT_STEPS_COMPLETED, 0)
+            prefs.edit(commit = true) {
+                putInt(PREF_ALERT_STEPS_COMPLETED, current or step)
+            }
+        }
+    }
+
+    /** Check whether [step] has already been completed for the current alert cycle. */
+    private fun isStepComplete(step: Int): Boolean {
+        if (currentTriggerTimestamp <= 0L) return false
+        return prefs.getInt(PREF_ALERT_STEPS_COMPLETED, 0) and step != 0
     }
 
     private fun createNotification(): Notification {
@@ -206,68 +311,119 @@ class AlertService : Service() {
     private fun sendAlert(context: Context, prefs: SharedPreferences) {
         DebugLogger.d("sendAlert", context.getString(R.string.debug_log_sending_alert))
 
-        // cancel the 'Are you there?' notification
+        // cancel the 'Are you there?' notification (idempotent — safe to repeat)
         AlertNotificationHelper(context).cancelNotification(
             AppController.ARE_YOU_THERE_NOTIFICATION_ID
         )
 
         // dismiss any 'Are you there?' overlay if it's showing
-        AreYouThereOverlay.dismiss(context)
+        // skip during Direct Boot since AreYouThereOverlayService is not directBootAware
+        if (isUserUnlocked(context)) {
+            AreYouThereOverlay.dismiss(context)
+        }
 
-        // send the alert messages
         val alertSender = AlertMessageSender(context)
-        alertSender.sendAlertMessage()
 
-        // only get the location if the user has enabled it for at least one contact
-        //  or for the webhook
-        if (prefs.getBoolean("location_enabled", false) || prefs.getBoolean("webhook_location_enabled", false)) {
+        // ---- Step 1: Send SMS alert messages ----
+        if (!isStepComplete(STEP_SMS_SENT)) {
+            alertSender.sendAlertMessage()
+            markStepComplete(STEP_SMS_SENT)
+            DebugLogger.d("sendAlert", "SMS step complete")
+        } else {
+            DebugLogger.d("sendAlert", "SMS step already complete, skipping")
+        }
 
-            // just add an extra layer try/catch in case anything unexpected
-            //  happens when trying to get the location
-            try {
+        val locationNeeded = prefs.getBoolean("location_enabled", false) ||
+                prefs.getBoolean("webhook_location_enabled", false)
+        val webhookEnabled = prefs.getBoolean("webhook_enabled", false)
 
-                // attempt to get the location and then execute sendLocationAlertMessage
-                val locationHelper = LocationHelper(context) { _, locationResult ->
+        // Track whether we kicked off an async location request so we know
+        // whether to stop the service at the end or let the callback do it.
+        var asyncLocationPending = false
 
-                    // this will still check whether location is enabled for each contact
-                    //  (in case location is only enabled for the webhook but not any SMS contacts)
+        // ---- Steps 3 & 4: Location SMS + Webhook ----
+        // These are grouped because the webhook may need the location result.
+        // The location request is async; its callback will mark the steps and
+        // stop the service.  If the process dies mid-location, the bits stay
+        // unset and will be retried on the next delivery.
+        if (locationNeeded) {
+            val needLocationSms = !isStepComplete(STEP_LOCATION_DONE)
+            val needWebhook = webhookEnabled && !isStepComplete(STEP_WEBHOOK_DONE)
 
-                    // for the SMS alerts we just need the formatted location string
-                    alertSender.sendLocationAlertMessage(locationResult.formattedLocationString)
+            if (needLocationSms || needWebhook) {
+                try {
+                    asyncLocationPending = true
 
-                    // if enabled, send a request to the webhook with the location result
-                    if (prefs.getBoolean("webhook_enabled", false)) {
-                        sendWebhookRequest(context, locationResult)
+                    val locationHelper = LocationHelper(context) { _, locationResult ->
+
+                        // send location SMS if not already sent
+                        if (!isStepComplete(STEP_LOCATION_DONE)) {
+                            alertSender.sendLocationAlertMessage(locationResult.formattedLocationString)
+                            markStepComplete(STEP_LOCATION_DONE)
+                            DebugLogger.d("sendAlert", "Location SMS step complete")
+                        }
+
+                        // send webhook with location if not already sent
+                        if (webhookEnabled && !isStepComplete(STEP_WEBHOOK_DONE)) {
+                            sendWebhookRequest(context, locationResult)
+                            markStepComplete(STEP_WEBHOOK_DONE)
+                            DebugLogger.d("sendAlert", "Webhook (with location) step complete")
+                        } else if (!webhookEnabled) {
+                            markStepComplete(STEP_WEBHOOK_DONE)
+                        }
+
+                        // stop the service after the async location work is done
+                        stopService()
                     }
 
-                    // stop the service after the location alert is sent
-                    stopService()
+                    locationHelper.getLocationAndExecute()
+
+                } catch (e: Exception) {
+                    DebugLogger.d("sendAlert", context.getString(R.string.debug_log_sending_alert_failed), e)
+
+                    // mark as done on failure so we don't endlessly retry a broken
+                    // location provider; the core SMS + call already went through
+                    markStepComplete(STEP_LOCATION_DONE)
+                    if (!isStepComplete(STEP_WEBHOOK_DONE)) {
+                        markStepComplete(STEP_WEBHOOK_DONE)
+                    }
+                    asyncLocationPending = false
                 }
-
-                locationHelper.getLocationAndExecute()
-
-            } catch (e: Exception) {
-
-                // if we fail for any reason then send the alert messages
-                DebugLogger.d("sendAlert", context.getString(R.string.debug_log_sending_alert_failed), e)
-
-                stopService()
+            } else {
+                DebugLogger.d("sendAlert", "Location and webhook steps already complete, skipping")
             }
         } else {
+            // location not enabled — mark as not needed
+            markStepComplete(STEP_LOCATION_DONE)
 
-            // if enabled, send the webhook without the location
-            if (prefs.getBoolean("webhook_enabled", false)) {
+            // send webhook without location if enabled and not already sent
+            if (webhookEnabled && !isStepComplete(STEP_WEBHOOK_DONE)) {
                 sendWebhookRequest(context, null)
+                markStepComplete(STEP_WEBHOOK_DONE)
+                DebugLogger.d("sendAlert", "Webhook (no location) step complete")
+            } else {
+                markStepComplete(STEP_WEBHOOK_DONE)
             }
         }
 
-        // also make the phone call (if enabled)
-        makeAlertCall(context)
+        // ---- Step 2: Phone call ----
+        if (!isStepComplete(STEP_CALL_MADE)) {
+            makeAlertCall(context)
+            markStepComplete(STEP_CALL_MADE)
+            DebugLogger.d("sendAlert", "Call step complete")
+        } else {
+            DebugLogger.d("sendAlert", "Call step already complete, skipping")
+        }
 
         // update prefs to include when the alert was sent
-        with(prefs.edit()) {
+        prefs.edit(commit = true) {
             putLong("LastAlertAt", System.currentTimeMillis())
-            apply()
+        }
+
+        // If no async work is pending, stop the service now.
+        // Otherwise the location callback will stop it when it finishes.
+        if (!asyncLocationPending) {
+            stopService()
         }
     }
 }

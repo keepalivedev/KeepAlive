@@ -70,6 +70,14 @@ class SettingsActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        // sync all relevant prefs to device-protected storage so they are available
+        //  during Direct Boot (before user unlocks the device after a reboot)
+        syncPrefsToDeviceProtectedStorage(this)
+    }
+
     private fun addOnClickListeners() {
 
         // listener for the Add SMS Emergency Contact button
@@ -108,6 +116,11 @@ class SettingsActivity : AppCompatActivity() {
                     putBoolean("enabled", isChecked)
                     apply()
                 }
+
+                // also mirror settings to device-protected storage so they can be
+                //  read during Direct Boot (before user unlocks the device)
+                syncPrefsToDeviceProtectedStorage(this)
+
                 processSettingChange("enabled")
             }
         }

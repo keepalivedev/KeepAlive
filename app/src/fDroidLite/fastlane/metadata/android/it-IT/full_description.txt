@@ -16,7 +16,9 @@ Requisiti
   Keep Alive richiede un piano cellulare attivo. Le chiamate e i messaggi Wi-Fi verranno utilizzati se supportati dal dispositivo.
 
 Come funziona
-  Keep Alive rileva l’attività tramite la schermata di blocco o altre app. Se il dispositivo non viene bloccato o sbloccato per un periodo prestabilito, o se non apri le app selezionate, comparirà una notifica “Ci sei?”. Se non rispondi, verrà attivato un Avviso. In base alle impostazioni dei Contatti di Emergenza, verranno inviati uno o più SMS e/o effettuata una chiamata per avvisare che potresti aver bisogno di aiuto.
+  Keep Alive rileva l'attività tramite la schermata di blocco o altre app. Se il dispositivo non viene bloccato o sbloccato per un periodo prestabilito, o se non apri le app selezionate, comparirà una notifica "Ci sei?". Se non rispondi, verrà attivato un Avviso. In base alle impostazioni dei Contatti di Emergenza, verranno inviati uno o più SMS e/o effettuata una chiamata per avvisare che potresti aver bisogno di aiuto.
+
+AVVERTENZA: Se il dispositivo si riavvia, Keep Alive non sarà in grado di verificare l'attività recente fino allo sblocco dello schermo. Su Android 7.0+, Keep Alive può comunque inviare un avviso prima dello sblocco, ma deve presumere che tu sia stato inattivo in base all'ultimo stato salvato. Sulle versioni Android precedenti, Keep Alive non può funzionare affatto fino allo sblocco dello schermo e gli avvisi non verranno inviati.
 
 Impostazioni principali
 - Metodo di monitoraggio: scegli tra schermata di blocco o app selezionate per rilevare l’attività.
