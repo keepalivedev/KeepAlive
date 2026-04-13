@@ -389,6 +389,16 @@
     <string name="debug_log_direct_boot_cleared_pending_flag">Direct Boot: Cleared direct_boot_notification_pending</string>
     <string name="debug_log_direct_boot_set_pending_flag">Direct Boot: Set direct_boot_notification_pending=true</string>
 
+    <!-- Are You There overlay strings -->
+    <string name="are_you_there_title">Are you still there?</string>
+    <string name="are_you_there_message">Tap I\'M OK to cancel the alert.</string>
+    <string name="are_you_there_countdown">Alert will be sent in …</string>
+    <string name="are_you_there_countdown_format">Alert will be sent in %1$d:%2$02d</string>
+    <string name="are_you_there_waiting_for_acknowledgement">Waiting for acknowledgement</string>
+    <string name="are_you_there_im_ok">I\'m OK</string>
+    <string name="are_you_there_open_app">Open app</string>
+    <string name="are_you_there_dismiss">Dismiss</string>
+
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Disabling webhook certificate verification!</string>
     <string name="debug_log_request_successful">Request successful with code: %1$d</string>

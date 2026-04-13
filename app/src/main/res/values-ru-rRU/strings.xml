@@ -372,6 +372,16 @@
     <string name="debug_log_webhook_config_load_error">Ошибка загрузки конфигурации вебхука</string>
     <string name="debug_log_invalid_header_json">Недопустимый JSON заголовка</string>
 
+    <!-- Are You There overlay strings -->
+    <string name="are_you_there_title">Вы всё ещё здесь?</string>
+    <string name="are_you_there_message">Нажмите Я В ПОРЯДКЕ, чтобы отменить оповещение.</string>
+    <string name="are_you_there_countdown">Оповещение будет отправлено через …</string>
+    <string name="are_you_there_countdown_format">Оповещение будет отправлено через %1$d:%2$02d</string>
+    <string name="are_you_there_waiting_for_acknowledgement">Ожидание подтверждения</string>
+    <string name="are_you_there_im_ok">Я в порядке</string>
+    <string name="are_you_there_open_app">Открыть приложение</string>
+    <string name="are_you_there_dismiss">Закрыть</string>
+
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Отключение проверки сертификата вебхука!</string>
     <string name="debug_log_request_successful">Запрос успешно выполнен с кодом: %1$d</string>

@@ -26,6 +26,9 @@
     <!-- background color for the icon -->
     <color name="ic_launcher_background">@color/white</color>
 
+    <!-- semi-transparent background for the "Are you there?" overlay -->
+    <color name="overlayBackground">#E6000000</color>
+
     <!-- the text color for the toolbar -->
     <color name="toolbarTitleTextColor">@color/white</color>
 </resources>

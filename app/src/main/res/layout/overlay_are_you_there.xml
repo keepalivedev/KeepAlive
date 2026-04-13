@@ -3,7 +3,7 @@
     android:id="@+id/areYouThereRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E6000000"
+    android:background="@color/overlayBackground"
     android:clickable="true"
     android:focusable="true">
 
@@ -14,36 +14,55 @@
         android:gravity="center"
         android:padding="24dp">
 
+        <ImageView
+            android:id="@+id/imageAppLogo"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_launcher_foreground"
+            android:contentDescription="@string/app_name" />
+
+        <TextView
+            android:id="@+id/textAppName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/primary"
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:text="@string/app_name" />
+
         <TextView
             android:id="@+id/textAreYouThereTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/holo_red_light"
+            android:textColor="@color/primary"
             android:textStyle="bold"
             android:textSize="36sp"
             android:gravity="center"
-            android:text="Are you still there?" />
+            android:text="@string/are_you_there_title" />
 
         <TextView
             android:id="@+id/textAreYouThereMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
+            android:textColor="@color/white"
             android:textSize="20sp"
             android:layout_marginTop="16dp"
             android:gravity="center"
-            android:text="Tap I'M OK to cancel the alert." />
+            android:text="@string/are_you_there_message" />
 
         <TextView
             android:id="@+id/textAreYouThereCountdown"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/holo_orange_light"
+            android:textColor="@color/monitoringImpaired"
             android:textStyle="bold"
             android:textSize="22sp"
             android:layout_marginTop="14dp"
             android:gravity="center"
-            android:text="Alert will be sent in …" />
+            android:text="@string/are_you_there_countdown" />
 
         <Button
             android:id="@+id/buttonImOk"
@@ -51,7 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
             android:textAllCaps="true"
-            android:text="I'm OK" />
+            android:text="@string/are_you_there_im_ok" />
 
         <Button
             android:id="@+id/buttonOpenApp"
@@ -59,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:textAllCaps="true"
-            android:text="Open app" />
+            android:text="@string/are_you_there_open_app" />
 
         <Button
             android:id="@+id/buttonDismiss"
@@ -67,7 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:textAllCaps="true"
-            android:text="Dismiss" />
+            android:text="@string/are_you_there_dismiss" />
 
     </LinearLayout>
 

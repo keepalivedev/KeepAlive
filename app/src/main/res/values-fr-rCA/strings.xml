@@ -372,6 +372,16 @@
     <string name="debug_log_webhook_config_load_error">Erreur lors du chargement de la configuration du webhook</string>
     <string name="debug_log_invalid_header_json">JSON d\'en-tête invalide</string>
 
+    <!-- Are You There overlay strings -->
+    <string name="are_you_there_title">Êtes-vous toujours là ?</string>
+    <string name="are_you_there_message">Appuyez sur JE VAIS BIEN pour annuler l\'alerte.</string>
+    <string name="are_you_there_countdown">L\'alerte sera envoyée dans …</string>
+    <string name="are_you_there_countdown_format">L\'alerte sera envoyée dans %1$d:%2$02d</string>
+    <string name="are_you_there_waiting_for_acknowledgement">En attente de confirmation</string>
+    <string name="are_you_there_im_ok">Je vais bien</string>
+    <string name="are_you_there_open_app">Ouvrir l\'appli</string>
+    <string name="are_you_there_dismiss">Fermer</string>
+
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Désactivation de la vérification du certificat du webhook !</string>
     <string name="debug_log_request_successful">Requête réussie avec le code : %1$d</string>

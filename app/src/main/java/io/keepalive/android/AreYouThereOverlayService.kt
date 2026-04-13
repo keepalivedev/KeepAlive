@@ -173,7 +173,7 @@ class AreYouThereOverlayService : Service() {
 
             countdownText.text = String.format(
                 Locale.getDefault(),
-                "Alert will be sent in %d:%02d",
+                getString(R.string.are_you_there_countdown_format),
                 minutes,
                 seconds
             )
@@ -250,7 +250,7 @@ class AreYouThereOverlayService : Service() {
         val notification = builder
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(getString(R.string.initial_check_notification_title))
-            .setContentText("Waiting for acknowledgement")
+            .setContentText(getString(R.string.are_you_there_waiting_for_acknowledgement))
             .setContentIntent(pendingIntent)
             .setOngoing(true)
             .setAutoCancel(false)
