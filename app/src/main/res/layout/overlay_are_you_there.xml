@@ -72,22 +72,6 @@
             android:textAllCaps="true"
             android:text="@string/are_you_there_im_ok" />
 
-        <Button
-            android:id="@+id/buttonOpenApp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:textAllCaps="true"
-            android:text="@string/are_you_there_open_app" />
-
-        <Button
-            android:id="@+id/buttonDismiss"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:textAllCaps="true"
-            android:text="@string/are_you_there_dismiss" />
-
     </LinearLayout>
 
 </FrameLayout>

@@ -381,8 +381,6 @@
     <string name="are_you_there_countdown_format">Оповещение будет отправлено через %1$d:%2$02d</string>
     <string name="are_you_there_waiting_for_acknowledgement">Ожидание подтверждения</string>
     <string name="are_you_there_im_ok">Я в порядке</string>
-    <string name="are_you_there_open_app">Открыть приложение</string>
-    <string name="are_you_there_dismiss">Закрыть</string>
 
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Отключение проверки сертификата вебхука!</string>
