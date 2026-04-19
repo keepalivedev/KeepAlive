@@ -364,6 +364,7 @@
     <string name="debug_log_boot_completed_user_unlocked">BOOT_COMPLETED: Benutzer hat Gerät entsperrt — wird als Aktivität behandelt, Benachrichtigung wird abgebrochen und Alarm wird zurückgesetzt</string>
     <string name="debug_log_boot_completed_no_pending_notification">BOOT_COMPLETED: Keine ausstehende Direct-Boot-Benachrichtigung, normaler Fortgang</string>
     <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED empfangen, Direct-Boot-Benachrichtigungsprüfung wird übersprungen. %1$s</string>
+    <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: Benutzer ist bereits entsperrt, Verarbeitung wird an BOOT_COMPLETED übergeben</string>
     <string name="debug_log_restored_alarm_stage">Alarmstufe aus gerätegeschütztem Speicher wiederhergestellt: %1$s, doAlertCheck() wird aufgerufen</string>
 
     <!-- WebhookConfigManager.kt -->

@@ -364,6 +364,7 @@
     <string name="debug_log_boot_completed_user_unlocked">BOOT_COMPLETED: Użytkownik odblokował urządzenie — traktowane jako aktywność, anulowanie powiadomienia i resetowanie alarmu</string>
     <string name="debug_log_boot_completed_no_pending_notification">BOOT_COMPLETED: Brak oczekującego powiadomienia Direct Boot, kontynuowanie normalnie</string>
     <string name="debug_log_locked_boot_completed_skipping">Otrzymano LOCKED_BOOT_COMPLETED, pomijanie sprawdzania powiadomienia Direct Boot. %1$s</string>
+    <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: Użytkownik jest już odblokowany, przekazywanie do BOOT_COMPLETED</string>
     <string name="debug_log_restored_alarm_stage">Przywrócono etap alarmu z chronionego magazynu urządzenia: %1$s, wywołanie doAlertCheck()</string>
 
     <!-- WebhookConfigManager.kt -->

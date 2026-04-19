@@ -512,6 +512,23 @@ private fun sendFinalAlert(
             context.startService(intent)
         }
     }
+
+    // Reset last_alarm_stage to "periodic" now that the alert has been dispatched.
+    // Without this, the BootBroadcastReceiver would read a stale "final" stage from
+    // device-protected storage after a reboot and call doAlertCheck("final"), which
+    // would immediately resend the alert because there's no recent activity yet.
+    // Note: if auto_restart_monitoring is enabled, setAlarm() below will also
+    // write "periodic" — but if auto-restart is disabled, this is the only place
+    // the stage gets cleared.
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        try {
+            val devicePrefs = getDeviceProtectedPreferences(context)
+            devicePrefs.edit(commit = true) { putString("last_alarm_stage", "periodic") }
+        } catch (e: Exception) {
+            Log.e("doAlertCheck", "Error resetting alarm stage after sending alert", e)
+        }
+    }
+
     if (prefs.getBoolean("auto_restart_monitoring", false)) {
         DebugLogger.d("doAlertCheck", context.getString(R.string.debug_log_auto_restart_monitoring))
         setAlarm(context, nowTimestamp, (checkPeriodHours * 60).toInt(), "periodic", restPeriods)

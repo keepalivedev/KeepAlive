@@ -376,6 +376,7 @@
     <string name="debug_log_boot_completed_user_unlocked">BOOT_COMPLETED: User unlocked device - treating as activity, cancelling notification and resetting alarm</string>
     <string name="debug_log_boot_completed_no_pending_notification">BOOT_COMPLETED: No Direct Boot notification pending, proceeding normally</string>
     <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED received, skipping Direct Boot notification check. %1$s</string>
+    <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: User is already unlocked, deferring to BOOT_COMPLETED</string>
     <string name="debug_log_restored_alarm_stage">Restored alarm stage from device-protected storage: %1$s, calling doAlertCheck()</string>
 
     <!-- WebhookConfigManager.kt -->

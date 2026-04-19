@@ -364,6 +364,7 @@
     <string name="debug_log_boot_completed_user_unlocked">BOOT_COMPLETED: Пользователь разблокировал устройство — расцениваем как активность, отменяем уведомление и сбрасываем будильник</string>
     <string name="debug_log_boot_completed_no_pending_notification">BOOT_COMPLETED: Нет ожидающего уведомления Direct Boot, продолжаем в обычном режиме</string>
     <string name="debug_log_locked_boot_completed_skipping">Получен LOCKED_BOOT_COMPLETED, пропускаем проверку уведомления Direct Boot. %1$s</string>
+    <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: Пользователь уже разблокирован, передаём обработку BOOT_COMPLETED</string>
     <string name="debug_log_restored_alarm_stage">Восстановлен этап будильника из защищённого хранилища устройства: %1$s, вызываем doAlertCheck()</string>
 
     <!-- WebhookConfigManager.kt -->

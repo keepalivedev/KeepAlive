@@ -364,6 +364,7 @@
 <string name="debug_log_boot_completed_user_unlocked">BOOT_COMPLETED: L\'utente ha sbloccato il dispositivo — trattato come attività, annullamento della notifica e reimpostazione dell\'allarme</string>
 <string name="debug_log_boot_completed_no_pending_notification">BOOT_COMPLETED: Nessuna notifica Direct Boot in sospeso, proseguendo normalmente</string>
 <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED ricevuto, salto del controllo notifica Direct Boot. %1$s</string>
+<string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: L\'utente è già sbloccato, rinvio a BOOT_COMPLETED</string>
 <string name="debug_log_restored_alarm_stage">Fase dell\'allarme ripristinata dall\'archivio protetto del dispositivo: %1$s, chiamata a doAlertCheck()</string>
 
 <!-- WebhookConfigManager.kt -->  
