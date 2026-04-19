@@ -119,8 +119,9 @@
         <string name="webhook_sent_notification_channel_description">Inviato quando viene attivato un avviso webhook</string>  
         <string name="alert_service_notification_channel_description">Visualizzato durante l\'invio di un avviso</string>  
         <string name="activity_notification_message">Contento di vedere che sei ancora vivo! Annullamento dell\'avviso.</string>  
-        <string name="initial_check_notification_title">Ci sei ancora?</string>  
-        <string name="initial_check_notification_text">Clicca qui se sei ancora vivo! Altrimenti, un avviso verrà inviato tra %1$s minuti.</string>  
+        <string name="initial_check_notification_title">Ci sei ancora?</string>
+        <string name="overlay_countdown_format">L\'avviso verrà inviato tra %1$d:%2$02d</string>
+        <string name="initial_check_notification_text">Clicca qui se sei ancora vivo! Altrimenti, un avviso verrà inviato tra %1$s minuti.</string>
         <string name="alert_notification_title">Avviso Keep Alive attivato!</string>  
         <string name="call_alert_notification_text">Una telefonata è stata effettuata al tuo contatto di emergenza: %1$s</string>  
         <string name="sms_alert_notification_text">Un SMS è stato inviato al tuo contatto di emergenza!</string>
@@ -364,6 +365,7 @@
 <string name="debug_log_boot_completed_user_unlocked">BOOT_COMPLETED: L\'utente ha sbloccato il dispositivo — trattato come attività, annullamento della notifica e reimpostazione dell\'allarme</string>
 <string name="debug_log_boot_completed_no_pending_notification">BOOT_COMPLETED: Nessuna notifica Direct Boot in sospeso, proseguendo normalmente</string>
 <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED ricevuto, salto del controllo notifica Direct Boot. %1$s</string>
+<string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: L\'utente è già sbloccato, rinvio a BOOT_COMPLETED</string>
 <string name="debug_log_restored_alarm_stage">Fase dell\'allarme ripristinata dall\'archivio protetto del dispositivo: %1$s, chiamata a doAlertCheck()</string>
 
 <!-- WebhookConfigManager.kt -->  

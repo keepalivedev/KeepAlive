@@ -120,6 +120,7 @@
     <string name="alert_service_notification_channel_description">Wird beim Senden eines Alarms angezeigt</string>
     <string name="activity_notification_message">Schön, dass Sie noch am Leben sind! Alarm wird aufgehoben.</string>
     <string name="initial_check_notification_title">Sind Sie noch da?</string>
+    <string name="overlay_countdown_format">Alarm wird in %1$d:%2$02d gesendet</string>
     <string name="initial_check_notification_text">Klicken Sie hier, wenn Sie noch am Leben sind! Andernfalls wird in %1$s Minuten ein Alarm gesendet.</string>
     <string name="alert_notification_title">Keep Alive Alarm ausgelöst!</string>
     <string name="call_alert_notification_text">Ihr Notfallkontakt wurde angerufen: %1$s</string>
@@ -364,6 +365,7 @@
     <string name="debug_log_boot_completed_user_unlocked">BOOT_COMPLETED: Benutzer hat Gerät entsperrt — wird als Aktivität behandelt, Benachrichtigung wird abgebrochen und Alarm wird zurückgesetzt</string>
     <string name="debug_log_boot_completed_no_pending_notification">BOOT_COMPLETED: Keine ausstehende Direct-Boot-Benachrichtigung, normaler Fortgang</string>
     <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED empfangen, Direct-Boot-Benachrichtigungsprüfung wird übersprungen. %1$s</string>
+    <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: Benutzer ist bereits entsperrt, Verarbeitung wird an BOOT_COMPLETED übergeben</string>
     <string name="debug_log_restored_alarm_stage">Alarmstufe aus gerätegeschütztem Speicher wiederhergestellt: %1$s, doAlertCheck() wird aufgerufen</string>
 
     <!-- WebhookConfigManager.kt -->
