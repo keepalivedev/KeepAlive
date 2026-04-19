@@ -120,6 +120,7 @@
     <string name="alert_service_notification_channel_description">Wyświetlane podczas wysyłania alertu</string>
     <string name="activity_notification_message">Cieszę się że żyjesz! Anuluję Alert.</string>
     <string name="initial_check_notification_title">Jesteś tam?</string>
+    <string name="overlay_countdown_format">Alert zostanie wysłany za %1$d:%2$02d</string>
     <string name="initial_check_notification_text">Kliknij tu jeśli wciąż żyjesz! W przeciwnym wypadku alert aktywuje się za %1$s minut.</string>
     <string name="alert_notification_title">Keep Alive Alert aktywowany!</string>
     <string name="call_alert_notification_text">Rozmowa telefoniczna została wykonana do Kontaktu Alarmowego: %1$s</string>

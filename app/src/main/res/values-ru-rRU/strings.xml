@@ -120,6 +120,7 @@
     <string name="alert_service_notification_channel_description">Отображается при отправке оповещения</string>
     <string name="activity_notification_message">Замечательно, что ты все еще здесь! Отмена оповещений</string>
     <string name="initial_check_notification_title">Вы всё еще здесь?</string>
+    <string name="overlay_countdown_format">Оповещение будет отправлено через %1$d:%2$02d</string>
     <string name="initial_check_notification_text">Нажмите здесь если вы тут! В противном случае оповещение будет отправлено через %1$s минут.</string>
     <string name="alert_notification_title">Keep Alive Alert сработало!</string>
     <string name="call_alert_notification_text">Звонок отправлен вашему контактному лицу: %1$s</string>

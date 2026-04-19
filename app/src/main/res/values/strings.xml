@@ -132,6 +132,7 @@
     <string name="alert_service_notification_channel_description">Displayed while sending an Alert</string>
     <string name="activity_notification_message">Glad to see you are still alive! Cancelling Alert.</string>
     <string name="initial_check_notification_title">Are you still there?</string>
+    <string name="overlay_countdown_format">Alert will be sent in %1$d:%2$02d</string>
     <string name="initial_check_notification_text">Click here if you are still alive! Otherwise an alert will be sent in %1$s minutes.</string>
     <string name="alert_notification_title">Keep Alive Alert triggered!</string>
     <string name="call_alert_notification_text">A phone call has been placed to your emergency contact: %1$s</string>

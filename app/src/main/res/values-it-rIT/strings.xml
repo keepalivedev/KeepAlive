@@ -119,8 +119,9 @@
         <string name="webhook_sent_notification_channel_description">Inviato quando viene attivato un avviso webhook</string>  
         <string name="alert_service_notification_channel_description">Visualizzato durante l\'invio di un avviso</string>  
         <string name="activity_notification_message">Contento di vedere che sei ancora vivo! Annullamento dell\'avviso.</string>  
-        <string name="initial_check_notification_title">Ci sei ancora?</string>  
-        <string name="initial_check_notification_text">Clicca qui se sei ancora vivo! Altrimenti, un avviso verrà inviato tra %1$s minuti.</string>  
+        <string name="initial_check_notification_title">Ci sei ancora?</string>
+        <string name="overlay_countdown_format">L\'avviso verrà inviato tra %1$d:%2$02d</string>
+        <string name="initial_check_notification_text">Clicca qui se sei ancora vivo! Altrimenti, un avviso verrà inviato tra %1$s minuti.</string>
         <string name="alert_notification_title">Avviso Keep Alive attivato!</string>  
         <string name="call_alert_notification_text">Una telefonata è stata effettuata al tuo contatto di emergenza: %1$s</string>  
         <string name="sms_alert_notification_text">Un SMS è stato inviato al tuo contatto di emergenza!</string>

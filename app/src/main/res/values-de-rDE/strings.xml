@@ -120,6 +120,7 @@
     <string name="alert_service_notification_channel_description">Wird beim Senden eines Alarms angezeigt</string>
     <string name="activity_notification_message">Schön, dass Sie noch am Leben sind! Alarm wird aufgehoben.</string>
     <string name="initial_check_notification_title">Sind Sie noch da?</string>
+    <string name="overlay_countdown_format">Alarm wird in %1$d:%2$02d gesendet</string>
     <string name="initial_check_notification_text">Klicken Sie hier, wenn Sie noch am Leben sind! Andernfalls wird in %1$s Minuten ein Alarm gesendet.</string>
     <string name="alert_notification_title">Keep Alive Alarm ausgelöst!</string>
     <string name="call_alert_notification_text">Ihr Notfallkontakt wurde angerufen: %1$s</string>

@@ -123,6 +123,7 @@
     <string name="alert_service_notification_channel_description">发出提醒时显示</string>
     <string name="activity_notification_message">很高兴看到你还活着！取消提醒。</string>
     <string name="initial_check_notification_title">Are you still there?</string>
+    <string name="overlay_countdown_format">将在 %1$d:%2$02d 后发送警报</string>
     <string name="initial_check_notification_text">Click here if you are still alive! Otherwise an alert will be sent in %1$s minutes.</string>
     <string name="alert_notification_title">提醒已触发！</string>
     <string name="call_alert_notification_text">已致电您的联系人: %1$s</string>

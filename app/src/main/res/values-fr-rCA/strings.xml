@@ -120,6 +120,7 @@
     <string name="alert_service_notification_channel_description">Affiché lors de l\'envoi d\'une alerte</string>
     <string name="activity_notification_message">Ravi de voir que vous êtes toujours en vie! Annulation de l\'alerte.</string>
     <string name="initial_check_notification_title">Êtes-vous toujours là?</string>
+    <string name="overlay_countdown_format">L\'alerte sera envoyée dans %1$d:%2$02d</string>
     <string name="initial_check_notification_text">Cliquez ici si vous êtes toujours en vie! Sinon, une alerte sera envoyée dans %1$s minutes.</string>
     <string name="alert_notification_title">Alerte Keep Alive enclenché!</string>
     <string name="call_alert_notification_text">Un appel téléphonique a été passé à votre contact d\'urgence: %1$s</string>
