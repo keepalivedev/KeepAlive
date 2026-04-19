@@ -60,6 +60,11 @@ class AlertService : Service() {
 
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, wakeLockTag)
+        // Disable reference counting so repeated acquire() calls don't stack
+        // (e.g., back-to-back alert intents, or START_REDELIVER_INTENT redelivery).
+        // With refcounting off, each acquire() just (re)extends the timeout and a
+        // single release() in onDestroy() fully releases the lock.
+        wakeLock.setReferenceCounted(false)
         alertNotificationHelper = AlertNotificationHelper(this)
     }
 
@@ -415,7 +420,7 @@ class AlertService : Service() {
             DebugLogger.d("sendAlert", "Call step already complete, skipping")
         }
 
-        // update prefs to include when the alert was sent
+        // update prefs to include when the alert was sent; not actually used for anything
         prefs.edit(commit = true) {
             putLong("LastAlertAt", System.currentTimeMillis())
         }
