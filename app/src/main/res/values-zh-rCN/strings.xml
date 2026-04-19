@@ -377,6 +377,16 @@
     <string name="debug_log_webhook_config_load_error">Error loading webhook configuration</string>
     <string name="debug_log_invalid_header_json">无效的标头 JSON</string>
 
+    <!-- Are You There overlay strings -->
+    <string name="are_you_there_title">你还在吗？</string>
+    <string name="are_you_there_message">点击"我没事"以取消警报。</string>
+    <string name="are_you_there_countdown">警报将在…后发送</string>
+    <string name="are_you_there_countdown_format">警报将在 %1$d:%2$02d 后发送</string>
+    <string name="are_you_there_waiting_for_acknowledgement">等待确认</string>
+    <string name="are_you_there_im_ok">我没事</string>
+    <string name="are_you_there_open_app">打开应用</string>
+    <string name="are_you_there_dismiss">关闭</string>
+
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Disabling webhook certificate verification!</string>
     <string name="debug_log_request_successful">Request successful with code: %1$d</string>

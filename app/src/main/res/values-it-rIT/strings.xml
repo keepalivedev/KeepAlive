@@ -374,7 +374,17 @@
 <string name="debug_log_webhook_config_load_error">Errore durante il caricamento della configurazione webhook</string>  
 <string name="debug_log_invalid_header_json">JSON dell\'intestazione non valido</string>
 
-<!-- WebhookSender.kt -->  
+<!-- Are You There overlay strings -->
+<string name="are_you_there_title">Sei ancora lì?</string>
+<string name="are_you_there_message">Tocca STO BENE per annullare l\'avviso.</string>
+<string name="are_you_there_countdown">L\'avviso verrà inviato tra …</string>
+<string name="are_you_there_countdown_format">L\'avviso verrà inviato tra %1$d:%2$02d</string>
+<string name="are_you_there_waiting_for_acknowledgement">In attesa di conferma</string>
+<string name="are_you_there_im_ok">Sto bene</string>
+<string name="are_you_there_open_app">Apri app</string>
+<string name="are_you_there_dismiss">Chiudi</string>
+
+<!-- WebhookSender.kt -->
 <string name="debug_log_disable_certificate_verification">Disabilitazione della verifica del certificato webhook!</string>  
 <string name="debug_log_request_successful">Richiesta completata con codice: %1$d</string>  
 <string name="debug_log_request_failed">Richiesta fallita con codice: %1$d</string>  
