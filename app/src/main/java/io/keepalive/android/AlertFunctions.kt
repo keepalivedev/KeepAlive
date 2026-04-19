@@ -11,6 +11,8 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.telecom.TelecomManager
 import android.telephony.PhoneNumberUtils
 import android.telephony.SmsManager
@@ -101,6 +103,15 @@ fun getSMSManager(context: Context): SmsManager? {
 
 
 class AlertMessageSender(private val context: Context) {
+
+    companion object {
+        // How long to wait before forcing the SMS_SENT receiver to unregister.
+        // The normal path unregisters once all expected broadcasts arrive; this
+        // guards against a sendTextMessage call that throws synchronously (so
+        // the matching broadcast never comes) leaving the receiver registered.
+        private const val SMS_RECEIVER_SAFETY_TIMEOUT_MS = 2 * 60 * 1000L
+    }
+
     private val smsManager = getSMSManager(context)
     private val prefs = getEncryptedSharedPreferences(context)
     private val alertNotificationHelper = AlertNotificationHelper(context)
@@ -174,110 +185,124 @@ class AlertMessageSender(private val context: Context) {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        // iterate through the contacts and send an SMS message to each
+        // Precompute the list of contacts we will actually send to, and the total
+        // number of SMS_SENT broadcasts we expect. A multipart message produces
+        // one broadcast per part, so we sum divideMessage(...).size across contacts.
+        // This lets us register a single receiver for the whole batch instead of
+        // one per contact — the old code re-registered inside the loop, so every
+        // receiver fired on the first broadcast and all of them unregistered
+        // themselves, leaving the remaining results unreported.
+        data class PendingSms(val contact: SMSEmergencyContactSetting, val parts: ArrayList<String>)
+        val pendingSmsList = mutableListOf<PendingSms>()
+        var expectedBroadcasts = 0
         for (contact in smsContacts) {
-
-            // if the contact is disabled then skip it
-            if (!contact.isEnabled) {
+            if (!contact.isEnabled) continue
+            if (contact.phoneNumber.isEmpty()) {
+                DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sms_phone_blank))
                 continue
             }
+            if (contact.alertMessage.isEmpty()) {
+                Log.d("sendAlertMessage", "Alert message is blank, skipping...")
+                continue
+            }
+            val parts = smsManager.divideMessage(contact.alertMessage)
+            pendingSmsList.add(PendingSms(contact, parts))
+            expectedBroadcasts += parts.size
+        }
+
+        // Register a single receiver that counts down across the whole batch.
+        // If no contacts are pending, skip registration entirely.
+        if (expectedBroadcasts > 0) {
+            try {
+                val receiver = SMSSentReceiver(expectedBroadcasts)
+                val appContext = context.applicationContext
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    // registerReceiver requires API 26+ but requires the use of
+                    //  Context.RECEIVER_NOT_EXPORTED, which isn't available until API 33...
+                    appContext.registerReceiver(
+                        receiver,
+                        IntentFilter("SMS_SENT"),
+                        Context.RECEIVER_NOT_EXPORTED
+                    )
+                } else {
+                    ContextCompat.registerReceiver(
+                        appContext,
+                        receiver,
+                        IntentFilter("SMS_SENT"),
+                        ContextCompat.RECEIVER_NOT_EXPORTED
+                    )
+                }
+
+                // Safety-net unregister: if a sendTextMessage call throws
+                // synchronously we will never receive that broadcast, so the
+                // counter wouldn't hit zero on its own. Schedule a forced
+                // unregister that no-ops if the receiver already cleaned up.
+                Handler(Looper.getMainLooper()).postDelayed({
+                    try {
+                        appContext.unregisterReceiver(receiver)
+                    } catch (e: IllegalArgumentException) {
+                        // already unregistered — all broadcasts arrived
+                    }
+                }, SMS_RECEIVER_SAFETY_TIMEOUT_MS)
+            } catch (e: Exception) {
+                DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_failed_registering_sms_sent_receiver), e)
+            }
+        }
+
+        // Now actually send the messages.
+        for ((contact, messageParts) in pendingSmsList) {
 
             Log.d(
                 "sendAlertMessage", "Alert message is ${contact.alertMessage}, " +
                         "SMS contact number is ${contact.phoneNumber}"
             )
 
-            // this shouldn't ever happen but just in case...
-            if (contact.phoneNumber != "") {
+            DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_text_message_to, maskPhoneNumber(contact.phoneNumber)))
 
-                // this shouldn't be able to happen either but just in case...
-                if (contact.alertMessage.isEmpty()) {
-                    Log.d("sendAlertMessage", "Alert message is blank, skipping...")
-                    continue
+            try {
+
+                // if there is a test message, send it first
+                if (testWarningMessage != "") {
+                    DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_warning_sms, maskPhoneNumber(contact.phoneNumber)))
+
+                    // don't include a sentIntent for the test message
+                    smsManager.sendTextMessage(contact.phoneNumber, null, testWarningMessage, null, null)
                 }
 
-                DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_text_message_to, maskPhoneNumber(contact.phoneNumber)))
+                Log.d("sendAlertMessage", "Message parts: $messageParts")
 
-                // add try/catch here to be extra safe in case there is an issue
-                //  registering the receiver...
-                try {
+                // only use sendMultipartTextMessage if there is more than 1 part
+                if (messageParts.size > 1) {
+                    DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_multipart_sms, messageParts.size))
 
-                    // do this for each contact instead of once at the beginning because
-                    //  the SMSSentReceiver will unregister it when it gets called
-                    // add a receiver for the SMS sent intent so we will get notified of the result
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-
-                        // registerReceiver requires API 26+ but requires the use of
-                        //  Context.RECEIVER_NOT_EXPORTED, which isn't available until API 33...
-                        context.applicationContext.registerReceiver(
-                            SMSSentReceiver(),
-                            IntentFilter("SMS_SENT"),
-                            Context.RECEIVER_NOT_EXPORTED
-                        )
-
-                    } else {
-                        ContextCompat.registerReceiver(
-                            context.applicationContext,
-                            SMSSentReceiver(),
-                            IntentFilter("SMS_SENT"),
-                            ContextCompat.RECEIVER_NOT_EXPORTED
-                        )
-                    }
-                }
-                catch (e: Exception) {
-                    DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_failed_registering_sms_sent_receiver), e)
-                }
-
-                try {
-
-                    // if there is a test message, send it first
-                    if (testWarningMessage != "") {
-                        DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_warning_sms, maskPhoneNumber(contact.phoneNumber)))
-
-                        // don't include a sentIntent for the test message
-                        smsManager.sendTextMessage(contact.phoneNumber, null, testWarningMessage, null, null)
+                    // create an array with the same pending intent for each part
+                    val sentPIList = ArrayList<PendingIntent>(messageParts.size)
+                    for (i in messageParts.indices) {
+                        sentPIList.add(sentPI)
                     }
 
-                    // divide the message into parts based on how long it is
-                    // messages with unicode characters have a shorter max length
-                    val messageParts = smsManager.divideMessage(contact.alertMessage)
-                    Log.d("sendAlertMessage", "Message parts: $messageParts")
+                    // send the multipart SMS message
+                    smsManager.sendMultipartTextMessage(contact.phoneNumber, null,
+                        messageParts, sentPIList, null)
+                } else {
 
-                    // only use sendMultipartTextMessage if there is more than 1 part
-                    if (messageParts.size > 1) {
-                        DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_multipart_sms, messageParts.size))
+                    DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_single_sms))
 
-                        // create an array with the same pending intent for each part
-                        val sentPIList = ArrayList<PendingIntent>()
-                        for (i in messageParts.indices) {
-                            sentPIList.add(sentPI)
-                        }
-
-                        // send the multipart SMS message
-                        smsManager.sendMultipartTextMessage(contact.phoneNumber, null,
-                            messageParts, sentPIList, null)
-                    } else {
-
-                        DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_single_sms))
-
-                        // send a single part SMS message
-                        smsManager.sendTextMessage(contact.phoneNumber, null,
-                            contact.alertMessage, sentPI, null)
-                    }
-
-                } catch (e: Exception) {
-                    DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_failed_sending_sms, maskPhoneNumber(contact.phoneNumber), e.localizedMessage), e)
-
-                    // if we failed while sending the SMS then send a notification
-                    //  to let the user know
-                    alertNotificationHelper.sendNotification(
-                        context.getString(R.string.sms_alert_failure_notification_title),
-                        context.getString(R.string.sms_alert_failure_notification_text),
-                        AppController.SMS_ALERT_SENT_NOTIFICATION_ID
-                    )
+                    // send a single part SMS message
+                    smsManager.sendTextMessage(contact.phoneNumber, null,
+                        contact.alertMessage, sentPI, null)
                 }
-            } else {
-                DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sms_phone_blank))
+
+            } catch (e: Exception) {
+                DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_failed_sending_sms, maskPhoneNumber(contact.phoneNumber), e.localizedMessage), e)
+
+                // if we failed while sending the SMS then send a notification
+                //  to let the user know
+                alertNotificationHelper.sendNotification(
+                    context.getString(R.string.sms_alert_failure_notification_title),
+                    context.getString(R.string.sms_alert_failure_notification_text),
+                    AppController.SMS_ALERT_SENT_NOTIFICATION_ID
+                )
             }
         }
     }
