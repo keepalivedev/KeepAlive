@@ -58,6 +58,13 @@ android {
         viewBinding = true
         buildConfig = true
     }
+    // Let unit tests load Android resources / use Robolectric manifest
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+            returnDefaultValues = true
+        }
+    }
     namespace = 'io.keepalive.android'
 
     flavorDimensions += "platform"
@@ -130,6 +137,19 @@ dependencies {
     // test stuff
     testImplementation 'org.mockito:mockito-core:5.23.0'
     testImplementation 'junit:junit:4.13.2'
+
+    // Robolectric 4.16 for running Android code on the JVM (SDK 36 supported).
+    testImplementation 'org.robolectric:robolectric:4.16.1'
+    testImplementation 'androidx.test:core:1.7.0'
+    testImplementation 'androidx.test:core-ktx:1.7.0'
+    testImplementation 'androidx.test.ext:junit:1.3.0'
+    testImplementation 'androidx.test.ext:junit-ktx:1.3.0'
+
+    // MockK — works with Kotlin 2.x `object`s and top-level funs better than Mockito.
+    testImplementation 'io.mockk:mockk:1.14.9'
+
+    // Coroutine test dispatchers (future-proofing; some helpers already use Handler).
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2'
 
     // android instrumented test dependencies
     androidTestImplementation 'androidx.test.ext:junit:1.3.0'
