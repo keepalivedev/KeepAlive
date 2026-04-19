@@ -130,31 +130,20 @@ class AlertService : Service() {
                 val savedTrigger = prefs.getLong(PREF_ALERT_TRIGGER_TIMESTAMP, 0L)
                 val savedSteps = prefs.getInt(PREF_ALERT_STEPS_COMPLETED, 0)
 
-                when {
-                    // All steps already done for this trigger → skip
-                    triggerTimestamp == savedTrigger &&
-                            savedSteps and ALL_STEPS_COMPLETE == ALL_STEPS_COMPLETE -> {
+                when (decideAlertIntentAction(triggerTimestamp, savedTrigger, savedSteps, ALL_STEPS_COMPLETE)) {
+                    AlertIntentAction.Skip -> {
                         DebugLogger.d("AlertService",
-                            "All alert steps already complete for trigger=$triggerTimestamp, skipping")
+                            "Skipping alert intent trigger=$triggerTimestamp " +
+                            "(savedTrigger=$savedTrigger, savedSteps=$savedSteps)")
                         stopService()
                         return START_REDELIVER_INTENT
                     }
-                    // An even newer alert was already started → skip the stale intent
-                    triggerTimestamp < savedTrigger -> {
-                        DebugLogger.d("AlertService",
-                            "Skipping stale trigger=$triggerTimestamp " +
-                            "(newer=$savedTrigger exists)")
-                        stopService()
-                        return START_REDELIVER_INTENT
-                    }
-                    // Same trigger, some steps remaining → resume
-                    triggerTimestamp == savedTrigger -> {
+                    AlertIntentAction.Resume -> {
                         DebugLogger.d("AlertService",
                             "Resuming alert trigger=$triggerTimestamp " +
                             "(completedSteps=$savedSteps)")
                     }
-                    // Brand-new trigger → initialize the step tracker
-                    else -> {
+                    AlertIntentAction.NewAlert -> {
                         prefs.edit(commit = true) {
                             putLong(PREF_ALERT_TRIGGER_TIMESTAMP, triggerTimestamp)
                             putInt(PREF_ALERT_STEPS_COMPLETED, 0)
