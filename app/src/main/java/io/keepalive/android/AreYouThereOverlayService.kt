@@ -100,21 +100,9 @@ class AreYouThereOverlayService : Service() {
             stopSelf()
         }
 
-        view.findViewById<Button>(R.id.buttonOpenApp).setOnClickListener {
-            val openIntent = MainActivity.createAlertCheckIntent(applicationContext).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-            applicationContext.startActivity(openIntent)
-            dismissOverlay()
-            stopSelf()
-        }
-
-        view.findViewById<Button>(R.id.buttonDismiss).setOnClickListener {
-            dismissOverlay()
-            stopSelf()
-        }
-
-        // Eat taps outside the buttons.
+        // Eat taps outside the button. Only the "I'm OK" button acknowledges;
+        // tapping around it must not dismiss the overlay, otherwise a user
+        // could silently cancel the prompt without being counted as present.
         view.setOnClickListener { /* no-op */ }
 
         val type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

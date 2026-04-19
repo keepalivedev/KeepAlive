@@ -10,14 +10,31 @@ import io.keepalive.android.AppController
 import io.keepalive.android.DebugLogger
 import io.keepalive.android.R
 
-class SMSSentReceiver : BroadcastReceiver() {
+/**
+ * Receives the "SMS_SENT" broadcast for each SMS (or multipart SMS part)
+ * dispatched from [AlertMessageSender.sendAlertMessage]. A single instance
+ * handles every broadcast from the batch and only unregisters itself once
+ * [expectedBroadcasts] results have been received.
+ *
+ * Note: onReceive runs on the main looper, so the remaining-broadcast counter
+ * does not need synchronization.
+ */
+class SMSSentReceiver(expectedBroadcasts: Int = 1) : BroadcastReceiver() {
+
+    private var remaining: Int = expectedBroadcasts
+
     override fun onReceive(context: Context, intent: Intent) {
 
-        // unregister the receiver so it doesn't get called again
-        try {
-            context.unregisterReceiver(this)
-        } catch (e: IllegalArgumentException) {
-            DebugLogger.d("SMSSentReceiver", context.getString(R.string.debug_log_sms_receiver_not_registered), e)
+        // Only unregister after every expected broadcast has arrived.
+        // A safety-net unregister in AlertMessageSender handles the case
+        // where a send throws synchronously and a broadcast never comes.
+        remaining--
+        if (remaining <= 0) {
+            try {
+                context.unregisterReceiver(this)
+            } catch (e: IllegalArgumentException) {
+                DebugLogger.d("SMSSentReceiver", context.getString(R.string.debug_log_sms_receiver_not_registered), e)
+            }
         }
 
         val result = when (resultCode) {

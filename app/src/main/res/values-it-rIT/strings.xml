@@ -381,8 +381,6 @@
 <string name="are_you_there_countdown_format">L\'avviso verrà inviato tra %1$d:%2$02d</string>
 <string name="are_you_there_waiting_for_acknowledgement">In attesa di conferma</string>
 <string name="are_you_there_im_ok">Sto bene</string>
-<string name="are_you_there_open_app">Apri app</string>
-<string name="are_you_there_dismiss">Chiudi</string>
 
 <!-- WebhookSender.kt -->
 <string name="debug_log_disable_certificate_verification">Disabilitazione della verifica del certificato webhook!</string>  

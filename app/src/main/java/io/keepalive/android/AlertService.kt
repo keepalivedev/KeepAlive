@@ -60,6 +60,11 @@ class AlertService : Service() {
 
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, wakeLockTag)
+        // Disable reference counting so repeated acquire() calls don't stack
+        // (e.g., back-to-back alert intents, or START_REDELIVER_INTENT redelivery).
+        // With refcounting off, each acquire() just (re)extends the timeout and a
+        // single release() in onDestroy() fully releases the lock.
+        wakeLock.setReferenceCounted(false)
         alertNotificationHelper = AlertNotificationHelper(this)
     }
 
@@ -324,6 +329,13 @@ class AlertService : Service() {
 
         val alertSender = AlertMessageSender(context)
 
+        // Step ordering note: the async location step is kicked off LAST so that
+        // all synchronous steps (SMS, call) and the "LastAlertAt" write are
+        // guaranteed to have run before its callback can invoke stopService().
+        // Earlier versions ran the call step after kicking off location, which
+        // created a race where a cached-fix callback could stop the service
+        // before the call was placed.
+
         // ---- Step 1: Send SMS alert messages ----
         if (!isStepComplete(STEP_SMS_SENT)) {
             alertSender.sendAlertMessage()
@@ -331,6 +343,22 @@ class AlertService : Service() {
             DebugLogger.d("sendAlert", "SMS step complete")
         } else {
             DebugLogger.d("sendAlert", "SMS step already complete, skipping")
+        }
+
+        // ---- Step 2: Phone call ----
+        // Done synchronously before the async location step so a fast
+        // location callback can't stop the service before the call is placed.
+        if (!isStepComplete(STEP_CALL_MADE)) {
+            makeAlertCall(context)
+            markStepComplete(STEP_CALL_MADE)
+            DebugLogger.d("sendAlert", "Call step complete")
+        } else {
+            DebugLogger.d("sendAlert", "Call step already complete, skipping")
+        }
+
+        // update prefs to include when the alert was sent; not actually used for anything
+        prefs.edit(commit = true) {
+            putLong("LastAlertAt", System.currentTimeMillis())
         }
 
         val locationNeeded = prefs.getBoolean("location_enabled", false) ||
@@ -404,20 +432,6 @@ class AlertService : Service() {
             } else {
                 markStepComplete(STEP_WEBHOOK_DONE)
             }
-        }
-
-        // ---- Step 2: Phone call ----
-        if (!isStepComplete(STEP_CALL_MADE)) {
-            makeAlertCall(context)
-            markStepComplete(STEP_CALL_MADE)
-            DebugLogger.d("sendAlert", "Call step complete")
-        } else {
-            DebugLogger.d("sendAlert", "Call step already complete, skipping")
-        }
-
-        // update prefs to include when the alert was sent
-        prefs.edit(commit = true) {
-            putLong("LastAlertAt", System.currentTimeMillis())
         }
 
         // If no async work is pending, stop the service now.
