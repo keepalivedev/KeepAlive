@@ -621,6 +621,27 @@ fun doAlertCheck(context: Context, alarmStage: String) {
         // --- alarm was due (now >= savedAlarmTimestamp) ---
 
         if (alarmStage == "final") {
+            // Mirror the activity re-check the unlocked path does before firing
+            // the real alert (see lastInteractiveEvent check further below).
+            // UsageStatsManager is not available in Direct Boot, so instead we
+            // read last_activity_timestamp from device-protected storage.
+            // AcknowledgeAreYouThere.acknowledge() writes this timestamp when
+            // the user responds (notification tap, or BootBroadcastReceiver
+            // handling unlock), so a value newer than when the "Are you there?"
+            // was posted means the user was already acknowledged — typically
+            // via a race between this final alarm and the acknowledgement
+            // replacing it.
+            val areYouTherePostedAt = savedAlarmTimestamp - (followupPeriodMinutes * 60 * 1000L)
+            val savedActivityTimestamp = devicePrefs.getLong("last_activity_timestamp", -1L)
+            if (savedActivityTimestamp > 0 && savedActivityTimestamp >= areYouTherePostedAt) {
+                DebugLogger.d("doAlertCheck",
+                    "Direct Boot: activity at ${getDateTimeStrFromTimestamp(savedActivityTimestamp)} " +
+                    "is newer than 'Are you there?' posted at ${getDateTimeStrFromTimestamp(areYouTherePostedAt)}; " +
+                    "skipping final alert")
+                AcknowledgeAreYouThere.acknowledge(context)
+                return
+            }
+
             // the "Are you there?" notification was already sent (by the periodic alarm
             // that scheduled this final alarm) and the followup period has elapsed.
             // send the real alert.

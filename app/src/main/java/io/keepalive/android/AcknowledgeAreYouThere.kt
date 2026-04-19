@@ -19,7 +19,12 @@ object AcknowledgeAreYouThere {
         // If we showed the over-other-apps overlay, remove it.
         AreYouThereOverlay.dismiss(context)
 
-        // Clear the Direct Boot notification flag in case it's still set.
+        // Clear the Direct Boot notification flag in case it's still set, and
+        // record the acknowledgement as activity in device-protected storage.
+        // The timestamp lets the Direct Boot final-alarm branch of
+        // doAlertCheck() detect a racing acknowledgement and skip the alert
+        // (UsageStatsManager is not queryable before unlock, so that path has
+        // no other signal for user activity).
         // NOTE: must use getDeviceProtectedPreferences directly, not
         // getEncryptedSharedPreferences, because after unlock the latter returns
         // credential-encrypted prefs (a different backing store) while the flag
@@ -28,9 +33,10 @@ object AcknowledgeAreYouThere {
             try {
                 getDeviceProtectedPreferences(context).edit(commit = true) {
                     putBoolean("direct_boot_notification_pending", false)
+                    putLong("last_activity_timestamp", System.currentTimeMillis())
                 }
             } catch (e: Exception) {
-                Log.e("AcknowledgeAreYouThere", "Error clearing Direct Boot notification flag", e)
+                Log.e("AcknowledgeAreYouThere", "Error updating Direct Boot state on acknowledge", e)
             }
         }
 
