@@ -40,6 +40,13 @@ class LocationHelper(
                         lastLocation.provider, lastLocation.accuracy)
                 )
 
+                // populate locationResult so downstream consumers (webhook
+                // body, SMS payload) see the real coords, not the 0,0 default.
+                // Mirrors what processCurrentLocationResults does above.
+                locationResult.latitude = lastLocation.latitude
+                locationResult.longitude = lastLocation.longitude
+                locationResult.accuracy = lastLocation.accuracy
+
                 // attempt to geocode the location and then execute the callback
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     GeocodingHelperAPI33Plus().geocodeLocationAndExecute(lastLocation)
