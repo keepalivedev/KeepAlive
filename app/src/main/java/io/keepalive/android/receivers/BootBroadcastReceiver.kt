@@ -86,6 +86,15 @@ class BootBroadcastReceiver : BroadcastReceiver() {
                         }
                     } else {
                         DebugLogger.d(tag, context.getString(R.string.debug_log_locked_boot_completed_skipping, intent.action))
+
+                        // If the user is already unlocked, BOOT_COMPLETED will also fire
+                        // and handle the alert check. Skip here to avoid calling doAlertCheck()
+                        // twice — which happens during app redeploy/update where both intents
+                        // fire while the device is already unlocked.
+                        if (isUserUnlocked(context)) {
+                            DebugLogger.d(tag, context.getString(R.string.debug_log_locked_boot_user_already_unlocked))
+                            return
+                        }
                     }
 
                     // restore the alarm stage that was saved before the reboot so we don't

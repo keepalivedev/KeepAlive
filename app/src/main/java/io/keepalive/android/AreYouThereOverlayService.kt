@@ -22,7 +22,6 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
-import java.util.Locale
 
 /**
  * Manages the over-other-apps full-screen "Are you there?" overlay.
@@ -171,11 +170,10 @@ class AreYouThereOverlayService : Service() {
             val minutes = totalSeconds / 60L
             val seconds = totalSeconds % 60L
 
-            countdownText.text = String.format(
-                Locale.getDefault(),
-                getString(R.string.are_you_there_countdown_format),
-                minutes,
-                seconds
+            countdownText.text = getString(
+                R.string.overlay_countdown_format,
+                minutes.toInt(),
+                seconds.toInt()
             )
 
             if (clampedMs <= 0L) {

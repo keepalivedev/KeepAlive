@@ -123,6 +123,7 @@
     <string name="alert_service_notification_channel_description">发出提醒时显示</string>
     <string name="activity_notification_message">很高兴看到你还活着！取消提醒。</string>
     <string name="initial_check_notification_title">Are you still there?</string>
+    <string name="overlay_countdown_format">将在 %1$d:%2$02d 后发送警报</string>
     <string name="initial_check_notification_text">Click here if you are still alive! Otherwise an alert will be sent in %1$s minutes.</string>
     <string name="alert_notification_title">提醒已触发！</string>
     <string name="call_alert_notification_text">已致电您的联系人: %1$s</string>
@@ -367,6 +368,7 @@
     <string name="debug_log_boot_completed_user_unlocked">BOOT_COMPLETED: 用户已解锁设备 — 视为活动，取消通知并重置闹钟</string>
     <string name="debug_log_boot_completed_no_pending_notification">BOOT_COMPLETED: 没有待处理的 Direct Boot 通知，正常继续</string>
     <string name="debug_log_locked_boot_completed_skipping">收到 LOCKED_BOOT_COMPLETED，跳过 Direct Boot 通知检查。%1$s</string>
+    <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED：用户已解锁，延迟到 BOOT_COMPLETED 处理</string>
     <string name="debug_log_restored_alarm_stage">从设备保护存储中恢复了闹钟阶段：%1$s，调用 doAlertCheck()</string>
 
     <!-- WebhookConfigManager.kt -->

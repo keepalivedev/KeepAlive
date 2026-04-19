@@ -701,15 +701,15 @@ class MainActivity : AppCompatActivity() {
         if (extras != null) {
 
             // this should only get set on the 'Are you there?' notification
-            val alertCheck = extras.getBoolean("AlertCheck", false)
+            val alertCheck = extras.getBoolean(EXTRA_ALERT_CHECK, false)
 
-            Log.d(tag, "AlertCheck extra is $alertCheck")
+            Log.d(tag, "$EXTRA_ALERT_CHECK extra is $alertCheck")
 
             // if the AlertCheck is true, meaning the user clicked on the 'Are you there?'
             // notification. since we cancel this notification when sending an alert,
             //  this should only ever be hit BEFORE an alert is sent so we can assume that
             //  it hasn't been sent yet and just re-set it and let the user know that
-            //  the Alert is going to go off
+            //  the Alert isn't going to go off
             if (alertCheck) {
 
                 Log.d(tag, "Alert notification was clicked on!")
@@ -898,13 +898,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val EXTRA_ALERT_CHECK = "AlertCheck"
+
         /**
          * Used to open the app in the same way as tapping the "Are you there?" notification.
          */
         fun createAlertCheckIntent(context: Context): Intent {
             return Intent(context, MainActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                putExtra("AlertCheck", true)
+                putExtra(EXTRA_ALERT_CHECK, true)
             }
         }
     }

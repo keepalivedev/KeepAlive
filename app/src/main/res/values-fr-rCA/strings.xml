@@ -120,6 +120,7 @@
     <string name="alert_service_notification_channel_description">Affiché lors de l\'envoi d\'une alerte</string>
     <string name="activity_notification_message">Ravi de voir que vous êtes toujours en vie! Annulation de l\'alerte.</string>
     <string name="initial_check_notification_title">Êtes-vous toujours là?</string>
+    <string name="overlay_countdown_format">L\'alerte sera envoyée dans %1$d:%2$02d</string>
     <string name="initial_check_notification_text">Cliquez ici si vous êtes toujours en vie! Sinon, une alerte sera envoyée dans %1$s minutes.</string>
     <string name="alert_notification_title">Alerte Keep Alive enclenché!</string>
     <string name="call_alert_notification_text">Un appel téléphonique a été passé à votre contact d\'urgence: %1$s</string>
@@ -364,6 +365,7 @@
     <string name="debug_log_boot_completed_user_unlocked">BOOT_COMPLETED : L\'utilisateur a déverrouillé l\'appareil — traité comme une activité, annulation de la notification et réinitialisation de l\'alarme</string>
     <string name="debug_log_boot_completed_no_pending_notification">BOOT_COMPLETED : Aucune notification Direct Boot en attente, poursuite normale</string>
     <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED reçu, vérification de la notification Direct Boot ignorée. %1$s</string>
+    <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED : L\'utilisateur est déjà déverrouillé, report vers BOOT_COMPLETED</string>
     <string name="debug_log_restored_alarm_stage">Étape d\'alarme restaurée depuis le stockage protégé de l\'appareil : %1$s, appel de doAlertCheck()</string>
 
     <!-- WebhookConfigManager.kt -->
