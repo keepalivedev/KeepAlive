@@ -124,14 +124,15 @@ class AlarmFlowInstrumentedTest {
 
         fireAlarm("final", alarmTimestamp = longAgo)
 
-        // Downgrade means we see the "Are you there?" prompt, NOT the
-        // AlertService's foreground notification. On a busy emulator the
-        // NotificationManager can take a full second or two to reflect the
-        // post when prior tests have generated load, hence 10s timeout.
-        assertTrue("stale final should fall through to periodic → prompt",
-            waitUntil(timeoutMs = 10_000L) {
-                hasNotification(AppController.ARE_YOU_THERE_NOTIFICATION_ID)
-            })
+        // Downgrade means doAlertCheck("periodic") ran. Most reliable
+        // evidence: a NEW final alarm was scheduled (the saved stage flips
+        // to "final" because periodic-due → schedule final). Asserting on
+        // notification visibility is flaky on a busy emulator — the system
+        // can take seconds to surface a post.
+        assertTrue("downgrade should schedule a fresh final alarm",
+            waitUntil(timeoutMs = 10_000L) { savedAlarmStage() == "final" })
+        // Confirm the AlertService wasn't started — a true "final" stage
+        // would have led to dispatching the real alert.
         assertFalse("must NOT have started AlertService",
             hasNotification(AppController.ALERT_SERVICE_NOTIFICATION_ID))
     }

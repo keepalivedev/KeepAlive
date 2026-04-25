@@ -1,10 +1,6 @@
 package io.keepalive.android
 
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.ContextWrapper
-import android.content.Intent
-import android.content.IntentFilter
 import android.telephony.SmsManager
 import androidx.test.core.app.ApplicationProvider
 import com.google.gson.Gson
@@ -19,6 +15,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 /**
  * Tests for [AlertMessageSender.sendAlertMessage] batching + single-receiver
@@ -29,34 +26,28 @@ import org.robolectric.RobolectricTestRunner
  * the first SMS_SENT broadcast and the remaining N-1 results to go unreported.
  */
 @RunWith(RobolectricTestRunner::class)
+// sendAlertMessage branches at API T (33) on registerReceiver flags.
+// Pre-33 uses ContextCompat with a synthesized RECEIVER_NOT_EXPORTED
+// permission — real devices accept it (manifest merger adds the perm) but
+// Robolectric's sandboxed manifest doesn't, causing registerReceiver to
+// throw. Production behavior there is covered via instrumented tests on
+// emulators at API 22/28. Unit tests stay at T+ where the runtime APIs
+// are direct.
+@Config(sdk = [33, 34, 35])
 class AlertMessageSenderTest {
 
-    /** Records registerReceiver calls from AlertMessageSender. */
-    private class RecordingContext(base: Context) : ContextWrapper(base) {
-        val registered = mutableListOf<BroadcastReceiver>()
-
-        override fun getApplicationContext(): Context = this
-
-        override fun registerReceiver(
-            receiver: BroadcastReceiver?,
-            filter: IntentFilter?,
-            flags: Int
-        ): Intent? {
-            if (receiver != null) registered.add(receiver)
-            return null
-        }
-
-        override fun registerReceiver(
-            receiver: BroadcastReceiver?,
-            filter: IntentFilter?
-        ): Intent? {
-            if (receiver != null) registered.add(receiver)
-            return null
-        }
-
-        override fun unregisterReceiver(receiver: BroadcastReceiver?) {
-            // swallow — the safety-net postDelayed will hit this eventually;
-            // irrelevant for these tests
+    /**
+     * Reads the list of currently-registered receivers from Robolectric's
+     * `ShadowApplication`. More reliable than a ContextWrapper override —
+     * `ContextCompat.registerReceiver` takes different code paths per SDK
+     * that can bypass overridden `registerReceiver` signatures, but all
+     * paths ultimately register with the application which the shadow
+     * tracks uniformly.
+     */
+    private fun registeredSMSSentReceiverCount(): Int {
+        val shadowApp = org.robolectric.Shadows.shadowOf(appCtx as android.app.Application)
+        return shadowApp.registeredReceivers.count { wrapper ->
+            wrapper.broadcastReceiver is io.keepalive.android.receivers.SMSSentReceiver
         }
     }
 
@@ -99,13 +90,12 @@ class AlertMessageSenderTest {
 
     @Test fun `no contacts enabled means no receiver registered and no sends`() {
         seedContacts(contact("+15551111111", enabled = false))
-        val recordingCtx = RecordingContext(appCtx)
         val sms = mockSms(emptyMap())
 
-        AlertMessageSender(recordingCtx, sms).sendAlertMessage()
+        AlertMessageSender(appCtx, sms).sendAlertMessage()
 
         assertEquals("no receiver should register when nothing will be sent",
-            0, recordingCtx.registered.size)
+            0, registeredSMSSentReceiverCount())
         verify(exactly = 0) { sms.sendTextMessage(any(), any(), any(), any(), any()) }
         verify(exactly = 0) { sms.sendMultipartTextMessage(any(), any(), any(), any(), any()) }
     }
@@ -116,36 +106,33 @@ class AlertMessageSenderTest {
             contact("+15550000001", msg = ""),       // blank message
             contact("+15550000002", msg = "real")    // OK
         )
-        val recordingCtx = RecordingContext(appCtx)
         val sms = mockSms(mapOf("real" to arrayListOf("real")))
 
-        AlertMessageSender(recordingCtx, sms).sendAlertMessage()
+        AlertMessageSender(appCtx, sms).sendAlertMessage()
 
-        assertEquals(1, recordingCtx.registered.size)
+        assertEquals(1, registeredSMSSentReceiverCount())
         verify(exactly = 1) { sms.sendTextMessage("+15550000002", null, "real", any(), null) }
     }
 
     @Test fun `single contact with single-part message registers one receiver and sends once`() {
-        val recordingCtx = RecordingContext(appCtx)
         val sms = mockSms(mapOf("help" to arrayListOf("help")))
 
-        AlertMessageSender(recordingCtx, sms).sendAlertMessage()
+        AlertMessageSender(appCtx, sms).sendAlertMessage()
 
         assertEquals("exactly one SMSSentReceiver should be registered per batch",
-            1, recordingCtx.registered.size)
+            1, registeredSMSSentReceiverCount())
         verify(exactly = 1) { sms.sendTextMessage("+15551111111", null, "help", any(), null) }
         verify(exactly = 0) { sms.sendMultipartTextMessage(any(), any(), any(), any(), any()) }
     }
 
     @Test fun `single contact with multi-part message uses sendMultipart with one PI per part`() {
         seedContacts(contact("+15551111111", msg = "long message"))
-        val recordingCtx = RecordingContext(appCtx)
         val sms = mockSms(mapOf("long message" to arrayListOf("long ", "message")))
 
         val partsSlot = slot<ArrayList<String>>()
         val pisSlot = slot<ArrayList<android.app.PendingIntent>>()
 
-        AlertMessageSender(recordingCtx, sms).sendAlertMessage()
+        AlertMessageSender(appCtx, sms).sendAlertMessage()
 
         verify(exactly = 1) {
             sms.sendMultipartTextMessage(
@@ -170,22 +157,18 @@ class AlertMessageSenderTest {
             contact("+15550000002"),
             contact("+15550000003")
         )
-        val recordingCtx = RecordingContext(appCtx)
         val sms = mockSms(mapOf("help" to arrayListOf("help")))
 
-        AlertMessageSender(recordingCtx, sms).sendAlertMessage()
+        AlertMessageSender(appCtx, sms).sendAlertMessage()
 
         assertEquals("exactly ONE receiver per batch — not one per contact",
-            1, recordingCtx.registered.size)
+            1, registeredSMSSentReceiverCount())
         verify(exactly = 3) { sms.sendTextMessage(any(), any(), any(), any(), any()) }
     }
 
     @Test fun `null smsManager short-circuits with no sends and no receiver`() {
-        val recordingCtx = RecordingContext(appCtx)
-
-        AlertMessageSender(recordingCtx, smsManager = null).sendAlertMessage()
-
-        assertEquals(0, recordingCtx.registered.size)
+        AlertMessageSender(appCtx, smsManager = null).sendAlertMessage()
+        assertEquals(0, registeredSMSSentReceiverCount())
     }
 
     @Test fun `mix of single-part and multi-part contacts produces one receiver`() {
@@ -196,25 +179,22 @@ class AlertMessageSenderTest {
             contact("+15550000001", msg = "short"),
             contact("+15550000002", msg = "long one")
         )
-        val recordingCtx = RecordingContext(appCtx)
         val sms = mockSms(mapOf(
             "short" to arrayListOf("short"),
             "long one" to arrayListOf("long ", "one")
         ))
 
-        AlertMessageSender(recordingCtx, sms).sendAlertMessage()
+        AlertMessageSender(appCtx, sms).sendAlertMessage()
 
-        assertEquals(1, recordingCtx.registered.size)
-        assertNotNull(recordingCtx.registered[0])
+        assertEquals(1, registeredSMSSentReceiverCount())
         verify(exactly = 1) { sms.sendTextMessage("+15550000001", null, "short", any(), null) }
         verify(exactly = 1) { sms.sendMultipartTextMessage("+15550000002", null, any(), any(), null) }
     }
 
     @Test fun `test warning message is sent first and does not use sentIntent`() {
-        val recordingCtx = RecordingContext(appCtx)
         val sms = mockSms(mapOf("help" to arrayListOf("help")))
 
-        AlertMessageSender(recordingCtx, sms).sendAlertMessage(testWarningMessage = "about to test")
+        AlertMessageSender(appCtx, sms).sendAlertMessage(testWarningMessage = "about to test")
 
         // Warning first, with null sentIntent; then the real alert.
         verify(exactly = 1) {

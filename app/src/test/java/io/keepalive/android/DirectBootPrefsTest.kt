@@ -12,6 +12,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
+import org.robolectric.annotation.Config
 
 /**
  * Direct Boot storage-switching behavior. This is the subtle bit where
@@ -23,6 +24,11 @@ import org.robolectric.Shadows.shadowOf
  * written in one store, expected in the other).
  */
 @RunWith(RobolectricTestRunner::class)
+// Direct Boot and device-protected storage are API N (24)+. The pre-N
+// fallback is trivial (both APIs return PreferenceManager.getDefault) and
+// doesn't merit its own test — the meaningful divergences (lock detection,
+// createDeviceProtectedStorageContext) are all API N+.
+@Config(sdk = [28, 33, 34, 35])
 class DirectBootPrefsTest {
 
     private val appCtx: Context = ApplicationProvider.getApplicationContext()

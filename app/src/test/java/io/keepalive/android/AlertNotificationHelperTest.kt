@@ -15,12 +15,18 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
+import org.robolectric.annotation.Config
 
 /**
  * Tests [AlertNotificationHelper]: channel creation, dedup, cancel, and
  * the "Are you there?" branch that makes the notification ongoing + non-auto-cancel.
+ *
+ * Matrix covers notification channels (API O/26+), POST_NOTIFICATIONS runtime
+ * permission check (API T/33+), and the pre-O branch that uses priority/defaults
+ * directly instead of a channel.
  */
 @RunWith(RobolectricTestRunner::class)
+@Config(sdk = [23, 28, 33, 34, 35])
 class AlertNotificationHelperTest {
 
     private val appCtx: Context = ApplicationProvider.getApplicationContext()
@@ -34,7 +40,9 @@ class AlertNotificationHelperTest {
         nm.cancelAll()
     }
 
-    @Test fun `constructor creates all expected channels`() {
+    @Test
+    @Config(sdk = [28, 33, 34, 35])  // notification channels are API O (26)+
+    fun `constructor creates all expected channels on API 26+`() {
         AlertNotificationHelper(appCtx)
 
         val channelIds = nm.notificationChannels.map { it.id }.toSet()
@@ -42,6 +50,16 @@ class AlertNotificationHelperTest {
         assertTrue(AppController.SMS_SENT_NOTIFICATION_CHANNEL_ID in channelIds)
         assertTrue(AppController.CALL_SENT_NOTIFICATION_CHANNEL_ID in channelIds)
         assertTrue(AppController.ALERT_SERVICE_NOTIFICATION_CHANNEL_ID in channelIds)
+    }
+
+    @Test
+    @Config(sdk = [23])  // pre-O: channels don't exist yet
+    fun `constructor does not crash on API 23 (pre-O, no notification-channel subsystem)`() {
+        // The whole notification-channel subsystem is API O+. On 23 the
+        // constructor must silently skip channel creation. Verified by
+        // constructing the helper without throwing — getNotificationChannels()
+        // isn't available to check directly pre-O.
+        AlertNotificationHelper(appCtx)  // must not throw
     }
 
     @Test fun `sendNotification posts with the right title and text`() {

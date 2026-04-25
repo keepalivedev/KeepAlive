@@ -11,12 +11,17 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
+import org.robolectric.annotation.Config
 
 /**
  * Tests the UsageStatsManager query that drives activity detection. Uses
  * Robolectric's shadow UsageStatsManager to seed events.
  */
 @RunWith(RobolectricTestRunner::class)
+// getLastDeviceActivity branches at API P (28) on the keyguard-events path
+// (not available pre-P → falls back to MOVE_TO_FOREGROUND only) and at API
+// Q (29) for the ACTIVITY_RESUMED event type. Matrix exercises the split.
+@Config(sdk = [23, 28, 33, 34, 35])
 class DeviceActivityQueryTest {
 
     private val appCtx: Context = ApplicationProvider.getApplicationContext()
@@ -39,7 +44,9 @@ class DeviceActivityQueryTest {
         assertNull(result)
     }
 
-    @Test fun `returns most recent matching system keyguard event when no apps specified`() {
+    @Test
+    @Config(sdk = [28, 33, 34, 35])  // keyguard-event path gated at API P+
+    fun `returns most recent matching system keyguard event when no apps specified`() {
         addEvent("android", UsageEvents.Event.KEYGUARD_HIDDEN, 1_000L)
         addEvent("android", UsageEvents.Event.KEYGUARD_SHOWN, 5_000L)
         addEvent("android", UsageEvents.Event.KEYGUARD_HIDDEN, 3_000L)
@@ -80,7 +87,9 @@ class DeviceActivityQueryTest {
         assertNull(result)
     }
 
-    @Test fun `empty monitored apps list falls back to system package and finds keyguard events`() {
+    @Test
+    @Config(sdk = [28, 33, 34, 35])  // fallback is gated at API P+
+    fun `empty monitored apps list falls back to system package and finds keyguard events`() {
         addEvent("android", UsageEvents.Event.KEYGUARD_HIDDEN, 2_000L)
 
         val result = getLastDeviceActivity(

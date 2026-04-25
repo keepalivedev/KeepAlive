@@ -16,6 +16,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 /**
  * Tests [AcknowledgeAreYouThere.acknowledge] — the single handler called when
@@ -27,6 +28,9 @@ import org.robolectric.RobolectricTestRunner
  * periodic alarm is scheduled (which replaces any pending final alarm).
  */
 @RunWith(RobolectricTestRunner::class)
+// acknowledge() has an `>= N (24)` branch for device-protected prefs;
+// matrix exercises pre-N and post-N behavior.
+@Config(sdk = [23, 28, 33, 34, 35])
 class AcknowledgeAreYouThereTest {
 
     private val appCtx: Context = ApplicationProvider.getApplicationContext()
@@ -50,14 +54,18 @@ class AcknowledgeAreYouThereTest {
         unmockkStatic(UTILITY_FUNCTIONS_KT)
     }
 
-    @Test fun `clears the direct boot notification pending flag`() {
+    @Test
+    @Config(sdk = [28, 33, 34, 35])  // device-protected storage is API N+
+    fun `clears the direct boot notification pending flag on API N+`() {
         AcknowledgeAreYouThere.acknowledge(appCtx)
 
         assertFalse(getDeviceProtectedPreferences(appCtx)
             .getBoolean("direct_boot_notification_pending", true))
     }
 
-    @Test fun `writes last_activity_timestamp so a racing final alarm sees the user as active`() {
+    @Test
+    @Config(sdk = [28, 33, 34, 35])
+    fun `writes last_activity_timestamp so a racing final alarm sees the user as active`() {
         val before = System.currentTimeMillis()
 
         AcknowledgeAreYouThere.acknowledge(appCtx)
@@ -109,7 +117,9 @@ class AcknowledgeAreYouThereTest {
         assertEquals(12 * 60, periodSlot.captured)
     }
 
-    @Test fun `acknowledgement can be called even when no flag was set`() {
+    @Test
+    @Config(sdk = [28, 33, 34, 35])
+    fun `acknowledgement can be called even when no flag was set`() {
         // Fresh install / never posted prompt: flag is absent. Should be a no-op
         // on the flag but still schedule periodic.
         getDeviceProtectedPreferences(appCtx).edit()

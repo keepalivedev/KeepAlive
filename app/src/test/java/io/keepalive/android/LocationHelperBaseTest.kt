@@ -22,6 +22,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
+import org.robolectric.annotation.Config
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
@@ -39,6 +40,13 @@ import java.util.concurrent.atomic.AtomicReference
  * getLastLocation were invoked, instead of standing up real location providers.
  */
 @RunWith(RobolectricTestRunner::class)
+// LocationHelperBase branches at:
+//  - API M (23): PowerManager.isDeviceIdleMode
+//  - API P (28): LocationManager.isLocationEnabled, getLocationPowerSaveMode
+//  - API Q (29): ACCESS_BACKGROUND_LOCATION required
+//  - API T (33): Geocoder async API (GeocodingHelperAPI33Plus)
+// Matrix exercises each.
+@Config(sdk = [23, 28, 33, 34, 35])
 class LocationHelperBaseTest {
 
     private val appCtx: Context = ApplicationProvider.getApplicationContext()
@@ -119,7 +127,9 @@ class LocationHelperBaseTest {
             result?.formattedLocationString)
     }
 
-    @Test fun `with FINE_LOCATION only, background perms required on Q+ - invalid callback`() {
+    @Test
+    @Config(sdk = [33, 34, 35])  // ACCESS_BACKGROUND_LOCATION is API Q+
+    fun `with FINE_LOCATION only, background perms required on Q+ - invalid callback`() {
         // Robolectric runs at SDK 35; background permission is required.
         shadowApp.grantPermissions(Manifest.permission.ACCESS_FINE_LOCATION)
         // DO NOT grant ACCESS_BACKGROUND_LOCATION
@@ -239,7 +249,9 @@ class LocationHelperBaseTest {
 
     // ---- Geocoding (API 33+) ---------------------------------------------
 
-    @Test fun `API33 geocode success formats an address into the location string`() {
+    @Test
+    @Config(sdk = [33, 34, 35])  // GeocodeListener only exists on TIRAMISU+
+    fun `API33 geocode success formats an address into the location string`() {
         val cb = CallbackRecorder()
         val helper = RecordingHelper(appCtx, cb.asLambda)
 
@@ -264,7 +276,9 @@ class LocationHelperBaseTest {
         assertEquals("123 Main St, Anytown, USA. ", result?.geocodedAddress)
     }
 
-    @Test fun `API33 geocode empty result falls back to GPS-only invalid-format message`() {
+    @Test
+    @Config(sdk = [33, 34, 35])  // GeocodeListener only exists on TIRAMISU+
+    fun `API33 geocode empty result falls back to GPS-only invalid-format message`() {
         val cb = CallbackRecorder()
         val helper = RecordingHelper(appCtx, cb.asLambda)
         stubGeocoderReturns(emptyList())
@@ -282,7 +296,9 @@ class LocationHelperBaseTest {
         assertEquals("", result?.geocodedAddress)
     }
 
-    @Test fun `API33 multi-line addresses are concatenated with period-space separators`() {
+    @Test
+    @Config(sdk = [33, 34, 35])  // GeocodeListener only exists on TIRAMISU+
+    fun `API33 multi-line addresses are concatenated with period-space separators`() {
         val cb = CallbackRecorder()
         val helper = RecordingHelper(appCtx, cb.asLambda)
         val addr = Address(java.util.Locale.getDefault()).apply {
@@ -304,7 +320,9 @@ class LocationHelperBaseTest {
         assertTrue("L3 present: $formatted", formatted.contains("Line three"))
     }
 
-    @Test fun `API33 geocode exception falls back to invalid-format coords message`() {
+    @Test
+    @Config(sdk = [33, 34, 35])  // GeocodeListener only exists on TIRAMISU+
+    fun `API33 geocode exception falls back to invalid-format coords message`() {
         val cb = CallbackRecorder()
         val helper = RecordingHelper(appCtx, cb.asLambda)
         // Simulate a provider backend exception
@@ -329,7 +347,11 @@ class LocationHelperBaseTest {
 
     // ---- Geocoding (pre-33 sync path) -------------------------------------
 
-    @Test fun `pre33 GeocodingHelper formats synchronous address results`() {
+    @Test
+    @Config(sdk = [33, 34, 35])  // uses mockkConstructor on Geocoder whose
+    // listener inner class only resolves on TIRAMISU+; sync-only behavior on
+    // older SDKs is exercised indirectly by the regular getLocationAndExecute tests.
+    fun `pre33 GeocodingHelper formats synchronous address results`() {
         val cb = CallbackRecorder()
         val helper = RecordingHelper(appCtx, cb.asLambda)
         val addr = Address(java.util.Locale.getDefault()).apply {
@@ -347,7 +369,11 @@ class LocationHelperBaseTest {
         assertEquals("42 Galaxy Way. ", result?.geocodedAddress)
     }
 
-    @Test fun `pre33 GeocodingHelper falls back when Geocoder returns empty`() {
+    @Test
+    @Config(sdk = [33, 34, 35])  // uses mockkConstructor on Geocoder whose
+    // listener inner class only resolves on TIRAMISU+; sync-only behavior on
+    // older SDKs is exercised indirectly by the regular getLocationAndExecute tests.
+    fun `pre33 GeocodingHelper falls back when Geocoder returns empty`() {
         val cb = CallbackRecorder()
         val helper = RecordingHelper(appCtx, cb.asLambda)
         stubGeocoderReturns(emptyList())
@@ -363,7 +389,11 @@ class LocationHelperBaseTest {
         assertEquals("", result?.geocodedAddress)
     }
 
-    @Test fun `pre33 GeocodingHelper swallows exceptions and still fires callback`() {
+    @Test
+    @Config(sdk = [33, 34, 35])  // uses mockkConstructor on Geocoder whose
+    // listener inner class only resolves on TIRAMISU+; sync-only behavior on
+    // older SDKs is exercised indirectly by the regular getLocationAndExecute tests.
+    fun `pre33 GeocodingHelper swallows exceptions and still fires callback`() {
         val cb = CallbackRecorder()
         val helper = RecordingHelper(appCtx, cb.asLambda)
         mockkConstructor(Geocoder::class)

@@ -99,9 +99,14 @@ class AlertServiceInstrumentedTest {
     @Test fun duplicateTriggerDoesNotRerunSteps() {
         val trigger = System.currentTimeMillis()
         startAlertService(trigger)
-        assertTrue("first run completes",
-            waitUntil { AlertFlowTestUtil.isAlertStepComplete(STEP_CALL_MADE) })
-        // LastAlertAt is written after the CALL step; wait for it to land.
+        // Wait for ALL step bits to be set — the dedup guard checks the whole
+        // ALL_STEPS_COMPLETE mask. If we send the second intent before
+        // LOCATION_DONE/WEBHOOK_DONE land, dedup decides Resume (not Skip)
+        // and re-runs sendAlert, updating LastAlertAt.
+        assertTrue("first run completes all 4 steps",
+            waitUntil(timeoutMs = 10_000L) {
+                AlertFlowTestUtil.isAlertStepComplete(ALL_STEPS_COMPLETE)
+            })
         assertTrue("first run should write LastAlertAt",
             waitUntil { getEncryptedSharedPreferences(targetContext).getLong("LastAlertAt", 0) > 0 })
 
