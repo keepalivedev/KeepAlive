@@ -161,5 +161,5 @@ dependencies {
     androidTestImplementation 'org.mockito:mockito-android:5.23.0'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.7.0'
     androidTestImplementation 'tools.fastlane:screengrab:2.1.1'
-    //androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.3.0'
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.3.0'
 }
