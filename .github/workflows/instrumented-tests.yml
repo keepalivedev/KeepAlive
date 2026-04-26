@@ -1,0 +1,79 @@
+name: Instrumented tests
+
+# Instrumented tests need an Android emulator; they're split into a separate
+# workflow from the unit tests so a unit-test-only CI cycle stays fast.
+#
+# Uses the `reactivecircus/android-emulator-runner` action which boots an AVD
+# in-CI. Runs all behavioral tests (AlarmFlow, BootFlow, AlertService,
+# Acknowledge, SettingsPersistence) — skips the screenshot flow which is
+# handled by Fastlane.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  instrumented-tests:
+    runs-on: ubuntu-latest
+    # AVD boot + Robolectric-free tests can take 10–15 min on free runners.
+    timeout-minutes: 30
+
+    strategy:
+      # Don't cancel siblings if one API fails — we want to see every break.
+      fail-fast: false
+      matrix:
+        # API levels span the version-sensitive branches in the codebase:
+        #   22 — minSdk; pre-M alarm scheduling, no notification channels,
+        #        no runtime permissions, no Direct Boot
+        #   28 — P; keyguard-based activity detection enables
+        #   33 — T; POST_NOTIFICATIONS runtime perm, Geocoder async, FOREGROUND_SERVICE_DATA_SYNC
+        #   34 — U; FOREGROUND_SERVICE_TYPE_SHORT_SERVICE required on AlertService
+        #   35 — V; current targetSdk
+        api-level: [22, 28, 33, 34, 35]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+          cache: 'gradle'
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run instrumented tests (skipping screenshot flow)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          # google_apis gives us Play Services on-emulator for the
+          # googlePlay flavor's FusedLocationProviderClient. `default` is
+          # the only reliable image for older levels (API 22).
+          target: ${{ matrix.api-level < 28 && 'default' || 'google_apis' }}
+          arch: x86_64
+          profile: pixel_8
+          disable-animations: true
+          script: >
+            ./gradlew connectedGooglePlayDebugAndroidTest
+            -Pandroid.testInstrumentationRunnerArguments.notClass=io.keepalive.android.AppScreenshotsInstrumentedTest
+            --no-daemon
+
+      - name: Upload instrumented test report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: instrumented-test-report-api${{ matrix.api-level }}
+          path: |
+            app/build/reports/androidTests/
+            app/build/outputs/androidTest-results/
