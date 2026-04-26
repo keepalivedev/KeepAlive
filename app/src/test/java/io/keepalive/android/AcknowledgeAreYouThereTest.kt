@@ -30,7 +30,7 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 // acknowledge() has an `>= N (24)` branch for device-protected prefs;
 // matrix exercises pre-N and post-N behavior.
-@Config(sdk = [23, 28, 33, 34, 35])
+@Config(sdk = [23, 28, 33, 34, 35, 36])
 class AcknowledgeAreYouThereTest {
 
     private val appCtx: Context = ApplicationProvider.getApplicationContext()
@@ -55,7 +55,7 @@ class AcknowledgeAreYouThereTest {
     }
 
     @Test
-    @Config(sdk = [28, 33, 34, 35])  // device-protected storage is API N+
+    @Config(sdk = [28, 33, 34, 35, 36])  // device-protected storage is API N+
     fun `clears the direct boot notification pending flag on API N+`() {
         AcknowledgeAreYouThere.acknowledge(appCtx)
 
@@ -64,7 +64,7 @@ class AcknowledgeAreYouThereTest {
     }
 
     @Test
-    @Config(sdk = [28, 33, 34, 35])
+    @Config(sdk = [28, 33, 34, 35, 36])
     fun `writes last_activity_timestamp so a racing final alarm sees the user as active`() {
         val before = System.currentTimeMillis()
 
@@ -118,7 +118,7 @@ class AcknowledgeAreYouThereTest {
     }
 
     @Test
-    @Config(sdk = [28, 33, 34, 35])
+    @Config(sdk = [28, 33, 34, 35, 36])
     fun `acknowledgement can be called even when no flag was set`() {
         // Fresh install / never posted prompt: flag is absent. Should be a no-op
         // on the flag but still schedule periodic.

@@ -28,7 +28,7 @@ import org.robolectric.annotation.Config
 // fallback is trivial (both APIs return PreferenceManager.getDefault) and
 // doesn't merit its own test — the meaningful divergences (lock detection,
 // createDeviceProtectedStorageContext) are all API N+.
-@Config(sdk = [28, 33, 34, 35])
+@Config(sdk = [28, 33, 34, 35, 36])
 class DirectBootPrefsTest {
 
     private val appCtx: Context = ApplicationProvider.getApplicationContext()

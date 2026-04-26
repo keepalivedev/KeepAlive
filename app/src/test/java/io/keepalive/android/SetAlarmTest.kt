@@ -28,7 +28,7 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 // Robolectric 4.16 only ships SDK jars for API 23+; genuine API 22 coverage
 // comes from the instrumented test CI matrix (emulator image supports it).
-@Config(sdk = [23, 28, 33, 34, 35])
+@Config(sdk = [23, 28, 33, 34, 35, 36])
 class SetAlarmTest {
 
     private val appCtx: Context = ApplicationProvider.getApplicationContext()
@@ -72,7 +72,7 @@ class SetAlarmTest {
     }
 
     @Test
-    @Config(sdk = [28, 33, 34, 35])  // device-protected storage is API N (24)+
+    @Config(sdk = [28, 33, 34, 35, 36])  // device-protected storage is API N (24)+
     fun `NextAlarmTimestamp is mirrored to device-protected storage on API N+`() {
         // Device-protected storage (Direct Boot) only exists on API N+.
         val now = System.currentTimeMillis()
@@ -86,7 +86,7 @@ class SetAlarmTest {
     }
 
     @Test
-    @Config(sdk = [28, 33, 34, 35])
+    @Config(sdk = [28, 33, 34, 35, 36])
     fun `last_alarm_stage is mirrored to device-protected storage on API N+`() {
         val now = System.currentTimeMillis()
         setAlarm(appCtx, now, 30, "final")
@@ -146,7 +146,7 @@ class SetAlarmTest {
     // matrix — Robolectric 4.16 can't boot that SDK image.
 
     @Test
-    @Config(sdk = [33, 34, 35])  // canScheduleExactAlarms is API S+ (31)
+    @Config(sdk = [33, 34, 35, 36])  // canScheduleExactAlarms is API S+ (31)
     fun `on API 31+ the exact-alarm pref is only honored if canScheduleExactAlarms`() {
         // Robolectric's shadow defaults canScheduleExactAlarms to true, so with
         // use_exact_alarms=true we go down the setExactAndAllowWhileIdle branch.

@@ -26,7 +26,7 @@ import org.robolectric.annotation.Config
  * directly instead of a channel.
  */
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [23, 28, 33, 34, 35])
+@Config(sdk = [23, 28, 33, 34, 35, 36])
 class AlertNotificationHelperTest {
 
     private val appCtx: Context = ApplicationProvider.getApplicationContext()
@@ -41,7 +41,7 @@ class AlertNotificationHelperTest {
     }
 
     @Test
-    @Config(sdk = [28, 33, 34, 35])  // notification channels are API O (26)+
+    @Config(sdk = [28, 33, 34, 35, 36])  // notification channels are API O (26)+
     fun `constructor creates all expected channels on API 26+`() {
         AlertNotificationHelper(appCtx)
 

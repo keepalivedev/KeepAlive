@@ -46,7 +46,7 @@ import java.util.concurrent.atomic.AtomicReference
 //  - API Q (29): ACCESS_BACKGROUND_LOCATION required
 //  - API T (33): Geocoder async API (GeocodingHelperAPI33Plus)
 // Matrix exercises each.
-@Config(sdk = [23, 28, 33, 34, 35])
+@Config(sdk = [23, 28, 33, 34, 35, 36])
 class LocationHelperBaseTest {
 
     private val appCtx: Context = ApplicationProvider.getApplicationContext()
@@ -128,7 +128,7 @@ class LocationHelperBaseTest {
     }
 
     @Test
-    @Config(sdk = [33, 34, 35])  // ACCESS_BACKGROUND_LOCATION is API Q+
+    @Config(sdk = [33, 34, 35, 36])  // ACCESS_BACKGROUND_LOCATION is API Q+
     fun `with FINE_LOCATION only, background perms required on Q+ - invalid callback`() {
         // Robolectric runs at SDK 35; background permission is required.
         shadowApp.grantPermissions(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -250,7 +250,7 @@ class LocationHelperBaseTest {
     // ---- Geocoding (API 33+) ---------------------------------------------
 
     @Test
-    @Config(sdk = [33, 34, 35])  // GeocodeListener only exists on TIRAMISU+
+    @Config(sdk = [33, 34, 35, 36])  // GeocodeListener only exists on TIRAMISU+
     fun `API33 geocode success formats an address into the location string`() {
         val cb = CallbackRecorder()
         val helper = RecordingHelper(appCtx, cb.asLambda)
@@ -277,7 +277,7 @@ class LocationHelperBaseTest {
     }
 
     @Test
-    @Config(sdk = [33, 34, 35])  // GeocodeListener only exists on TIRAMISU+
+    @Config(sdk = [33, 34, 35, 36])  // GeocodeListener only exists on TIRAMISU+
     fun `API33 geocode empty result falls back to GPS-only invalid-format message`() {
         val cb = CallbackRecorder()
         val helper = RecordingHelper(appCtx, cb.asLambda)
@@ -297,7 +297,7 @@ class LocationHelperBaseTest {
     }
 
     @Test
-    @Config(sdk = [33, 34, 35])  // GeocodeListener only exists on TIRAMISU+
+    @Config(sdk = [33, 34, 35, 36])  // GeocodeListener only exists on TIRAMISU+
     fun `API33 multi-line addresses are concatenated with period-space separators`() {
         val cb = CallbackRecorder()
         val helper = RecordingHelper(appCtx, cb.asLambda)
@@ -321,7 +321,7 @@ class LocationHelperBaseTest {
     }
 
     @Test
-    @Config(sdk = [33, 34, 35])  // GeocodeListener only exists on TIRAMISU+
+    @Config(sdk = [33, 34, 35, 36])  // GeocodeListener only exists on TIRAMISU+
     fun `API33 geocode exception falls back to invalid-format coords message`() {
         val cb = CallbackRecorder()
         val helper = RecordingHelper(appCtx, cb.asLambda)
@@ -348,7 +348,7 @@ class LocationHelperBaseTest {
     // ---- Geocoding (pre-33 sync path) -------------------------------------
 
     @Test
-    @Config(sdk = [33, 34, 35])  // uses mockkConstructor on Geocoder whose
+    @Config(sdk = [33, 34, 35, 36])  // uses mockkConstructor on Geocoder whose
     // listener inner class only resolves on TIRAMISU+; sync-only behavior on
     // older SDKs is exercised indirectly by the regular getLocationAndExecute tests.
     fun `pre33 GeocodingHelper formats synchronous address results`() {
@@ -370,7 +370,7 @@ class LocationHelperBaseTest {
     }
 
     @Test
-    @Config(sdk = [33, 34, 35])  // uses mockkConstructor on Geocoder whose
+    @Config(sdk = [33, 34, 35, 36])  // uses mockkConstructor on Geocoder whose
     // listener inner class only resolves on TIRAMISU+; sync-only behavior on
     // older SDKs is exercised indirectly by the regular getLocationAndExecute tests.
     fun `pre33 GeocodingHelper falls back when Geocoder returns empty`() {
@@ -390,7 +390,7 @@ class LocationHelperBaseTest {
     }
 
     @Test
-    @Config(sdk = [33, 34, 35])  // uses mockkConstructor on Geocoder whose
+    @Config(sdk = [33, 34, 35, 36])  // uses mockkConstructor on Geocoder whose
     // listener inner class only resolves on TIRAMISU+; sync-only behavior on
     // older SDKs is exercised indirectly by the regular getLocationAndExecute tests.
     fun `pre33 GeocodingHelper swallows exceptions and still fires callback`() {

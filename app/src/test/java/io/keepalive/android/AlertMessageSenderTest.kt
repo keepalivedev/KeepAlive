@@ -33,7 +33,7 @@ import org.robolectric.annotation.Config
 // throw. Production behavior there is covered via instrumented tests on
 // emulators at API 22/28. Unit tests stay at T+ where the runtime APIs
 // are direct.
-@Config(sdk = [33, 34, 35])
+@Config(sdk = [33, 34, 35, 36])
 class AlertMessageSenderTest {
 
     /**
