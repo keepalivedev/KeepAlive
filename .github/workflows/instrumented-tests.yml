@@ -73,13 +73,15 @@ jobs:
           # Logging `avdmanager list devices` first surfaces which device
           # profiles are actually available on this runner's cmdline-tools,
           # so if we ever want to set `profile:` again we know what's safe.
+          #
+          # NOTE: emulator-runner runs EACH LINE as its own `sh -c` call.
+          # That means line continuations (`\`) don't work — the gradle
+          # invocation must fit on one physical line.
           script: |
             echo "=== Available device profiles on API ${{ matrix.api-level }} ==="
             avdmanager list devices -c | sort -u | head -40
             echo "==="
-            ./gradlew connectedGooglePlayDebugAndroidTest \
-              -Pandroid.testInstrumentationRunnerArguments.notClass=io.keepalive.android.AppScreenshotsInstrumentedTest \
-              --no-daemon
+            ./gradlew connectedGooglePlayDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.notClass=io.keepalive.android.AppScreenshotsInstrumentedTest --no-daemon
 
       - name: Upload instrumented test report on failure
         if: failure()
