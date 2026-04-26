@@ -1,14 +1,14 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
 }
 
 kotlin {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_1_8)
-    }
+    // Pins the JDK Gradle uses to build/test. With this set, devs don't
+    // need JAVA_HOME pointed at JDK 21 — Gradle auto-discovers an installed
+    // JDK 21 (Windows: C:\Program Files\Java\jdk-21) or fetches one.
+    // CI workflows use JDK 21 too; this keeps local + CI consistent.
+    jvmToolchain(21)
 }
 
 android {
@@ -51,8 +51,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
     buildFeatures {
         viewBinding = true
