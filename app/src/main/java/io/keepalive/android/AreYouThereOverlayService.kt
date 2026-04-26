@@ -330,10 +330,21 @@ class AreYouThereOverlayService : Service() {
                 putExtra(EXTRA_MESSAGE, message)
             }
             // When triggered from background on Android O+, use startForegroundService.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(i)
-            } else {
-                context.startService(i)
+            // Wrap in try/catch: on API 31+ Android can throw
+            // ForegroundServiceStartNotAllowedException if we're not in an
+            // exempt state (e.g. background after a non-system-broadcast
+            // alarm wake-up). The overlay is supplementary — the
+            // "Are you there?" notification is the primary signal, and we
+            // must NEVER let an overlay-start failure crash the alert flow.
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(i)
+                } else {
+                    context.startService(i)
+                }
+            } catch (t: Throwable) {
+                Log.w("AreYouThereOverlay",
+                    "Failed to start overlay service; the notification is still posted", t)
             }
         }
 
