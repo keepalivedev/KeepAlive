@@ -1,6 +1,7 @@
 package io.keepalive.android
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SdkSuppress
 import io.keepalive.android.AlertFlowTestUtil.fireAlarm
 import io.keepalive.android.AlertFlowTestUtil.hasNotification
 import io.keepalive.android.AlertFlowTestUtil.hasPendingKeepAliveAlarm
@@ -23,6 +24,8 @@ import org.junit.runner.RunWith
  * the overlay button, or BOOT_COMPLETED after Direct Boot).
  */
 @RunWith(AndroidJUnit4::class)
+// Uses NotificationManager.getActiveNotifications() (API 23+).
+@SdkSuppress(minSdkVersion = android.os.Build.VERSION_CODES.M)
 class AcknowledgeFlowInstrumentedTest {
 
     companion object {

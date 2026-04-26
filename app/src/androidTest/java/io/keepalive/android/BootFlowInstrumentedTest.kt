@@ -2,6 +2,7 @@ package io.keepalive.android
 
 import android.content.Intent
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SdkSuppress
 import io.keepalive.android.AlertFlowTestUtil.hasNotification
 import io.keepalive.android.AlertFlowTestUtil.hasPendingKeepAliveAlarm
 import io.keepalive.android.AlertFlowTestUtil.resetToCleanEnabledState
@@ -23,6 +24,10 @@ import org.junit.runner.RunWith
  * the receiver logic that runs on every real reboot.
  */
 @RunWith(AndroidJUnit4::class)
+// Direct Boot, the device-protected pending flag, and the LOCKED_BOOT_COMPLETED
+// path are all API N (24)+. Pre-N these tests are testing concepts that
+// don't exist on the OS. Also uses getActiveNotifications (API 23+).
+@SdkSuppress(minSdkVersion = android.os.Build.VERSION_CODES.N)
 class BootFlowInstrumentedTest {
 
     companion object {

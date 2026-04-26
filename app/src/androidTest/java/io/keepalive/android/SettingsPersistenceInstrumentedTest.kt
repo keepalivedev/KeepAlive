@@ -1,6 +1,7 @@
 package io.keepalive.android
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SdkSuppress
 import io.keepalive.android.AlertFlowTestUtil.resetToCleanEnabledState
 import io.keepalive.android.AlertFlowTestUtil.targetContext
 import org.junit.After
@@ -18,6 +19,10 @@ import org.junit.runner.RunWith
  * This is pure pref-level plumbing; the machinery runs on real Android.
  */
 @RunWith(AndroidJUnit4::class)
+// Device-protected storage, the credential→device mirror, and the
+// last_alarm_stage write are all gated on API N (24)+ in the production
+// code. Pre-N these assertions read null and fail. API 22 skipped.
+@SdkSuppress(minSdkVersion = android.os.Build.VERSION_CODES.N)
 class SettingsPersistenceInstrumentedTest {
 
     companion object {

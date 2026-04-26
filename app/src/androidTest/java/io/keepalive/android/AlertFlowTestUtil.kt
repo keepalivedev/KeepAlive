@@ -72,6 +72,16 @@ object AlertFlowTestUtil {
             )
         )
 
+        // Clear device-protected state FIRST so that on pre-N — where
+        // getDeviceProtectedPreferences() falls back to the same default-prefs
+        // file as getEncryptedSharedPreferences() — we don't wipe out the
+        // credential-store writes we're about to make.
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            try {
+                getDeviceProtectedPreferences(ctx).edit().clear().commit()
+            } catch (_: Exception) { /* device-protected unavailable: no-op */ }
+        }
+
         prefs.edit().apply {
             clear()
             putBoolean("enabled", true)
@@ -88,14 +98,20 @@ object AlertFlowTestUtil {
             commit()
         }
 
-        // Clear device-protected state too — it shadows credential-encrypted
-        // for Direct Boot and leftover keys trip up later tests.
-        try {
-            getDeviceProtectedPreferences(ctx).edit().clear().commit()
-        } catch (e: Exception) { /* pre-N: no-op */ }
-
         cancelAnyPendingAlarms()
         cancelAllNotifications()
+
+        // Revoke the overlay permission so doAlertCheck's overlay branch
+        // returns early. Background-FG-service starts are restricted on
+        // API 31+ and trigger ForegroundServiceDidNotStartInTimeException
+        // when our tests invoke AlarmReceiver.onReceive() directly (real
+        // alarm broadcasts grant an exemption; our synthetic invocations
+        // don't). Tests verify the alert flow via the prompt notification
+        // and prefs — the overlay is supplementary and doesn't need to
+        // succeed for the assertions to be meaningful.
+        try {
+            shell("appops set ${ctx.packageName} SYSTEM_ALERT_WINDOW deny")
+        } catch (e: Exception) { /* pre-M / shell-blocked: no-op */ }
     }
 
     /** Cancel the KeepAlive AlarmManager alarm so tests start clean. */
@@ -108,6 +124,23 @@ object AlertFlowTestUtil {
         val nm = targetContext.getSystemService(Context.NOTIFICATION_SERVICE)
                 as NotificationManager
         nm.cancelAll()
+    }
+
+    /**
+     * End any in-progress phone call.
+     *
+     * `AlertService` issues a real `Intent.ACTION_CALL` to the seeded fake
+     * number ([FAKE_CALL_TARGET]). On an emulator with no SIM that placement
+     * fails — but the dialer UI still surfaces and, depending on the API
+     * level, the call state can stay "active" (or the dialer activity can
+     * stay foreground) after the test process is torn down. Send
+     * `KEYCODE_ENDCALL` (6) to hang up; portable across every API the app
+     * supports (`cmd telecom end-call` doesn't exist pre-N).
+     */
+    fun endAnyActiveCall() {
+        try {
+            shell("input keyevent 6")
+        } catch (_: Exception) { /* shell unavailable: no-op */ }
     }
 
     /** Drive the periodic or final alarm by delivering the intent to the receiver directly. */

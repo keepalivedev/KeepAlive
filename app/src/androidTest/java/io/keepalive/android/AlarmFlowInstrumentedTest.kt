@@ -1,6 +1,7 @@
 package io.keepalive.android
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SdkSuppress
 import io.keepalive.android.AlertFlowTestUtil.FAKE_CONTACT_A
 import io.keepalive.android.AlertFlowTestUtil.fireAlarm
 import io.keepalive.android.AlertFlowTestUtil.hasNotification
@@ -35,6 +36,10 @@ import org.junit.runner.RunWith
  * (handled by [TestSetupUtil.setupTestEnvironment]).
  */
 @RunWith(AndroidJUnit4::class)
+// Many assertions read the active notification list via
+// NotificationManager.getActiveNotifications() — which was added in API 23.
+// Pre-M (API 22) the test runner skips this class entirely.
+@SdkSuppress(minSdkVersion = android.os.Build.VERSION_CODES.M)
 class AlarmFlowInstrumentedTest {
 
     companion object {
@@ -59,6 +64,10 @@ class AlarmFlowInstrumentedTest {
         AlertFlowTestUtil.cancelAllNotifications()
         targetContext.stopService(android.content.Intent(
             targetContext, AlertService::class.java))
+        // finalAlarmWithNoActivityStartsAlertService drives the real call
+        // step against the fake +15550102 number — hang up so the dialer
+        // doesn't stay foreground after the test process exits.
+        AlertFlowTestUtil.endAnyActiveCall()
     }
 
     // ---- The core "no recent activity → Are you there? → final" flow ------

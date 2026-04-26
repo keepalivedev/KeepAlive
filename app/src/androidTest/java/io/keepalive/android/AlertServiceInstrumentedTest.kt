@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SdkSuppress
 import io.keepalive.android.AlertFlowTestUtil.hasNotification
 import io.keepalive.android.AlertFlowTestUtil.resetToCleanEnabledState
 import io.keepalive.android.AlertFlowTestUtil.savedAlertTriggerTimestamp
@@ -31,6 +32,9 @@ import org.junit.runner.RunWith
  * delivery confirmation.
  */
 @RunWith(AndroidJUnit4::class)
+// Uses NotificationManager.getActiveNotifications() (API 23+) and
+// AlertService is foreground-aware (API 26+ contract). API 22 skipped.
+@SdkSuppress(minSdkVersion = android.os.Build.VERSION_CODES.M)
 class AlertServiceInstrumentedTest {
 
     companion object {
@@ -61,6 +65,9 @@ class AlertServiceInstrumentedTest {
         // Stop the service if still running
         targetContext.stopService(Intent(targetContext, AlertService::class.java))
         Thread.sleep(200)
+        // AlertService dispatches a real Intent.ACTION_CALL to the fake
+        // +15550102 number; hang up so the dialer doesn't stay foreground.
+        AlertFlowTestUtil.endAnyActiveCall()
     }
 
     private fun startAlertService(triggerTimestamp: Long = System.currentTimeMillis()) {
