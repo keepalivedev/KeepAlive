@@ -38,6 +38,10 @@ class SetAlarmTest {
     @Before fun setUp() {
         // Start from a clean slate.
         shadowAlarm.scheduledAlarms.clear()
+        // ShadowAlarmManager.canScheduleExactAlarms is a *static* (process-
+        // level) flag — bleed-over from a prior test would silently flip the
+        // exact-alarm branch. Reset it here so individual tests own its value.
+        org.robolectric.shadows.ShadowAlarmManager.setCanScheduleExactAlarms(true)
         getEncryptedSharedPreferences(appCtx).edit()
             .putBoolean("use_exact_alarms", false)
             .commit()
@@ -165,5 +169,73 @@ class SetAlarmTest {
         // discriminate the two via ShadowAlarmManager's scheduledAlarms list.
         // Smoke check: still scheduled, still wake-up.
         assertEquals(android.app.AlarmManager.ELAPSED_REALTIME_WAKEUP, scheduled!!.type)
+    }
+
+    // ---- SCHEDULE_EXACT_ALARM denied (API S/31+) ---------------------------
+    //
+    // Production behavior: when `canScheduleExactAlarms()` returns false, the
+    // periodic path silently uses `setAndAllowWhileIdle` regardless of
+    // `use_exact_alarms`, and the final path falls back to
+    // `setAndAllowWhileIdle` (M+) instead of `setAlarmClock`. Either way an
+    // alarm IS scheduled — the safety net of getting *some* alarm matters
+    // more than getting an exact one.
+
+    @Test
+    @Config(sdk = [33, 34, 35, 36])
+    fun `periodic alarm is still scheduled when SCHEDULE_EXACT_ALARM is denied`() {
+        org.robolectric.shadows.ShadowAlarmManager.setCanScheduleExactAlarms(false)
+        getEncryptedSharedPreferences(appCtx).edit()
+            .putBoolean("use_exact_alarms", true)  // user wanted exact
+            .commit()
+
+        setAlarm(appCtx, System.currentTimeMillis(), 10, "periodic")
+
+        val scheduled = shadowAlarm.nextScheduledAlarm
+        assertNotNull("periodic must still schedule an inexact alarm when exact is denied",
+            scheduled)
+        // Periodic path on M+ without exact uses ELAPSED_REALTIME_WAKEUP.
+        assertEquals(android.app.AlarmManager.ELAPSED_REALTIME_WAKEUP, scheduled!!.type)
+    }
+
+    @Test
+    @Config(sdk = [33, 34, 35, 36])
+    fun `final alarm falls back to setAndAllowWhileIdle when SCHEDULE_EXACT_ALARM is denied`() {
+        org.robolectric.shadows.ShadowAlarmManager.setCanScheduleExactAlarms(false)
+
+        setAlarm(appCtx, System.currentTimeMillis(), 60, "final")
+
+        val scheduled = shadowAlarm.nextScheduledAlarm
+        assertNotNull("final must still schedule even without exact-alarm permission",
+            scheduled)
+        // setAlarmClock uses RTC_WAKEUP; the fallback setAndAllowWhileIdle uses
+        // ELAPSED_REALTIME_WAKEUP. The denied-path scheduled alarm must NOT be
+        // an alarm-clock entry (which would mean we successfully called
+        // setAlarmClock — but canScheduleExactAlarms=false should prevent that).
+        assertEquals(
+            "denied exact must use ELAPSED_REALTIME_WAKEUP fallback, not RTC_WAKEUP alarmClock",
+            android.app.AlarmManager.ELAPSED_REALTIME_WAKEUP, scheduled!!.type
+        )
+        // ShadowAlarmManager exposes the AlarmClockInfo on the scheduled
+        // entry; the fallback path leaves it null.
+        assertEquals(
+            "denied exact path must not produce an AlarmClock entry",
+            null, scheduled.alarmClockInfo
+        )
+    }
+
+    @Test
+    @Config(sdk = [33, 34, 35, 36])
+    fun `final alarm uses setAlarmClock when SCHEDULE_EXACT_ALARM is granted`() {
+        // Companion to the denied test above: confirm we DID take the exact
+        // path when permitted, so the denied test isn't passing for the wrong
+        // reason.
+        org.robolectric.shadows.ShadowAlarmManager.setCanScheduleExactAlarms(true)
+
+        setAlarm(appCtx, System.currentTimeMillis(), 60, "final")
+
+        val scheduled = shadowAlarm.nextScheduledAlarm
+        assertNotNull(scheduled)
+        assertNotNull("granted exact-alarm path must produce an AlarmClock entry",
+            scheduled!!.alarmClockInfo)
     }
 }

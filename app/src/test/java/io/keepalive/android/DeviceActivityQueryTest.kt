@@ -102,4 +102,48 @@ class DeviceActivityQueryTest {
         // Robolectric runs at SDK 35 via properties, so we exercise that path.
         assertEquals(2_000L, result?.timeStamp)
     }
+
+    // ---- PACKAGE_USAGE_STATS permission denied -----------------------------
+    //
+    // The production code does not pre-check the appops permission — it just
+    // calls queryEvents and relies on the try/catch to swallow failures. On
+    // some Android versions a missing permission surfaces as SecurityException
+    // from queryEvents; on others it returns an empty event stream. Both must
+    // result in a clean null return.
+
+    @Test fun `returns null when queryEvents throws SecurityException (no usage-stats permission)`() {
+        // Robolectric's ShadowUsageStatsManager doesn't model the appops gate
+        // directly; the closest contract test is "if queryEvents throws — as
+        // it can on a real device with the perm denied — getLastDeviceActivity
+        // catches and returns null". Mock the manager via mockkStatic on
+        // getSystemService to inject a throwing instance.
+        val throwing = io.mockk.mockk<UsageStatsManager>(relaxed = true) {
+            io.mockk.every {
+                queryEvents(any(), any())
+            } throws SecurityException("usage stats permission denied")
+        }
+        val ctxSpy = io.mockk.spyk(appCtx)
+        io.mockk.every { ctxSpy.getSystemService(Context.USAGE_STATS_SERVICE) } returns throwing
+
+        val result = getLastDeviceActivity(
+            ctxSpy,
+            startTimestamp = 0L,
+            monitoredApps = listOf("com.example.target")
+        )
+
+        assertNull("denied usage-stats permission must surface as null, not crash", result)
+    }
+
+    @Test fun `empty event stream (no permission, silent failure mode) returns null`() {
+        // Mirrors the "permission denied but no exception" failure mode that
+        // some OEM-customized OS builds exhibit: queryEvents returns nothing.
+        // No events seeded → behaves as if the perm were denied silently.
+        val result = getLastDeviceActivity(
+            appCtx,
+            startTimestamp = 0L,
+            monitoredApps = listOf("com.example.target")
+        )
+
+        assertNull(result)
+    }
 }

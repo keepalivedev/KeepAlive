@@ -146,4 +146,43 @@ class AlertNotificationHelperTest {
         assertNotNull("notification must have a contentIntent so user can open the app",
             notif.contentIntent)
     }
+
+    // ---- POST_NOTIFICATIONS permission gate (API 33+) ---------------------
+
+    @Test
+    @Config(sdk = [33, 34, 35, 36])  // POST_NOTIFICATIONS is API T (33)+
+    fun `sendNotification is a no-op on API 33+ when POST_NOTIFICATIONS is denied`() {
+        // The default Robolectric state denies runtime permissions; the @Before
+        // grants POST_NOTIFICATIONS for every other test so the helper actually
+        // surfaces. Here we revoke it (deny + clear before grant) and assert
+        // the early-return at NotificationHelper.kt around line 150 fires.
+        shadowOf(appCtx as Application).denyPermissions(Manifest.permission.POST_NOTIFICATIONS)
+
+        AlertNotificationHelper(appCtx).sendNotification(
+            "ignored",
+            "denied state",
+            AppController.SMS_ALERT_SENT_NOTIFICATION_ID
+        )
+
+        assertEquals("nothing should post when POST_NOTIFICATIONS is denied",
+            0, shadowOf(nm).allNotifications.size)
+    }
+
+    @Test
+    @Config(sdk = [23, 28])  // pre-T: permission doesn't exist, gate is bypassed
+    fun `sendNotification works pre-T even with POST_NOTIFICATIONS denied (perm did not exist)`() {
+        // POST_NOTIFICATIONS only exists on T+. Pre-T, the gate at line 150
+        // is skipped entirely (the SDK_INT check), so denying the permission
+        // has no effect and the notification still posts.
+        shadowOf(appCtx as Application).denyPermissions(Manifest.permission.POST_NOTIFICATIONS)
+
+        AlertNotificationHelper(appCtx).sendNotification(
+            "shown",
+            "pre-T path",
+            AppController.SMS_ALERT_SENT_NOTIFICATION_ID
+        )
+
+        assertEquals("pre-T must ignore POST_NOTIFICATIONS state and post",
+            1, shadowOf(nm).allNotifications.size)
+    }
 }

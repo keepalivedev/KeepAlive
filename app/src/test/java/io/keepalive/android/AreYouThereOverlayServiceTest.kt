@@ -150,4 +150,36 @@ class AreYouThereOverlayServiceTest {
         assertNull("dismiss must not start the service",
             shadowOf(appCtx as Application).nextStartedService)
     }
+
+    // ---- SYSTEM_ALERT_WINDOW denied path -----------------------------------
+    //
+    // canDrawOverlays() returns false → the service must NOT add a view to
+    // WindowManager (would throw on a real device) and must clean up its
+    // foreground state instead. AreYouThereOverlayService.kt:98-104.
+
+    @Test fun `show does not inflate an overlay when canDrawOverlays is false`() {
+        every { Settings.canDrawOverlays(any()) } returns false
+
+        val service = Robolectric.buildService(AreYouThereOverlayService::class.java, showIntent())
+            .create()
+            .startCommand(0, 1)
+            .get()
+
+        assertNull("overlay must NOT be inflated when SYSTEM_ALERT_WINDOW is denied",
+            overlayViewOf(service))
+    }
+
+    @Test fun `show with overlay denied does not invoke acknowledge`() {
+        // Belt-and-suspenders: even if some path slipped through, denied state
+        // must never silently call acknowledge() (would falsely mark the user
+        // as present).
+        every { Settings.canDrawOverlays(any()) } returns false
+
+        Robolectric.buildService(AreYouThereOverlayService::class.java, showIntent())
+            .create()
+            .startCommand(0, 1)
+            .get()
+
+        verify(exactly = 0) { AcknowledgeAreYouThere.acknowledge(any()) }
+    }
 }

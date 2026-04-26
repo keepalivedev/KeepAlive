@@ -204,4 +204,53 @@ class AlertMessageSenderTest {
             sms.sendTextMessage("+15551111111", null, "help", any(), isNull())
         }
     }
+
+    // ---- SEND_SMS permission denied ----------------------------------------
+    //
+    // Production code does not pre-check Manifest.permission.SEND_SMS — it
+    // relies on `SmsManager.sendTextMessage(...)` throwing SecurityException,
+    // which the per-contact try/catch swallows after posting a failure
+    // notification. These tests pin that contract: a denied SEND_SMS at the
+    // OS level surfaces as an exception from the SmsManager call, the alert
+    // path keeps running (other contacts still attempt), and the user gets
+    // a status notification telling them the alert didn't go.
+
+    @Test fun `SecurityException from sendTextMessage posts the failure notification`() {
+        val sms = mockSms(mapOf("help" to arrayListOf("help")))
+        io.mockk.every {
+            sms.sendTextMessage(any(), any(), any(), any(), any())
+        } throws SecurityException("SEND_SMS denied")
+
+        // POST_NOTIFICATIONS needed on T+ for the failure notification to surface.
+        org.robolectric.Shadows.shadowOf(appCtx as android.app.Application)
+            .grantPermissions(android.Manifest.permission.POST_NOTIFICATIONS)
+        val nm = appCtx.getSystemService(Context.NOTIFICATION_SERVICE)
+                as android.app.NotificationManager
+        nm.cancelAll()
+
+        AlertMessageSender(appCtx, sms).sendAlertMessage()
+
+        val active = nm.activeNotifications
+        assertEquals("a failure notification must be posted when SMS send throws",
+            1, active.size)
+        assertEquals(AppController.SMS_ALERT_SENT_NOTIFICATION_ID, active[0].id)
+    }
+
+    @Test fun `SecurityException from one contact does not stop the loop`() {
+        // First contact's send throws (e.g. a particular number triggers
+        // carrier-blocked exception); second contact must still attempt.
+        seedContacts(
+            contact("+15550000001"),
+            contact("+15550000002")
+        )
+        val sms = mockSms(mapOf("help" to arrayListOf("help")))
+        io.mockk.every {
+            sms.sendTextMessage("+15550000001", any(), any(), any(), any())
+        } throws SecurityException("blocked")
+
+        AlertMessageSender(appCtx, sms).sendAlertMessage()
+
+        verify(exactly = 1) { sms.sendTextMessage("+15550000001", null, "help", any(), null) }
+        verify(exactly = 1) { sms.sendTextMessage("+15550000002", null, "help", any(), null) }
+    }
 }
