@@ -216,6 +216,19 @@ class MinSdkSmokeInstrumentedTest {
         val ok = AlertFlowTestUtil.waitUntil(timeoutMs = 10_000L) {
             prefs.getLong("LastAlertAt", 0) >= before
         }
+
+        // Stop AlertService cleanly before the assertion can fail-fast and
+        // tear down the test process. Same FG-service-contract concern as
+        // AlarmFlowInstrumentedTest.finalAlarmWithNoActivityStartsAlertService:
+        // if the process dies while AlertService is still in its
+        // "waiting for startForeground" 5s window, the OS delivers
+        // ForegroundServiceDidNotStartInTimeException to the next test.
+        androidx.test.platform.app.InstrumentationRegistry.getInstrumentation()
+            .waitForIdleSync()
+        Thread.sleep(1_000)
+        ctx.stopService(android.content.Intent(ctx, AlertService::class.java))
+        Thread.sleep(500)
+
         assertTrue(
             "final alarm with no activity should record LastAlertAt eventually",
             ok

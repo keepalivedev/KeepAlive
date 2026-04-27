@@ -62,6 +62,15 @@ class OverlayInstrumentedTest {
             "appops set ${targetContext.packageName} SYSTEM_ALERT_WINDOW allow"
         )
 
+        // CI emulators idle the screen during a long test run. UiAutomator
+        // tap injection on TYPE_APPLICATION_OVERLAY windows requires an
+        // awake screen with the keyguard dismissed; otherwise click() looks
+        // successful but the touch is never delivered to the overlay
+        // window. Wake + unlock before each test to make this deterministic.
+        device.wakeUp()
+        device.pressMenu()
+        Thread.sleep(200)
+
         // Make sure no leftover overlay from a prior test is in the way.
         AreYouThereOverlay.dismiss(targetContext)
         Thread.sleep(300)
@@ -97,13 +106,30 @@ class OverlayInstrumentedTest {
         // Tap I'm OK — should dismiss the overlay AND invoke
         // AcknowledgeAreYouThere.acknowledge() which writes the
         // last_activity_timestamp pref (the Direct-Boot race-fix).
+        //
+        // UiAutomator click injection on TYPE_APPLICATION_OVERLAY windows is
+        // best-effort across emulator images: when it works, dismissal is
+        // instant; when it doesn't, the click() call returns silently and
+        // the overlay stays. Retry up to 3 times before giving up and
+        // checking whether the overlay state ever cleared.
         val before = System.currentTimeMillis()
-        okButton.click()
-
-        val gone = device.wait(
-            Until.gone(By.res(targetContext.packageName, "buttonImOk")),
-            5_000L
-        )
+        var gone = false
+        repeat(3) { attempt ->
+            if (gone) return@repeat
+            okButton.click()
+            gone = device.wait(
+                Until.gone(By.res(targetContext.packageName, "buttonImOk")),
+                5_000L
+            )
+            if (!gone) {
+                // Re-find — the previous handle may have been invalidated
+                // by partial state changes between attempts.
+                device.wait(
+                    Until.findObject(By.res(targetContext.packageName, "buttonImOk")),
+                    1_000L
+                )
+            }
+        }
         assertTrue("overlay should disappear after I'm OK click", gone)
 
         // Acknowledge side effect: last_activity_timestamp persisted.
