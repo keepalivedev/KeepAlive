@@ -41,7 +41,28 @@ class AreYouThereOverlayService : Service() {
 
     override fun onBind(intent: Intent?): IBinder? = null
 
+    override fun onCreate() {
+        super.onCreate()
+        // Android (O+) contract: if the service was started with
+        // startForegroundService(), it MUST call Service.startForeground()
+        // within ~5s or the system kills the app with
+        // ForegroundServiceDidNotStartInTimeException. Calling
+        // startForeground in onCreate is the earliest possible point —
+        // onStartCommand may be delayed or skipped in edge cases (process
+        // restart on START_NOT_STICKY, OS queueing under load).
+        try {
+            ensureForeground()
+        } catch (t: Throwable) {
+            Log.e(TAG, "ensureForeground failed in onCreate", t)
+        }
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // Redundant safety — usually a no-op since onCreate already did it.
+        try { ensureForeground() } catch (t: Throwable) {
+            Log.e(TAG, "ensureForeground failed in onStartCommand", t)
+        }
+
         try {
             when (intent?.action) {
                 ACTION_SHOW -> {
@@ -76,13 +97,16 @@ class AreYouThereOverlayService : Service() {
 
         if (!canDrawOverlays(this)) {
             Log.d(TAG, "Overlay permission not granted; not showing overlay")
+            // stopForeground+stopSelf — onStartCommand already called
+            // startForeground, we must tear that down cleanly.
+            stopForegroundIfNeeded()
             stopSelf()
             return
         }
 
-        // Keep the process/service alive while the overlay is visible.
-        // This improves reliability when triggered from the background on Android O+.
-        ensureForeground()
+        // ensureForeground() is already invoked in onStartCommand so we're
+        // guaranteed the foreground-service contract was honored before any
+        // early return. No-op here since isForeground is already true.
 
         val wm = getSystemService(WINDOW_SERVICE) as WindowManager
         val view = LayoutInflater.from(this).inflate(R.layout.overlay_are_you_there, null, false)
@@ -306,10 +330,21 @@ class AreYouThereOverlayService : Service() {
                 putExtra(EXTRA_MESSAGE, message)
             }
             // When triggered from background on Android O+, use startForegroundService.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(i)
-            } else {
-                context.startService(i)
+            // Wrap in try/catch: on API 31+ Android can throw
+            // ForegroundServiceStartNotAllowedException if we're not in an
+            // exempt state (e.g. background after a non-system-broadcast
+            // alarm wake-up). The overlay is supplementary — the
+            // "Are you there?" notification is the primary signal, and we
+            // must NEVER let an overlay-start failure crash the alert flow.
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(i)
+                } else {
+                    context.startService(i)
+                }
+            } catch (t: Throwable) {
+                Log.w("AreYouThereOverlay",
+                    "Failed to start overlay service; the notification is still posted", t)
             }
         }
 

@@ -1,0 +1,40 @@
+name: Unit tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+          cache: 'gradle'
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Run unit tests (googlePlay + fDroid flavors)
+        # fDroid flavor covers the android.location-based LocationHelper;
+        # googlePlay covers the FusedLocationProviderClient path. Both need
+        # to pass before a merge.
+        run: ./gradlew testGooglePlayDebugUnitTest testFDroidDebugUnitTest --no-daemon
+
+      - name: Upload test reports on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-report
+          path: |
+            app/build/reports/tests/
+            app/build/test-results/

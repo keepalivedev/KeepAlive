@@ -90,7 +90,12 @@ fun getSMSManager(context: Context): SmsManager? {
 }
 
 
-class AlertMessageSender(private val context: Context) {
+class AlertMessageSender @JvmOverloads constructor(
+    private val context: Context,
+    // Injectable for tests. Default resolves the real SmsManager so production
+    // callers don't need to care. Pass null or a mock from unit tests.
+    private val smsManager: SmsManager? = getSMSManager(context)
+) {
 
     companion object {
         // How long to wait before forcing the SMS_SENT receiver to unregister.
@@ -100,7 +105,6 @@ class AlertMessageSender(private val context: Context) {
         private const val SMS_RECEIVER_SAFETY_TIMEOUT_MS = 2 * 60 * 1000L
     }
 
-    private val smsManager = getSMSManager(context)
     private val prefs = getEncryptedSharedPreferences(context)
     private val alertNotificationHelper = AlertNotificationHelper(context)
     private val smsContacts: MutableList<SMSEmergencyContactSetting> = loadJSONSharedPreference(prefs,
