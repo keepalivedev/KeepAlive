@@ -139,10 +139,27 @@ class ProductionAlertCheckDeps(private val context: Context) : AlertCheckDeps {
             intent.putExtra(AlertService.EXTRA_ALERT_TRIGGER_TIMESTAMP, System.currentTimeMillis())
 
             DebugLogger.d("doAlertCheck", context.getString(R.string.debug_log_alert_service_start))
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(intent)
-            } else {
-                context.startService(intent)
+            // API 31+ can throw ForegroundServiceStartNotAllowedException
+            // (or BackgroundServiceStartNotAllowedException, depending on
+            // version) when start{Foreground,}Service is called from a
+            // background context that doesn't currently hold a
+            // foreground-service exemption. A real AlarmManager broadcast
+            // gets the exemption automatically; an exotic code path or test
+            // harness that synthesizes the broadcast does not. We must NOT
+            // let that bubble up — the SMS / call / webhook flow is the
+            // primary alert mechanism and should at minimum log if the
+            // service can't be started rather than swallowed silently
+            // upstream by the AlarmReceiver's catch-all.
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(intent)
+                } else {
+                    context.startService(intent)
+                }
+            } catch (t: Throwable) {
+                DebugLogger.d("doAlertCheck",
+                    "Failed to start AlertService: ${t.localizedMessage}",
+                    t as? Exception)
             }
         }
 
