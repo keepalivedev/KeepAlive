@@ -517,22 +517,36 @@ fun calculateOffsetDateTimeExcludingRestPeriod(
         Log.d("calcPastDtExcRestPeriod", "Invalid rest period? $restPeriod")
         thisTargetDtCalendar.add(Calendar.MINUTE, minuteStep * minutesToOffset)
     } else {
+        // Each iteration traverses one wall-clock minute. We classify that minute
+        // as rest/active by checking isWithinRestPeriod at the START of the
+        // wall-clock minute traversed (the lower bound of [t, t+1)).
+        //
+        // For forward (step=+1) the start is the cal value BEFORE advancing.
+        // For backward (step=-1) the start is the cal value AFTER advancing
+        // (advance-then-check makes the new cal equal to the lower bound).
         while (minutesToOffset > 0) {
 
-            // every minute, check whether the current time is within the rest period and, if not,
-            //  offset another minute until we get to 0 minutes, i.e. the end of the check period
-
-            thisTargetDtCalendar.add(Calendar.MINUTE, minuteStep)
-
-            // if the current time isn't within the rest period, offset another minute
-            if (!isWithinRestPeriod(
+            if (minuteStep > 0) {
+                // Forward: classify by START of the upcoming minute, then advance.
+                val inRest = isWithinRestPeriod(
                     thisTargetDtCalendar.get(Calendar.HOUR_OF_DAY),
                     thisTargetDtCalendar.get(Calendar.MINUTE),
                     restPeriod
-            )) {
-                minutesToOffset--
+                )
+                thisTargetDtCalendar.add(Calendar.MINUTE, minuteStep)
+                if (inRest) skippedMinutes++ else minutesToOffset--
             } else {
-                skippedMinutes++
+                // Backward: advance first; new cal is the start of the traversed minute.
+                thisTargetDtCalendar.add(Calendar.MINUTE, minuteStep)
+                if (!isWithinRestPeriod(
+                        thisTargetDtCalendar.get(Calendar.HOUR_OF_DAY),
+                        thisTargetDtCalendar.get(Calendar.MINUTE),
+                        restPeriod
+                )) {
+                    minutesToOffset--
+                } else {
+                    skippedMinutes++
+                }
             }
         }
     }
