@@ -242,6 +242,61 @@ class AlertStepRunnerTest {
         assertEquals(1, disp.stopServiceCount)
     }
 
+    // ========================================================================
+    // Per-step exception → retry semantics (no bit flips on throw)
+    // ========================================================================
+
+    @Test fun `sendSmsAlert exception leaves STEP_SMS_SENT unset for next-delivery retry`() {
+        // Pin the contract: if SMS dispatch throws (e.g., a SecurityException
+        // from a denied SEND_SMS), the step bit stays UNSET so a subsequent
+        // intent re-delivery (Android's START_REDELIVER_INTENT) will retry
+        // it. If a future refactor moved markComplete into a `finally` block
+        // or before the dispatch, the SMS would be silently skipped on
+        // retry — this test catches that regression.
+        val steps = FakeAlertStepOps()
+        val disp = FakeAlertDispatcher().apply {
+            smsSendThrows = SecurityException("SEND_SMS denied")
+        }
+
+        try {
+            runAlertSteps(steps, disp)
+            org.junit.Assert.fail("sendSmsAlert exception should propagate to caller")
+        } catch (_: SecurityException) { /* expected */ }
+
+        org.junit.Assert.assertFalse(
+            "SMS bit must NOT be set when sendSmsAlert threw — drives retry on redelivery",
+            steps.isComplete(STEP_SMS_SENT)
+        )
+        // Call step never reached because runAlertSteps short-circuited.
+        org.junit.Assert.assertEquals(0, disp.callCount)
+    }
+
+    @Test fun `makeCall exception leaves STEP_CALL_MADE unset but SMS step stays marked`() {
+        // After SMS succeeds and is marked complete, a subsequent call-step
+        // failure must NOT roll back the SMS bit — that would cause a
+        // re-delivery to re-send all SMSes, double-paging the contacts.
+        // Per-step bits, not all-or-nothing.
+        val steps = FakeAlertStepOps()
+        val disp = FakeAlertDispatcher().apply {
+            callThrows = RuntimeException("dialer crashed")
+        }
+
+        try {
+            runAlertSteps(steps, disp)
+            org.junit.Assert.fail("makeCall exception should propagate")
+        } catch (_: RuntimeException) { /* expected */ }
+
+        org.junit.Assert.assertTrue(
+            "SMS bit must remain set after a successful SMS dispatch, even " +
+                    "if a later step throws",
+            steps.isComplete(STEP_SMS_SENT)
+        )
+        org.junit.Assert.assertFalse(
+            "CALL bit must NOT be set when makeCall threw — drives retry",
+            steps.isComplete(STEP_CALL_MADE)
+        )
+    }
+
     @Test fun `resume after SMS sent but before call also skips location if already complete`() {
         // Worst-case resume: SMS went through, process died before call.
         // On redelivery we send only call + location + webhook.

@@ -274,4 +274,137 @@ class UtilityFunctionsTest {
             assertFalse(isWithinRestPeriod(time.hour, time.minute, restPeriod))
         }
     }
+
+    /**
+     * `calculateOffsetDateTimeExcludingRestPeriod` walks the calendar one
+     * minute at a time via `Calendar.add(Calendar.MINUTE, ±1)`. On DST
+     * transition days this is the moment where bugs hide:
+     *
+     *  - **Spring-forward** (March, 2nd Sunday in US): 2:00 AM EST advances
+     *    directly to 3:00 AM EDT — the 2:00–2:59 hour does not exist on
+     *    the wall clock. `Calendar.add(MINUTE, 1)` correctly elides the
+     *    missing minute (real elapsed time still increments by 1 minute).
+     *  - **Fall-back** (November, 1st Sunday in US): 2:00 AM EDT becomes
+     *    1:00 AM EST — the 1:00–1:59 hour repeats. `Calendar.add` walks
+     *    forward in real time but the wall-clock value goes backward.
+     *
+     * Both behaviors must produce the SAME final timestamp the algorithm
+     * would on a non-DST week — i.e. the user's "skip the rest period
+     * then offset N minutes" semantics work identically across DST. If
+     * `Calendar.add` were ever swapped for naive `timeInMillis += 60_000`
+     * arithmetic, the fall-back day would over-skip the rest period (the
+     * 1:00 hour gets visited twice → counted as rest twice → end time off
+     * by an hour); the spring-forward day would symmetrically under-skip.
+     *
+     * These tests pin the current correct behavior so a future refactor
+     * that breaks DST semantics fails loudly.
+     */
+    class TestDstTransitions {
+
+        private val savedTz = TimeZone.getDefault()
+
+        @org.junit.After fun restoreTz() { TimeZone.setDefault(savedTz) }
+
+        /** Set both the JVM default zone AND build a Calendar in that zone. */
+        private fun calAt(year: Int, month: Int, day: Int, hour: Int, minute: Int,
+                          zoneId: String): Calendar {
+            val tz = TimeZone.getTimeZone(zoneId)
+            TimeZone.setDefault(tz)
+            return Calendar.getInstance(tz).apply {
+                clear()
+                set(year, month, day, hour, minute, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
+        }
+
+        @Test
+        fun springForwardForwardOffsetEndsAtTheCorrectWallClockTime() {
+            // March 10, 2024 — US spring-forward at 2:00 AM EST → 3:00 AM EDT.
+            // Start at midnight EST, rest period 22:00–06:00, offset 60 min.
+            // Walk: 0:00 EST → 1:59 EST → 3:00 EDT (DST gap skipped) → 5:59 EDT
+            //       → 6:00 EDT (rest ends) → 7:00 EDT (60 min offset complete).
+            val start = calAt(2024, Calendar.MARCH, 10, 0, 0, "America/New_York")
+            val rest = RestPeriod(22, 0, 6, 0)
+
+            val result = calculateOffsetDateTimeExcludingRestPeriod(
+                start, offsetMinutes = 60, restPeriod = rest, direction = "forward"
+            )
+
+            val expected = calAt(2024, Calendar.MARCH, 10, 7, 0, "America/New_York")
+            assertEquals(
+                "spring-forward day must end 60 wall-clock min after rest ends, " +
+                        "even though the 2:00–2:59 hour was skipped",
+                expected.timeInMillis, result.timeInMillis
+            )
+        }
+
+        @Test
+        fun fallBackForwardOffsetEndsAtTheCorrectWallClockTime() {
+            // November 3, 2024 — US fall-back at 2:00 AM EDT → 1:00 AM EST.
+            // Start at midnight EDT, rest 22:00–06:00, offset 60 min.
+            // The wall clock visits the 1:00 hour twice. Both visits are in
+            // the rest period, so the loop must skip both — net real time
+            // until rest ends = 7 wall-clock hours = 6 + the repeated hour.
+            // Ending wall clock should be 6:00 EST + 60 min = 7:00 EST.
+            val start = calAt(2024, Calendar.NOVEMBER, 3, 0, 0, "America/New_York")
+            val rest = RestPeriod(22, 0, 6, 0)
+
+            val result = calculateOffsetDateTimeExcludingRestPeriod(
+                start, offsetMinutes = 60, restPeriod = rest, direction = "forward"
+            )
+
+            val expected = calAt(2024, Calendar.NOVEMBER, 3, 7, 0, "America/New_York")
+            assertEquals(
+                "fall-back day must end at 7:00 EST despite the 1:00 hour " +
+                        "repeating during rest",
+                expected.timeInMillis, result.timeInMillis
+            )
+        }
+
+        @Test
+        fun nonDstWeekControlMatchesExpectedAlgebra() {
+            // Same shape as the spring-forward test, but on a non-DST day.
+            // This is the "control" — confirms the DST tests above are
+            // checking against the same algebra they should match.
+            val start = calAt(2024, Calendar.JULY, 14, 0, 0, "America/New_York")
+            val rest = RestPeriod(22, 0, 6, 0)
+
+            val result = calculateOffsetDateTimeExcludingRestPeriod(
+                start, offsetMinutes = 60, restPeriod = rest, direction = "forward"
+            )
+
+            val expected = calAt(2024, Calendar.JULY, 14, 7, 0, "America/New_York")
+            assertEquals(expected.timeInMillis, result.timeInMillis)
+        }
+
+        @Test
+        fun springForwardBackwardOffsetMatchesNonDst() {
+            // Symmetrical: walking BACKWARD across spring-forward.
+            // Start at noon, walk back 60 minutes outside rest, plus skip
+            // the rest period 22:00–06:00 of the prior day.
+            val start = calAt(2024, Calendar.MARCH, 10, 12, 0, "America/New_York")
+            val rest = RestPeriod(22, 0, 6, 0)
+
+            val dstResult = calculateOffsetDateTimeExcludingRestPeriod(
+                start, offsetMinutes = 60, restPeriod = rest, direction = "backward"
+            )
+
+            // Compare against the same shape on a non-DST day:
+            val nonDstStart = calAt(2024, Calendar.JULY, 14, 12, 0, "America/New_York")
+            val nonDstResult = calculateOffsetDateTimeExcludingRestPeriod(
+                nonDstStart, offsetMinutes = 60, restPeriod = rest, direction = "backward"
+            )
+
+            // Both should land at the same wall-clock offset from start
+            // (the rest period doesn't intersect the walked range, so DST
+            // is the only variable).
+            val dstOffset = start.timeInMillis - dstResult.timeInMillis
+            val nonDstOffset = nonDstStart.timeInMillis - nonDstResult.timeInMillis
+            assertEquals(
+                "backward 60 min outside rest should consume identical real " +
+                        "time on DST and non-DST days",
+                nonDstOffset, dstOffset
+            )
+        }
+    }
 }

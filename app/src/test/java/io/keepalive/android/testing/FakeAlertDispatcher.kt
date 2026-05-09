@@ -59,6 +59,12 @@ class FakeAlertDispatcher(
     /** If set, `requestLocationAsync` throws this instead of calling the callback. */
     var locationRequestThrows: Exception? = null
 
+    /** If set, `sendSmsAlert` throws this instead of returning normally. */
+    var smsSendThrows: Exception? = null
+
+    /** If set, `makeCall` throws this instead of returning normally. */
+    var callThrows: Exception? = null
+
     override fun cancelAreYouThereNotification() {
         callLog += "cancelNotification"
         cancelNotificationCount++
@@ -72,11 +78,13 @@ class FakeAlertDispatcher(
     override fun sendSmsAlert() {
         callLog += "sendSms"
         smsSendCount++
+        smsSendThrows?.let { throw it }
     }
 
     override fun makeCall() {
         callLog += "makeCall"
         callCount++
+        callThrows?.let { throw it }
     }
 
     override fun writeLastAlertAt(timestamp: Long) {
