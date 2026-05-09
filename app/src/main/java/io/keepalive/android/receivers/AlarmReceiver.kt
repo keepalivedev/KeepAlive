@@ -67,50 +67,29 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
     private fun getAlarmStage(context: Context, intent: Intent): String {
-        var alarmStage = ""
+        val extras = intent.extras ?: return "periodic"
+        val declaredStage = extras.getString("AlarmStage", "periodic")
+        val alarmTimestamp = extras.getLong("AlarmTimestamp", 0)
 
-        // the current alarm stage should be passed in as an extra
-        intent.extras?.let {
+        if (alarmTimestamp == 0L) return declaredStage
 
-            alarmStage = it.getString("AlarmStage", "periodic")
+        // this is just for informational purposes so we can see how well Android respects
+        //  the alarm time we set...
+        val alarmDtStr = getDateTimeStrFromTimestamp(alarmTimestamp)
+        val currentDtStr = getDateTimeStrFromTimestamp(System.currentTimeMillis())
+        val delaySeconds = (System.currentTimeMillis() - alarmTimestamp) / 1000
 
-            // also check when the alarm was supposed to go off and compare to
-            //   when it actually did go off
-            val alarmTimestamp = it.getLong("AlarmTimestamp", 0)
+        DebugLogger.d(tag, context.getString(R.string.debug_log_alarm_time_comparison, currentDtStr, alarmDtStr, delaySeconds))
 
-            // this is just for informational purposes so we can see how well Android respects
-            //  the alarm time we set...
-            if (alarmTimestamp != 0L) {
+        val followupMinutes = getEncryptedSharedPreferences(context)
+            .getString("followup_time_period_minutes", "60")
+            ?.toIntOrNull() ?: 60
 
-                val alarmDtStr = getDateTimeStrFromTimestamp(alarmTimestamp)
-                val currentDtStr = getDateTimeStrFromTimestamp(System.currentTimeMillis())
-                val delaySeconds = (System.currentTimeMillis() - alarmTimestamp) / 1000
-
-                DebugLogger.d(tag, context.getString(R.string.debug_log_alarm_time_comparison, currentDtStr, alarmDtStr, delaySeconds))
-
-                // todo ensure that there are no edge cases where this behavior would prevent
-                //  a real alert from firing when it should
-                // If a "final" alarm fires significantly later than scheduled, it's likely
-                // stale — e.g., from an app update/redeploy, extended device-off, or process
-                // death. Downgrade to "periodic" to give the user a fresh "Are you there?"
-                // prompt instead of immediately sending the real alert.
-                // Threshold: if the delay exceeds the followup period, treat it as stale.
-                if (alarmStage == "final" && delaySeconds > 0) {
-                    val prefs = getEncryptedSharedPreferences(context)
-                    val followupMinutes = prefs.getString("followup_time_period_minutes", "60")?.toIntOrNull() ?: 60
-
-                    val maxAcceptableDelaySeconds = followupMinutes * 60L
-
-                    // if the delay is longer than the followup then it means that the
-                    //  final alarm time would be in the past?
-                    if (delaySeconds > maxAcceptableDelaySeconds) {
-                        DebugLogger.d(tag, context.getString(R.string.debug_log_final_alarm_stale, delaySeconds, maxAcceptableDelaySeconds))
-                        alarmStage = "periodic"
-                    }
-                }
-            }
+        val effectiveStage = computeEffectiveAlarmStage(declaredStage, delaySeconds, followupMinutes)
+        if (effectiveStage != declaredStage) {
+            DebugLogger.d(tag, context.getString(R.string.debug_log_final_alarm_stale, delaySeconds, followupMinutes * 60L))
         }
-        return alarmStage
+        return effectiveStage
     }
 
     class AppForegroundChecker(private val context: Context) {
