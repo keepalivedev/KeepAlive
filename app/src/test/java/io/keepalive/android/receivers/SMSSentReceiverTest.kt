@@ -102,7 +102,7 @@ class SMSSentReceiverTest {
         //   PendingResult(int resultCode, String resultData, Bundle resultExtras,
         //                 int type, boolean ordered, boolean sticky,
         //                 IBinder token, int userId, int flags)
-        val cls = android.content.BroadcastReceiver.PendingResult::class.java
+        val cls = BroadcastReceiver.PendingResult::class.java
         val ctor = cls.declaredConstructors.maxByOrNull { it.parameterCount }!!
         ctor.isAccessible = true
         val args: Array<Any?> = ctor.parameterTypes.mapIndexed { i, type ->
@@ -120,7 +120,7 @@ class SMSSentReceiverTest {
     private fun BroadcastReceiver.installPendingResult(pr: Any) {
         val m = BroadcastReceiver::class.java.getMethod(
             "setPendingResult",
-            android.content.BroadcastReceiver.PendingResult::class.java
+            BroadcastReceiver.PendingResult::class.java
         )
         m.invoke(this, pr)
     }

@@ -263,12 +263,12 @@ class AlertStepRunnerTest {
             org.junit.Assert.fail("sendSmsAlert exception should propagate to caller")
         } catch (_: SecurityException) { /* expected */ }
 
-        org.junit.Assert.assertFalse(
+        assertFalse(
             "SMS bit must NOT be set when sendSmsAlert threw — drives retry on redelivery",
             steps.isComplete(STEP_SMS_SENT)
         )
         // Call step never reached because runAlertSteps short-circuited.
-        org.junit.Assert.assertEquals(0, disp.callCount)
+        assertEquals(0, disp.callCount)
     }
 
     @Test fun `makeCall exception leaves STEP_CALL_MADE unset but SMS step stays marked`() {
@@ -286,12 +286,12 @@ class AlertStepRunnerTest {
             org.junit.Assert.fail("makeCall exception should propagate")
         } catch (_: RuntimeException) { /* expected */ }
 
-        org.junit.Assert.assertTrue(
+        assertTrue(
             "SMS bit must remain set after a successful SMS dispatch, even " +
                     "if a later step throws",
             steps.isComplete(STEP_SMS_SENT)
         )
-        org.junit.Assert.assertFalse(
+        assertFalse(
             "CALL bit must NOT be set when makeCall threw — drives retry",
             steps.isComplete(STEP_CALL_MADE)
         )

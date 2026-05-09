@@ -6,7 +6,7 @@ import io.keepalive.android.LocationResult
 
 /**
  * Recording fake of [AlertStepOps] backed by a mutable int bitmask.
- * Test-only seed helper so tests can set up "resume" scenarios directly.
+ * Pass [initial] to set up "resume" scenarios directly.
  */
 class FakeAlertStepOps(initial: Int = 0) : AlertStepOps {
     var bitmask: Int = initial
@@ -14,8 +14,6 @@ class FakeAlertStepOps(initial: Int = 0) : AlertStepOps {
 
     override fun isComplete(step: Int): Boolean = (bitmask and step) != 0
     override fun markComplete(step: Int) { bitmask = bitmask or step }
-
-    fun seed(mask: Int) { bitmask = mask }
 }
 
 /**

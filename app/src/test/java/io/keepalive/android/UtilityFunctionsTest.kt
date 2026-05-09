@@ -9,10 +9,7 @@ import com.google.gson.Gson
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import java.time.Instant
-import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.ZoneId
-import java.time.ZonedDateTime
 import java.util.Calendar
 import java.util.TimeZone
 
@@ -202,6 +199,169 @@ class UtilityFunctionsTest {
         }
     }
 
+    /**
+     * Forward-direction counterparts to [TestCalculatePastDateTimeExcludingRestPeriod].
+     *
+     * Forward is the production path used by `setAlarm` to compute the next
+     * alarm timestamp from "now". Each test pins the SAME spec the backward
+     * tests pin: total wall-clock walk = offsetMinutes + restMinutesInWalkedRange.
+     * If a future change drifts the forward semantic by even one minute (the
+     * shape of the bug fixed in `calculateOffsetDateTimeExcludingRestPeriod`
+     * where the boundary-of-rest minute was misclassified), these will fail.
+     */
+    class TestCalculateFutureDateTimeExcludingRestPeriod {
+
+        @Test
+        fun longCheckPeriod() {
+            // Walk forward 48h from 12:00 noon, crossing 3 nightly rest periods.
+            //  d1 12:00→22:00 = 10h active
+            //  d1 22:00→d2 06:00 = 8h rest  (skipped #1)
+            //  d2 06:00→22:00 = 16h active  (26h cumulative)
+            //  d2 22:00→d3 06:00 = 8h rest  (skipped #2)
+            //  d3 06:00→22:00 = 16h active  (42h cumulative)
+            //  d3 22:00→d4 06:00 = 8h rest  (skipped #3)
+            //  d4 06:00→12:00 = 6h active   (48h done)
+            val targetDateTime: Calendar = Calendar.getInstance().apply {
+                set(Calendar.YEAR, 2024)
+                set(Calendar.MONTH, Calendar.JANUARY)
+                set(Calendar.DAY_OF_MONTH, 1)
+                set(Calendar.HOUR_OF_DAY, 12)
+                set(Calendar.MINUTE, 0)
+            }
+
+            val checkPeriodHours = 48.0f
+            val restPeriod = RestPeriod(22, 0, 6, 0) // 22:00 to 06:00
+
+            val totalRestMinutes = 8 * 60 * 3
+            val checkPeriodMinutes = (checkPeriodHours * 60).toLong()
+            val expectedDateTime: Calendar = targetDateTime.clone() as Calendar
+            expectedDateTime.add(Calendar.MINUTE, (checkPeriodMinutes + totalRestMinutes).toInt())
+
+            val result = calculateOffsetDateTimeExcludingRestPeriod(
+                targetDateTime, (checkPeriodHours * 60).toInt(), restPeriod, "forward"
+            )
+            assertEquals(expectedDateTime.timeInMillis, result.timeInMillis)
+        }
+
+        @Test
+        fun longRestPeriod() {
+            // Rest period (12h) is larger than the offset (4h). Start just before
+            // rest begins so the entire rest window is traversed in the walk.
+            //  d1 22:00→23:59 = 2h active
+            //  d2 00:00→11:59 = 12h rest (skipped)
+            //  d2 12:00→13:59 = 2h active (4h done)
+            val targetDateTime: Calendar = Calendar.getInstance().apply {
+                set(Calendar.YEAR, 2024)
+                set(Calendar.MONTH, Calendar.JANUARY)
+                set(Calendar.DAY_OF_MONTH, 1)
+                set(Calendar.HOUR_OF_DAY, 22)
+                set(Calendar.MINUTE, 0)
+            }
+            val checkPeriodHours = 4.0f
+            val restPeriod = RestPeriod(0, 0, 12, 0) // 00:00 to 12:00
+
+            // Entire rest window of 12h is traversed.
+            val totalRestMinutes = 12 * 60
+            val checkPeriodMinutes = (checkPeriodHours * 60).toLong()
+            val expectedDateTime: Calendar = targetDateTime.clone() as Calendar
+            expectedDateTime.add(Calendar.MINUTE, (checkPeriodMinutes + totalRestMinutes).toInt())
+
+            val result = calculateOffsetDateTimeExcludingRestPeriod(
+                targetDateTime, (checkPeriodHours * 60).toInt(), restPeriod, "forward"
+            )
+            assertEquals(expectedDateTime.timeInMillis, result.timeInMillis)
+        }
+
+        @Test
+        fun startInRestingPeriod() {
+            // Start at 23:00 — already inside rest [22:00, 02:00). The first 3h
+            // of the walk are in rest before active counting starts.
+            //  d1 23:00→23:59 = 1h rest
+            //  d2 00:00→01:59 = 2h rest (3h rest skipped total)
+            //  d2 02:00→07:59 = 6h active (offset done)
+            val targetDateTime: Calendar = Calendar.getInstance().apply {
+                set(Calendar.YEAR, 2024)
+                set(Calendar.MONTH, Calendar.JANUARY)
+                set(Calendar.DAY_OF_MONTH, 1)
+                set(Calendar.HOUR_OF_DAY, 23)
+                set(Calendar.MINUTE, 0)
+            }
+            val checkPeriodHours = 6.0f
+            val restPeriod = RestPeriod(22, 0, 2, 0) // 22:00 to 02:00 (crosses midnight)
+
+            // 23:00 to 02:00 = 3h of rest traversed.
+            val totalRestMinutes = 3 * 60
+            val checkPeriodMinutes = (checkPeriodHours * 60).toLong()
+            val expectedDateTime: Calendar = targetDateTime.clone() as Calendar
+            expectedDateTime.add(Calendar.MINUTE, (checkPeriodMinutes + totalRestMinutes).toInt())
+
+            val result = calculateOffsetDateTimeExcludingRestPeriod(
+                targetDateTime, (checkPeriodHours * 60).toInt(), restPeriod, "forward"
+            )
+            assertEquals(expectedDateTime.timeInMillis, result.timeInMillis)
+        }
+
+        @Test
+        fun restPeriodCrossesMidnight() {
+            // Start at 18:00, walk forward 6h. Rest 22:00–02:00 falls in the
+            // walked range. The full 4h rest window is traversed.
+            //  d1 18:00→21:59 = 4h active
+            //  d1 22:00→d2 01:59 = 4h rest (skipped)
+            //  d2 02:00→03:59 = 2h active (6h done)
+            val targetDateTime: Calendar = Calendar.getInstance().apply {
+                set(Calendar.YEAR, 2024)
+                set(Calendar.MONTH, Calendar.JANUARY)
+                set(Calendar.DAY_OF_MONTH, 1)
+                set(Calendar.HOUR_OF_DAY, 18)
+                set(Calendar.MINUTE, 0)
+            }
+
+            val checkPeriodHours = 6.0f
+            val restPeriod = RestPeriod(22, 0, 2, 0) // crosses midnight
+
+            val totalRestMinutes = 4 * 60
+            val checkPeriodMinutes = (checkPeriodHours * 60).toLong()
+
+            val expectedDateTime: Calendar = targetDateTime.clone() as Calendar
+            expectedDateTime.add(Calendar.MINUTE, (checkPeriodMinutes + totalRestMinutes).toInt())
+
+            val result = calculateOffsetDateTimeExcludingRestPeriod(
+                targetDateTime, (checkPeriodHours * 60).toInt(), restPeriod, "forward"
+            )
+            assertEquals(expectedDateTime.timeInMillis, result.timeInMillis)
+        }
+
+        @Test
+        fun restPeriodEntirelyWithinCheckPeriod() {
+            // Walk forward 8h from noon. Rest 14:00–16:00 (2h) is fully inside
+            // the walked range — start and end both outside rest.
+            //  12:00→13:59 = 2h active
+            //  14:00→15:59 = 2h rest (skipped)
+            //  16:00→21:59 = 6h active (8h done)
+            val targetDateTime: Calendar = Calendar.getInstance().apply {
+                set(Calendar.YEAR, 2024)
+                set(Calendar.MONTH, Calendar.JANUARY)
+                set(Calendar.DAY_OF_MONTH, 1)
+                set(Calendar.HOUR_OF_DAY, 12)
+                set(Calendar.MINUTE, 0)
+            }
+
+            val checkPeriodHours = 8.0f
+            val restPeriod = RestPeriod(14, 0, 16, 0) // 14:00 to 16:00
+
+            val totalRestMinutes = 2 * 60
+            val checkPeriodMinutes = (checkPeriodHours * 60).toLong()
+
+            val expectedDateTime: Calendar = targetDateTime.clone() as Calendar
+            expectedDateTime.add(Calendar.MINUTE, (checkPeriodMinutes + totalRestMinutes).toInt())
+
+            val result = calculateOffsetDateTimeExcludingRestPeriod(
+                targetDateTime, (checkPeriodHours * 60).toInt(), restPeriod, "forward"
+            )
+            assertEquals(expectedDateTime.timeInMillis, result.timeInMillis)
+        }
+    }
+
     class TestAdjustTimestampIfInRestPeriod {
 
         @Test
@@ -306,13 +466,12 @@ class UtilityFunctionsTest {
         @org.junit.After fun restoreTz() { TimeZone.setDefault(savedTz) }
 
         /** Set both the JVM default zone AND build a Calendar in that zone. */
-        private fun calAt(year: Int, month: Int, day: Int, hour: Int, minute: Int,
-                          zoneId: String): Calendar {
-            val tz = TimeZone.getTimeZone(zoneId)
+        private fun calAt(month: Int, day: Int, hour: Int): Calendar {
+            val tz = TimeZone.getTimeZone("America/New_York")
             TimeZone.setDefault(tz)
             return Calendar.getInstance(tz).apply {
                 clear()
-                set(year, month, day, hour, minute, 0)
+                set(2024, month, day, hour, 0, 0)
                 set(Calendar.MILLISECOND, 0)
             }
         }
@@ -323,14 +482,14 @@ class UtilityFunctionsTest {
             // Start at midnight EST, rest period 22:00–06:00, offset 60 min.
             // Walk: 0:00 EST → 1:59 EST → 3:00 EDT (DST gap skipped) → 5:59 EDT
             //       → 6:00 EDT (rest ends) → 7:00 EDT (60 min offset complete).
-            val start = calAt(2024, Calendar.MARCH, 10, 0, 0, "America/New_York")
+            val start = calAt(Calendar.MARCH, 10, 0)
             val rest = RestPeriod(22, 0, 6, 0)
 
             val result = calculateOffsetDateTimeExcludingRestPeriod(
                 start, offsetMinutes = 60, restPeriod = rest, direction = "forward"
             )
 
-            val expected = calAt(2024, Calendar.MARCH, 10, 7, 0, "America/New_York")
+            val expected = calAt(Calendar.MARCH, 10, 7)
             assertEquals(
                 "spring-forward day must end 60 wall-clock min after rest ends, " +
                         "even though the 2:00–2:59 hour was skipped",
@@ -346,14 +505,14 @@ class UtilityFunctionsTest {
             // the rest period, so the loop must skip both — net real time
             // until rest ends = 7 wall-clock hours = 6 + the repeated hour.
             // Ending wall clock should be 6:00 EST + 60 min = 7:00 EST.
-            val start = calAt(2024, Calendar.NOVEMBER, 3, 0, 0, "America/New_York")
+            val start = calAt(Calendar.NOVEMBER, 3, 0)
             val rest = RestPeriod(22, 0, 6, 0)
 
             val result = calculateOffsetDateTimeExcludingRestPeriod(
                 start, offsetMinutes = 60, restPeriod = rest, direction = "forward"
             )
 
-            val expected = calAt(2024, Calendar.NOVEMBER, 3, 7, 0, "America/New_York")
+            val expected = calAt(Calendar.NOVEMBER, 3, 7)
             assertEquals(
                 "fall-back day must end at 7:00 EST despite the 1:00 hour " +
                         "repeating during rest",
@@ -366,14 +525,14 @@ class UtilityFunctionsTest {
             // Same shape as the spring-forward test, but on a non-DST day.
             // This is the "control" — confirms the DST tests above are
             // checking against the same algebra they should match.
-            val start = calAt(2024, Calendar.JULY, 14, 0, 0, "America/New_York")
+            val start = calAt(Calendar.JULY, 14, 0)
             val rest = RestPeriod(22, 0, 6, 0)
 
             val result = calculateOffsetDateTimeExcludingRestPeriod(
                 start, offsetMinutes = 60, restPeriod = rest, direction = "forward"
             )
 
-            val expected = calAt(2024, Calendar.JULY, 14, 7, 0, "America/New_York")
+            val expected = calAt(Calendar.JULY, 14, 7)
             assertEquals(expected.timeInMillis, result.timeInMillis)
         }
 
@@ -382,7 +541,7 @@ class UtilityFunctionsTest {
             // Symmetrical: walking BACKWARD across spring-forward.
             // Start at noon, walk back 60 minutes outside rest, plus skip
             // the rest period 22:00–06:00 of the prior day.
-            val start = calAt(2024, Calendar.MARCH, 10, 12, 0, "America/New_York")
+            val start = calAt(Calendar.MARCH, 10, 12)
             val rest = RestPeriod(22, 0, 6, 0)
 
             val dstResult = calculateOffsetDateTimeExcludingRestPeriod(
@@ -390,7 +549,7 @@ class UtilityFunctionsTest {
             )
 
             // Compare against the same shape on a non-DST day:
-            val nonDstStart = calAt(2024, Calendar.JULY, 14, 12, 0, "America/New_York")
+            val nonDstStart = calAt(Calendar.JULY, 14, 12)
             val nonDstResult = calculateOffsetDateTimeExcludingRestPeriod(
                 nonDstStart, offsetMinutes = 60, restPeriod = rest, direction = "backward"
             )

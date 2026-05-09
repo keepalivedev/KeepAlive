@@ -129,9 +129,9 @@ class PhoneAlertCallTest {
      * startActivity — the same surface a kiosk-mode device or stripped-down
      * emulator (no telephony / no dialer app) presents.
      */
-    private class NoDialerContext(base: android.content.Context)
+    private class NoDialerContext(base: Context)
         : android.content.ContextWrapper(base) {
-        override fun startActivity(intent: android.content.Intent) {
+        override fun startActivity(intent: Intent) {
             throw android.content.ActivityNotFoundException(
                 "Test injection: no activity for ${intent.action}"
             )
@@ -162,7 +162,7 @@ class PhoneAlertCallTest {
         // that by moving the notification before startActivity, OR by
         // posting a separate failure notification in the catch, this test
         // will fail and the change-author can update it deliberately.
-        org.robolectric.Shadows.shadowOf(appCtx as android.app.Application)
+        org.robolectric.Shadows.shadowOf(appCtx as Application)
             .grantPermissions(Manifest.permission.CALL_PHONE)
         getEncryptedSharedPreferences(appCtx).edit()
             .putString("contact_phone", "+15551234567")
