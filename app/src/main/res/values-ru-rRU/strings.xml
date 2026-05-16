@@ -282,6 +282,7 @@
     <string name="debug_log_alert_service_start">Запуск службы оповещения</string>
     <string name="debug_log_alert_service_stop">Остановка службы оповещения</string>
     <string name="debug_log_alert_service_error">Произошла ошибка в службе оповещения: %1$s</string>
+    <string name="debug_log_failed_to_start_alert_service">Не удалось запустить AlertService: %1$s</string>
     <string name="debug_log_auto_restart_monitoring">Автоматический перезапуск мониторинга включен, перезапуск будильника…</string>
     <string name="debug_log_sending_warning_sms">Отправка предупреждающего SMS на %1$s</string>
 
@@ -351,6 +352,8 @@
     <!-- AlertService.kt -->
     <string name="debug_log_wake_lock_acquired">Получение блокировки пробуждения</string>
     <string name="debug_log_wake_lock_released">Освобождение блокировки пробуждения</string>
+    <string name="debug_log_alert_intent_skipping">Намерение оповещения пропущено: trigger=%1$d (savedTrigger=%2$d, savedSteps=%3$d)</string>
+    <string name="debug_log_alert_intent_resuming">Возобновление оповещения: trigger=%1$d (completedSteps=%2$d)</string>
 
     <!-- SMSSentReceiver.kt -->
     <string name="debug_log_sms_sent">SMS отправлено!</string>
@@ -399,4 +402,5 @@
     <string name="debug_log_direct_boot_final_alarm_due">Direct Boot: Финальный будильник наступил — отправляем оповещение</string>
     <string name="debug_log_direct_boot_cleared_pending_flag">Direct Boot: Флаг direct_boot_notification_pending сброшен</string>
     <string name="debug_log_direct_boot_set_pending_flag">Direct Boot: Установлен direct_boot_notification_pending=true</string>
+    <string name="debug_log_direct_boot_activity_newer_skipping">Direct Boot: активность в %1$s новее, чем \'Вы всё ещё здесь?\', отправленное в %2$s; окончательное оповещение пропущено</string>
 </resources>

@@ -56,7 +56,7 @@ interface AlertCheckDeps {
 
     // --- Actions ---
 
-    /** Schedule the next [receivers.AlarmReceiver] firing via AlarmManager. */
+    /** Schedule the next [io.keepalive.android.receivers.AlarmReceiver] firing via AlarmManager. */
     fun scheduleAlarm(baseTimestamp: Long, periodMinutes: Int, stage: String, restPeriods: MutableList<RestPeriod>?)
 
     /** Post the "Are you there?" user notification. */
@@ -86,7 +86,7 @@ class ProductionAlertCheckDeps(private val context: Context) : AlertCheckDeps {
 
     override fun now(): Long = System.currentTimeMillis()
 
-    override fun isUserUnlocked(): Boolean = io.keepalive.android.isUserUnlocked(context)
+    override fun isUserUnlocked(): Boolean = isUserUnlocked(context)
 
     override fun getString(resId: Int, vararg args: Any): String = context.getString(resId, *args)
 
@@ -96,7 +96,7 @@ class ProductionAlertCheckDeps(private val context: Context) : AlertCheckDeps {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) getDeviceProtectedPreferences(context) else null
 
     override fun getLastDeviceActivity(startTimestamp: Long, monitoredApps: List<String>): UsageEvents.Event? =
-        io.keepalive.android.getLastDeviceActivity(context, startTimestamp, monitoredApps)
+        getLastDeviceActivity(context, startTimestamp, monitoredApps)
 
     override fun scheduleAlarm(baseTimestamp: Long, periodMinutes: Int, stage: String, restPeriods: MutableList<RestPeriod>?) {
         setAlarm(context, baseTimestamp, periodMinutes, stage, restPeriods)
@@ -158,7 +158,7 @@ class ProductionAlertCheckDeps(private val context: Context) : AlertCheckDeps {
                 }
             } catch (t: Throwable) {
                 DebugLogger.d("doAlertCheck",
-                    "Failed to start AlertService: ${t.localizedMessage}",
+                    context.getString(R.string.debug_log_failed_to_start_alert_service, t.localizedMessage),
                     t as? Exception)
             }
         }

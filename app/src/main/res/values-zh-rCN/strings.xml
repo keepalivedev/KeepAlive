@@ -285,6 +285,7 @@
     <string name="debug_log_alert_service_start">Starting Alert Service</string>
     <string name="debug_log_alert_service_stop">Stopping Alert Service</string>
     <string name="debug_log_alert_service_error">Error occurred in the Alert Service: %1$s</string>
+    <string name="debug_log_failed_to_start_alert_service">AlertService 启动失败：%1$s</string>
     <string name="debug_log_auto_restart_monitoring">Auto-Restart Monitoring is enabled, restarting alarm…</string>
     <string name="debug_log_sending_warning_sms">Sending warning SMS to %1$s</string>
 
@@ -354,6 +355,8 @@
     <!-- AlertService.kt -->
     <string name="debug_log_wake_lock_acquired">Acquiring wake lock</string>
     <string name="debug_log_wake_lock_released">Releasing wake lock</string>
+    <string name="debug_log_alert_intent_skipping">跳过警报意图：trigger=%1$d (savedTrigger=%2$d, savedSteps=%3$d)</string>
+    <string name="debug_log_alert_intent_resuming">恢复警报：trigger=%1$d (completedSteps=%2$d)</string>
 
     <!-- SMSSentReceiver.kt -->
     <string name="debug_log_sms_sent">SMS sent!</string>
@@ -402,5 +405,6 @@
     <string name="debug_log_direct_boot_final_alarm_due">Direct Boot: 最终闹钟已到期 — 正在发送提醒</string>
     <string name="debug_log_direct_boot_cleared_pending_flag">Direct Boot: 已清除 direct_boot_notification_pending</string>
     <string name="debug_log_direct_boot_set_pending_flag">Direct Boot: 已设置 direct_boot_notification_pending=true</string>
+    <string name="debug_log_direct_boot_activity_newer_skipping">Direct Boot：%1$s 的活动比 %2$s 发布的\'你还在吗？\'更新；跳过最终警报</string>
 
 </resources>

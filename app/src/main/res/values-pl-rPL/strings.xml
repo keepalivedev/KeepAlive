@@ -282,6 +282,7 @@
     <string name="debug_log_alert_service_start">Uruchamianie usługi alertów</string>
     <string name="debug_log_alert_service_stop">Zatrzymywanie usługi alertów</string>
     <string name="debug_log_alert_service_error">Wystąpił błąd w usłudze alertów: %1$s</string>
+    <string name="debug_log_failed_to_start_alert_service">Nie udało się uruchomić AlertService: %1$s</string>
     <string name="debug_log_auto_restart_monitoring">Automatyczne ponowne uruchamianie monitorowania jest włączone, ponowne uruchamianie alarmu…</string>
     <string name="debug_log_sending_warning_sms">Wysyłanie ostrzegawczego SMS-a do %1$s</string>
 
@@ -351,6 +352,8 @@
     <!-- AlertService.kt -->
     <string name="debug_log_wake_lock_acquired">Uzyskiwanie blokady wybudzenia</string>
     <string name="debug_log_wake_lock_released">Zwalnianie blokady wybudzenia</string>
+    <string name="debug_log_alert_intent_skipping">Pomijanie intencji alertu: trigger=%1$d (savedTrigger=%2$d, savedSteps=%3$d)</string>
+    <string name="debug_log_alert_intent_resuming">Wznawianie alertu: trigger=%1$d (completedSteps=%2$d)</string>
 
     <!-- SMSSentReceiver.kt -->
     <string name="debug_log_sms_sent">SMS wysłany!</string>
@@ -399,4 +402,5 @@
     <string name="debug_log_direct_boot_final_alarm_due">Direct Boot: Alarm końcowy jest wymagalny — wysyłanie alertu</string>
     <string name="debug_log_direct_boot_cleared_pending_flag">Direct Boot: Wyczyszczono direct_boot_notification_pending</string>
     <string name="debug_log_direct_boot_set_pending_flag">Direct Boot: Ustawiono direct_boot_notification_pending=true</string>
+    <string name="debug_log_direct_boot_activity_newer_skipping">Direct Boot: aktywność o %1$s jest nowsza niż \'Czy nadal tam jesteś?\' wysłane o %2$s; pomijanie ostatecznego alertu</string>
 </resources>

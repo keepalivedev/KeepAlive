@@ -294,6 +294,7 @@
     <string name="debug_log_alert_service_start">Starting Alert Service</string>
     <string name="debug_log_alert_service_stop">Stopping Alert Service</string>
     <string name="debug_log_alert_service_error">Error occurred in the Alert Service: %1$s</string>
+    <string name="debug_log_failed_to_start_alert_service">Failed to start AlertService: %1$s</string>
     <string name="debug_log_auto_restart_monitoring">Auto-Restart Monitoring is enabled, restarting alarm…</string>
     <string name="debug_log_sending_warning_sms">Sending warning SMS to %1$s</string>
 
@@ -363,6 +364,8 @@
     <!-- AlertService.kt -->
     <string name="debug_log_wake_lock_acquired">Acquiring wake lock</string>
     <string name="debug_log_wake_lock_released">Releasing wake lock</string>
+    <string name="debug_log_alert_intent_skipping">Skipping alert intent trigger=%1$d (savedTrigger=%2$d, savedSteps=%3$d)</string>
+    <string name="debug_log_alert_intent_resuming">Resuming alert trigger=%1$d (completedSteps=%2$d)</string>
 
     <!-- SMSSentReceiver.kt -->
     <string name="debug_log_sms_sent">SMS sent!</string>
@@ -390,6 +393,7 @@
     <string name="debug_log_direct_boot_final_alarm_due">Direct Boot: Final alarm is due — sending alert</string>
     <string name="debug_log_direct_boot_cleared_pending_flag">Direct Boot: Cleared direct_boot_notification_pending</string>
     <string name="debug_log_direct_boot_set_pending_flag">Direct Boot: Set direct_boot_notification_pending=true</string>
+    <string name="debug_log_direct_boot_activity_newer_skipping">Direct Boot: activity at %1$s is newer than \'Are you there?\' posted at %2$s; skipping final alert</string>
 
     <!-- Are You There overlay strings -->
     <string name="are_you_there_title">Are you still there?</string>

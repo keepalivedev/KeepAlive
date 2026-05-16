@@ -282,6 +282,7 @@
     <string name="debug_log_alert_service_start">Alarmdienst wird gestartet</string>
     <string name="debug_log_alert_service_stop">Alarmdienst wird gestoppt</string>
     <string name="debug_log_alert_service_error">Fehler im Alarmdienst aufgetreten: %1$s</string>
+    <string name="debug_log_failed_to_start_alert_service">AlertService konnte nicht gestartet werden: %1$s</string>
     <string name="debug_log_auto_restart_monitoring">Automatischer Neustart der Überwachung ist aktiviert, Alarm wird neu gestartet…</string>
     <string name="debug_log_sending_warning_sms">Sende Warn-SMS an %1$s</string>
 
@@ -351,6 +352,8 @@
     <!-- AlertService.kt -->
     <string name="debug_log_wake_lock_acquired">Wake-Lock wird erworben</string>
     <string name="debug_log_wake_lock_released">Wake-Lock wird freigegeben</string>
+    <string name="debug_log_alert_intent_skipping">Alert-Intent wird übersprungen: trigger=%1$d (savedTrigger=%2$d, savedSteps=%3$d)</string>
+    <string name="debug_log_alert_intent_resuming">Alarm wird fortgesetzt: trigger=%1$d (completedSteps=%2$d)</string>
 
     <!-- SMSSentReceiver.kt -->
     <string name="debug_log_sms_sent">SMS gesendet!</string>
@@ -399,4 +402,5 @@
     <string name="debug_log_direct_boot_final_alarm_due">Direct Boot: Letzter Alarm ist fällig — Alarm wird gesendet</string>
     <string name="debug_log_direct_boot_cleared_pending_flag">Direct Boot: direct_boot_notification_pending gelöscht</string>
     <string name="debug_log_direct_boot_set_pending_flag">Direct Boot: direct_boot_notification_pending=true gesetzt</string>
+    <string name="debug_log_direct_boot_activity_newer_skipping">Direct Boot: Aktivität um %1$s ist neuer als \'Bist du noch da?\' gesendet um %2$s; endgültiger Alarm wird übersprungen</string>
 </resources>

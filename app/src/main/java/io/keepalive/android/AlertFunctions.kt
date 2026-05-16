@@ -129,9 +129,9 @@ internal fun doAlertCheck(deps: AlertCheckDeps, alarmStage: String) {
             val savedActivityTimestamp = devicePrefs.getLong("last_activity_timestamp", -1L)
             if (savedActivityTimestamp > 0 && savedActivityTimestamp >= areYouTherePostedAt) {
                 DebugLogger.d("doAlertCheck",
-                    "Direct Boot: activity at ${getDateTimeStrFromTimestamp(savedActivityTimestamp)} " +
-                    "is newer than 'Are you there?' posted at ${getDateTimeStrFromTimestamp(areYouTherePostedAt)}; " +
-                    "skipping final alert")
+                    deps.getString(R.string.debug_log_direct_boot_activity_newer_skipping,
+                        getDateTimeStrFromTimestamp(savedActivityTimestamp),
+                        getDateTimeStrFromTimestamp(areYouTherePostedAt)))
                 deps.acknowledgeAreYouThere()
                 return
             }

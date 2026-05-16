@@ -281,7 +281,8 @@
         <string name="debug_log_failed_getting_sms_sub_id">Fallito l\'ottenimento dell\'ID di abbonamento SMS predefinito.</string>  
         <string name="debug_log_alert_service_start">Avvio del servizio di avviso</string>  
         <string name="debug_log_alert_service_stop">Arresto del servizio di avviso</string>  
-        <string name="debug_log_alert_service_error">Si è verificato un errore nel servizio di avviso: %1$s</string>  
+        <string name="debug_log_alert_service_error">Si è verificato un errore nel servizio di avviso: %1$s</string>
+        <string name="debug_log_failed_to_start_alert_service">Impossibile avviare AlertService: %1$s</string>
         <string name="debug_log_auto_restart_monitoring">Il monitoraggio di riavvio automatico è attivato, riavvio dell\'allarme…</string>
         <string name="debug_log_sending_warning_sms">Invio di un SMS di avviso a %1$s</string>  
       
@@ -350,8 +351,10 @@
 
 <!-- AlertService.kt -->  
 <string name="debug_log_wake_lock_acquired">Acquisizione del wakelock</string>  
-<string name="debug_log_wake_lock_released">Rilascio del wakelock</string>  
-  
+<string name="debug_log_wake_lock_released">Rilascio del wakelock</string>
+<string name="debug_log_alert_intent_skipping">Intent di avviso ignorato: trigger=%1$d (savedTrigger=%2$d, savedSteps=%3$d)</string>
+<string name="debug_log_alert_intent_resuming">Ripresa dell\'avviso: trigger=%1$d (completedSteps=%2$d)</string>
+
 <!-- SMSSentReceiver.kt -->  
 <string name="debug_log_sms_sent">SMS inviato!</string>  
 <string name="debug_log_sms_send_error">Errore di invio SMS: %1$s</string>  
@@ -399,4 +402,5 @@
 <string name="debug_log_direct_boot_final_alarm_due">Direct Boot: L\'allarme finale è scaduto — invio dell\'avviso</string>
 <string name="debug_log_direct_boot_cleared_pending_flag">Direct Boot: direct_boot_notification_pending cancellato</string>
 <string name="debug_log_direct_boot_set_pending_flag">Direct Boot: Impostato direct_boot_notification_pending=true</string>
+<string name="debug_log_direct_boot_activity_newer_skipping">Direct Boot: attività alle %1$s è più recente di \'Sei ancora lì?\' inviato alle %2$s; avviso finale ignorato</string>
 </resources>

@@ -282,6 +282,7 @@
     <string name="debug_log_alert_service_start">Démarrage du service d\'alerte</string>
     <string name="debug_log_alert_service_stop">Arrêt du service d\'alerte</string>
     <string name="debug_log_alert_service_error">Une erreur s\'est produite dans le service d\'alerte : %1$s</string>
+    <string name="debug_log_failed_to_start_alert_service">Échec du démarrage d\'AlertService : %1$s</string>
     <string name="debug_log_auto_restart_monitoring">La surveillance de redémarrage automatique est activée, redémarrage de l\'alarme…</string>
     <string name="debug_log_sending_warning_sms">Envoi d\'un SMS d\'avertissement à %1$s</string>
 
@@ -351,6 +352,8 @@
     <!-- AlertService.kt -->
     <string name="debug_log_wake_lock_acquired">Acquisition du verrou d\'éveil</string>
     <string name="debug_log_wake_lock_released">Libération du verrou d\'éveil</string>
+    <string name="debug_log_alert_intent_skipping">Intent d\'alerte ignoré : trigger=%1$d (savedTrigger=%2$d, savedSteps=%3$d)</string>
+    <string name="debug_log_alert_intent_resuming">Reprise de l\'alerte : trigger=%1$d (completedSteps=%2$d)</string>
 
     <!-- SMSSentReceiver.kt -->
     <string name="debug_log_sms_sent">SMS envoyé!</string>
@@ -399,4 +402,5 @@
     <string name="debug_log_direct_boot_final_alarm_due">Direct Boot : L\'alarme finale est arrivée à échéance — envoi de l\'alerte</string>
     <string name="debug_log_direct_boot_cleared_pending_flag">Direct Boot : direct_boot_notification_pending effacé</string>
     <string name="debug_log_direct_boot_set_pending_flag">Direct Boot : direct_boot_notification_pending=true défini</string>
+    <string name="debug_log_direct_boot_activity_newer_skipping">Direct Boot : activité à %1$s plus récente que \'Êtes-vous toujours là ?\' envoyé à %2$s ; alerte finale ignorée</string>
 </resources>

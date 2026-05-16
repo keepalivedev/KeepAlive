@@ -52,7 +52,7 @@ class AlertService : Service() {
 
         prefs = getEncryptedSharedPreferences(this)
 
-        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        val powerManager = getSystemService(POWER_SERVICE) as PowerManager
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, wakeLockTag)
         // Disable reference counting so repeated acquire() calls don't stack
         // (e.g., back-to-back alert intents, or START_REDELIVER_INTENT redelivery).
@@ -127,15 +127,13 @@ class AlertService : Service() {
                 when (decideAlertIntentAction(triggerTimestamp, savedTrigger, savedSteps, ALL_STEPS_COMPLETE)) {
                     AlertIntentAction.Skip -> {
                         DebugLogger.d("AlertService",
-                            "Skipping alert intent trigger=$triggerTimestamp " +
-                            "(savedTrigger=$savedTrigger, savedSteps=$savedSteps)")
+                            getString(R.string.debug_log_alert_intent_skipping, triggerTimestamp, savedTrigger, savedSteps))
                         stopService()
                         return START_REDELIVER_INTENT
                     }
                     AlertIntentAction.Resume -> {
                         DebugLogger.d("AlertService",
-                            "Resuming alert trigger=$triggerTimestamp " +
-                            "(completedSteps=$savedSteps)")
+                            getString(R.string.debug_log_alert_intent_resuming, triggerTimestamp, savedSteps))
                     }
                     AlertIntentAction.NewAlert -> {
                         prefs.edit(commit = true) {
