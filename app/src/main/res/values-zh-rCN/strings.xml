@@ -235,7 +235,7 @@
 
     <!-- MANAGE_OVERLAY_PERMISSION Permission -->
     <string name="permission_manage_overlay_title">需要授予权限: 显示在其他应用的上层</string>
-    <string name="permission_manage_overlay_description">提供了一个联系电话号码时，需要具备在后台拨打电话的能力。\n\n请为 Keep Alive 启用该权限。</string>
+    <string name="permission_manage_overlay_description">需要悬浮窗权限以：\n\n• 在触发\'你还在吗？\'检查时，在其他应用上方显示全屏提示，避免误发警报。\n\n• 在配置了紧急联系电话号码时，在后台拨打电话。\n\n请在设备设置中为 Keep Alive 应用启用此权限。</string>
 
     <!-- ACCESS_FINE_LOCATION Permission -->
     <string name="permission_access_fine_location_title">需要授予权限: 访问精确位置信息</string>
@@ -387,6 +387,7 @@
     <string name="are_you_there_countdown_format">警报将在 %1$d:%2$02d 后发送</string>
     <string name="are_you_there_waiting_for_acknowledgement">等待确认</string>
     <string name="are_you_there_im_ok">我没事</string>
+    <string name="are_you_there_overlay_title">显示全屏\'你还在吗？\'提示</string>
 
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Disabling webhook certificate verification!</string>

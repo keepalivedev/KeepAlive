@@ -21,6 +21,7 @@ class PermissionManager(private val context: Context, private val activity: AppC
 
     private var locationEnabled = false
     private var callPhoneEnabled = false
+    private var overlayPromptEnabled = false
 
     // start with no permissions
     private val basicPermissions = mutableListOf<String>()
@@ -82,6 +83,14 @@ class PermissionManager(private val context: Context, private val activity: AppC
             callPhoneEnabled = true
             basicPermissions.add(Manifest.permission.CALL_PHONE)
         }
+
+        // also need overlay permission if the user has opted in to the full-screen
+        //  are-you-there dialog (independent of the call-phone path).
+        // default false here is deliberate: we only want to require the permission
+        //  when we know the user wants the feature on. AppController.onCreate writes
+        //  the explicit true value on every app start, so by the time PermissionManager
+        //  is constructed in any realistic flow the value will be present.
+        overlayPromptEnabled = sharedPrefs.getBoolean("are_you_there_overlay_enabled", false)
 
         // overlay permissions added in API 23
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -313,32 +322,32 @@ class PermissionManager(private val context: Context, private val activity: AppC
 
     private fun checkOverlayPermissions(requestPermissions: Boolean): Boolean {
 
-        // we only need this if the phone call is enabled
-        if (!callPhoneEnabled) {
+        // we need overlay perm if EITHER the call-phone path or the
+        //  user-opted-in are-you-there overlay path requires it
+        if (!callPhoneEnabled && !overlayPromptEnabled) {
             return true
+        }
+
+        Log.d(tag, "Checking overlay permissions")
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(context)) {
+
+            if (!requestPermissions) {
+                return false
+            }
+
+            explainSettingsPermission(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                permissionExplanations[Settings.ACTION_MANAGE_OVERLAY_PERMISSION]!![0],
+                permissionExplanations[Settings.ACTION_MANAGE_OVERLAY_PERMISSION]!![1]
+            )
+
+            // return false because we haven't actually granted the permission at this point
+            return false
 
         } else {
-            Log.d(tag, "Checking overlay permissions")
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(context)) {
-
-                if (!requestPermissions) {
-                    return false
-                }
-
-                explainSettingsPermission(
-                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    permissionExplanations[Settings.ACTION_MANAGE_OVERLAY_PERMISSION]!![0],
-                    permissionExplanations[Settings.ACTION_MANAGE_OVERLAY_PERMISSION]!![1]
-                )
-
-                // return false because we haven't actually granted the permission at this point
-                return false
-
-            } else {
-                Log.d(tag, "Overlay permissions already granted!")
-                return true
-            }
+            Log.d(tag, "Overlay permissions already granted!")
+            return true
         }
     }
 

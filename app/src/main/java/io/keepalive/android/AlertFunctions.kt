@@ -286,11 +286,15 @@ internal fun doAlertCheck(deps: AlertCheckDeps, alarmStage: String) {
 
         deps.showAreYouThereNotification(followupPeriodMinutes)
 
-        // If we have overlay permission, also show a full-screen warning over other apps.
-        // This makes the prompt effectively impossible to miss (e.g., while watching video).
-        // Note: no need to check isUserUnlocked() here — the Direct Boot path returns
-        // early above, so we are guaranteed the user is unlocked at this point.
-        deps.showAreYouThereOverlay(followupPeriodMinutes)
+        // If we have overlay permission AND the user has opted in to the full-screen
+        // dialog, also show a full-screen warning over other apps. This makes the
+        // prompt effectively impossible to miss (e.g., while watching video).
+        // Default true preserves the always-on behavior for any path that reaches
+        // doAlertCheck before AppController's first-run migration has written the
+        // explicit value.
+        if (prefs.getBoolean("are_you_there_overlay_enabled", true)) {
+            deps.showAreYouThereOverlay(followupPeriodMinutes)
+        }
 
         // if no events are found then set the alarm so we follow up; do not adjust the followup
         //  time based on the rest periods

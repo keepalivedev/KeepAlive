@@ -232,7 +232,7 @@
       
         <!-- MANAGE_OVERLAY_PERMISSION Permission -->  
         <string name="permission_manage_overlay_title">Autorizzazione richiesta: Gestire la sovrapposizione</string>  
-        <string name="permission_manage_overlay_description">È stato fornito un numero di telefono di chiamata di emergenza, il che richiede la possibilità di effettuare una telefonata in background.\n\nSi prega di attivare l\'autorizzazione Gestisci la sovrapposizione per l\'applicazione Keep Alive nelle impostazioni del tuo dispositivo.</string>  
+        <string name="permission_manage_overlay_description">L\'autorizzazione Gestisci la sovrapposizione è necessaria per:\n\n• Mostrare una richiesta a tutto schermo sopra le altre app quando viene attivato il controllo \'Sei lì?\', per evitare l\'invio di un falso allarme.\n\n• Effettuare una telefonata in background quando è configurato un Numero di Telefono di Chiamata di Emergenza.\n\nSi prega di attivare questa autorizzazione per l\'applicazione Keep Alive nelle impostazioni del tuo dispositivo.</string>
       
         <!-- ACCESS_FINE_LOCATION Permission -->  
         <string name="permission_access_fine_location_title">Autorizzazione richiesta: Accedere alla posizione precisa</string>  
@@ -384,6 +384,7 @@
 <string name="are_you_there_countdown_format">L\'avviso verrà inviato tra %1$d:%2$02d</string>
 <string name="are_you_there_waiting_for_acknowledgement">In attesa di conferma</string>
 <string name="are_you_there_im_ok">Sto bene</string>
+<string name="are_you_there_overlay_title">Mostra richiesta a tutto schermo \'Sei lì?\'</string>
 
 <!-- WebhookSender.kt -->
 <string name="debug_log_disable_certificate_verification">Disabilitazione della verifica del certificato webhook!</string>  

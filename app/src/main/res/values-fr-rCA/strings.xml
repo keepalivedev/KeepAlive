@@ -232,7 +232,7 @@
 
     <!-- MANAGE_OVERLAY_PERMISSION Permission -->
     <string name="permission_manage_overlay_title">Autorisation requise: Gérer la superposition</string>
-    <string name="permission_manage_overlay_description">Un numéro de téléphone d\'appel d\'urgence a été fourni, ce qui nécessite la possibilité de passer un appel téléphonique en arrière-plan.\n\nVeuillez activer l\'autorisation Gérer la superposition pour l\'application Keep Alive dans les paramètres de votre appareil.</string>
+    <string name="permission_manage_overlay_description">L\'autorisation Gérer la superposition est requise pour :\n\n• Afficher une invite plein écran par-dessus les autres applications lorsque la vérification \'Êtes-vous là?\' est déclenchée, afin d\'éviter l\'envoi d\'une fausse alerte.\n\n• Passer un appel téléphonique en arrière-plan lorsqu\'un Numéro de Téléphone d\'Appel d\'Urgence est configuré.\n\nVeuillez activer cette autorisation pour l\'application Keep Alive dans les paramètres de votre appareil.</string>
 
     <!-- ACCESS_FINE_LOCATION Permission -->
     <string name="permission_access_fine_location_title">Autorisation requise: Accéder à l\'emplacement précis</string>
@@ -384,6 +384,7 @@
     <string name="are_you_there_countdown_format">L\'alerte sera envoyée dans %1$d:%2$02d</string>
     <string name="are_you_there_waiting_for_acknowledgement">En attente de confirmation</string>
     <string name="are_you_there_im_ok">Je vais bien</string>
+    <string name="are_you_there_overlay_title">Afficher l\'invite plein écran \'Êtes-vous là?\'</string>
 
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Désactivation de la vérification du certificat du webhook !</string>

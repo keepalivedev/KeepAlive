@@ -232,7 +232,7 @@
 
     <!-- MANAGE_OVERLAY_PERMISSION Permission -->
     <string name="permission_manage_overlay_title">Erlaubnis erforderlich: Am Anfang anzeigen (Manage Overlay)</string>
-    <string name="permission_manage_overlay_description">Eine Notrufnummer wurde angegeben, was die Möglichkeit erfordert, einen Anruf aus dem Hintergrund zu tätigen.\n\nBitte aktivieren Sie die Berechtigung "Über anderen Apps einblenden" für die Keep Alive App in Ihren Geräteeinstellungen</string>
+    <string name="permission_manage_overlay_description">Die Berechtigung "Über anderen Apps einblenden" wird benötigt um:\n\n• Bei der \'Sind Sie da?\'-Prüfung eine Vollbildabfrage über anderen Apps anzuzeigen, um einen Fehlalarm zu vermeiden.\n\n• Einen Anruf aus dem Hintergrund zu tätigen, wenn eine Notrufnummer konfiguriert ist.\n\nBitte aktivieren Sie diese Berechtigung für die Keep Alive App in Ihren Geräteeinstellungen.</string>
 
     <!-- ACCESS_FINE_LOCATION Permission -->
     <string name="permission_access_fine_location_title">Erlaubnis erforderlich: Genauer Standort</string>
@@ -384,6 +384,7 @@
     <string name="are_you_there_countdown_format">Alarm wird gesendet in %1$d:%2$02d</string>
     <string name="are_you_there_waiting_for_acknowledgement">Warte auf Bestätigung</string>
     <string name="are_you_there_im_ok">Mir geht\'s gut</string>
+    <string name="are_you_there_overlay_title">Vollbild-\'Sind Sie da?\'-Abfrage anzeigen</string>
 
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Webhook-Zertifikatsüberprüfung deaktivieren!</string>

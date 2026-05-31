@@ -136,6 +136,15 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
+        // listener for the full-screen 'are you there?' overlay switch
+        val areYouThereOverlaySwitch: SwitchCompat = findViewById(R.id.areYouThereOverlaySwitch)
+        areYouThereOverlaySwitch.setOnCheckedChangeListener { _, isChecked ->
+            with(sharedPrefs!!.edit()) {
+                putBoolean("are_you_there_overlay_enabled", isChecked)
+                apply()
+            }
+        }
+
         // set up listeners for each setting row so that the user can click
         //  anywhere on the row itself to bring up the edit dialog
 
@@ -240,6 +249,9 @@ class SettingsActivity : AppCompatActivity() {
 
         val restartMonitoringSwitch: SwitchCompat = findViewById(R.id.restartMonitoringSwitch)
         restartMonitoringSwitch.isChecked = sharedPrefs!!.getBoolean("auto_restart_monitoring", false)
+
+        val areYouThereOverlaySwitch: SwitchCompat = findViewById(R.id.areYouThereOverlaySwitch)
+        areYouThereOverlaySwitch.isChecked = sharedPrefs!!.getBoolean("are_you_there_overlay_enabled", true)
 
         val timePeriodValueTextView: TextView = findViewById(R.id.edit_time_period_hours)
         timePeriodValueTextView.text = sharedPrefs!!.getString("time_period_hours", "12")

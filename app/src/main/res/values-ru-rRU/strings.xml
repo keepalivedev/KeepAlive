@@ -232,7 +232,7 @@
 
     <!-- MANAGE_OVERLAY_PERMISSION Permission -->
     <string name="permission_manage_overlay_title">Требуется разрешение: Поверх других приложений</string>
-    <string name="permission_manage_overlay_description">Был предоставлен номер телефона для экстренного вызова, для которого требуется возможность совершить телефонный звонок в фоновом режиме.\n\nВключите разрешение Управление наложением для приложения Keep Alive в настройках вашего устройства.</string>
+    <string name="permission_manage_overlay_description">Разрешение "Поверх других приложений" необходимо для:\n\n• Отображения полноэкранного запроса поверх других приложений при срабатывании проверки \'Вы здесь?\', чтобы предотвратить отправку ложной тревоги.\n\n• Совершения телефонного звонка в фоновом режиме при настроенном номере экстренного вызова.\n\nПожалуйста, включите это разрешение для приложения Keep Alive в настройках устройства.</string>
 
     <!-- ACCESS_FINE_LOCATION Permission -->
     <string name="permission_access_fine_location_title">Требуется разрешение: доступ к точному местоположению</string>
@@ -384,6 +384,7 @@
     <string name="are_you_there_countdown_format">Оповещение будет отправлено через %1$d:%2$02d</string>
     <string name="are_you_there_waiting_for_acknowledgement">Ожидание подтверждения</string>
     <string name="are_you_there_im_ok">Я в порядке</string>
+    <string name="are_you_there_overlay_title">Показывать полноэкранный запрос \'Вы здесь?\'</string>
 
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Отключение проверки сертификата вебхука!</string>

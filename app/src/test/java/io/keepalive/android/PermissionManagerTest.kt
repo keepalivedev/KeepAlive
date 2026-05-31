@@ -245,6 +245,40 @@ class PermissionManagerTest {
         )
     }
 
+    @Test
+    @Config(sdk = [33, 34, 35, 36])
+    fun `overlay permission required when overlay prompt enabled without call target`() {
+        // No call target, but the user enabled the overlay prompt — overlay perm needed.
+        getEncryptedSharedPreferences(appCtx).edit()
+            .putBoolean("are_you_there_overlay_enabled", true).commit()
+        grantUsageStats()
+        grantPostNotificationsIfApplicable()
+
+        // Robolectric defaults Settings.canDrawOverlays to false, so the overlay
+        // gate is the only outstanding permission.
+        val pm = PermissionManager(appCtx, null)
+        assertTrue(
+            "overlay pref enabled → overlay perm should be required",
+            pm.checkNeedAnyPermissions()
+        )
+    }
+
+    @Test
+    @Config(sdk = [33, 34, 35, 36])
+    fun `overlay permission not required when both call target and overlay pref are off`() {
+        // Explicitly opted out of the overlay; no call target → overlay gate bypassed.
+        getEncryptedSharedPreferences(appCtx).edit()
+            .putBoolean("are_you_there_overlay_enabled", false).commit()
+        grantUsageStats()
+        grantPostNotificationsIfApplicable()
+
+        val pm = PermissionManager(appCtx, null)
+        assertFalse(
+            "neither call nor overlay → overlay perm not required",
+            pm.checkNeedAnyPermissions()
+        )
+    }
+
     // ---- background location only after fine-location granted -------------
 
     @Test

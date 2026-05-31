@@ -112,6 +112,16 @@
             android:text="" />
     </LinearLayout>
 
+    <!-- Switch for full-screen are-you-there overlay -->
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/areYouThereOverlaySwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="8dp"
+        android:text="@string/are_you_there_overlay_title"
+        android:textSize="@dimen/default_text_size" />
+
     <LinearLayout
         android:id="@+id/restPeriodRow"
         android:layout_width="match_parent"
