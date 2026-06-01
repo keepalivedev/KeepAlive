@@ -389,22 +389,13 @@ class PermissionManager(private val context: Context, private val activity: AppC
         Log.d(tag, "checking usage stats permissions")
         val opsMan = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
 
-        // the function used to check whether we have permissions was changed in API 29
-        val opsPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            opsMan.unsafeCheckOpNoThrow(
-                AppOpsManager.OPSTR_GET_USAGE_STATS,
-                context.applicationInfo.uid,
-                context.applicationInfo.packageName
-            )
-        } else {
-            // suppress deprecation because we are only using this for API 28 and below
-            @Suppress("DEPRECATION")
-            opsMan.checkOpNoThrow(
-                AppOpsManager.OPSTR_GET_USAGE_STATS,
-                context.applicationInfo.uid,
-                context.applicationInfo.packageName
-            )
-        }
+        // checkOpNoThrow works across all supported API levels; unsafeCheckOpNoThrow was
+        // deprecated in API 36 in favor of checkOpNoThrow (which is no longer deprecated)
+        val opsPermission = opsMan.checkOpNoThrow(
+            AppOpsManager.OPSTR_GET_USAGE_STATS,
+            context.applicationInfo.uid,
+            context.applicationInfo.packageName
+        )
 
         if (opsPermission != AppOpsManager.MODE_ALLOWED) {
             Log.d(tag, "Do not have Usage stats permissions!")
