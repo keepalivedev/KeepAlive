@@ -16,7 +16,7 @@ import org.robolectric.annotation.Config
 
 /**
  * Direct Boot storage-switching behavior. This is the subtle bit where
- * [getEncryptedSharedPreferences] falls back to device-protected storage
+ * [getAppSharedPreferences] falls back to device-protected storage
  * when the user hasn't unlocked yet — and those are two SEPARATE backing
  * stores, not the same prefs file.
  *
@@ -38,7 +38,7 @@ class DirectBootPrefsTest {
     @Before fun setUp() {
         shadowUser.setUserUnlocked(true)
         // Start clean; these tests write to both stores independently.
-        getEncryptedSharedPreferences(appCtx).edit().clear().commit()
+        getAppSharedPreferences(appCtx).edit().clear().commit()
         getDeviceProtectedPreferences(appCtx).edit().clear().commit()
     }
 
@@ -54,12 +54,12 @@ class DirectBootPrefsTest {
         assertEquals(false, isUserUnlocked(appCtx))
     }
 
-    // ---- getEncryptedSharedPreferences fallback -----------------------------
+    // ---- getAppSharedPreferences fallback -----------------------------
 
     @Test fun `when unlocked, returns credential-encrypted prefs (a different instance from device-protected)`() {
         shadowUser.setUserUnlocked(true)
 
-        val enc = getEncryptedSharedPreferences(appCtx)
+        val enc = getAppSharedPreferences(appCtx)
         val dev = getDeviceProtectedPreferences(appCtx)
 
         assertNotNull(enc)
@@ -68,10 +68,10 @@ class DirectBootPrefsTest {
             enc, dev)
     }
 
-    @Test fun `when locked, getEncryptedSharedPreferences falls back to device-protected`() {
+    @Test fun `when locked, getAppSharedPreferences falls back to device-protected`() {
         shadowUser.setUserUnlocked(false)
 
-        val falllback = getEncryptedSharedPreferences(appCtx)
+        val falllback = getAppSharedPreferences(appCtx)
         val dev = getDeviceProtectedPreferences(appCtx)
 
         // Robolectric caches SharedPreferences by name, so two calls to the
@@ -84,9 +84,9 @@ class DirectBootPrefsTest {
 
     @Test fun `value written when unlocked is visible via the unlocked-path read`() {
         shadowUser.setUserUnlocked(true)
-        getEncryptedSharedPreferences(appCtx).edit().putString("k", "v").commit()
+        getAppSharedPreferences(appCtx).edit().putString("k", "v").commit()
 
-        val roundtrip = getEncryptedSharedPreferences(appCtx).getString("k", null)
+        val roundtrip = getAppSharedPreferences(appCtx).getString("k", null)
 
         assertEquals("v", roundtrip)
     }
@@ -99,11 +99,11 @@ class DirectBootPrefsTest {
         // the other direction for credential-encrypted state to be seen
         // during subsequent Direct Boot.
         shadowUser.setUserUnlocked(false)
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putString("directBootWrite", "yes").commit()
 
         shadowUser.setUserUnlocked(true)
-        val cred = getEncryptedSharedPreferences(appCtx).getString("directBootWrite", null)
+        val cred = getAppSharedPreferences(appCtx).getString("directBootWrite", null)
         val dev = getDeviceProtectedPreferences(appCtx).getString("directBootWrite", null)
 
         assertEquals("device-protected still has it", "yes", dev)

@@ -106,14 +106,14 @@ class AppsSelectionDialogFragment(val callback: () -> Unit) : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.dialog_apps_selection, null)
-        val prefs = getEncryptedSharedPreferences(requireContext())
+        val prefs = getAppSharedPreferences(requireContext())
 
         // get the list views on the dialog layout
         availableAppsListView = view.findViewById(R.id.availableAppsListView)
         chosenAppsListView = view.findViewById(R.id.chosenAppsListView)
 
         // update the chosen app list with what the user has configured
-        val appsToMonitor: MutableList<MonitoredAppDetails> = loadJSONSharedPreference(prefs,"APPS_TO_MONITOR")
+        val appsToMonitor: MutableList<MonitoredAppDetails> = loadJSONSharedPreference(prefs,PrefKeys.APPS_TO_MONITOR)
         chosenApps.addAll(appsToMonitor.sortedBy { it.appName })
 
         // update the available app list
@@ -181,7 +181,7 @@ class AppsSelectionDialogFragment(val callback: () -> Unit) : DialogFragment() {
                     //  aren't able to use device lock/unlock events then also disable monitoring
                     if (Build.VERSION.SDK_INT < AppController.MIN_API_LEVEL_FOR_DEVICE_LOCK_UNLOCK) {
                         with(prefs.edit()) {
-                            putBoolean("enabled", false)
+                            putBoolean(PrefKeys.ENABLED, false)
                             apply()
                         }
                         syncPrefsToDeviceProtectedStorage(requireContext())
@@ -201,7 +201,7 @@ class AppsSelectionDialogFragment(val callback: () -> Unit) : DialogFragment() {
                 //  device lock/unlock events then also disable monitoring
                 if (Build.VERSION.SDK_INT < AppController.MIN_API_LEVEL_FOR_DEVICE_LOCK_UNLOCK) {
                     with(prefs.edit()) {
-                        putBoolean("enabled", false)
+                        putBoolean(PrefKeys.ENABLED, false)
                         apply()
                     }
                     syncPrefsToDeviceProtectedStorage(requireContext())
@@ -234,13 +234,13 @@ class AppsSelectionDialogFragment(val callback: () -> Unit) : DialogFragment() {
 
     private fun saveChosenApps(context: Context, appInfos: MutableList<MonitoredAppDetails>) {
 
-        val prefs = getEncryptedSharedPreferences(context)
+        val prefs = getAppSharedPreferences(context)
 
         with(prefs.edit()) {
 
             // convert the list to json and save it to shared prefs
             val jsonString = Gson().toJson(appInfos)
-            putString("APPS_TO_MONITOR", jsonString)
+            putString(PrefKeys.APPS_TO_MONITOR, jsonString)
             apply()
         }
     }

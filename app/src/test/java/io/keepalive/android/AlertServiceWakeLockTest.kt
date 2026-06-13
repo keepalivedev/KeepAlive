@@ -39,7 +39,7 @@ class AlertServiceWakeLockTest {
         }
 
     @Before fun clearPrefs() {
-        getEncryptedSharedPreferences(appCtx).edit().clear().commit()
+        getAppSharedPreferences(appCtx).edit().clear().commit()
     }
 
     @Test fun `onCreate constructs a PARTIAL wake lock`() {
@@ -99,7 +99,7 @@ class AlertServiceWakeLockTest {
 
     @Test fun `stale-trigger intent does not hold a wake lock past the dedup guard`() {
         // Seed a newer trigger as "already saved", then deliver an older one.
-        val prefs = getEncryptedSharedPreferences(appCtx)
+        val prefs = getAppSharedPreferences(appCtx)
         prefs.edit()
             .putLong("AlertTriggerTimestamp", 10_000L)
             .putInt("AlertStepsCompleted", 0)

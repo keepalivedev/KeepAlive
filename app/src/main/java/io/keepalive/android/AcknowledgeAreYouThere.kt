@@ -11,7 +11,7 @@ import androidx.core.content.edit
 object AcknowledgeAreYouThere {
 
     fun acknowledge(context: Context) {
-        val sharedPrefs = getEncryptedSharedPreferences(context)
+        val sharedPrefs = getAppSharedPreferences(context)
 
         // Cancel the on-screen notification.
         AlertNotificationHelper(context).cancelNotification(AppController.ARE_YOU_THERE_NOTIFICATION_ID)
@@ -26,14 +26,14 @@ object AcknowledgeAreYouThere {
         // (UsageStatsManager is not queryable before unlock, so that path has
         // no other signal for user activity).
         // NOTE: must use getDeviceProtectedPreferences directly, not
-        // getEncryptedSharedPreferences, because after unlock the latter returns
+        // getAppSharedPreferences, because after unlock the latter returns
         // credential-encrypted prefs (a different backing store) while the flag
         // was written to device-protected storage during Direct Boot.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             try {
                 getDeviceProtectedPreferences(context).edit(commit = true) {
-                    putBoolean("direct_boot_notification_pending", false)
-                    putLong("last_activity_timestamp", System.currentTimeMillis())
+                    putBoolean(PrefKeys.DIRECT_BOOT_NOTIFICATION_PENDING, false)
+                    putLong(PrefKeys.LAST_ACTIVITY_TIMESTAMP, System.currentTimeMillis())
                 }
             } catch (e: Exception) {
                 Log.e("AcknowledgeAreYouThere", "Error updating Direct Boot state on acknowledge", e)
@@ -41,8 +41,8 @@ object AcknowledgeAreYouThere {
         }
 
         // Re-set periodic monitoring.
-        val checkPeriodHours = sharedPrefs.getString("time_period_hours", "12")?.toFloatOrNull() ?: 12f
-        val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(sharedPrefs, "REST_PERIODS")
+        val checkPeriodHours = sharedPrefs.getString(PrefKeys.TIME_PERIOD_HOURS, "12")?.toFloatOrNull() ?: 12f
+        val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(sharedPrefs, PrefKeys.REST_PERIODS)
 
         setAlarm(
             context,

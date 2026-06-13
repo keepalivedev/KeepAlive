@@ -41,7 +41,7 @@ class MinSdkSmokeInstrumentedTest {
     }
 
     private val ctx: Context = AlertFlowTestUtil.targetContext
-    private val prefs get() = getEncryptedSharedPreferences(ctx)
+    private val prefs get() = getAppSharedPreferences(ctx)
 
     @Before fun setUp() {
         AlertFlowTestUtil.resetToCleanEnabledState()

@@ -45,7 +45,7 @@ object AlertFlowTestUtil {
         includeSmsContact: Boolean = true
     ) {
         val ctx = targetContext
-        val prefs = getEncryptedSharedPreferences(ctx)
+        val prefs = getAppSharedPreferences(ctx)
         val contacts = if (includeSmsContact) {
             mutableListOf(
                 SMSEmergencyContactSetting(
@@ -74,7 +74,7 @@ object AlertFlowTestUtil {
 
         // Clear device-protected state FIRST so that on pre-N — where
         // getDeviceProtectedPreferences() falls back to the same default-prefs
-        // file as getEncryptedSharedPreferences() — we don't wipe out the
+        // file as getAppSharedPreferences() — we don't wipe out the
         // credential-store writes we're about to make.
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             try {
@@ -159,7 +159,7 @@ object AlertFlowTestUtil {
         // at next-alarm-clock. Both have caveats. Use NextAlarmTimestamp the
         // app itself persists — if the app thinks an alarm is scheduled and
         // we haven't cancelled it, it's really scheduled.
-        val saved = getEncryptedSharedPreferences(targetContext)
+        val saved = getAppSharedPreferences(targetContext)
             .getLong("NextAlarmTimestamp", 0L)
         return saved > 0L
     }
@@ -202,13 +202,13 @@ object AlertFlowTestUtil {
 
     /** Read a step-tracker bit to confirm the alert service reached a given stage. */
     fun isAlertStepComplete(stepBit: Int): Boolean {
-        val saved = getEncryptedSharedPreferences(targetContext)
+        val saved = getAppSharedPreferences(targetContext)
             .getInt("AlertStepsCompleted", 0)
         return (saved and stepBit) == stepBit
     }
 
     fun savedAlertTriggerTimestamp(): Long =
-        getEncryptedSharedPreferences(targetContext).getLong("AlertTriggerTimestamp", 0L)
+        getAppSharedPreferences(targetContext).getLong("AlertTriggerTimestamp", 0L)
 
     fun savedAlarmStage(): String? =
         try {

@@ -122,17 +122,22 @@ internal fun runAlertSteps(steps: AlertStepOps, disp: AlertDispatcher): Boolean 
         if (needLocationSms || needWebhook) {
             try {
                 disp.requestLocationAsync { locationResult ->
-                    if (!steps.isComplete(STEP_LOCATION_DONE)) {
-                        disp.sendLocationSms(locationResult.formattedLocationString)
-                        steps.markComplete(STEP_LOCATION_DONE)
+                    try {
+                        if (!steps.isComplete(STEP_LOCATION_DONE)) {
+                            disp.sendLocationSms(locationResult.formattedLocationString)
+                            steps.markComplete(STEP_LOCATION_DONE)
+                        }
+                        if (webhookEnabled && !steps.isComplete(STEP_WEBHOOK_DONE)) {
+                            disp.sendWebhook(locationResult)
+                            steps.markComplete(STEP_WEBHOOK_DONE)
+                        } else if (!webhookEnabled) {
+                            steps.markComplete(STEP_WEBHOOK_DONE)
+                        }
+                    } finally {
+                        // always stop the service, even if a location step throws —
+                        // otherwise it would linger until the service timeout fires
+                        disp.stopService()
                     }
-                    if (webhookEnabled && !steps.isComplete(STEP_WEBHOOK_DONE)) {
-                        disp.sendWebhook(locationResult)
-                        steps.markComplete(STEP_WEBHOOK_DONE)
-                    } else if (!webhookEnabled) {
-                        steps.markComplete(STEP_WEBHOOK_DONE)
-                    }
-                    disp.stopService()
                 }
                 return true  // async work pending — caller MUST NOT stop service
             } catch (e: Exception) {

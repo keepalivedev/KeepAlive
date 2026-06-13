@@ -19,8 +19,9 @@
       <!-- webhook layout strings -->  
       <string name="webhook_url_hint">URL del webhook</string>  
       <string name="webhook_http_method_hint">Metodo HTTP</string>  
-      <string name="webhook_verify_certificate_label">Verifica il certificato</string>  
-      <string name="webhook_timeout_hint">Timeout (secondi)</string>  
+      <string name="webhook_verify_certificate_label">Verifica il certificato</string>
+      <string name="webhook_verify_certificate_warning">Attenzione: con la verifica del certificato disattivata, la connessione non è protetta dalle intercettazioni. Usare solo con un server privato attendibile.</string>
+      <string name="webhook_timeout_hint">Timeout (secondi)</string>
       <string name="webhook_retries_hint">Tentativi</string>  
       <string name="webhook_include_location_hint">Includi la posizione nella richiesta?</string>  
       <string name="webhook_headers_title">Intestazioni</string>  

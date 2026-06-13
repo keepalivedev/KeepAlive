@@ -47,8 +47,8 @@ class LogDisplayActivity : AppCompatActivity() {
         DebugLogger.d("LogDisplayActivity", getString(R.string.debug_log_log_display_activity_started))
 
         // load the text size from shared preferences
-        val sharedPrefs = getEncryptedSharedPreferences(this.applicationContext)
-        textSize = sharedPrefs.getFloat("log_display_text_size", textSize)
+        val sharedPrefs = getAppSharedPreferences(this.applicationContext)
+        textSize = sharedPrefs.getFloat(PrefKeys.LOG_DISPLAY_TEXT_SIZE, textSize)
 
         // initialize with default text size
         updateLogs(logsRecyclerView, textSize)
@@ -120,9 +120,9 @@ class LogDisplayActivity : AppCompatActivity() {
 
     // save the text size to shared preferences
     private fun saveTextSize(textSize: Float) {
-        val sharedPrefs = getEncryptedSharedPreferences(this.applicationContext)
+        val sharedPrefs = getAppSharedPreferences(this.applicationContext)
         with (sharedPrefs.edit()) {
-            putFloat("log_display_text_size", textSize)
+            putFloat(PrefKeys.LOG_DISPLAY_TEXT_SIZE, textSize)
             apply()
         }
     }

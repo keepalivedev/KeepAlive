@@ -20,6 +20,7 @@
     <string name="webhook_url_hint">URL вебхука</string>
     <string name="webhook_http_method_hint">HTTP-метод</string>
     <string name="webhook_verify_certificate_label">Проверить сертификат</string>
+    <string name="webhook_verify_certificate_warning">Предупреждение: при отключённой проверке сертификата соединение не защищено от перехвата. Используйте только с доверенным частным сервером.</string>
     <string name="webhook_timeout_hint">Таймаут (секунды)</string>
     <string name="webhook_retries_hint">Повторные попытки</string>
     <string name="webhook_include_location_hint">Включить местоположение в запрос?</string>

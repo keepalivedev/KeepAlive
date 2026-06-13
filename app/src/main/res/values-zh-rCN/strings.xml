@@ -23,6 +23,7 @@
     <string name="webhook_url_hint">Webhook URL</string>
     <string name="webhook_http_method_hint">HTTP Method</string>
     <string name="webhook_verify_certificate_label">Verify Certificate</string>
+    <string name="webhook_verify_certificate_warning">警告：禁用证书验证后，连接将无法防止被拦截。请仅与可信的私有服务器一起使用。</string>
     <string name="webhook_timeout_hint">Timeout (seconds)</string>
     <string name="webhook_retries_hint">Retries</string>
     <string name="webhook_include_location_hint">Include Location in Request?</string>

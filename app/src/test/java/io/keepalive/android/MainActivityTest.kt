@@ -35,7 +35,7 @@ class MainActivityTest {
         mockkObject(AcknowledgeAreYouThere)
         every { AcknowledgeAreYouThere.acknowledge(any()) } returns Unit
         // Clean prefs
-        getEncryptedSharedPreferences(appCtx).edit().clear().commit()
+        getAppSharedPreferences(appCtx).edit().clear().commit()
         getDeviceProtectedPreferences(appCtx).edit().clear().commit()
     }
 

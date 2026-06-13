@@ -42,7 +42,7 @@ class SetAlarmTest {
         // level) flag — bleed-over from a prior test would silently flip the
         // exact-alarm branch. Reset it here so individual tests own its value.
         org.robolectric.shadows.ShadowAlarmManager.setCanScheduleExactAlarms(true)
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putBoolean("use_exact_alarms", false)
             .commit()
     }
@@ -71,7 +71,7 @@ class SetAlarmTest {
         val now = System.currentTimeMillis()
         setAlarm(appCtx, now, desiredAlarmInMinutes = 30, alarmStage = "periodic")
 
-        val credSaved = getEncryptedSharedPreferences(appCtx).getLong("NextAlarmTimestamp", 0)
+        val credSaved = getAppSharedPreferences(appCtx).getLong("NextAlarmTimestamp", 0)
         assertTrue("credential prefs remembers next alarm time", credSaved > now)
     }
 
@@ -82,7 +82,7 @@ class SetAlarmTest {
         val now = System.currentTimeMillis()
         setAlarm(appCtx, now, desiredAlarmInMinutes = 30, alarmStage = "periodic")
 
-        val credSaved = getEncryptedSharedPreferences(appCtx).getLong("NextAlarmTimestamp", 0)
+        val credSaved = getAppSharedPreferences(appCtx).getLong("NextAlarmTimestamp", 0)
         val devSaved = getDeviceProtectedPreferences(appCtx).getLong("NextAlarmTimestamp", 0)
 
         assertTrue("device-protected prefs mirrors it for Direct Boot", devSaved > now)
@@ -112,7 +112,7 @@ class SetAlarmTest {
         val wayInThePast = System.currentTimeMillis() - 1000 * 60 * 60
         setAlarm(appCtx, wayInThePast, desiredAlarmInMinutes = 1, alarmStage = "periodic")
 
-        val credSaved = getEncryptedSharedPreferences(appCtx).getLong("NextAlarmTimestamp", 0)
+        val credSaved = getAppSharedPreferences(appCtx).getLong("NextAlarmTimestamp", 0)
         assertTrue("alarm must fire in the future, not the past",
             credSaved >= System.currentTimeMillis())
     }
@@ -130,7 +130,7 @@ class SetAlarmTest {
     }
 
     @Test fun `exact-alarm user preference is honored when the system permits`() {
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putBoolean("use_exact_alarms", true)
             .commit()
         val now = System.currentTimeMillis()
@@ -156,7 +156,7 @@ class SetAlarmTest {
         // use_exact_alarms=true we go down the setExactAndAllowWhileIdle branch.
         // If we deny exact alarms, setAlarm falls back to setAndAllowWhileIdle
         // (code path only reachable on API S+).
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putBoolean("use_exact_alarms", true)
             .commit()
         val now = System.currentTimeMillis()
@@ -184,7 +184,7 @@ class SetAlarmTest {
     @Config(sdk = [33, 34, 35, 36])
     fun `periodic alarm is still scheduled when SCHEDULE_EXACT_ALARM is denied`() {
         org.robolectric.shadows.ShadowAlarmManager.setCanScheduleExactAlarms(false)
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putBoolean("use_exact_alarms", true)  // user wanted exact
             .commit()
 

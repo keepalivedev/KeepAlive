@@ -25,7 +25,7 @@ import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 class WebhookConfigManager(private val context: Context, private val activity: AppCompatActivity?) {
 
-    private val sharedPref = getEncryptedSharedPreferences(context)
+    private val sharedPref = getAppSharedPreferences(context)
     private val maxHeaders = 10
     private val maxRetries = 10
     private val maxTimeout = 300
@@ -88,6 +88,14 @@ class WebhookConfigManager(private val context: Context, private val activity: A
         switchVerifyCertificate.isChecked = webhookConfig.verifyCertificate
         spinnerHttpMethod.setText(webhookConfig.method, false)
         spinnerIncludeLocation.setText(webhookConfig.includeLocation, false)
+
+        // warn the user whenever certificate verification is turned off
+        val textViewCertificateWarning = dialogView.findViewById<TextView>(R.id.textViewCertificateWarning)
+        textViewCertificateWarning.visibility =
+            if (webhookConfig.verifyCertificate) View.GONE else View.VISIBLE
+        switchVerifyCertificate.setOnCheckedChangeListener { _, isChecked ->
+            textViewCertificateWarning.visibility = if (isChecked) View.GONE else View.VISIBLE
+        }
 
         // Disable HTTP method selection if saved location is Body - JSON or Body - Form
         if (webhookConfig.includeLocation == context.getString(R.string.webhook_location_body_json) || webhookConfig.includeLocation == context.getString(R.string.webhook_location_body_form)) {
@@ -180,20 +188,20 @@ class WebhookConfigManager(private val context: Context, private val activity: A
 
                 // save the settings
                 with (sharedPref.edit()) {
-                    putBoolean("webhook_enabled", true)
+                    putBoolean(PrefKeys.WEBHOOK_ENABLED, true)
 
                     // location is enabled if it is anything but the 'do not include' option
-                    putBoolean("webhook_location_enabled", spinnerIncludeLocation.text.toString() != context.getString(R.string.webhook_location_do_not_include))
+                    putBoolean(PrefKeys.WEBHOOK_LOCATION_ENABLED, spinnerIncludeLocation.text.toString() != context.getString(R.string.webhook_location_do_not_include))
 
                     // save the raw url instead of from toHttpUrlOrNull so that it will show up
                     //  in a more user friendly way
-                    putString("webhook_url", editTextWebhookUrl.text.toString())
-                    putString("webhook_method", spinnerHttpMethod.text.toString())
-                    putString("webhook_include_location", spinnerIncludeLocation.text.toString())
-                    putInt("webhook_timeout", editTextTimeout.text.toString().toIntOrNull() ?: 10)
-                    putInt("webhook_retries", editTextRetries.text.toString().toIntOrNull() ?: 0)
-                    putBoolean("webhook_verify_certificate", switchVerifyCertificate.isChecked)
-                    putString("webhook_headers", JSONObject(headers).toString())
+                    putString(PrefKeys.WEBHOOK_URL, editTextWebhookUrl.text.toString())
+                    putString(PrefKeys.WEBHOOK_METHOD, spinnerHttpMethod.text.toString())
+                    putString(PrefKeys.WEBHOOK_INCLUDE_LOCATION, spinnerIncludeLocation.text.toString())
+                    putInt(PrefKeys.WEBHOOK_TIMEOUT, editTextTimeout.text.toString().toIntOrNull() ?: 10)
+                    putInt(PrefKeys.WEBHOOK_RETRIES, editTextRetries.text.toString().toIntOrNull() ?: 0)
+                    putBoolean(PrefKeys.WEBHOOK_VERIFY_CERTIFICATE, switchVerifyCertificate.isChecked)
+                    putString(PrefKeys.WEBHOOK_HEADERS, JSONObject(headers).toString())
                     apply()
                 }
                 DebugLogger.d("WebhookConfigManager", context.getString(R.string.debug_log_webhook_config_saved))
@@ -205,14 +213,14 @@ class WebhookConfigManager(private val context: Context, private val activity: A
 
                 // remove all webhook settings
                 with (sharedPref.edit()) {
-                    remove("webhook_enabled")
-                    remove("webhook_url")
-                    remove("webhook_method")
-                    remove("webhook_include_location")
-                    remove("webhook_timeout")
-                    remove("webhook_retries")
-                    remove("webhook_verify_certificate")
-                    remove("webhook_headers")
+                    remove(PrefKeys.WEBHOOK_ENABLED)
+                    remove(PrefKeys.WEBHOOK_URL)
+                    remove(PrefKeys.WEBHOOK_METHOD)
+                    remove(PrefKeys.WEBHOOK_INCLUDE_LOCATION)
+                    remove(PrefKeys.WEBHOOK_TIMEOUT)
+                    remove(PrefKeys.WEBHOOK_RETRIES)
+                    remove(PrefKeys.WEBHOOK_VERIFY_CERTIFICATE)
+                    remove(PrefKeys.WEBHOOK_HEADERS)
                     apply()
                 }
                 DebugLogger.d("WebhookConfigManager", context.getString(R.string.debug_log_webhook_config_deleted))
@@ -376,15 +384,15 @@ class WebhookConfigManager(private val context: Context, private val activity: A
 
     // pull the webhook settings from shared preferences and load them into a WebhookConfig object
     fun getWebhookConfig(): WebhookConfig {
-        val webhookUrl = sharedPref.getString("webhook_url", "") ?: ""
-        val webhookMethod = sharedPref.getString("webhook_method", context.getString(R.string.webhook_get)) ?: context.getString(R.string.webhook_get)
-        val includeLocation = sharedPref.getString("webhook_include_location", context.getString(R.string.webhook_location_do_not_include)) ?: context.getString(R.string.webhook_location_do_not_include)
-        val timeout = sharedPref.getInt("webhook_timeout", 10)
-        val retries = sharedPref.getInt("webhook_retries", 0)
-        val verifyCertificate = sharedPref.getBoolean("webhook_verify_certificate", true)
+        val webhookUrl = sharedPref.getString(PrefKeys.WEBHOOK_URL, "") ?: ""
+        val webhookMethod = sharedPref.getString(PrefKeys.WEBHOOK_METHOD, context.getString(R.string.webhook_get)) ?: context.getString(R.string.webhook_get)
+        val includeLocation = sharedPref.getString(PrefKeys.WEBHOOK_INCLUDE_LOCATION, context.getString(R.string.webhook_location_do_not_include)) ?: context.getString(R.string.webhook_location_do_not_include)
+        val timeout = sharedPref.getInt(PrefKeys.WEBHOOK_TIMEOUT, 10)
+        val retries = sharedPref.getInt(PrefKeys.WEBHOOK_RETRIES, 0)
+        val verifyCertificate = sharedPref.getBoolean(PrefKeys.WEBHOOK_VERIFY_CERTIFICATE, true)
 
         val headers = mutableMapOf<String, String>()
-        val headersStr = sharedPref.getString("webhook_headers", "{}")
+        val headersStr = sharedPref.getString(PrefKeys.WEBHOOK_HEADERS, "{}")
         try {
             val headersJson = JSONObject(headersStr ?: "{}")
             headersJson.keys().forEach { key ->
@@ -588,4 +596,4 @@ interface WebhookCallback {
     fun onSuccess(responseCode: Int)
     fun onFailure(responseCode: Int)
     fun onError(errorMessage: String)
-}
+}

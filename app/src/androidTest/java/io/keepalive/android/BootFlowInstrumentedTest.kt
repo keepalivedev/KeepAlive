@@ -108,7 +108,7 @@ class BootFlowInstrumentedTest {
     }
 
     @Test fun disabledAppIgnoresBootIntents() {
-        getEncryptedSharedPreferences(targetContext).edit()
+        getAppSharedPreferences(targetContext).edit()
             .putBoolean("enabled", false).commit()
 
         deliverBoot(Intent.ACTION_BOOT_COMPLETED)

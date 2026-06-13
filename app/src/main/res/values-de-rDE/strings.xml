@@ -20,6 +20,7 @@
     <string name="webhook_url_hint">Webhook-URL</string>
     <string name="webhook_http_method_hint">HTTP-Methode</string>
     <string name="webhook_verify_certificate_label">Zertifikat überprüfen</string>
+    <string name="webhook_verify_certificate_warning">Warnung: Bei deaktivierter Zertifikatsprüfung ist die Verbindung nicht gegen Abhören geschützt. Nur mit einem vertrauenswürdigen privaten Server verwenden.</string>
     <string name="webhook_timeout_hint">Zeitlimit (Sekunden)</string>
     <string name="webhook_retries_hint">Wiederholungen</string>
     <string name="webhook_include_location_hint">Standort in Anfrage einschließen?</string>

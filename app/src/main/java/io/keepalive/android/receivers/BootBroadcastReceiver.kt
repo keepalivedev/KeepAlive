@@ -6,10 +6,11 @@ import android.content.Intent
 import android.util.Log
 import io.keepalive.android.AcknowledgeAreYouThere
 import io.keepalive.android.DebugLogger
+import io.keepalive.android.PrefKeys
 import io.keepalive.android.R
 import io.keepalive.android.doAlertCheck
 import io.keepalive.android.getDeviceProtectedPreferences
-import io.keepalive.android.getEncryptedSharedPreferences
+import io.keepalive.android.getAppSharedPreferences
 import io.keepalive.android.isUserUnlocked
 
 
@@ -36,11 +37,11 @@ class BootBroadcastReceiver : BroadcastReceiver() {
                 DebugLogger.d(tag, context.getString(R.string.debug_log_boot_completed,
                     intent.action ?: "unknown"))
 
-                // getEncryptedSharedPreferences will automatically use device-protected
+                // getAppSharedPreferences will automatically use device-protected
                 //  storage during Direct Boot (LOCKED_BOOT_COMPLETED) since credential-
                 //  encrypted storage is not available until the user unlocks the device
-                val prefs = getEncryptedSharedPreferences(context)
-                val enabled = prefs.getBoolean("enabled", false)
+                val prefs = getAppSharedPreferences(context)
+                val enabled = prefs.getBoolean(PrefKeys.ENABLED, false)
 
                 if (enabled) {
                     Log.d(tag, "boot intent is ${intent.action}")
@@ -60,12 +61,12 @@ class BootBroadcastReceiver : BroadcastReceiver() {
                     //    and immediately sends the alert before the user can acknowledge.
                     if (intent.action == "android.intent.action.BOOT_COMPLETED") {
                         // NOTE: must use getDeviceProtectedPreferences directly, not
-                        // getEncryptedSharedPreferences, because after unlock the latter
+                        // getAppSharedPreferences, because after unlock the latter
                         // returns credential-encrypted prefs (a different backing store)
                         // while the flag was written to device-protected storage during
                         // Direct Boot.
                         val devicePrefs = getDeviceProtectedPreferences(context)
-                        val flagValue = devicePrefs.getBoolean("direct_boot_notification_pending", false)
+                        val flagValue = devicePrefs.getBoolean(PrefKeys.DIRECT_BOOT_NOTIFICATION_PENDING, false)
                         val userUnlocked = isUserUnlocked(context)
 
                         DebugLogger.d(tag, context.getString(R.string.debug_log_boot_completed_flag_status, flagValue, userUnlocked))
@@ -100,7 +101,7 @@ class BootBroadcastReceiver : BroadcastReceiver() {
                     // restore the alarm stage that was saved before the reboot so we don't
                     // lose track of whether a final alarm was pending
                     val devicePrefs = getDeviceProtectedPreferences(context)
-                    val savedAlarmStage = devicePrefs.getString("last_alarm_stage", "periodic") ?: "periodic"
+                    val savedAlarmStage = devicePrefs.getString(PrefKeys.LAST_ALARM_STAGE, "periodic") ?: "periodic"
 
                     DebugLogger.d(tag, context.getString(R.string.debug_log_restored_alarm_stage, savedAlarmStage))
 
@@ -122,4 +123,4 @@ class BootBroadcastReceiver : BroadcastReceiver() {
             }
         }
     }
-}
+}

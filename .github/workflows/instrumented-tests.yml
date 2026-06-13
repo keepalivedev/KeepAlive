@@ -7,6 +7,9 @@ name: Instrumented tests
 # in-CI. Runs all behavioral tests (AlarmFlow, BootFlow, AlertService,
 # Acknowledge, SettingsPersistence) — skips the screenshot flow which is
 # handled by Fastlane.
+#
+# The googlePlay flavor runs across the full API matrix; the fDroid flavor
+# (android.location LocationHelper) additionally runs once on the newest API.
 
 on:
   push:
@@ -33,9 +36,16 @@ jobs:
         #   34 — U; FOREGROUND_SERVICE_TYPE_SHORT_SERVICE required on AlertService
         #   35 — V; current targetSdk
         api-level: [22, 28, 33, 34, 35]
+        flavor: [GooglePlay]
+        include:
+          # also exercise the android.location-based fDroid LocationHelper
+          # on the current targetSdk — it is otherwise only covered by
+          # Robolectric unit tests
+          - api-level: 35
+            flavor: FDroid
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -81,13 +91,13 @@ jobs:
             echo "=== Available device profiles on API ${{ matrix.api-level }} ==="
             avdmanager list devices -c | sort -u | head -40
             echo "==="
-            ./gradlew connectedGooglePlayDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.notClass=io.keepalive.android.AppScreenshotsInstrumentedTest --no-daemon
+            ./gradlew connected${{ matrix.flavor }}DebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.notClass=io.keepalive.android.AppScreenshotsInstrumentedTest --no-daemon
 
-      - name: Upload instrumented test report on failure
-        if: failure()
+      - name: Upload instrumented test report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: instrumented-test-report-api${{ matrix.api-level }}
+          name: instrumented-test-report-api${{ matrix.api-level }}-${{ matrix.flavor }}
           path: |
             app/build/reports/androidTests/
             app/build/outputs/androidTest-results/

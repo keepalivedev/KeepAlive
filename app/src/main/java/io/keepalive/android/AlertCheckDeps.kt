@@ -90,7 +90,7 @@ class ProductionAlertCheckDeps(private val context: Context) : AlertCheckDeps {
 
     override fun getString(resId: Int, vararg args: Any): String = context.getString(resId, *args)
 
-    override fun credentialPrefs(): SharedPreferences = getEncryptedSharedPreferences(context)
+    override fun credentialPrefs(): SharedPreferences = getAppSharedPreferences(context)
 
     override fun devicePrefs(): SharedPreferences? =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) getDeviceProtectedPreferences(context) else null
@@ -170,14 +170,14 @@ class ProductionAlertCheckDeps(private val context: Context) : AlertCheckDeps {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             try {
                 getDeviceProtectedPreferences(context).edit(commit = true) {
-                    putString("last_alarm_stage", "periodic")
+                    putString(PrefKeys.LAST_ALARM_STAGE, "periodic")
                 }
             } catch (e: Exception) {
                 Log.e("doAlertCheck", "Error resetting alarm stage after sending alert", e)
             }
         }
 
-        if (prefs.getBoolean("auto_restart_monitoring", false)) {
+        if (prefs.getBoolean(PrefKeys.AUTO_RESTART_MONITORING, false)) {
             DebugLogger.d("doAlertCheck", context.getString(R.string.debug_log_auto_restart_monitoring))
             scheduleAlarm(nowTimestamp, (checkPeriodHours * 60).toInt(), "periodic", restPeriods)
         }

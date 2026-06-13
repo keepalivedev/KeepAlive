@@ -120,7 +120,7 @@ class AppControllerTest {
     @Test fun `onCreate writes are_you_there_overlay_enabled = true when key absent`() {
         // AppController.onCreate has already run as part of Robolectric setup.
         // Verify the migration produced the expected pref state.
-        val prefs = getEncryptedSharedPreferences(app)
+        val prefs = getAppSharedPreferences(app)
         assertTrue("migration must seed the new pref",
             prefs.contains("are_you_there_overlay_enabled"))
         assertTrue("default value is true",
@@ -128,7 +128,7 @@ class AppControllerTest {
     }
 
     @Test fun `migration does not overwrite an existing false value`() {
-        val prefs = getEncryptedSharedPreferences(app)
+        val prefs = getAppSharedPreferences(app)
         prefs.edit().putBoolean("are_you_there_overlay_enabled", false).commit()
 
         AppController.migrateAreYouThereOverlayDefault(app)

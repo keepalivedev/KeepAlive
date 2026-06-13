@@ -39,7 +39,7 @@ class WebhookSender(private val context: Context, private val config: WebhookCon
                 override fun getAcceptedIssuers() = arrayOf<X509Certificate>()
             })
 
-            val sslContext = SSLContext.getInstance("SSL")
+            val sslContext = SSLContext.getInstance("TLS")
             sslContext.init(null, trustAllCerts, java.security.SecureRandom())
 
             sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)

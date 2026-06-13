@@ -153,8 +153,8 @@ class AreYouThereOverlayService : Service() {
 
         // Start a visible countdown until the final alert triggers.
         // We already know the follow-up duration in minutes from preferences.
-        val followupMins = getEncryptedSharedPreferences(applicationContext)
-            .getString("followup_time_period_minutes", "60")
+        val followupMins = getAppSharedPreferences(applicationContext)
+            .getString(PrefKeys.FOLLOWUP_TIME_PERIOD_MINUTES, "60")
             ?.toIntOrNull() ?: 60
         startCountdown(view, followupMins)
 

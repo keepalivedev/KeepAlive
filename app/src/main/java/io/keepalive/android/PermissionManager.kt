@@ -54,7 +54,7 @@ class PermissionManager(private val context: Context, private val activity: AppC
 
         // get the preferences and check for SMS contacts, whether location is enabled and
         //  if there is a call phone number
-        val sharedPrefs = getEncryptedSharedPreferences(context)
+        val sharedPrefs = getAppSharedPreferences(context)
 
         val smsContacts: MutableList<SMSEmergencyContactSetting> = loadJSONSharedPreference(sharedPrefs,
             "PHONE_NUMBER_SETTINGS")
@@ -71,7 +71,7 @@ class PermissionManager(private val context: Context, private val activity: AppC
         }
 
         // if location is enabled for an SMS contact or for the webhook
-        locationEnabled = sharedPrefs.getBoolean("location_enabled", false) || sharedPrefs.getBoolean("webhook_location_enabled",false)
+        locationEnabled = sharedPrefs.getBoolean(PrefKeys.LOCATION_ENABLED, false) || sharedPrefs.getBoolean(PrefKeys.WEBHOOK_LOCATION_ENABLED,false)
 
         // only request location if its enabled
         if (locationEnabled) {
@@ -79,7 +79,7 @@ class PermissionManager(private val context: Context, private val activity: AppC
         }
 
         // only request phone permissions if we have a contact phone number set
-        if (sharedPrefs.getString("contact_phone", "") != "") {
+        if (sharedPrefs.getString(PrefKeys.CONTACT_PHONE, "") != "") {
             callPhoneEnabled = true
             basicPermissions.add(Manifest.permission.CALL_PHONE)
         }
@@ -90,7 +90,7 @@ class PermissionManager(private val context: Context, private val activity: AppC
         //  when we know the user wants the feature on. AppController.onCreate writes
         //  the explicit true value on every app start, so by the time PermissionManager
         //  is constructed in any realistic flow the value will be present.
-        overlayPromptEnabled = sharedPrefs.getBoolean("are_you_there_overlay_enabled", false)
+        overlayPromptEnabled = sharedPrefs.getBoolean(PrefKeys.ARE_YOU_THERE_OVERLAY_ENABLED, false)
 
         // overlay permissions added in API 23
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

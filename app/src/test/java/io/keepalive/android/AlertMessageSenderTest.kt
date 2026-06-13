@@ -71,7 +71,7 @@ class AlertMessageSenderTest {
     ) = SMSEmergencyContactSetting(phone, msg, enabled, includeLocation)
 
     private fun seedContacts(vararg contacts: SMSEmergencyContactSetting) {
-        val prefs = getEncryptedSharedPreferences(appCtx)
+        val prefs = getAppSharedPreferences(appCtx)
         prefs.edit()
             .putString("PHONE_NUMBER_SETTINGS", gson.toJson(contacts.toList()))
             .commit()

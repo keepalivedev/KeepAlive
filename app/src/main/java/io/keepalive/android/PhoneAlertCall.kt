@@ -13,9 +13,9 @@ import java.util.Locale
 
 fun makeAlertCall(context: Context) {
     try {
-        val prefs = getEncryptedSharedPreferences(context)
+        val prefs = getAppSharedPreferences(context)
         val alertNotificationHelper = AlertNotificationHelper(context)
-        val phoneContactNumber = prefs.getString("contact_phone", "")
+        val phoneContactNumber = prefs.getString(PrefKeys.CONTACT_PHONE, "")
 
         // if we have a phone number
         if (phoneContactNumber != null && phoneContactNumber != "") {

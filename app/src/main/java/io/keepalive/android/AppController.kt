@@ -52,9 +52,9 @@ class AppController : Application() {
          * for upgraders and gives new installs the overlay by default.
          */
         fun migrateAreYouThereOverlayDefault(context: Context) {
-            val prefs = getEncryptedSharedPreferences(context)
-            if (!prefs.contains("are_you_there_overlay_enabled")) {
-                prefs.edit().putBoolean("are_you_there_overlay_enabled", true).apply()
+            val prefs = getAppSharedPreferences(context)
+            if (!prefs.contains(PrefKeys.ARE_YOU_THERE_OVERLAY_ENABLED)) {
+                prefs.edit().putBoolean(PrefKeys.ARE_YOU_THERE_OVERLAY_ENABLED, true).apply()
             }
         }
     }

@@ -43,7 +43,7 @@ class PermissionManagerTest {
     private val alarmMan get() = appCtx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     @Before fun setUp() {
-        getEncryptedSharedPreferences(appCtx).edit().clear().commit()
+        getAppSharedPreferences(appCtx).edit().clear().commit()
         // Clean baseline: all runtime perms denied, all appops as Robolectric
         // defaults them. Each test grants what it needs.
         shadowApp.denyPermissions(
@@ -75,18 +75,18 @@ class PermissionManagerTest {
                 includeLocation = false
             )
         )
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putString("PHONE_NUMBER_SETTINGS", gson.toJson(contacts))
             .commit()
     }
 
     private fun seedCallTarget(phone: String = "+15552222222") {
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putString("contact_phone", phone).commit()
     }
 
     private fun enableLocation() {
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putBoolean("location_enabled", true).commit()
     }
 
@@ -249,7 +249,7 @@ class PermissionManagerTest {
     @Config(sdk = [33, 34, 35, 36])
     fun `overlay permission required when overlay prompt enabled without call target`() {
         // No call target, but the user enabled the overlay prompt — overlay perm needed.
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putBoolean("are_you_there_overlay_enabled", true).commit()
         grantUsageStats()
         grantPostNotificationsIfApplicable()
@@ -267,7 +267,7 @@ class PermissionManagerTest {
     @Config(sdk = [33, 34, 35, 36])
     fun `overlay permission not required when both call target and overlay pref are off`() {
         // Explicitly opted out of the overlay; no call target → overlay gate bypassed.
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putBoolean("are_you_there_overlay_enabled", false).commit()
         grantUsageStats()
         grantPostNotificationsIfApplicable()

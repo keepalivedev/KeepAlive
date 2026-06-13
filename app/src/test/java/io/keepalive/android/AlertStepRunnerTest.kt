@@ -349,4 +349,64 @@ class AlertStepRunnerTest {
         assertTrue(steps.isComplete(STEP_WEBHOOK_DONE))
         assertEquals(1, disp.stopServiceCount)
     }
+
+    @Test fun `exception inside the location callback still stops the service`() {
+        // If sendLocationSms (or sendWebhook) throws inside the async callback,
+        // the try/finally must still call stopService — otherwise the service
+        // would linger until the 2-minute AlertService timeout. The step bit
+        // stays unset so a redelivery can retry the location SMS.
+        val steps = FakeAlertStepOps()
+        val disp = FakeAlertDispatcher(
+            isUserUnlocked = true,
+            locationNeeded = true,
+            webhookEnabled = true
+        ).apply {
+            locationResultToDeliver = null
+            locationSmsThrows = RuntimeException("SMS service died mid-callback")
+        }
+
+        assertTrue(runAlertSteps(steps, disp))
+
+        try {
+            disp.pendingLocationCallback!!(sampleLocation())
+            org.junit.Assert.fail("callback exception should propagate")
+        } catch (_: RuntimeException) { /* expected */ }
+
+        assertEquals("stopService must run despite the exception",
+            1, disp.stopServiceCount)
+        assertFalse("location bit stays unset so redelivery can retry",
+            steps.isComplete(STEP_LOCATION_DONE))
+        assertFalse("webhook step never reached — bit stays unset",
+            steps.isComplete(STEP_WEBHOOK_DONE))
+    }
+
+    @Test fun `late callback after the service timeout already stopped it is safe`() {
+        // The 2-minute AlertService timeout can fire stopService before a slow
+        // location callback arrives. The late callback must still mark its
+        // steps (so a redelivery doesn't re-send) and the second stopService
+        // is a tolerated no-op (Service.stopSelf is idempotent).
+        val steps = FakeAlertStepOps()
+        val disp = FakeAlertDispatcher(
+            isUserUnlocked = true,
+            locationNeeded = true,
+            webhookEnabled = true
+        ).apply {
+            locationResultToDeliver = null
+        }
+
+        assertTrue(runAlertSteps(steps, disp))
+
+        // Simulate the AlertService timeout stopping the service first.
+        disp.stopService()
+        assertEquals(1, disp.stopServiceCount)
+
+        // The slow location callback arrives afterwards.
+        disp.pendingLocationCallback!!(sampleLocation())
+
+        assertTrue(steps.isComplete(STEP_LOCATION_DONE))
+        assertTrue(steps.isComplete(STEP_WEBHOOK_DONE))
+        assertEquals(1, disp.locationSmsSends.size)
+        assertEquals(1, disp.webhookSends.size)
+        assertEquals("second stop is expected and harmless", 2, disp.stopServiceCount)
+    }
 }

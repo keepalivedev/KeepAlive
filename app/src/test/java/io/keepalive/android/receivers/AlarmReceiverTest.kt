@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
 import io.keepalive.android.doAlertCheck
-import io.keepalive.android.getEncryptedSharedPreferences
+import io.keepalive.android.getAppSharedPreferences
 import io.mockk.every
 import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
@@ -31,7 +31,7 @@ class AlarmReceiverTest {
         mockkStatic(ALERT_FUNCTIONS_KT)
         every { doAlertCheck(any<Context>(), any()) } returns Unit
         // Default: app enabled
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putBoolean("enabled", true)
             .commit()
     }
@@ -41,7 +41,7 @@ class AlarmReceiverTest {
     }
 
     @Test fun `onReceive short-circuits when app is disabled`() {
-        getEncryptedSharedPreferences(appCtx).edit().putBoolean("enabled", false).commit()
+        getAppSharedPreferences(appCtx).edit().putBoolean("enabled", false).commit()
         val intent = Intent().putExtra("AlarmStage", "periodic")
 
         AlarmReceiver().onReceive(appCtx, intent)
