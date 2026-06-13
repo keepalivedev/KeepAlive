@@ -226,7 +226,7 @@ class MinSdkSmokeInstrumentedTest {
         androidx.test.platform.app.InstrumentationRegistry.getInstrumentation()
             .waitForIdleSync()
         Thread.sleep(1_000)
-        ctx.stopService(android.content.Intent(ctx, AlertService::class.java))
+        ctx.stopService(Intent(ctx, AlertService::class.java))
         Thread.sleep(500)
 
         assertTrue(

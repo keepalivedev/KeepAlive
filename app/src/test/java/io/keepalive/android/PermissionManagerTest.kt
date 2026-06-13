@@ -1,13 +1,11 @@
 package io.keepalive.android
 
 import android.Manifest
-import android.app.AlarmManager
 import android.app.AppOpsManager
 import android.app.Application
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.google.gson.Gson
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -40,7 +38,6 @@ class PermissionManagerTest {
     private val gson = Gson()
     private val shadowApp get() = shadowOf(appCtx as Application)
     private val opsMan get() = appCtx.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
-    private val alarmMan get() = appCtx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     @Before fun setUp() {
         getAppSharedPreferences(appCtx).edit().clear().commit()

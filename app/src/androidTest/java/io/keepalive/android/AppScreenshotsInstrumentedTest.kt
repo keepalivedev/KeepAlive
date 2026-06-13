@@ -174,7 +174,7 @@ class AppScreenshotsInstrumentedTest {
         // can't do any locale-specific stuff here, because the locale is set after this runs
         @JvmStatic
         @BeforeClass
-        fun beforeAll(): Unit {
+        fun beforeAll() {
             println("Test starting up...")
 
             // in order for the app to appear under normal operation, there has to be a recent
@@ -200,7 +200,7 @@ class AppScreenshotsInstrumentedTest {
 
         @JvmStatic
         @AfterClass
-        fun afterAll(): Unit {
+        fun afterAll() {
             println("Tests done...")
             //CleanStatusBar.disable()
         }

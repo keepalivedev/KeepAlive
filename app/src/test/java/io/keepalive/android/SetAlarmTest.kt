@@ -168,7 +168,7 @@ class SetAlarmTest {
         // same SDK also uses ELAPSED_REALTIME_WAKEUP; we can't easily
         // discriminate the two via ShadowAlarmManager's scheduledAlarms list.
         // Smoke check: still scheduled, still wake-up.
-        assertEquals(android.app.AlarmManager.ELAPSED_REALTIME_WAKEUP, scheduled!!.type)
+        assertEquals(AlarmManager.ELAPSED_REALTIME_WAKEUP, scheduled!!.type)
     }
 
     // ---- SCHEDULE_EXACT_ALARM denied (API S/31+) ---------------------------
@@ -194,7 +194,7 @@ class SetAlarmTest {
         assertNotNull("periodic must still schedule an inexact alarm when exact is denied",
             scheduled)
         // Periodic path on M+ without exact uses ELAPSED_REALTIME_WAKEUP.
-        assertEquals(android.app.AlarmManager.ELAPSED_REALTIME_WAKEUP, scheduled!!.type)
+        assertEquals(AlarmManager.ELAPSED_REALTIME_WAKEUP, scheduled!!.type)
     }
 
     @Test
@@ -213,7 +213,7 @@ class SetAlarmTest {
         // setAlarmClock — but canScheduleExactAlarms=false should prevent that).
         assertEquals(
             "denied exact must use ELAPSED_REALTIME_WAKEUP fallback, not RTC_WAKEUP alarmClock",
-            android.app.AlarmManager.ELAPSED_REALTIME_WAKEUP, scheduled!!.type
+            AlarmManager.ELAPSED_REALTIME_WAKEUP, scheduled!!.type
         )
         // ShadowAlarmManager exposes the AlarmClockInfo on the scheduled
         // entry; the fallback path leaves it null.

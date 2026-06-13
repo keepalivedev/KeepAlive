@@ -6,7 +6,6 @@ import androidx.appcompat.app.AlertDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Typeface
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -32,6 +31,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
 import androidx.core.content.PackageManagerCompat
 import androidx.core.content.UnusedAppRestrictionsConstants
+import androidx.core.content.edit
+import androidx.core.net.toUri
 import com.google.common.util.concurrent.ListenableFuture
 import io.keepalive.android.databinding.ActivityMainBinding
 import java.util.Locale
@@ -117,14 +118,14 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> {
                 val i = Intent(this, SettingsActivity::class.java)
                 this.startActivity(i)
-                return true
+                true
             }
 
             // launch the log display activity
             R.id.action_logdisplay -> {
                 val i = Intent(this, LogDisplayActivity::class.java)
                 this.startActivity(i)
-                return true
+                true
             }
 
             // show an About dialog with information about the app
@@ -156,7 +157,7 @@ class MainActivity : AppCompatActivity() {
                 dialogMessage?.movementMethod = LinkMovementMethod.getInstance()
                 dialogMessage?.textSize = 18f
 
-                return true
+                true
             }
 
             else -> super.onOptionsItemSelected(item)
@@ -172,7 +173,7 @@ class MainActivity : AppCompatActivity() {
 
         Log.d(
             tag,
-            "requestCode: $requestCode, permissions: $permissions, grantResults: $grantResults"
+            "requestCode: $requestCode, permissions: ${permissions.contentToString()}, grantResults: ${grantResults.contentToString()}"
         )
 
         // don't really need to check whether the permissions were granted or not?
@@ -346,16 +347,14 @@ class MainActivity : AppCompatActivity() {
                 testAlertSmsButton.isEnabled = false
 
                 // save the status of the warning message checkbox
-                with(sharedPrefs.edit()) {
+                sharedPrefs.edit {
                     putBoolean(PrefKeys.TEST_ALERT_SEND_WARNING, switchSendWarning.isChecked)
-                    apply()
                 }
 
                 // if the message isn't still the default message then save it to shared prefs
                 if (editTextWarningMessage.text.toString() != getString(R.string.test_alert_sms_default_message)) {
-                    with(sharedPrefs.edit()) {
+                    sharedPrefs.edit {
                         putString(PrefKeys.TEST_ALERT_WARNING_SMS_MESSAGE, editTextWarningMessage.text.toString())
-                        apply()
                     }
                 }
 
@@ -608,7 +607,7 @@ class MainActivity : AppCompatActivity() {
         // next configure the SMS phone number text view and button
 
         // load SMS contacts as csv string
-        var smsPhoneNumbers = getSMSContactString()
+        val smsPhoneNumbers = getSMSContactString()
 
         // set the text color to the default, may change below
         smsPhoneTextView.setTextColor(getColorCompat(this, R.color.textColor))
@@ -868,6 +867,9 @@ class MainActivity : AppCompatActivity() {
 
     // todo implement this?
     // also requires android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+    // BatteryLife: REQUEST_IGNORE_BATTERY_OPTIMIZATIONS is a legitimate acceptable-use
+    //  case for a dead-man's-switch alarm app that must fire reliably under Doze.
+    @Suppress("BatteryLife")
     private fun checkAppBatteryRestrictions() {
         try {
 
@@ -888,7 +890,7 @@ class MainActivity : AppCompatActivity() {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-                intent.setData(Uri.parse("package:$packageName"))
+                intent.setData("package:$packageName".toUri())
                 ActivityCompat.startActivity(this, intent, null)
             }
 

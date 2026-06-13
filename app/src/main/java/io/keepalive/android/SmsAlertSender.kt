@@ -232,7 +232,7 @@ class AlertMessageSender @JvmOverloads constructor(
                 Handler(Looper.getMainLooper()).postDelayed({
                     try {
                         appContext.unregisterReceiver(receiver)
-                    } catch (e: IllegalArgumentException) {
+                    } catch (_: IllegalArgumentException) {
                         // already unregistered — all broadcasts arrived
                     }
                 }, SMS_RECEIVER_SAFETY_TIMEOUT_MS)
@@ -265,7 +265,7 @@ class AlertMessageSender @JvmOverloads constructor(
 
                     // create an array with the same pending intent for each part
                     val sentPIList = ArrayList<PendingIntent>(messageParts.size)
-                    for (i in messageParts.indices) {
+                    repeat(messageParts.size) {
                         sentPIList.add(sentPI)
                     }
 

@@ -92,6 +92,9 @@ class AreYouThereOverlayService : Service() {
         super.onDestroy()
     }
 
+    // InflateParams: an overlay window has no parent view to attach to, so passing
+    //  null as the inflate root is correct here.
+    @Suppress("InflateParams")
     private fun showOverlay(message: String?) {
         if (overlayView != null) return
 

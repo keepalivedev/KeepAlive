@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -121,13 +122,15 @@ class LogDisplayActivity : AppCompatActivity() {
     // save the text size to shared preferences
     private fun saveTextSize(textSize: Float) {
         val sharedPrefs = getAppSharedPreferences(this.applicationContext)
-        with (sharedPrefs.edit()) {
+        sharedPrefs.edit {
             putFloat(PrefKeys.LOG_DISPLAY_TEXT_SIZE, textSize)
-            apply()
         }
     }
 
     // reload the logs and notify the adapter
+    // NotifyDataSetChanged: the whole log list is rebuilt on refresh, so a full
+    //  invalidation is the correct choice here.
+    @Suppress("NotifyDataSetChanged")
     private fun updateLogs(recyclerView: RecyclerView, textSize: Float) {
         recyclerView.adapter = LogsAdapter(DebugLogger.getLogs(), textSize)
         recyclerView.adapter?.notifyDataSetChanged()
@@ -179,7 +182,7 @@ class LogDisplayActivity : AppCompatActivity() {
 
                 // return the formatted date
                 parsedDate?.let { outputFormat.format(it) }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 Log.e("LogDisplayActivity", "Error parsing the log timestamp?! $utcTimestamp")
                 null
             }

@@ -1,6 +1,5 @@
 package io.keepalive.android
 
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -12,8 +11,6 @@ import io.keepalive.android.AlertFlowTestUtil.targetContext
 import io.keepalive.android.AlertFlowTestUtil.waitUntil
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.BeforeClass
@@ -34,7 +31,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 // Uses NotificationManager.getActiveNotifications() (API 23+) and
 // AlertService is foreground-aware (API 26+ contract). API 22 skipped.
-@SdkSuppress(minSdkVersion = android.os.Build.VERSION_CODES.M)
+@SdkSuppress(minSdkVersion = Build.VERSION_CODES.M)
 class AlertServiceInstrumentedTest {
 
     companion object {

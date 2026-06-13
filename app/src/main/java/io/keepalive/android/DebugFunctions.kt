@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import androidx.core.content.edit
 import com.google.gson.Gson
 import io.keepalive.android.receivers.AlarmReceiver
 
@@ -25,7 +26,7 @@ class DebugFunctions {
             )
         )
 
-        with(sharedPrefs.edit()) {
+        sharedPrefs.edit {
             putString(PrefKeys.PHONE_NUMBER_SETTINGS, gson.toJson(smsContactList))
 
             putString(PrefKeys.CONTACT_PHONE, "2345678901")
@@ -55,8 +56,6 @@ class DebugFunctions {
             putInt(PrefKeys.WEBHOOK_RETRIES, 3)
             putBoolean(PrefKeys.WEBHOOK_VERIFY_CERTIFICATE, false)
             putString(PrefKeys.WEBHOOK_HEADERS, "{}")
-
-            apply()
         }
     }
 

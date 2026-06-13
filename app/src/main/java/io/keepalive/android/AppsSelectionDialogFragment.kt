@@ -19,6 +19,7 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.fragment.app.DialogFragment
 import com.google.gson.Gson
 import java.text.DateFormat
@@ -82,7 +83,7 @@ class AppsSelectionDialogFragment(val callback: () -> Unit) : DialogFragment() {
     }
 
     private fun showDetailsDialog(context: Context, appInfo: MonitoredAppDetails) {
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_apps_show_details, null)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_apps_show_details, null)
 
         // get app usage details for the last 72 hours
         val appUsageDetails = getAppUsageDetails(context,
@@ -104,7 +105,7 @@ class AppsSelectionDialogFragment(val callback: () -> Unit) : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val inflater = LayoutInflater.from(context)
+        val inflater = layoutInflater
         val view = inflater.inflate(R.layout.dialog_apps_selection, null)
         val prefs = getAppSharedPreferences(requireContext())
 
@@ -180,9 +181,8 @@ class AppsSelectionDialogFragment(val callback: () -> Unit) : DialogFragment() {
                     // if the user saved the monitoring settings without any apps selected and they
                     //  aren't able to use device lock/unlock events then also disable monitoring
                     if (Build.VERSION.SDK_INT < AppController.MIN_API_LEVEL_FOR_DEVICE_LOCK_UNLOCK) {
-                        with(prefs.edit()) {
+                        prefs.edit {
                             putBoolean(PrefKeys.ENABLED, false)
-                            apply()
                         }
                         syncPrefsToDeviceProtectedStorage(requireContext())
                     }
@@ -200,9 +200,8 @@ class AppsSelectionDialogFragment(val callback: () -> Unit) : DialogFragment() {
                 // if the user deleted the monitoring settings and they aren't able to use
                 //  device lock/unlock events then also disable monitoring
                 if (Build.VERSION.SDK_INT < AppController.MIN_API_LEVEL_FOR_DEVICE_LOCK_UNLOCK) {
-                    with(prefs.edit()) {
+                    prefs.edit {
                         putBoolean(PrefKeys.ENABLED, false)
-                        apply()
                     }
                     syncPrefsToDeviceProtectedStorage(requireContext())
                 }
@@ -236,12 +235,11 @@ class AppsSelectionDialogFragment(val callback: () -> Unit) : DialogFragment() {
 
         val prefs = getAppSharedPreferences(context)
 
-        with(prefs.edit()) {
+        prefs.edit {
 
             // convert the list to json and save it to shared prefs
             val jsonString = Gson().toJson(appInfos)
             putString(PrefKeys.APPS_TO_MONITOR, jsonString)
-            apply()
         }
     }
 

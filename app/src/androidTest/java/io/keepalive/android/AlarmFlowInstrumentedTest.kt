@@ -13,7 +13,6 @@ import io.keepalive.android.AlertFlowTestUtil.waitUntil
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.BeforeClass
@@ -108,7 +107,7 @@ class AlarmFlowInstrumentedTest {
             "dispatchFinalAlert must reset last_alarm_stage to 'periodic' " +
                     "after attempting to start AlertService",
             waitUntil(timeoutMs = 5_000L) {
-                AlertFlowTestUtil.savedAlarmStage() == "periodic"
+                savedAlarmStage() == "periodic"
             }
         )
 

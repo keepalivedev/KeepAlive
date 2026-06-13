@@ -4,11 +4,11 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.telecom.TelecomManager
 import android.telephony.PhoneNumberUtils
 import android.util.Log
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import java.util.Locale
 
 fun makeAlertCall(context: Context) {
@@ -37,7 +37,7 @@ fun makeAlertCall(context: Context) {
 
                 // build the call intent
                 val callIntent = Intent(Intent.ACTION_CALL)
-                callIntent.data = Uri.parse("tel:$phoneContactNumber")
+                callIntent.data = "tel:$phoneContactNumber".toUri()
                 callIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
                 // enable speakerphone on the call

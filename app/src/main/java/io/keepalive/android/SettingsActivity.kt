@@ -23,6 +23,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -112,9 +113,8 @@ class SettingsActivity : AppCompatActivity() {
             } else {
 
                 // no dialog for the switch, just save the new value and process the change
-                with(sharedPrefs!!.edit()) {
+                sharedPrefs!!.edit {
                     putBoolean(PrefKeys.ENABLED, isChecked)
-                    apply()
                 }
 
                 // also mirror settings to device-protected storage so they can be
@@ -130,18 +130,16 @@ class SettingsActivity : AppCompatActivity() {
         restartMonitoringSwitch.setOnCheckedChangeListener { _, isChecked ->
 
             // no dialog for the switch, just save the new value
-            with(sharedPrefs!!.edit()) {
+            sharedPrefs!!.edit {
                 putBoolean(PrefKeys.AUTO_RESTART_MONITORING, isChecked)
-                apply()
             }
         }
 
         // listener for the full-screen 'are you there?' overlay switch
         val areYouThereOverlaySwitch: SwitchCompat = findViewById(R.id.areYouThereOverlaySwitch)
         areYouThereOverlaySwitch.setOnCheckedChangeListener { _, isChecked ->
-            with(sharedPrefs!!.edit()) {
+            sharedPrefs!!.edit {
                 putBoolean(PrefKeys.ARE_YOU_THERE_OVERLAY_ENABLED, isChecked)
-                apply()
             }
         }
 
@@ -447,12 +445,11 @@ class SettingsActivity : AppCompatActivity() {
             .setPositiveButton(getString(R.string.save)) { _, _ ->
 
                 // all of the settings we are editing in a dialog are strings
-                with(sharedPrefs!!.edit()) {
+                sharedPrefs!!.edit {
                     putString(preferenceKey, dialogEditText.text.toString())
                     if (preferenceKey == "time_period_hours") {
                         putBoolean(PrefKeys.USE_EXACT_ALARMS, exactAlarmSwitch.isChecked)
                     }
-                    apply()
                 }
 
                 // take action depending on what preference is changing
@@ -467,9 +464,8 @@ class SettingsActivity : AppCompatActivity() {
             dialog.setNeutralButton(getString(R.string.delete)) { _, _ ->
 
                 // if the user deletes the phone number then remove it from shared prefs
-                with(sharedPrefs!!.edit()) {
+                sharedPrefs!!.edit {
                     remove(preferenceKey)
-                    apply()
                 }
 
                 // processSettingChange(preferenceKey)
@@ -576,7 +572,7 @@ class SettingsActivity : AppCompatActivity() {
                     return@setPositiveButton
                 }
 
-                with(sharedPrefs!!.edit()) {
+                sharedPrefs!!.edit {
 
                     // create a new list of rest periods with just this one
                     val restPeriods = mutableListOf<RestPeriod>()
@@ -592,7 +588,6 @@ class SettingsActivity : AppCompatActivity() {
                     // convert the list to json and save it to shared prefs
                     val jsonString = gson.toJson(restPeriods)
                     putString(PrefKeys.REST_PERIODS, jsonString)
-                    apply()
                 }
 
                 // take action depending on what preference is changing
@@ -604,9 +599,8 @@ class SettingsActivity : AppCompatActivity() {
             .setNeutralButton(getString(R.string.delete)) { _, _ ->
 
                 // if the user deletes the rest period then remove it from shared prefs
-                with(sharedPrefs!!.edit()) {
+                sharedPrefs!!.edit {
                     remove(PrefKeys.REST_PERIODS)
-                    apply()
                 }
 
                 processSettingChange("REST_PERIODS")

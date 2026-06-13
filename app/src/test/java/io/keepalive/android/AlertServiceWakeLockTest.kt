@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.PowerManager
 import androidx.test.core.app.ApplicationProvider
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue

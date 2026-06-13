@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.os.Build
 import android.util.Log
+import androidx.core.content.edit
 
 
 class AppController : Application() {
@@ -54,7 +55,7 @@ class AppController : Application() {
         fun migrateAreYouThereOverlayDefault(context: Context) {
             val prefs = getAppSharedPreferences(context)
             if (!prefs.contains(PrefKeys.ARE_YOU_THERE_OVERLAY_ENABLED)) {
-                prefs.edit().putBoolean(PrefKeys.ARE_YOU_THERE_OVERLAY_ENABLED, true).apply()
+                prefs.edit { putBoolean(PrefKeys.ARE_YOU_THERE_OVERLAY_ENABLED, true) }
             }
         }
     }

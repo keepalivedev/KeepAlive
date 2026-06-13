@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
@@ -42,6 +43,10 @@ class WebhookConfigManager(private val context: Context, private val activity: A
     private lateinit var buttonTestWebhook: Button
     private lateinit var buttonAddHeader: Button
 
+    // The timeout/retries fields are prefilled from Int values and parsed back via
+    // toIntOrNull(), so they intentionally use invariant digits — locale-formatted
+    // digits would break round-tripping. Suppress lint's SetTextI18n advice here.
+    @Suppress("SetTextI18n")
     fun showWebhookConfigDialog(updateViewsCallback: () -> Unit) {
         val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_webhook_config, null)
         val editTextWebhookUrl = dialogView.findViewById<TextInputEditText>(R.id.editTextWebhookUrl)
@@ -187,7 +192,7 @@ class WebhookConfigManager(private val context: Context, private val activity: A
                 Log.d("WebhookConfigManager", "converted url: ${editTextWebhookUrl.text.toString().toHttpUrlOrNull()}")
 
                 // save the settings
-                with (sharedPref.edit()) {
+                sharedPref.edit {
                     putBoolean(PrefKeys.WEBHOOK_ENABLED, true)
 
                     // location is enabled if it is anything but the 'do not include' option
@@ -202,7 +207,6 @@ class WebhookConfigManager(private val context: Context, private val activity: A
                     putInt(PrefKeys.WEBHOOK_RETRIES, editTextRetries.text.toString().toIntOrNull() ?: 0)
                     putBoolean(PrefKeys.WEBHOOK_VERIFY_CERTIFICATE, switchVerifyCertificate.isChecked)
                     putString(PrefKeys.WEBHOOK_HEADERS, JSONObject(headers).toString())
-                    apply()
                 }
                 DebugLogger.d("WebhookConfigManager", context.getString(R.string.debug_log_webhook_config_saved))
                 updateViewsCallback()
@@ -212,7 +216,7 @@ class WebhookConfigManager(private val context: Context, private val activity: A
             .setNeutralButton(context.getString(R.string.delete)) { _, _ ->
 
                 // remove all webhook settings
-                with (sharedPref.edit()) {
+                sharedPref.edit {
                     remove(PrefKeys.WEBHOOK_ENABLED)
                     remove(PrefKeys.WEBHOOK_URL)
                     remove(PrefKeys.WEBHOOK_METHOD)
@@ -221,7 +225,6 @@ class WebhookConfigManager(private val context: Context, private val activity: A
                     remove(PrefKeys.WEBHOOK_RETRIES)
                     remove(PrefKeys.WEBHOOK_VERIFY_CERTIFICATE)
                     remove(PrefKeys.WEBHOOK_HEADERS)
-                    apply()
                 }
                 DebugLogger.d("WebhookConfigManager", context.getString(R.string.debug_log_webhook_config_deleted))
                 updateViewsCallback()

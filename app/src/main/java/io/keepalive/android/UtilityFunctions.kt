@@ -87,12 +87,11 @@ fun saveSMSEmergencyContactSettings(
             }
         }
 
-        with(sharedPrefs!!.edit()) {
+        sharedPrefs!!.edit {
             putString(PrefKeys.PHONE_NUMBER_SETTINGS, jsonString)
 
             // this is stored as a single setting so that it can be more easily checked elsewhere
             putBoolean(PrefKeys.LOCATION_ENABLED, includeLocation)
-            apply()
         }
     } catch (e: Exception) {
         Log.e("PhoneNumberAdapter", "Error saving settings: ${e.message}")
@@ -405,9 +404,8 @@ fun setAlarm(
     )
 
     // track when the next alarm is set to go off in our preferences
-    with(prefs.edit()) {
+    prefs.edit {
         putLong(PrefKeys.NEXT_ALARM_TIMESTAMP, alarmTimestamp)
-        apply()
     }
 
     // also save the alarm stage to device-protected storage so it can be
