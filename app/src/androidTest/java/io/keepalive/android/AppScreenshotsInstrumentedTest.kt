@@ -97,6 +97,27 @@ class AppScreenshotsInstrumentedTest {
         Thread.sleep(2000)
         Screengrab.screenshot("6-ConfigureWebhookScreen")
         onView(withId(android.R.id.button2)).perform(click())
+
+        // show the full-screen "Are you there?" overlay and take a screenshot.
+        // This is the prompt the user sees after a period of inactivity — the
+        //  headline safety feature, so it's worth a store screenshot.
+        // UiAutomatorScreenshotStrategy (set in beforeAll) captures the system
+        //  overlay window, not just the foreground activity.
+        // SYSTEM_ALERT_WINDOW is an appop rather than a normal runtime permission,
+        //  so grant it via appops — grantRuntimePermission doesn't enable it.
+        cmdExec("appops set ${targetContext.packageName} SYSTEM_ALERT_WINDOW allow")
+        Thread.sleep(1000)
+        AreYouThereOverlay.show(
+            targetContext,
+            String.format(
+                targetContext.getString(R.string.initial_check_notification_text),
+                "60"
+            )
+        )
+        Thread.sleep(2000)
+        Screengrab.screenshot("7-AreYouThereOverlayScreen")
+        AreYouThereOverlay.dismiss(targetContext)
+        Thread.sleep(1000)
     }
 
     // we can't do this with the other shared prefs because those are loaded before
@@ -153,7 +174,7 @@ class AppScreenshotsInstrumentedTest {
         // can't do any locale-specific stuff here, because the locale is set after this runs
         @JvmStatic
         @BeforeClass
-        fun beforeAll(): Unit {
+        fun beforeAll() {
             println("Test starting up...")
 
             // in order for the app to appear under normal operation, there has to be a recent
@@ -179,7 +200,7 @@ class AppScreenshotsInstrumentedTest {
 
         @JvmStatic
         @AfterClass
-        fun afterAll(): Unit {
+        fun afterAll() {
             println("Tests done...")
             //CleanStatusBar.disable()
         }

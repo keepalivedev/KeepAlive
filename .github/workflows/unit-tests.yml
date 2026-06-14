@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -24,17 +24,24 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Run unit tests (googlePlay + fDroid flavors)
+      - name: Run unit tests (googlePlay + fDroid + fDroidLite flavors)
         # fDroid flavor covers the android.location-based LocationHelper;
-        # googlePlay covers the FusedLocationProviderClient path. Both need
-        # to pass before a merge.
-        run: ./gradlew testGooglePlayDebugUnitTest testFDroidDebugUnitTest --no-daemon
+        # googlePlay covers the FusedLocationProviderClient path; fDroidLite
+        # validates the INCLUDE_WEBHOOK=false build. All need to pass before
+        # a merge.
+        run: ./gradlew testGooglePlayDebugUnitTest testFDroidDebugUnitTest testFDroidLiteDebugUnitTest --no-daemon
 
-      - name: Upload test reports on failure
-        if: failure()
+      - name: Run lint
+        run: ./gradlew lintGooglePlayDebug --no-daemon
+
+      - name: Generate unit-test coverage report
+        run: ./gradlew createGooglePlayDebugUnitTestCoverageReport --no-daemon
+
+      - name: Upload test, lint, and coverage reports
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: unit-test-report
           path: |
-            app/build/reports/tests/
+            app/build/reports/
             app/build/test-results/

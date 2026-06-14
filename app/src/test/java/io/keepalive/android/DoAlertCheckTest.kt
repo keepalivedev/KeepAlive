@@ -270,6 +270,50 @@ class DoAlertCheckTest {
         assertTrue("empty when no monitored apps configured", apps.isEmpty())
     }
 
+    @Test fun `overlay suppressed when are_you_there_overlay_enabled is false`() {
+        deps.credPrefs.edit()
+            .putBoolean("are_you_there_overlay_enabled", false)
+            .apply()
+        deps.userUnlockedValue = true
+        deps.nowValue = hours(24)
+        deps.lastActivity = null
+
+        doAlertCheck(deps, "periodic")
+
+        // Notification still fires; overlay does not.
+        assertEquals(1, deps.notificationShowCount)
+        assertEquals("overlay must not be shown when pref is false",
+            0, deps.overlayShowCount)
+    }
+
+    @Test fun `overlay shown when are_you_there_overlay_enabled is true`() {
+        deps.credPrefs.edit()
+            .putBoolean("are_you_there_overlay_enabled", true)
+            .apply()
+        deps.userUnlockedValue = true
+        deps.nowValue = hours(24)
+        deps.lastActivity = null
+
+        doAlertCheck(deps, "periodic")
+
+        assertEquals(1, deps.overlayShowCount)
+    }
+
+    @Test fun `overlay defaults to on when pref not set in tests`() {
+        // FakeAlertCheckDeps starts with empty prefs; production migration
+        // seeds true at app start. Inside doAlertCheck we treat an absent
+        // pref as 'on' to preserve the upgrade path before the migration
+        // has run (e.g., concurrent first-launch alarm).
+        deps.userUnlockedValue = true
+        deps.nowValue = hours(24)
+        deps.lastActivity = null
+
+        doAlertCheck(deps, "periodic")
+
+        assertEquals("absent pref should default to ON in doAlertCheck",
+            1, deps.overlayShowCount)
+    }
+
     @Test fun `checkPeriodHours below 1 is honored`() {
         // e.g. 0.5 hours (30 minutes). Division happens in floats.
         deps.credPrefs.edit().putString("time_period_hours", "0.5").apply()

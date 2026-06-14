@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import androidx.core.content.edit
 import com.google.gson.Gson
 import io.keepalive.android.receivers.AlarmReceiver
 
@@ -14,7 +15,7 @@ class DebugFunctions {
     fun setSharedPrefs(context: Context) {
 
         val gson = Gson()
-        val sharedPrefs = getEncryptedSharedPreferences(context)
+        val sharedPrefs = getAppSharedPreferences(context)
 
         val smsContactList = listOf(
             SMSEmergencyContactSetting(
@@ -25,38 +26,36 @@ class DebugFunctions {
             )
         )
 
-        with(sharedPrefs.edit()) {
-            putString("PHONE_NUMBER_SETTINGS", gson.toJson(smsContactList))
+        sharedPrefs.edit {
+            putString(PrefKeys.PHONE_NUMBER_SETTINGS, gson.toJson(smsContactList))
 
-            putString("contact_phone", "2345678901")
+            putString(PrefKeys.CONTACT_PHONE, "2345678901")
 
             // leave these at the default
-            putString("time_period_hours", "0.21")
-            putString("followup_time_period_minutes", "60")
+            putString(PrefKeys.TIME_PERIOD_HOURS, "0.21")
+            putString(PrefKeys.FOLLOWUP_TIME_PERIOD_MINUTES, "60")
 
             // make it think there is an alarm in the future
-            // putLong("NextAlarmTimestamp", System.currentTimeMillis() + 1000 * 60 * 60 * 12)
+            // putLong(PrefKeys.NEXT_ALARM_TIMESTAMP, System.currentTimeMillis() + 1000 * 60 * 60 * 12)
 
             // enable monitoring and auto restart
-            putBoolean("enabled", true)
-            putBoolean("auto_restart_monitoring", true)
+            putBoolean(PrefKeys.ENABLED, true)
+            putBoolean(PrefKeys.AUTO_RESTART_MONITORING, true)
 
-            putBoolean("webhook_enabled", true)
+            putBoolean(PrefKeys.WEBHOOK_ENABLED, true)
 
             // location is enabled if it is anything but the 'do not include' option
-            putBoolean("webhook_location_enabled", true)
+            putBoolean(PrefKeys.WEBHOOK_LOCATION_ENABLED, true)
 
             // save the raw url instead of from toHttpUrlOrNull so that it will show up
             //  in a more user friendly way
-            putString("webhook_url", "https://example.com/webhook_test")
-            putString("webhook_method", "POST")
-            putString("webhook_include_location", "JSON - Body")
-            putInt("webhook_timeout", 30)
-            putInt("webhook_retries", 3)
-            putBoolean("webhook_verify_certificate", false)
-            putString("webhook_headers", "{}")
-
-            apply()
+            putString(PrefKeys.WEBHOOK_URL, "https://example.com/webhook_test")
+            putString(PrefKeys.WEBHOOK_METHOD, "POST")
+            putString(PrefKeys.WEBHOOK_INCLUDE_LOCATION, "JSON - Body")
+            putInt(PrefKeys.WEBHOOK_TIMEOUT, 30)
+            putInt(PrefKeys.WEBHOOK_RETRIES, 3)
+            putBoolean(PrefKeys.WEBHOOK_VERIFY_CERTIFICATE, false)
+            putString(PrefKeys.WEBHOOK_HEADERS, "{}")
         }
     }
 
@@ -85,4 +84,4 @@ class DebugFunctions {
         )
         //}
     }
-}
+}

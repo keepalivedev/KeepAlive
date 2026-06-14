@@ -14,15 +14,12 @@
     <string name="back">后退</string>
     <string name="go_to_settings">去设置</string>
     <string name="enabled">启用</string>
-    <string name="disabled">禁用</string>
-    <string name="placeholder" translatable="false">PLACEHOLDER TEXT</string>
 
     <!-- webhook layout strings -->
-    <string name="webhook_get" translatable="false">GET</string>
-    <string name="webhook_post" translatable="false">POST</string>
     <string name="webhook_url_hint">Webhook URL</string>
     <string name="webhook_http_method_hint">HTTP Method</string>
     <string name="webhook_verify_certificate_label">Verify Certificate</string>
+    <string name="webhook_verify_certificate_warning">警告：禁用证书验证后，连接将无法防止被拦截。请仅与可信的私有服务器一起使用。</string>
     <string name="webhook_timeout_hint">Timeout (seconds)</string>
     <string name="webhook_retries_hint">Retries</string>
     <string name="webhook_include_location_hint">Include Location in Request?</string>
@@ -108,7 +105,6 @@
     <string name="test_sms_configured_contacts_message">这将向您的联系人 %1$s 发送测试短信。</string>
     <string name="test_alert_confirmation_message_with_count"><![CDATA[总共将发送 <b>%1$d</b> 条短信。 您想继续吗？]]></string>
     <string name="test_alert_sms_default_message">The following messages are a test from the Keep Alive app. Please confirm receipt!</string>
-    <string name="test_alert_warning_message_explanation">在发送提醒消息之前，以下内容将发送给每位已启用的联系人。</string>
 
     <!-- notification strings -->
     <string name="default_notification_channel_title">进入等待期</string>
@@ -133,8 +129,6 @@
     <string name="sms_alert_failure_notification_text_with_error">发送短信时发生错误: %1$s</string>
     <string name="sms_service_failure_notification_title">无法发送提醒短信</string>
     <string name="sms_service_failure_notification_text">发送提醒短信时发生错误，请插入有效的SIM卡。</string>
-    <string name="sms_sent_toast_text">提醒短信已发送！</string>
-    <string name="sms_failure_toast_text">提醒短信发送失败？！</string>
     <string name="alert_service_notification_title">正在发送提醒…</string>
     <string name="alert_service_notification_message">提醒消息正在发送给您的联系人，请稍候。</string>
 
@@ -169,7 +163,6 @@
 
     <!-- Main Settings -->
     <string name="enabled_title">启用监测器</string>
-    <string name="disabled_title">监测器已禁用</string>
     <string name="auto_restart_title">发出提醒后自动重启监测器</string>
     <string name="time_period_title">闲置多久后弹出通知</string>
     <string name="time_period_description">设备超过 # 小时不活动，系统将弹出 \'Are you there?\' 的通知。</string>
@@ -178,7 +171,6 @@
     <string name="exact_alarm_note">注意：此时间并非精确值，系统可能延迟最多1小时发送通知。\n\n若需精确检测，请启用下方的“使用精确闹钟计时”功能，可能略微增加电池电量消耗。</string>
     <string name="rest_period_title">休眠期</string>
     <string name="followup_time_period_description">弹出 \'Are you there?\' 的通知后，等待 # 分钟无人响应才会向您的联系人发出提醒。</string>
-    <string name="contact_sms_phone_title">短信号码</string>
     <string name="contact_phone_title">电话联系（可选）</string>
     <string name="add_sms_contact_button_text">短信联系</string>
     <string name="contact_phone_description">触发提醒后，将向该电话号码拨打语音电话并启用免提功能。\n\n请注意，这需要授予额外的权限以便从后台拨打电话。</string>
@@ -187,14 +179,12 @@
     <string name="add_emergency_contact_title">添加联系人</string>
     <string name="edit_emergency_contact_title">编辑联系人</string>
     <string name="webhook_title">Alert Webhook</string>
-    <string name="webhook_url_title">Webhook URL</string>
 
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">监测方式</string>
     <string name="monitored_apps_dialog_title">选择 1 个或多个App</string>
     <string name="monitored_apps_dialog_message">所选App的使用情况将用于确定您最后一次活动的时间</string>
     <string name="monitored_apps_chosen_title">已选中的App</string>
-    <string name="monitored_apps_usage_history_dialog_title">App使用历史 (72 小时)</string>
     <string name="monitored_apps_usage_history_message">这些事件不一定都是用户活动造成的。请在选择此App前仔细考虑清楚。</string>
     <string name="monitored_apps_recently_used_title">最近被使用过的App (过去 72 小时)</string>
     <string name="monitored_apps_not_configured_title">未设置</string>
@@ -235,7 +225,7 @@
 
     <!-- MANAGE_OVERLAY_PERMISSION Permission -->
     <string name="permission_manage_overlay_title">需要授予权限: 显示在其他应用的上层</string>
-    <string name="permission_manage_overlay_description">提供了一个联系电话号码时，需要具备在后台拨打电话的能力。\n\n请为 Keep Alive 启用该权限。</string>
+    <string name="permission_manage_overlay_description">需要悬浮窗权限以：\n\n• 在触发\'你还在吗？\'检查时，在其他应用上方显示全屏提示，避免误发警报。\n\n• 在配置了紧急联系电话号码时，在后台拨打电话。\n\n请在设备设置中为 Keep Alive 应用启用此权限。</string>
 
     <!-- ACCESS_FINE_LOCATION Permission -->
     <string name="permission_access_fine_location_title">需要授予权限: 访问精确位置信息</string>
@@ -276,7 +266,6 @@
     <string name="debug_log_failed_getting_last_phone_activity">Failed getting last phone activity?!</string>
     <string name="debug_log_no_events_sending_notification">no events found in the last %1$.2f hours, sending Are you there? notification</string>
     <string name="debug_log_sending_alert">Sending alert!</string>
-    <string name="debug_log_sending_alert_failed">Failed while attempting to get and send location alert</string>
     <string name="debug_log_last_device_activity">Last usage event was %1$s from %2$s at %3$s UTC</string>
     <string name="debug_log_location_power_mode_warning">Location power save mode may prevent us from obtaining location: %1$s</string>
     <string name="debug_log_power_and_idle_status">In power save mode? %1$b. Is device idle? %2$b</string>
@@ -285,6 +274,7 @@
     <string name="debug_log_alert_service_start">Starting Alert Service</string>
     <string name="debug_log_alert_service_stop">Stopping Alert Service</string>
     <string name="debug_log_alert_service_error">Error occurred in the Alert Service: %1$s</string>
+    <string name="debug_log_failed_to_start_alert_service">AlertService 启动失败：%1$s</string>
     <string name="debug_log_auto_restart_monitoring">Auto-Restart Monitoring is enabled, restarting alarm…</string>
     <string name="debug_log_sending_warning_sms">Sending warning SMS to %1$s</string>
 
@@ -292,14 +282,12 @@
     <string name="debug_log_starting_up">KeepAlive starting up!</string>
 
     <!-- UtilityFunctions.kt -->
-    <string name="debug_log_failed_getting_shared_prefs">Failed getting shared preferences?!</string>
     <string name="debug_log_failed_getting_alarm_manager">Failed to get AlarmManager?!</string>
     <string name="debug_log_setting_periodic_alarm">Setting new periodic alarm for approximately %1$s UTC</string>
     <string name="debug_log_setting_periodic_exact_alarm">Setting new periodic exact alarm for %1$s UTC</string>
     <string name="debug_log_setting_final_exact_alarm">Setting final exact alarm to go off at %1$s UTC</string>
     <string name="debug_log_unable_to_set_exact_alarm">Unable to set exact alarm?!  Setting normal final alarm to go off at %1$s UTC</string>
     <string name="debug_log_api_22_unable_to_set_exact_alarm">This is API 22 but we weren\'t able to set an exact alarm?!</string>
-    <string name="debug_log_returning_logs">Returning %1$d logs</string>
 
     <!-- LogDisplayActivity.kt -->
     <string name="debug_log_log_display_activity_started">Debug Log Display Activity started</string>
@@ -354,6 +342,8 @@
     <!-- AlertService.kt -->
     <string name="debug_log_wake_lock_acquired">Acquiring wake lock</string>
     <string name="debug_log_wake_lock_released">Releasing wake lock</string>
+    <string name="debug_log_alert_intent_skipping">跳过警报意图：trigger=%1$d (savedTrigger=%2$d, savedSteps=%3$d)</string>
+    <string name="debug_log_alert_intent_resuming">恢复警报：trigger=%1$d (completedSteps=%2$d)</string>
 
     <!-- SMSSentReceiver.kt -->
     <string name="debug_log_sms_sent">SMS sent!</string>
@@ -374,16 +364,15 @@
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Webhook configuration saved</string>
     <string name="debug_log_webhook_config_deleted">Webhook configuration deleted</string>
-    <string name="debug_log_webhook_config_load_error">Error loading webhook configuration</string>
     <string name="debug_log_invalid_header_json">无效的标头 JSON</string>
 
     <!-- Are You There overlay strings -->
     <string name="are_you_there_title">你还在吗？</string>
     <string name="are_you_there_message">点击"我没事"以取消警报。</string>
     <string name="are_you_there_countdown">警报将在…后发送</string>
-    <string name="are_you_there_countdown_format">警报将在 %1$d:%2$02d 后发送</string>
     <string name="are_you_there_waiting_for_acknowledgement">等待确认</string>
     <string name="are_you_there_im_ok">我没事</string>
+    <string name="are_you_there_overlay_title">显示全屏\'你还在吗？\'提示</string>
 
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Disabling webhook certificate verification!</string>
@@ -402,5 +391,6 @@
     <string name="debug_log_direct_boot_final_alarm_due">Direct Boot: 最终闹钟已到期 — 正在发送提醒</string>
     <string name="debug_log_direct_boot_cleared_pending_flag">Direct Boot: 已清除 direct_boot_notification_pending</string>
     <string name="debug_log_direct_boot_set_pending_flag">Direct Boot: 已设置 direct_boot_notification_pending=true</string>
+    <string name="debug_log_direct_boot_activity_newer_skipping">Direct Boot：%1$s 的活动比 %2$s 发布的\'你还在吗？\'更新；跳过最终警报</string>
 
 </resources>

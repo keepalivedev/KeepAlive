@@ -22,7 +22,7 @@ class WebhookConfigManagerTest {
 
     @Before fun setUp() {
         // Start each test with a clean slate
-        getEncryptedSharedPreferences(appCtx).edit().clear().commit()
+        getAppSharedPreferences(appCtx).edit().clear().commit()
     }
 
     @Test fun `defaults come through when no webhook prefs are set`() {
@@ -38,7 +38,7 @@ class WebhookConfigManagerTest {
     }
 
     @Test fun `stored values round-trip through getWebhookConfig`() {
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putString("webhook_url", "https://example.com/hook")
             .putString("webhook_method", appCtx.getString(R.string.webhook_post))
             .putString("webhook_include_location",
@@ -60,7 +60,7 @@ class WebhookConfigManagerTest {
     }
 
     @Test fun `malformed header JSON is tolerated and falls back to empty headers`() {
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putString("webhook_headers", "not-valid-json{{{")
             .commit()
 
@@ -71,7 +71,7 @@ class WebhookConfigManagerTest {
     }
 
     @Test fun `empty header JSON produces empty map`() {
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putString("webhook_headers", "{}")
             .commit()
 

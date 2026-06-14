@@ -10,7 +10,6 @@ import io.mockk.verify
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -41,7 +40,7 @@ class AcknowledgeAreYouThereTest {
         // setAlarm hits AlarmManager — mock it out so we can just verify it was called.
         every { setAlarm(any(), any(), any(), any(), any()) } returns Unit
         // Seed prefs with the defaults the acknowledgement reads.
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putString("time_period_hours", "12")
             .commit()
         // Simulate Direct Boot pending state we expect to clear.
@@ -94,7 +93,7 @@ class AcknowledgeAreYouThereTest {
     }
 
     @Test fun `uses the configured check period for the periodic alarm`() {
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putString("time_period_hours", "4")
             .commit()
         val periodSlot = slot<Int>()
@@ -106,7 +105,7 @@ class AcknowledgeAreYouThereTest {
     }
 
     @Test fun `falls back to 12h check period when preference is unparseable`() {
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putString("time_period_hours", "not-a-number")
             .commit()
         val periodSlot = slot<Int>()

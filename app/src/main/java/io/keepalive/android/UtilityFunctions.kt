@@ -53,7 +53,9 @@ inline fun <reified T> loadJSONSharedPreference(
     preferenceKey: String
 ): MutableList<T> {
     val jsonString = sharedPrefs.getString(preferenceKey, null) ?: return mutableListOf()
-    Log.d("loadJSONSharedPref", "Loading $preferenceKey: $jsonString")
+
+    // don't log the JSON itself — it can contain phone numbers and alert messages
+    Log.d("loadJSONSharedPref", "Loading $preferenceKey")
 
     val gson = Gson()
     return gson.fromJson(
@@ -71,8 +73,9 @@ fun saveSMSEmergencyContactSettings(
 
     try {
         // turn the phone number list into a string
+        // don't log the JSON itself — it contains phone numbers and alert messages
         val jsonString = gson.toJson(phoneNumberList)
-        Log.d("PhoneNumberAdapter", "Saving settings: $jsonString")
+        Log.d("PhoneNumberAdapter", "Saving ${phoneNumberList.size} contact setting(s)")
 
         // if any of the phone numbers have location enabled then we need to set the
         //  location_enabled preference to true
@@ -80,30 +83,29 @@ fun saveSMSEmergencyContactSettings(
 
         for (phoneNumberSetting in phoneNumberList) {
             if (phoneNumberSetting.isEnabled && phoneNumberSetting.includeLocation) {
-                Log.d("saveSettings", "phoneNumberSetting: $phoneNumberSetting")
                 includeLocation = true
             }
         }
 
-        with(sharedPrefs!!.edit()) {
-            putString("PHONE_NUMBER_SETTINGS", jsonString)
+        sharedPrefs!!.edit {
+            putString(PrefKeys.PHONE_NUMBER_SETTINGS, jsonString)
 
             // this is stored as a single setting so that it can be more easily checked elsewhere
-            putBoolean("location_enabled", includeLocation)
-            apply()
+            putBoolean(PrefKeys.LOCATION_ENABLED, includeLocation)
         }
     } catch (e: Exception) {
         Log.e("PhoneNumberAdapter", "Error saving settings: ${e.message}")
     }
 }
 
-// originally implemented because I thought one of the questions in the play store asked about it
-//  but that wasn't the case.  to reduce complexity and the chances of this failing, just
-//  use the default shared preferences as we aren't really store anything sensitive anyway.
+// the app's main settings store. settings are intentionally kept in plain
+//  (unencrypted) default SharedPreferences — EncryptedSharedPreferences was removed
+//  to reduce complexity and the chances of failing to read settings when an alert
+//  needs to go out.
 // if the user hasn't unlocked the device yet (Direct Boot mode), credential-encrypted
 //  storage is not available so we fall back to device-protected storage which was synced
 //  from the main prefs whenever settings were changed.
-fun getEncryptedSharedPreferences(context: Context): SharedPreferences {
+fun getAppSharedPreferences(context: Context): SharedPreferences {
     return try {
 
         // check if we're in Direct Boot mode (user hasn't unlocked the device yet)
@@ -115,28 +117,11 @@ fun getEncryptedSharedPreferences(context: Context): SharedPreferences {
             // defaulting to device-protected when we can't determine lock state is safer
             // than crashing on inaccessible credential-encrypted storage.
             if (userManager == null || !userManager.isUserUnlocked) {
-                Log.d("getEncryptedSP", "User not unlocked or UserManager unavailable, using device-protected storage")
+                Log.d("getAppSharedPrefs", "User not unlocked or UserManager unavailable, using device-protected storage")
                 return getDeviceProtectedPreferences(context)
             }
         }
 
-        /*
-        Log.d("getEncryptedSP", "Getting encrypted shared preferences")
-        // this gets a system generated master key that is stored in the android keystore?
-        // by default this won't require that the device be unlocked?
-        val masterKey = MasterKey.Builder(context)
-            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-            .build()
-
-        // get or create the encrypted shared preferences and return it
-        EncryptedSharedPreferences.create(
-            context,
-            AppController.ENCRYPTED_SHARED_PREFERENCES_NAME,
-            masterKey,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
-        */
         PreferenceManager.getDefaultSharedPreferences(context)
 
     } catch (e: Exception) {
@@ -148,16 +133,16 @@ fun getEncryptedSharedPreferences(context: Context): SharedPreferences {
         // NOTE: do NOT call DebugLogger.d() here — it may also fail during Direct Boot,
         //  creating a cascading error chain. use Log.e() for logcat-only logging instead.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Log.e("getEncryptedSP", "Fallback to device-protected storage after exception", e)
+            Log.e("getAppSharedPrefs", "Fallback to device-protected storage after exception", e)
             return getDeviceProtectedPreferences(context)
         }
 
         // pre-API 24: no device-protected storage, try default prefs as last resort
-        Log.e("getEncryptedSP", "Falling back to default shared preferences", e)
+        Log.e("getAppSharedPrefs", "Falling back to default shared preferences", e)
         try {
             PreferenceManager.getDefaultSharedPreferences(context)
         } catch (e2: Exception) {
-            Log.e("getEncryptedSP", "Default shared preferences also failed!", e2)
+            Log.e("getAppSharedPrefs", "Default shared preferences also failed!", e2)
             throw e2
         }
     }
@@ -305,7 +290,7 @@ fun setAlarm(
     )
 
     // Check if user has enabled the "Use Exact Alarm Timing" setting
-    val useExactAlarms = getEncryptedSharedPreferences(context).getBoolean("use_exact_alarms", false)
+    val useExactAlarms = getAppSharedPreferences(context).getBoolean(PrefKeys.USE_EXACT_ALARMS, false)
 
     // API 31+ added new permissions for setting exact alarms so we need to make sure we have them
     var canScheduleExactAlarms = true
@@ -408,10 +393,10 @@ fun setAlarm(
         }
     }
 
-    val prefs = getEncryptedSharedPreferences(context)
+    val prefs = getAppSharedPreferences(context)
 
     // previous alarm may not actually be active anymore but no way to know for sure
-    val previousAlarmTimestamp = prefs.getLong("NextAlarmTimestamp", 0)
+    val previousAlarmTimestamp = prefs.getLong(PrefKeys.NEXT_ALARM_TIMESTAMP, 0)
 
     Log.d(
         "setAlarm", "Previous alarm was set to" +
@@ -419,9 +404,8 @@ fun setAlarm(
     )
 
     // track when the next alarm is set to go off in our preferences
-    with(prefs.edit()) {
-        putLong("NextAlarmTimestamp", alarmTimestamp)
-        apply()
+    prefs.edit {
+        putLong(PrefKeys.NEXT_ALARM_TIMESTAMP, alarmTimestamp)
     }
 
     // also save the alarm stage to device-protected storage so it can be
@@ -433,8 +417,8 @@ fun setAlarm(
         try {
             val devicePrefs = getDeviceProtectedPreferences(context)
             devicePrefs.edit(commit = true) {
-                putString("last_alarm_stage", alarmStage)
-                putLong("NextAlarmTimestamp", alarmTimestamp)
+                putString(PrefKeys.LAST_ALARM_STAGE, alarmStage)
+                putLong(PrefKeys.NEXT_ALARM_TIMESTAMP, alarmTimestamp)
             }
         } catch (e: Exception) {
             Log.e("setAlarm", "Error saving alarm stage to device-protected storage", e)

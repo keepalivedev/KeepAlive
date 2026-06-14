@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lint>
+
+    <!-- "Newer version available" nags. Dependency versions are pinned
+         deliberately (e.g. core-ktx stays on 1.17.0 to keep API 22 support);
+         upgrades are handled as a separate, conscious task. NewerVersionAvailable
+         also hits the network, which makes it a poor CI signal. -->
+    <issue id="GradleDependency" severity="ignore" />
+    <issue id="NewerVersionAvailable" severity="ignore" />
+
+    <!-- ic_notification is intentionally shipped as BOTH an anydpi vector and
+         density PNGs: vector notification icons are unreliable on API 22-23
+         (minSdk is 22), so the PNGs are the fallback. -->
+    <issue id="IconXmlAndPng" severity="ignore" />
+
+    <!-- Flagged strings are debug-log messages that contain a count. They are
+         non-UI diagnostics, so converting them to <plurals> adds no value. -->
+    <issue id="PluralsCandidate" severity="ignore" />
+
+    <!-- The log-display action buttons intentionally use the default bordered
+         style rather than the borderless button-bar style. -->
+    <issue id="ButtonStyle" severity="ignore" />
+
+    <!-- Advisory checks surfaced by the lint 9.2.x toolchain bump (not in the
+         original report):
+         - NotShrinkingResources: the release build uses minifyEnabled without
+           shrinkResources. Left as-is to keep F-Droid builds simple and avoid
+           accidentally stripping resources; revisit as a deliberate size pass.
+         - OldTargetApi: targetSdk 36 is current — this is a version nag like the
+           dependency checks above. -->
+    <issue id="NotShrinkingResources" severity="ignore" />
+    <issue id="OldTargetApi" severity="ignore" />
+
+    <!-- These strings are used only by the fDroid flavor's android.location
+         LocationHelper, so lint reports them as unused when it analyzes the
+         googlePlay flavor. They must stay for the fDroid/fDroidLite builds. -->
+    <issue id="UnusedResources">
+        <ignore regexp="debug_log_best_last_known_location" />
+        <ignore regexp="debug_log_unable_to_determine_location" />
+        <ignore regexp="debug_log_unable_to_get_current_location" />
+        <ignore regexp="debug_log_location_timeout_reached" />
+    </issue>
+
+</lint>

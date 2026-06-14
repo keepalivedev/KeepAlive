@@ -29,8 +29,8 @@ import java.util.Calendar
  * Pure helper — no side effects, safe to call directly from tests.
  */
 internal fun getSavedReferenceTimestamp(devicePrefs: SharedPreferences, fallback: Long): Long {
-    val savedActivityTimestamp = devicePrefs.getLong("last_activity_timestamp", -1L)
-    val savedCheckTimestamp = devicePrefs.getLong("last_check_timestamp", -1L)
+    val savedActivityTimestamp = devicePrefs.getLong(PrefKeys.LAST_ACTIVITY_TIMESTAMP, -1L)
+    val savedCheckTimestamp = devicePrefs.getLong(PrefKeys.LAST_CHECK_TIMESTAMP, -1L)
     return when {
         savedActivityTimestamp > 0 -> savedActivityTimestamp
         savedCheckTimestamp > 0 -> savedCheckTimestamp
@@ -60,10 +60,10 @@ internal fun doAlertCheck(deps: AlertCheckDeps, alarmStage: String) {
     val prefs = deps.credentialPrefs()
 
     // get the necessary preferences
-    val checkPeriodHours = prefs.getString("time_period_hours", "12")?.toFloatOrNull() ?: 12f
-    val followupPeriodMinutes = prefs.getString("followup_time_period_minutes", "60")?.toIntOrNull() ?: 60
-    val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(prefs, "REST_PERIODS")
-    val appsToMonitor: MutableList<MonitoredAppDetails> = loadJSONSharedPreference(prefs, "APPS_TO_MONITOR")
+    val checkPeriodHours = prefs.getString(PrefKeys.TIME_PERIOD_HOURS, "12")?.toFloatOrNull() ?: 12f
+    val followupPeriodMinutes = prefs.getString(PrefKeys.FOLLOWUP_TIME_PERIOD_MINUTES, "60")?.toIntOrNull() ?: 60
+    val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(prefs, PrefKeys.REST_PERIODS)
+    val appsToMonitor: MutableList<MonitoredAppDetails> = loadJSONSharedPreference(prefs, PrefKeys.APPS_TO_MONITOR)
 
     // if the user hasn't unlocked the device yet (Direct Boot), UsageStatsManager is not
     //  available so we can't query for recent activity. instead, use the alarm state
@@ -80,7 +80,7 @@ internal fun doAlertCheck(deps: AlertCheckDeps, alarmStage: String) {
             Log.e("doAlertCheck", "Direct Boot path but devicePrefs() returned null; aborting")
             return
         }
-        val savedAlarmTimestamp = devicePrefs.getLong("NextAlarmTimestamp", 0L)
+        val savedAlarmTimestamp = devicePrefs.getLong(PrefKeys.NEXT_ALARM_TIMESTAMP, 0L)
         val nowTimestamp = deps.now()
 
         Log.d("doAlertCheck", "Direct Boot: alarmStage=$alarmStage, " +
@@ -126,12 +126,12 @@ internal fun doAlertCheck(deps: AlertCheckDeps, alarmStage: String) {
             // via a race between this final alarm and the acknowledgement
             // replacing it.
             val areYouTherePostedAt = savedAlarmTimestamp - (followupPeriodMinutes * 60 * 1000L)
-            val savedActivityTimestamp = devicePrefs.getLong("last_activity_timestamp", -1L)
+            val savedActivityTimestamp = devicePrefs.getLong(PrefKeys.LAST_ACTIVITY_TIMESTAMP, -1L)
             if (savedActivityTimestamp > 0 && savedActivityTimestamp >= areYouTherePostedAt) {
                 DebugLogger.d("doAlertCheck",
-                    "Direct Boot: activity at ${getDateTimeStrFromTimestamp(savedActivityTimestamp)} " +
-                    "is newer than 'Are you there?' posted at ${getDateTimeStrFromTimestamp(areYouTherePostedAt)}; " +
-                    "skipping final alert")
+                    deps.getString(R.string.debug_log_direct_boot_activity_newer_skipping,
+                        getDateTimeStrFromTimestamp(savedActivityTimestamp),
+                        getDateTimeStrFromTimestamp(areYouTherePostedAt)))
                 deps.acknowledgeAreYouThere()
                 return
             }
@@ -142,7 +142,7 @@ internal fun doAlertCheck(deps: AlertCheckDeps, alarmStage: String) {
             DebugLogger.d("doAlertCheck", deps.getString(R.string.debug_log_direct_boot_final_alarm_due))
 
             try {
-                devicePrefs.edit(commit = true) { putBoolean("direct_boot_notification_pending", false) }
+                devicePrefs.edit(commit = true) { putBoolean(PrefKeys.DIRECT_BOOT_NOTIFICATION_PENDING, false) }
                 DebugLogger.d("doAlertCheck", deps.getString(R.string.debug_log_direct_boot_cleared_pending_flag))
             } catch (e: Exception) {
                 Log.e("doAlertCheck", "Error clearing Direct Boot notification flag", e)
@@ -178,7 +178,7 @@ internal fun doAlertCheck(deps: AlertCheckDeps, alarmStage: String) {
             // use commit=true (synchronous) because apply() is async and the process can
             // be killed after onReceive() returns, losing the write.
             try {
-                devicePrefs.edit(commit = true) { putBoolean("direct_boot_notification_pending", true) }
+                devicePrefs.edit(commit = true) { putBoolean(PrefKeys.DIRECT_BOOT_NOTIFICATION_PENDING, true) }
                 DebugLogger.d("doAlertCheck", deps.getString(R.string.debug_log_direct_boot_set_pending_flag))
             } catch (e: Exception) {
                 Log.e("doAlertCheck", "Error saving Direct Boot notification flag", e)
@@ -253,9 +253,9 @@ internal fun doAlertCheck(deps: AlertCheckDeps, alarmStage: String) {
     deps.devicePrefs()?.let { devicePrefs ->
         try {
             devicePrefs.edit(commit = true) {
-                putLong("last_check_timestamp", nowTimestamp)
+                putLong(PrefKeys.LAST_CHECK_TIMESTAMP, nowTimestamp)
                 if (lastInteractiveEvent != null) {
-                    putLong("last_activity_timestamp", lastInteractiveEvent.timeStamp)
+                    putLong(PrefKeys.LAST_ACTIVITY_TIMESTAMP, lastInteractiveEvent.timeStamp)
                 }
             }
         } catch (e: Exception) {
@@ -286,11 +286,15 @@ internal fun doAlertCheck(deps: AlertCheckDeps, alarmStage: String) {
 
         deps.showAreYouThereNotification(followupPeriodMinutes)
 
-        // If we have overlay permission, also show a full-screen warning over other apps.
-        // This makes the prompt effectively impossible to miss (e.g., while watching video).
-        // Note: no need to check isUserUnlocked() here — the Direct Boot path returns
-        // early above, so we are guaranteed the user is unlocked at this point.
-        deps.showAreYouThereOverlay(followupPeriodMinutes)
+        // If we have overlay permission AND the user has opted in to the full-screen
+        // dialog, also show a full-screen warning over other apps. This makes the
+        // prompt effectively impossible to miss (e.g., while watching video).
+        // Default true preserves the always-on behavior for any path that reaches
+        // doAlertCheck before AppController's first-run migration has written the
+        // explicit value.
+        if (prefs.getBoolean(PrefKeys.ARE_YOU_THERE_OVERLAY_ENABLED, true)) {
+            deps.showAreYouThereOverlay(followupPeriodMinutes)
+        }
 
         // if no events are found then set the alarm so we follow up; do not adjust the followup
         //  time based on the rest periods

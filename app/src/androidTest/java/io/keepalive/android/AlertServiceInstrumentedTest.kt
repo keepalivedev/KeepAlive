@@ -1,6 +1,5 @@
 package io.keepalive.android
 
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -12,8 +11,6 @@ import io.keepalive.android.AlertFlowTestUtil.targetContext
 import io.keepalive.android.AlertFlowTestUtil.waitUntil
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.BeforeClass
@@ -34,7 +31,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 // Uses NotificationManager.getActiveNotifications() (API 23+) and
 // AlertService is foreground-aware (API 26+ contract). API 22 skipped.
-@SdkSuppress(minSdkVersion = android.os.Build.VERSION_CODES.M)
+@SdkSuppress(minSdkVersion = Build.VERSION_CODES.M)
 class AlertServiceInstrumentedTest {
 
     companion object {
@@ -53,7 +50,7 @@ class AlertServiceInstrumentedTest {
 
         resetToCleanEnabledState()
         // Also clear step tracker from any prior run
-        getEncryptedSharedPreferences(targetContext).edit()
+        getAppSharedPreferences(targetContext).edit()
             .putLong("AlertTriggerTimestamp", 0L)
             .putInt("AlertStepsCompleted", 0)
             .putLong("LastAlertAt", 0L)
@@ -99,7 +96,7 @@ class AlertServiceInstrumentedTest {
             waitUntil { AlertFlowTestUtil.isAlertStepComplete(STEP_WEBHOOK_DONE) })
 
         // LastAlertAt should be recent
-        val lastAt = getEncryptedSharedPreferences(targetContext).getLong("LastAlertAt", 0)
+        val lastAt = getAppSharedPreferences(targetContext).getLong("LastAlertAt", 0)
         assertTrue("LastAlertAt should be recent", lastAt >= trigger)
     }
 
@@ -115,16 +112,16 @@ class AlertServiceInstrumentedTest {
                 AlertFlowTestUtil.isAlertStepComplete(ALL_STEPS_COMPLETE)
             })
         assertTrue("first run should write LastAlertAt",
-            waitUntil { getEncryptedSharedPreferences(targetContext).getLong("LastAlertAt", 0) > 0 })
+            waitUntil { getAppSharedPreferences(targetContext).getLong("LastAlertAt", 0) > 0 })
 
-        val firstLastAt = getEncryptedSharedPreferences(targetContext).getLong("LastAlertAt", 0)
+        val firstLastAt = getAppSharedPreferences(targetContext).getLong("LastAlertAt", 0)
         Thread.sleep(50)
 
         // Send the same trigger again — dedup guard should bail.
         startAlertService(trigger)
         Thread.sleep(1500) // let service boot and bail
 
-        val secondLastAt = getEncryptedSharedPreferences(targetContext).getLong("LastAlertAt", 0)
+        val secondLastAt = getAppSharedPreferences(targetContext).getLong("LastAlertAt", 0)
         assertEquals("LastAlertAt should NOT be updated by a duplicate trigger",
             firstLastAt, secondLastAt)
     }
@@ -169,16 +166,15 @@ class AlertServiceInstrumentedTest {
 
     @Test fun serviceRunsWithoutCrashingWhenContactsAreBlank() {
         // Edge case: the user enables the app but hasn't configured a contact.
-        getEncryptedSharedPreferences(targetContext).edit()
+        getAppSharedPreferences(targetContext).edit()
             .putString("PHONE_NUMBER_SETTINGS", "[]")
             .putString("contact_phone", "")
             .commit()
 
         startAlertService()
-        Thread.sleep(2000)
 
         // Steps still mark complete — we don't hang when there's nothing to send.
-        assertTrue(AlertFlowTestUtil.isAlertStepComplete(STEP_SMS_SENT))
-        assertTrue(AlertFlowTestUtil.isAlertStepComplete(STEP_CALL_MADE))
+        assertTrue(waitUntil { AlertFlowTestUtil.isAlertStepComplete(STEP_SMS_SENT) })
+        assertTrue(waitUntil { AlertFlowTestUtil.isAlertStepComplete(STEP_CALL_MADE) })
     }
 }

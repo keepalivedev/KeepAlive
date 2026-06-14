@@ -14,12 +14,12 @@
     <string name="back">Dos</string>
     <string name="go_to_settings">Paramètre</string>
     <string name="enabled">Activé</string>
-    <string name="disabled">Désactivé</string>
 
     <!-- webhook layout strings -->
     <string name="webhook_url_hint">URL du webhook</string>
     <string name="webhook_http_method_hint">Méthode HTTP</string>
     <string name="webhook_verify_certificate_label">Vérifier le certificat</string>
+    <string name="webhook_verify_certificate_warning">Avertissement : si la vérification du certificat est désactivée, la connexion n\'est pas protégée contre l\'interception. À utiliser uniquement avec un serveur privé de confiance.</string>
     <string name="webhook_timeout_hint">Délai d\'expiration (secondes)</string>
     <string name="webhook_retries_hint">Tentatives</string>
     <string name="webhook_include_location_hint">Inclure la localisation dans la requête ?</string>
@@ -105,7 +105,6 @@
     <string name="test_sms_configured_contacts_message">Cela enverra une alerte test par SMS à vos contacts d\'urgence configurés : %1$s.</string>
     <string name="test_alert_confirmation_message_with_count"><![CDATA[Un total de <b>%1$d</b> SMS seront envoyés. Voulez-vous continuer ?]]></string>
     <string name="test_alert_sms_default_message">Les messages suivants sont un test de l\'application Keep Alive. Veuillez confirmer la réception !</string>
-    <string name="test_alert_warning_message_explanation">Le message ci-dessous sera envoyé à chaque contact activé avant l\'envoi du message d\'alerte configuré.</string>
 
     <!-- notification strings -->
     <string name="default_notification_channel_title">Notifications d\'alerte</string>
@@ -130,8 +129,6 @@
     <string name="sms_alert_failure_notification_text_with_error">Une erreur s\'est produite lors de la tentative d\'envoi d\'un SMS d\'alerte: %1$s</string>
     <string name="sms_service_failure_notification_title">Impossible de transmettre l\'alerte SMS</string>
     <string name="sms_service_failure_notification_text">Une erreur s\'est produite lors de la tentative d\'envoi d\'un SMS d\'alerte, veuillez vérifier que vous disposez d\'une carte SIM active</string>
-    <string name="sms_sent_toast_text">Alert SMS Keep Alive envoyée!</string>
-    <string name="sms_failure_toast_text">Échec de l\'envoi du SMS d\'alerte Keep Alive?!</string>
     <string name="alert_service_notification_title">Envoi de l\'alerte en cours…</string>
     <string name="alert_service_notification_message">L\'alerte (ou les alertes) est en cours d\'envoi à vos contacts configurés, veuillez patienter.</string>
 
@@ -166,7 +163,6 @@
 
     <!-- Main Settings -->
     <string name="enabled_title">Surveillance activée</string>
-    <string name="disabled_title">Surveillance désactivée</string>
     <string name="auto_restart_title">Surveillance de redémarrage automatique après alerte</string>
     <string name="time_period_title">Heures d\'inactivité avant la notification</string>
     <string name="time_period_description">Le nombre d\'heures d\'inactivité avant qu\'une notification «Êtes-vous là?» ne soit affichée.</string>
@@ -175,7 +171,6 @@
     <string name="exact_alarm_note">REMARQUE : Ce minutage n\'est pas exact et le système peut retarder cette notification jusqu\'à 1 heure.\n\nActivez «Utiliser le minutage exact de l\'alarme» ci-dessous si vous avez besoin de vérifications précises, ce qui peut légèrement augmenter l\'utilisation de la batterie.</string>
     <string name="rest_period_title">Plage de temps de la période de repos</string>
     <string name="followup_time_period_description">Le nombre de minutes à attendre après l\'envoi d\'une notification «Êtes-vous là?» avant qu\'une alerte ne soit envoyée à vos contacts d\'urgence</string>
-    <string name="contact_sms_phone_title">Numéro de téléphone SMS</string>
     <string name="contact_phone_title">Numéro de téléphone à appeler (facultatif)</string>
     <string name="add_sms_contact_button_text">Ajouter un contact d\'urgence SMS</string>
     <string name="contact_phone_description">Lorsqu\'une alerte est déclenchée, un appel téléphonique sera passé vers ce numéro de téléphone avec le haut-parleur activé.\n\nVeuillez noter que cela nécessite des autorisations supplémentaires afin que les appels téléphoniques puissent être passés en arrière-plan.</string>
@@ -184,14 +179,12 @@
     <string name="add_emergency_contact_title">Ajouter un contact d\'urgence</string>
     <string name="edit_emergency_contact_title">Modifier un contact d\'urgence</string>
     <string name="webhook_title">Webhook d\'alerte</string>
-    <string name="webhook_url_title">URL du webhook</string>
 
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Méthode de surveillance</string>
     <string name="monitored_apps_dialog_title">Sélectionnez 1 ou plusieurs applications sur votre appareil</string>
     <string name="monitored_apps_dialog_message">L\'utilisation des applications sélectionnées sera utilisée pour déterminer la dernière interaction avec votre appareil. Pour revenir au verrouillage/déverrouillage de l\'appareil, appuyez sur \'Supprimer\'.</string>
     <string name="monitored_apps_chosen_title">Application(s) sélectionnée(s)</string>
-    <string name="monitored_apps_usage_history_dialog_title">Historique d\'utilisation des applications (72 heures)</string>
     <string name="monitored_apps_usage_history_message">Ces événements ne sont pas toujours le résultat de l\'activité de l\'utilisateur. Veuillez les examiner attentivement avant de choisir cette application.</string>
     <string name="monitored_apps_recently_used_title">Applications récemment utilisées (dernières 72 heures)</string>
     <string name="monitored_apps_not_configured_title">Méthode de surveillance non configurée</string>
@@ -232,7 +225,7 @@
 
     <!-- MANAGE_OVERLAY_PERMISSION Permission -->
     <string name="permission_manage_overlay_title">Autorisation requise: Gérer la superposition</string>
-    <string name="permission_manage_overlay_description">Un numéro de téléphone d\'appel d\'urgence a été fourni, ce qui nécessite la possibilité de passer un appel téléphonique en arrière-plan.\n\nVeuillez activer l\'autorisation Gérer la superposition pour l\'application Keep Alive dans les paramètres de votre appareil.</string>
+    <string name="permission_manage_overlay_description">L\'autorisation Gérer la superposition est requise pour :\n\n• Afficher une invite plein écran par-dessus les autres applications lorsque la vérification \'Êtes-vous là?\' est déclenchée, afin d\'éviter l\'envoi d\'une fausse alerte.\n\n• Passer un appel téléphonique en arrière-plan lorsqu\'un Numéro de Téléphone d\'Appel d\'Urgence est configuré.\n\nVeuillez activer cette autorisation pour l\'application Keep Alive dans les paramètres de votre appareil.</string>
 
     <!-- ACCESS_FINE_LOCATION Permission -->
     <string name="permission_access_fine_location_title">Autorisation requise: Accéder à l\'emplacement précis</string>
@@ -273,7 +266,6 @@
     <string name="debug_log_failed_getting_last_phone_activity">Échec de l\'obtention de la dernière activité du téléphone?!</string>
     <string name="debug_log_no_events_sending_notification">aucun événement trouvé dans les %1$.2f dernières heures, envoi de la notification Es-tu là?</string>
     <string name="debug_log_sending_alert">Envoi de l\'alerte!</string>
-    <string name="debug_log_sending_alert_failed">Échec lors de la tentative d\'obtention et d\'envoi de l\'alerte de localisation</string>
     <string name="debug_log_last_device_activity">Le dernier événement d\'utilisation était %1$s de %2$s à %3$s UTC</string>
     <string name="debug_log_location_power_mode_warning">Le mode d\'économie d\'énergie de localisation peut nous empêcher d\'obtenir la localisation : %1$s</string>
     <string name="debug_log_power_and_idle_status">En mode économie d\'énergie ? %1$b. L\'appareil est-il en veille ? %2$b</string>
@@ -282,6 +274,7 @@
     <string name="debug_log_alert_service_start">Démarrage du service d\'alerte</string>
     <string name="debug_log_alert_service_stop">Arrêt du service d\'alerte</string>
     <string name="debug_log_alert_service_error">Une erreur s\'est produite dans le service d\'alerte : %1$s</string>
+    <string name="debug_log_failed_to_start_alert_service">Échec du démarrage d\'AlertService : %1$s</string>
     <string name="debug_log_auto_restart_monitoring">La surveillance de redémarrage automatique est activée, redémarrage de l\'alarme…</string>
     <string name="debug_log_sending_warning_sms">Envoi d\'un SMS d\'avertissement à %1$s</string>
 
@@ -289,14 +282,12 @@
     <string name="debug_log_starting_up">KeepAlive démarre!</string>
 
     <!-- UtilityFunctions.kt -->
-    <string name="debug_log_failed_getting_shared_prefs">Échec de l\'obtention des préférences partagées?!</string>
     <string name="debug_log_failed_getting_alarm_manager">Échec de l\'obtention de l\'AlarmManager?!</string>
     <string name="debug_log_setting_periodic_alarm">Définition d\'une nouvelle alarme périodique pour environ %1$s UTC</string>
     <string name="debug_log_setting_periodic_exact_alarm">Configuration d\'une nouvelle alarme périodique exacte pour %1$s UTC</string>
     <string name="debug_log_setting_final_exact_alarm">Définition de l\'alarme exacte finale pour se déclencher à %1$s UTC</string>
     <string name="debug_log_unable_to_set_exact_alarm">Impossible de définir l\'alarme exacte?! Définition de l\'alarme finale normale pour se déclencher à %1$s UTC</string>
     <string name="debug_log_api_22_unable_to_set_exact_alarm">C\'est l\'API 22 mais nous n\'avons pas pu définir une alarme exacte?!</string>
-    <string name="debug_log_returning_logs">Retour de %1$d journaux</string>
 
     <!-- LogDisplayActivity.kt -->
     <string name="debug_log_log_display_activity_started">Activité d\'affichage du journal de débogage démarrée</string>
@@ -351,6 +342,8 @@
     <!-- AlertService.kt -->
     <string name="debug_log_wake_lock_acquired">Acquisition du verrou d\'éveil</string>
     <string name="debug_log_wake_lock_released">Libération du verrou d\'éveil</string>
+    <string name="debug_log_alert_intent_skipping">Intent d\'alerte ignoré : trigger=%1$d (savedTrigger=%2$d, savedSteps=%3$d)</string>
+    <string name="debug_log_alert_intent_resuming">Reprise de l\'alerte : trigger=%1$d (completedSteps=%2$d)</string>
 
     <!-- SMSSentReceiver.kt -->
     <string name="debug_log_sms_sent">SMS envoyé!</string>
@@ -371,16 +364,15 @@
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Configuration du webhook enregistrée</string>
     <string name="debug_log_webhook_config_deleted">Configuration du webhook supprimée</string>
-    <string name="debug_log_webhook_config_load_error">Erreur lors du chargement de la configuration du webhook</string>
     <string name="debug_log_invalid_header_json">JSON d\'en-tête invalide</string>
 
     <!-- Are You There overlay strings -->
     <string name="are_you_there_title">Êtes-vous toujours là ?</string>
     <string name="are_you_there_message">Appuyez sur JE VAIS BIEN pour annuler l\'alerte.</string>
     <string name="are_you_there_countdown">L\'alerte sera envoyée dans …</string>
-    <string name="are_you_there_countdown_format">L\'alerte sera envoyée dans %1$d:%2$02d</string>
     <string name="are_you_there_waiting_for_acknowledgement">En attente de confirmation</string>
     <string name="are_you_there_im_ok">Je vais bien</string>
+    <string name="are_you_there_overlay_title">Afficher l\'invite plein écran \'Êtes-vous là?\'</string>
 
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Désactivation de la vérification du certificat du webhook !</string>
@@ -399,4 +391,5 @@
     <string name="debug_log_direct_boot_final_alarm_due">Direct Boot : L\'alarme finale est arrivée à échéance — envoi de l\'alerte</string>
     <string name="debug_log_direct_boot_cleared_pending_flag">Direct Boot : direct_boot_notification_pending effacé</string>
     <string name="debug_log_direct_boot_set_pending_flag">Direct Boot : direct_boot_notification_pending=true défini</string>
+    <string name="debug_log_direct_boot_activity_newer_skipping">Direct Boot : activité à %1$s plus récente que \'Êtes-vous toujours là ?\' envoyé à %2$s ; alerte finale ignorée</string>
 </resources>

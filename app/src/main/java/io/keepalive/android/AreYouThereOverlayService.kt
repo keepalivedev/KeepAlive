@@ -92,6 +92,9 @@ class AreYouThereOverlayService : Service() {
         super.onDestroy()
     }
 
+    // InflateParams: an overlay window has no parent view to attach to, so passing
+    //  null as the inflate root is correct here.
+    @Suppress("InflateParams")
     private fun showOverlay(message: String?) {
         if (overlayView != null) return
 
@@ -153,8 +156,8 @@ class AreYouThereOverlayService : Service() {
 
         // Start a visible countdown until the final alert triggers.
         // We already know the follow-up duration in minutes from preferences.
-        val followupMins = getEncryptedSharedPreferences(applicationContext)
-            .getString("followup_time_period_minutes", "60")
+        val followupMins = getAppSharedPreferences(applicationContext)
+            .getString(PrefKeys.FOLLOWUP_TIME_PERIOD_MINUTES, "60")
             ?.toIntOrNull() ?: 60
         startCountdown(view, followupMins)
 

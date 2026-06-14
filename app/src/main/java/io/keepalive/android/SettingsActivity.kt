@@ -23,6 +23,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -49,8 +50,8 @@ class SettingsActivity : AppCompatActivity() {
 
         // load settings and initialize the adapter that will be used to store and interact with
         //  the SMS contact number settings
-        sharedPrefs = getEncryptedSharedPreferences(this)
-        phoneNumberList.addAll(loadJSONSharedPreference(sharedPrefs!!,"PHONE_NUMBER_SETTINGS"))
+        sharedPrefs = getAppSharedPreferences(this)
+        phoneNumberList.addAll(loadJSONSharedPreference(sharedPrefs!!,PrefKeys.PHONE_NUMBER_SETTINGS))
         phoneNumberAdapter = PhoneNumberAdapter(phoneNumberList, sharedPrefs!!, ::editPhoneNumber)
 
         // initialize the recycler view and link it to the adapter
@@ -92,7 +93,7 @@ class SettingsActivity : AppCompatActivity() {
             //  any apps to monitor and the user is trying to enable monitoring then show a dialog
             //  to let them know that they need to configure the apps first
             if (Build.VERSION.SDK_INT < AppController.MIN_API_LEVEL_FOR_DEVICE_LOCK_UNLOCK &&
-                sharedPrefs!!.getString("APPS_TO_MONITOR", "[]") == "[]" && isChecked) {
+                sharedPrefs!!.getString(PrefKeys.APPS_TO_MONITOR, "[]") == "[]" && isChecked) {
 
                 // force it back to false
                 monitoringEnabledSwitch.isChecked = false
@@ -112,9 +113,8 @@ class SettingsActivity : AppCompatActivity() {
             } else {
 
                 // no dialog for the switch, just save the new value and process the change
-                with(sharedPrefs!!.edit()) {
-                    putBoolean("enabled", isChecked)
-                    apply()
+                sharedPrefs!!.edit {
+                    putBoolean(PrefKeys.ENABLED, isChecked)
                 }
 
                 // also mirror settings to device-protected storage so they can be
@@ -130,9 +130,16 @@ class SettingsActivity : AppCompatActivity() {
         restartMonitoringSwitch.setOnCheckedChangeListener { _, isChecked ->
 
             // no dialog for the switch, just save the new value
-            with(sharedPrefs!!.edit()) {
-                putBoolean("auto_restart_monitoring", isChecked)
-                apply()
+            sharedPrefs!!.edit {
+                putBoolean(PrefKeys.AUTO_RESTART_MONITORING, isChecked)
+            }
+        }
+
+        // listener for the full-screen 'are you there?' overlay switch
+        val areYouThereOverlaySwitch: SwitchCompat = findViewById(R.id.areYouThereOverlaySwitch)
+        areYouThereOverlaySwitch.setOnCheckedChangeListener { _, isChecked ->
+            sharedPrefs!!.edit {
+                putBoolean(PrefKeys.ARE_YOU_THERE_OVERLAY_ENABLED, isChecked)
             }
         }
 
@@ -195,7 +202,7 @@ class SettingsActivity : AppCompatActivity() {
 
             // if no apps are configured yet then show a warning dialog to explain that
             //  this feature is still in beta testing
-            if (sharedPrefs!!.getString("APPS_TO_MONITOR", "[]") == "[]") {
+            if (sharedPrefs!!.getString(PrefKeys.APPS_TO_MONITOR, "[]") == "[]") {
 
                 var dialogMsg = getString(R.string.monitored_apps_warning_dialog_message)
 
@@ -236,13 +243,16 @@ class SettingsActivity : AppCompatActivity() {
         // update the main settings text views based on the current preference values
 
         val monitoringEnabledSwitch: SwitchCompat = findViewById(R.id.monitoringEnabledSwitch)
-        monitoringEnabledSwitch.isChecked = sharedPrefs!!.getBoolean("enabled", false)
+        monitoringEnabledSwitch.isChecked = sharedPrefs!!.getBoolean(PrefKeys.ENABLED, false)
 
         val restartMonitoringSwitch: SwitchCompat = findViewById(R.id.restartMonitoringSwitch)
-        restartMonitoringSwitch.isChecked = sharedPrefs!!.getBoolean("auto_restart_monitoring", false)
+        restartMonitoringSwitch.isChecked = sharedPrefs!!.getBoolean(PrefKeys.AUTO_RESTART_MONITORING, false)
+
+        val areYouThereOverlaySwitch: SwitchCompat = findViewById(R.id.areYouThereOverlaySwitch)
+        areYouThereOverlaySwitch.isChecked = sharedPrefs!!.getBoolean(PrefKeys.ARE_YOU_THERE_OVERLAY_ENABLED, true)
 
         val timePeriodValueTextView: TextView = findViewById(R.id.edit_time_period_hours)
-        timePeriodValueTextView.text = sharedPrefs!!.getString("time_period_hours", "12")
+        timePeriodValueTextView.text = sharedPrefs!!.getString(PrefKeys.TIME_PERIOD_HOURS, "12")
 
         val monitoredAppsValueTextView: TextView = findViewById(R.id.edit_monitored_apps)
         val appsToMonitor: MutableList<MonitoredAppDetails> = loadJSONSharedPreference(
@@ -275,12 +285,12 @@ class SettingsActivity : AppCompatActivity() {
         val followupPeriodValueTextView: TextView =
             findViewById(R.id.edit_followup_time_period_minutes)
         followupPeriodValueTextView.text =
-            sharedPrefs!!.getString("followup_time_period_minutes", "60")
+            sharedPrefs!!.getString(PrefKeys.FOLLOWUP_TIME_PERIOD_MINUTES, "60")
 
         // format the phone number for display
         val callPhoneValueTextView: TextView = findViewById(R.id.edit_contact_phone)
         callPhoneValueTextView.text = PhoneNumberUtils.formatNumber(
-            sharedPrefs!!.getString("contact_phone", ""),
+            sharedPrefs!!.getString(PrefKeys.CONTACT_PHONE, ""),
             Locale.getDefault().country
         )
 
@@ -310,7 +320,7 @@ class SettingsActivity : AppCompatActivity() {
             val alertWebhookValueTextView: TextView = findViewById(R.id.edit_webhook)
 
             // make sure the webhook url isn't blank and limit the # of characters
-            val webhookUrl = sharedPrefs!!.getString("webhook_url", "")!!
+            val webhookUrl = sharedPrefs!!.getString(PrefKeys.WEBHOOK_URL, "")!!
 
             // if configured, limit the displayed webhook to 150 characters (arbitrary...)
             // otherwise show a 'Not Configured' message
@@ -349,21 +359,21 @@ class SettingsActivity : AppCompatActivity() {
         else if (preferenceKey == "time_period_hours" || preferenceKey == "REST_PERIODS") {
 
             // make sure the app is actually enabled
-            if (sharedPrefs!!.getBoolean("enabled", false)) {
+            if (sharedPrefs!!.getBoolean(PrefKeys.ENABLED, false)) {
                 updateAlarm = true
             }
         }
 
         // if we need to update the alarm
         if (updateAlarm) {
-            val newValue = sharedPrefs!!.getString("time_period_hours", "12")?.toFloatOrNull() ?: 12f
+            val newValue = sharedPrefs!!.getString(PrefKeys.TIME_PERIOD_HOURS, "12")?.toFloatOrNull() ?: 12f
 
             Log.d(
                 "processSettingChange",
                 "Check period updated, need to re-set alarm to $newValue hours"
             )
 
-            val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(sharedPrefs!!,"REST_PERIODS")
+            val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(sharedPrefs!!,PrefKeys.REST_PERIODS)
 
             // don't need to cancel the existing alarm, just set a new one
             setAlarm(this, System.currentTimeMillis(), (newValue * 60).toInt(), "periodic", restPeriods)
@@ -395,11 +405,11 @@ class SettingsActivity : AppCompatActivity() {
                 dialogDescription.text = getString(R.string.time_period_description)
                 dialogEditText.inputType =
                     EditorInfo.TYPE_CLASS_NUMBER or EditorInfo.TYPE_NUMBER_FLAG_DECIMAL
-                dialogEditText.setText(sharedPrefs!!.getString("time_period_hours", "12"))
+                dialogEditText.setText(sharedPrefs!!.getString(PrefKeys.TIME_PERIOD_HOURS, "12"))
 
                 // show the exact alarm switch and explanatory note for this setting
                 exactAlarmSwitch.visibility = View.VISIBLE
-                exactAlarmSwitch.isChecked = sharedPrefs!!.getBoolean("use_exact_alarms", false)
+                exactAlarmSwitch.isChecked = sharedPrefs!!.getBoolean(PrefKeys.USE_EXACT_ALARMS, false)
                 exactAlarmNoteTextView.visibility = View.VISIBLE
             }
 
@@ -422,7 +432,7 @@ class SettingsActivity : AppCompatActivity() {
                 dialogEditText.hint = getString(R.string.contact_phone_title)
                 dialogDescription.text = getString(R.string.contact_phone_description)
                 dialogEditText.inputType = EditorInfo.TYPE_CLASS_PHONE
-                dialogEditText.setText(sharedPrefs!!.getString("contact_phone", ""))
+                dialogEditText.setText(sharedPrefs!!.getString(PrefKeys.CONTACT_PHONE, ""))
                 showDeleteButton = true
             }
         }
@@ -435,12 +445,11 @@ class SettingsActivity : AppCompatActivity() {
             .setPositiveButton(getString(R.string.save)) { _, _ ->
 
                 // all of the settings we are editing in a dialog are strings
-                with(sharedPrefs!!.edit()) {
+                sharedPrefs!!.edit {
                     putString(preferenceKey, dialogEditText.text.toString())
                     if (preferenceKey == "time_period_hours") {
-                        putBoolean("use_exact_alarms", exactAlarmSwitch.isChecked)
+                        putBoolean(PrefKeys.USE_EXACT_ALARMS, exactAlarmSwitch.isChecked)
                     }
-                    apply()
                 }
 
                 // take action depending on what preference is changing
@@ -455,9 +464,8 @@ class SettingsActivity : AppCompatActivity() {
             dialog.setNeutralButton(getString(R.string.delete)) { _, _ ->
 
                 // if the user deletes the phone number then remove it from shared prefs
-                with(sharedPrefs!!.edit()) {
+                sharedPrefs!!.edit {
                     remove(preferenceKey)
-                    apply()
                 }
 
                 // processSettingChange(preferenceKey)
@@ -564,7 +572,7 @@ class SettingsActivity : AppCompatActivity() {
                     return@setPositiveButton
                 }
 
-                with(sharedPrefs!!.edit()) {
+                sharedPrefs!!.edit {
 
                     // create a new list of rest periods with just this one
                     val restPeriods = mutableListOf<RestPeriod>()
@@ -579,8 +587,7 @@ class SettingsActivity : AppCompatActivity() {
 
                     // convert the list to json and save it to shared prefs
                     val jsonString = gson.toJson(restPeriods)
-                    putString("REST_PERIODS", jsonString)
-                    apply()
+                    putString(PrefKeys.REST_PERIODS, jsonString)
                 }
 
                 // take action depending on what preference is changing
@@ -592,9 +599,8 @@ class SettingsActivity : AppCompatActivity() {
             .setNeutralButton(getString(R.string.delete)) { _, _ ->
 
                 // if the user deletes the rest period then remove it from shared prefs
-                with(sharedPrefs!!.edit()) {
-                    remove("REST_PERIODS")
-                    apply()
+                sharedPrefs!!.edit {
+                    remove(PrefKeys.REST_PERIODS)
                 }
 
                 processSettingChange("REST_PERIODS")

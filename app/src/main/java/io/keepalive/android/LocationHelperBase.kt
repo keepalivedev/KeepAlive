@@ -52,7 +52,6 @@ open class LocationHelperBase(
     // timeout handler to make sure the entire location process doesn't hang
     private val globalTimeoutHandler = Handler(backgroundHandler.looper)
 
-    //private var locationString = ""
     private val geocodingTimeoutHandler = Handler(backgroundHandler.looper)
     var locationResult = LocationResult(0.0, 0.0, 0.0f, "", "")
 

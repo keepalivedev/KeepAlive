@@ -33,13 +33,20 @@ class WebhookSender(private val context: Context, private val config: WebhookCon
 
             DebugLogger.d("WebhookSender", context.getString(R.string.debug_log_disable_certificate_verification))
 
+            // Intentional opt-in: the user explicitly disabled certificate verification
+            //  for a trusted private webhook server (a UI warning is shown when they do).
+            // CustomX509TrustManager is reported on the object; TrustAllX509TrustManager
+            //  is reported on the empty override bodies, so each needs its own suppression.
+            @Suppress("CustomX509TrustManager")
             val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
+                @Suppress("TrustAllX509TrustManager")
                 override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+                @Suppress("TrustAllX509TrustManager")
                 override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
                 override fun getAcceptedIssuers() = arrayOf<X509Certificate>()
             })
 
-            val sslContext = SSLContext.getInstance("SSL")
+            val sslContext = SSLContext.getInstance("TLS")
             sslContext.init(null, trustAllCerts, java.security.SecureRandom())
 
             sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)

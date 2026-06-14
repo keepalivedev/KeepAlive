@@ -39,8 +39,8 @@ class AlarmReceiver : BroadcastReceiver() {
             // shouldn't need to check whether the app is still enabled here because
             //  we will cancel the alarm when the setting is changed
             // but just in case...
-            val prefs = getEncryptedSharedPreferences(context)
-            val appEnabled = prefs.getBoolean("enabled", false)
+            val prefs = getAppSharedPreferences(context)
+            val appEnabled = prefs.getBoolean(PrefKeys.ENABLED, false)
 
             if (!appEnabled) {
                 DebugLogger.d(tag, context.getString(R.string.debug_log_app_not_enabled_alarm_went_off))
@@ -81,8 +81,8 @@ class AlarmReceiver : BroadcastReceiver() {
 
         DebugLogger.d(tag, context.getString(R.string.debug_log_alarm_time_comparison, currentDtStr, alarmDtStr, delaySeconds))
 
-        val followupMinutes = getEncryptedSharedPreferences(context)
-            .getString("followup_time_period_minutes", "60")
+        val followupMinutes = getAppSharedPreferences(context)
+            .getString(PrefKeys.FOLLOWUP_TIME_PERIOD_MINUTES, "60")
             ?.toIntOrNull() ?: 60
 
         val effectiveStage = computeEffectiveAlarmStage(declaredStage, delaySeconds, followupMinutes)

@@ -15,7 +15,6 @@
     <string name="back">Back</string>
     <string name="go_to_settings">Go to Settings</string>
     <string name="enabled">Enabled</string>
-    <string name="disabled">Disabled</string>
     <string name="placeholder" translatable="false">PLACEHOLDER TEXT</string>
 
     <!-- webhook layout strings -->
@@ -24,6 +23,7 @@
     <string name="webhook_url_hint">Webhook URL</string>
     <string name="webhook_http_method_hint">HTTP Method</string>
     <string name="webhook_verify_certificate_label">Verify Certificate</string>
+    <string name="webhook_verify_certificate_warning">Warning: with certificate verification disabled, the connection is not protected against interception. Only use this with a trusted private server.</string>
     <string name="webhook_timeout_hint">Timeout (seconds)</string>
     <string name="webhook_retries_hint">Retries</string>
     <string name="webhook_include_location_hint">Include Location in Request?</string>
@@ -117,7 +117,6 @@
     <string name="test_sms_configured_contacts_message">This will send a test SMS alert to your configured emergency contacts: %1$s.</string>
     <string name="test_alert_confirmation_message_with_count"><![CDATA[A total of <b>%1$d</b> SMS will be sent. Do you want to proceed?]]></string>
     <string name="test_alert_sms_default_message">The following messages are a test from the Keep Alive app. Please confirm receipt!</string>
-    <string name="test_alert_warning_message_explanation">The below will be sent to each enabled contact prior to sending the configured alert message.</string>
 
     <!-- notification strings -->
     <string name="default_notification_channel_title">Alert Notifications</string>
@@ -142,8 +141,6 @@
     <string name="sms_alert_failure_notification_text_with_error">Error occurred while attempting to send Alert SMS: %1$s</string>
     <string name="sms_service_failure_notification_title">Unable to send Alert SMS</string>
     <string name="sms_service_failure_notification_text">Error occurred while attempting to send Alert SMS, please verify you have an active SIM</string>
-    <string name="sms_sent_toast_text">Keep Alive Alert SMS sent!</string>
-    <string name="sms_failure_toast_text">Failed to send Keep Alive Alert SMS?!</string>
     <string name="alert_service_notification_title">Sending Alert…</string>
     <string name="alert_service_notification_message">Alert(s) are being sent to your configured contacts, please wait.</string>
 
@@ -178,7 +175,6 @@
 
     <!-- Main Settings -->
     <string name="enabled_title">Monitoring Enabled</string>
-    <string name="disabled_title">Monitoring Disabled</string>
     <string name="auto_restart_title">Auto-Restart Monitoring After Alert</string>
     <string name="time_period_title">Hours of Inactivity Before Prompt</string>
     <string name="time_period_description">The # of hours of inactivity before you will be prompted with an \'Are you there?\' notification.</string>
@@ -187,7 +183,6 @@
     <string name="exact_alarm_note">NOTE: This timing is not exact and the system may delay this notification by up to 1 hour.\n\nEnable \'Use Exact Alarm Timing\' below if you require precise checks, which may slightly increase battery usage.</string>
     <string name="rest_period_title">Rest Period Time Range</string>
     <string name="followup_time_period_description">The # of minutes to wait after sending a \'Are you there?\' notification before an Alert will be sent to your Emergency Contact(s)</string>
-    <string name="contact_sms_phone_title">SMS Phone Number</string>
     <string name="contact_phone_title">Call Phone Number (Optional)</string>
     <string name="add_sms_contact_button_text">Add SMS Emergency Contact</string>
     <string name="contact_phone_description">When an Alert is triggered, a phone call will be placed to this phone number with speakerphone enabled.\n\nPlease note that this requires additional permissions so that phone calls can be placed from the background.</string>
@@ -196,14 +191,12 @@
     <string name="add_emergency_contact_title">Add Emergency Contact</string>
     <string name="edit_emergency_contact_title">Edit Emergency Contact</string>
     <string name="webhook_title">Alert Webhook</string>
-    <string name="webhook_url_title">Webhook URL</string>
 
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Monitoring Method</string>
     <string name="monitored_apps_dialog_title">Select 1 or more apps on your device</string>
     <string name="monitored_apps_dialog_message">Usage of the selected app(s) will be used to determine when your device was last interacted with. To revert to Device Lock/Unlock press \'Delete\'.</string>
     <string name="monitored_apps_chosen_title">Selected App(s)</string>
-    <string name="monitored_apps_usage_history_dialog_title">App Usage History (72 hours)</string>
     <string name="monitored_apps_usage_history_message">These events may not always be a result of user activity. Please review them carefully before choosing this app.</string>
     <string name="monitored_apps_recently_used_title">Recently Used Apps (Last 72 Hours)</string>
     <string name="monitored_apps_not_configured_title">Monitoring Method Not Configured</string>
@@ -244,7 +237,7 @@
 
     <!-- MANAGE_OVERLAY_PERMISSION Permission -->
     <string name="permission_manage_overlay_title">Permission Required: Manage Overlay</string>
-    <string name="permission_manage_overlay_description">An Emergency Contact Call Phone Number has been provided, which requires the ability to place a phone call from the background.\n\nPlease enable the Manage Overlay permission for the Keep Alive app in your device settings.</string>
+    <string name="permission_manage_overlay_description">The Manage Overlay permission is needed to:\n\n• Show a full-screen prompt over other apps when the \'Are you there?\' check is triggered to help prevent a false-positive alert from being sent.\n\n• Place a phone call from the background when a Call Phone Number is configured.\n\nPlease enable the Manage Overlay permission for the Keep Alive app in your device settings.</string>
 
     <!-- ACCESS_FINE_LOCATION Permission -->
     <string name="permission_access_fine_location_title">Permission Required: Access Precise Location</string>
@@ -285,7 +278,6 @@
     <string name="debug_log_failed_getting_last_phone_activity">Failed getting last phone activity?!</string>
     <string name="debug_log_no_events_sending_notification">no events found in the last %1$.2f hours, sending Are you there? notification</string>
     <string name="debug_log_sending_alert">Sending alert!</string>
-    <string name="debug_log_sending_alert_failed">Failed while attempting to get and send location alert</string>
     <string name="debug_log_last_device_activity">Last usage event was %1$s from %2$s at %3$s UTC</string>
     <string name="debug_log_location_power_mode_warning">Location power save mode may prevent us from obtaining location: %1$s</string>
     <string name="debug_log_power_and_idle_status">In power save mode? %1$b. Is device idle? %2$b</string>
@@ -294,6 +286,7 @@
     <string name="debug_log_alert_service_start">Starting Alert Service</string>
     <string name="debug_log_alert_service_stop">Stopping Alert Service</string>
     <string name="debug_log_alert_service_error">Error occurred in the Alert Service: %1$s</string>
+    <string name="debug_log_failed_to_start_alert_service">Failed to start AlertService: %1$s</string>
     <string name="debug_log_auto_restart_monitoring">Auto-Restart Monitoring is enabled, restarting alarm…</string>
     <string name="debug_log_sending_warning_sms">Sending warning SMS to %1$s</string>
 
@@ -301,14 +294,12 @@
     <string name="debug_log_starting_up">KeepAlive starting up!</string>
 
     <!-- UtilityFunctions.kt -->
-    <string name="debug_log_failed_getting_shared_prefs">Failed getting shared preferences?!</string>
     <string name="debug_log_failed_getting_alarm_manager">Failed to get AlarmManager?!</string>
     <string name="debug_log_setting_periodic_alarm">Setting new periodic alarm for approximately %1$s UTC</string>
     <string name="debug_log_setting_periodic_exact_alarm">Setting new periodic exact alarm for %1$s UTC</string>
     <string name="debug_log_setting_final_exact_alarm">Setting final exact alarm to go off at %1$s UTC</string>
     <string name="debug_log_unable_to_set_exact_alarm">Unable to set exact alarm?!  Setting normal final alarm to go off at %1$s UTC</string>
     <string name="debug_log_api_22_unable_to_set_exact_alarm">This is API 22 but we weren\'t able to set an exact alarm?!</string>
-    <string name="debug_log_returning_logs">Returning %1$d logs</string>
 
     <!-- LogDisplayActivity.kt -->
     <string name="debug_log_log_display_activity_started">Debug Log Display Activity started</string>
@@ -363,6 +354,8 @@
     <!-- AlertService.kt -->
     <string name="debug_log_wake_lock_acquired">Acquiring wake lock</string>
     <string name="debug_log_wake_lock_released">Releasing wake lock</string>
+    <string name="debug_log_alert_intent_skipping">Skipping alert intent trigger=%1$d (savedTrigger=%2$d, savedSteps=%3$d)</string>
+    <string name="debug_log_alert_intent_resuming">Resuming alert trigger=%1$d (completedSteps=%2$d)</string>
 
     <!-- SMSSentReceiver.kt -->
     <string name="debug_log_sms_sent">SMS sent!</string>
@@ -383,21 +376,21 @@
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Webhook configuration saved</string>
     <string name="debug_log_webhook_config_deleted">Webhook configuration deleted</string>
-    <string name="debug_log_webhook_config_load_error">Error loading webhook configuration</string>
     <string name="debug_log_invalid_header_json">Invalid header JSON</string>
 
     <!-- AlertFunctions.kt -->
     <string name="debug_log_direct_boot_final_alarm_due">Direct Boot: Final alarm is due — sending alert</string>
     <string name="debug_log_direct_boot_cleared_pending_flag">Direct Boot: Cleared direct_boot_notification_pending</string>
     <string name="debug_log_direct_boot_set_pending_flag">Direct Boot: Set direct_boot_notification_pending=true</string>
+    <string name="debug_log_direct_boot_activity_newer_skipping">Direct Boot: activity at %1$s is newer than \'Are you there?\' posted at %2$s; skipping final alert</string>
 
     <!-- Are You There overlay strings -->
     <string name="are_you_there_title">Are you still there?</string>
     <string name="are_you_there_message">Tap I\'M OK to cancel the alert.</string>
     <string name="are_you_there_countdown">Alert will be sent in …</string>
-    <string name="are_you_there_countdown_format">Alert will be sent in %1$d:%2$02d</string>
     <string name="are_you_there_waiting_for_acknowledgement">Waiting for acknowledgement</string>
     <string name="are_you_there_im_ok">I\'m OK</string>
+    <string name="are_you_there_overlay_title">Show full-screen \'Are you there?\' prompt</string>
 
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Disabling webhook certificate verification!</string>

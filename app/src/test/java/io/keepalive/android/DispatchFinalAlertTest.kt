@@ -64,12 +64,12 @@ class DispatchFinalAlertTest {
 
     @Before fun setUp() {
         // Clean slate for both stores.
-        getEncryptedSharedPreferences(realCtx).edit().clear().commit()
+        getAppSharedPreferences(realCtx).edit().clear().commit()
         try { getDeviceProtectedPreferences(realCtx).edit().clear().commit() } catch (_: Exception) {}
     }
 
     @After fun tearDown() {
-        getEncryptedSharedPreferences(realCtx).edit().clear().commit()
+        getAppSharedPreferences(realCtx).edit().clear().commit()
         try { getDeviceProtectedPreferences(realCtx).edit().clear().commit() } catch (_: Exception) {}
     }
 
@@ -82,7 +82,7 @@ class DispatchFinalAlertTest {
         // normally proves the catch is engaged at the right level.
         val ctx = ServiceStartFailing(realCtx as Application)
         val deps = newDeps(ctx)
-        val prefs = getEncryptedSharedPreferences(realCtx)
+        val prefs = getAppSharedPreferences(realCtx)
 
         deps.dispatchFinalAlert(
             prefs = prefs,
@@ -109,7 +109,7 @@ class DispatchFinalAlertTest {
 
         val ctx = ServiceStartFailing(realCtx as Application)
         newDeps(ctx).dispatchFinalAlert(
-            prefs = getEncryptedSharedPreferences(realCtx),
+            prefs = getAppSharedPreferences(realCtx),
             nowTimestamp = System.currentTimeMillis(),
             checkPeriodHours = 12f,
             restPeriods = mutableListOf()
@@ -126,12 +126,12 @@ class DispatchFinalAlertTest {
         // observe AlarmManager.set from this layer (it's mocked by
         // Robolectric), but we CAN observe that the credential-store
         // `NextAlarmTimestamp` gets a value populated by setAlarm.
-        val prefs = getEncryptedSharedPreferences(realCtx)
+        val prefs = getAppSharedPreferences(realCtx)
         prefs.edit().putBoolean("auto_restart_monitoring", true).commit()
 
         val ctx = ServiceStartFailing(realCtx as Application)
         // ProductionAlertCheckDeps.scheduleAlarm calls setAlarm(context, ...)
-        // which writes NextAlarmTimestamp via getEncryptedSharedPreferences.
+        // which writes NextAlarmTimestamp via getAppSharedPreferences.
         // Because our wrapper context only throws for startService, the
         // scheduleAlarm path is unaffected.
         val before = System.currentTimeMillis()
@@ -153,7 +153,7 @@ class DispatchFinalAlertTest {
     @Test fun `auto_restart_monitoring disabled means no reschedule after dispatch`() {
         // Companion to the test above — confirms the auto-restart branch is
         // gated by the pref, and isn't accidentally always-on.
-        val prefs = getEncryptedSharedPreferences(realCtx)
+        val prefs = getAppSharedPreferences(realCtx)
         // auto_restart_monitoring defaults to false; do not set it.
 
         val ctx = ServiceStartFailing(realCtx as Application)

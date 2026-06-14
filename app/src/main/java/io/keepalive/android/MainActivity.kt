@@ -6,7 +6,6 @@ import androidx.appcompat.app.AlertDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Typeface
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -32,6 +31,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
 import androidx.core.content.PackageManagerCompat
 import androidx.core.content.UnusedAppRestrictionsConstants
+import androidx.core.content.edit
+import androidx.core.net.toUri
 import com.google.common.util.concurrent.ListenableFuture
 import io.keepalive.android.databinding.ActivityMainBinding
 import java.util.Locale
@@ -54,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         // load the preferences
-        sharedPrefs = getEncryptedSharedPreferences(this.applicationContext)
+        sharedPrefs = getAppSharedPreferences(this.applicationContext)
 
         Log.d(tag, "KeepAlive onCreate")
 
@@ -85,7 +86,7 @@ class MainActivity : AppCompatActivity() {
 
         try {
             val devicePrefs = getDeviceProtectedPreferences(this)
-            val pending = devicePrefs.getBoolean("direct_boot_notification_pending", false)
+            val pending = devicePrefs.getBoolean(PrefKeys.DIRECT_BOOT_NOTIFICATION_PENDING, false)
             if (pending) {
                 Log.d(tag, "Direct Boot notification still pending — user opened app manually, acknowledging")
                 DebugLogger.d(tag, getString(R.string.debug_log_direct_boot_notification_pending_app_open))
@@ -117,14 +118,14 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> {
                 val i = Intent(this, SettingsActivity::class.java)
                 this.startActivity(i)
-                return true
+                true
             }
 
             // launch the log display activity
             R.id.action_logdisplay -> {
                 val i = Intent(this, LogDisplayActivity::class.java)
                 this.startActivity(i)
-                return true
+                true
             }
 
             // show an About dialog with information about the app
@@ -156,7 +157,7 @@ class MainActivity : AppCompatActivity() {
                 dialogMessage?.movementMethod = LinkMovementMethod.getInstance()
                 dialogMessage?.textSize = 18f
 
-                return true
+                true
             }
 
             else -> super.onOptionsItemSelected(item)
@@ -172,7 +173,7 @@ class MainActivity : AppCompatActivity() {
 
         Log.d(
             tag,
-            "requestCode: $requestCode, permissions: $permissions, grantResults: $grantResults"
+            "requestCode: $requestCode, permissions: ${permissions.contentToString()}, grantResults: ${grantResults.contentToString()}"
         )
 
         // don't really need to check whether the permissions were granted or not?
@@ -256,8 +257,8 @@ class MainActivity : AppCompatActivity() {
             restartMonitoringButton.isClickable = false
 
             // set the alarm
-            val checkPeriodHours = sharedPrefs.getString("time_period_hours", "12")?.toFloatOrNull() ?: 12f
-            val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(sharedPrefs,"REST_PERIODS")
+            val checkPeriodHours = sharedPrefs.getString(PrefKeys.TIME_PERIOD_HOURS, "12")?.toFloatOrNull() ?: 12f
+            val restPeriods: MutableList<RestPeriod> = loadJSONSharedPreference(sharedPrefs,PrefKeys.REST_PERIODS)
 
             // if they are hitting the restart button then use now as the last activity time
             setAlarm(this, System.currentTimeMillis(), (checkPeriodHours * 60).toInt(), "periodic", restPeriods)
@@ -283,11 +284,11 @@ class MainActivity : AppCompatActivity() {
         val warningMessageLayout = dialogView.findViewById<LinearLayout>(R.id.warningMessageLayout)
 
         // load the status of the warning message checkbox
-        val warningMessageEnabled = sharedPrefs.getBoolean("test_alert_send_warning", false)
+        val warningMessageEnabled = sharedPrefs.getBoolean(PrefKeys.TEST_ALERT_SEND_WARNING, false)
         switchSendWarning.isChecked = warningMessageEnabled
 
         // if they saved a custom message use that
-        val testAlertSMSMessage = sharedPrefs.getString("test_alert_warning_sms_message", "")
+        val testAlertSMSMessage = sharedPrefs.getString(PrefKeys.TEST_ALERT_WARNING_SMS_MESSAGE, "")
         if (testAlertSMSMessage != "") {
             editTextWarningMessage.setText(testAlertSMSMessage)
         } else {
@@ -346,16 +347,14 @@ class MainActivity : AppCompatActivity() {
                 testAlertSmsButton.isEnabled = false
 
                 // save the status of the warning message checkbox
-                with(sharedPrefs.edit()) {
-                    putBoolean("test_alert_send_warning", switchSendWarning.isChecked)
-                    apply()
+                sharedPrefs.edit {
+                    putBoolean(PrefKeys.TEST_ALERT_SEND_WARNING, switchSendWarning.isChecked)
                 }
 
                 // if the message isn't still the default message then save it to shared prefs
                 if (editTextWarningMessage.text.toString() != getString(R.string.test_alert_sms_default_message)) {
-                    with(sharedPrefs.edit()) {
-                        putString("test_alert_warning_sms_message", editTextWarningMessage.text.toString())
-                        apply()
+                    sharedPrefs.edit {
+                        putString(PrefKeys.TEST_ALERT_WARNING_SMS_MESSAGE, editTextWarningMessage.text.toString())
                     }
                 }
 
@@ -368,7 +367,7 @@ class MainActivity : AppCompatActivity() {
                 alertSender.sendAlertMessage(testWarningMessage = warningMessage)
 
                 // if location is enabled, try to get that and then send the message
-                if (sharedPrefs.getBoolean("location_enabled", false)) {
+                if (sharedPrefs.getBoolean(PrefKeys.LOCATION_ENABLED, false)) {
 
                     val locationHelper = LocationHelper(this) { _, locationResult ->
                         alertSender.sendLocationAlertMessage(locationResult.formattedLocationString)
@@ -414,8 +413,8 @@ class MainActivity : AppCompatActivity() {
     //  views and buttons are displayed
     private fun updateStatusTextViews(needPerms: Boolean) {
 
-        val alarmTimestamp = sharedPrefs.getLong("NextAlarmTimestamp", -1)
-        val isEnabled = sharedPrefs.getBoolean("enabled", false)
+        val alarmTimestamp = sharedPrefs.getLong(PrefKeys.NEXT_ALARM_TIMESTAMP, -1)
+        val isEnabled = sharedPrefs.getBoolean(PrefKeys.ENABLED, false)
 
         // the message will always be visible
         val monitoringMessageTextView =
@@ -456,7 +455,7 @@ class MainActivity : AppCompatActivity() {
                 restartMonitoringButton.visibility = View.INVISIBLE
                 monitoringStatusTextView.visibility = View.VISIBLE
 
-                var checkPeriodHours = sharedPrefs.getString("time_period_hours", "12")?.toFloatOrNull() ?: 12f
+                var checkPeriodHours = sharedPrefs.getString(PrefKeys.TIME_PERIOD_HOURS, "12")?.toFloatOrNull() ?: 12f
                 checkPeriodHours =
                     maxOf(checkPeriodHours, AppController.LAST_ACTIVITY_MAX_PERIOD_CHECK_HOURS)
 
@@ -587,7 +586,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // default value is empty string in case the user later decides to remove the phone number
-        var callPhoneNumber = sharedPrefs.getString("contact_phone", "")
+        var callPhoneNumber = sharedPrefs.getString(PrefKeys.CONTACT_PHONE, "")
 
         // if nothing is configured then disable the button and set a red message
         if (callPhoneNumber == "") {
@@ -608,7 +607,7 @@ class MainActivity : AppCompatActivity() {
         // next configure the SMS phone number text view and button
 
         // load SMS contacts as csv string
-        var smsPhoneNumbers = getSMSContactString()
+        val smsPhoneNumbers = getSMSContactString()
 
         // set the text color to the default, may change below
         smsPhoneTextView.setTextColor(getColorCompat(this, R.color.textColor))
@@ -868,6 +867,9 @@ class MainActivity : AppCompatActivity() {
 
     // todo implement this?
     // also requires android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+    // BatteryLife: REQUEST_IGNORE_BATTERY_OPTIMIZATIONS is a legitimate acceptable-use
+    //  case for a dead-man's-switch alarm app that must fire reliably under Doze.
+    @Suppress("BatteryLife")
     private fun checkAppBatteryRestrictions() {
         try {
 
@@ -888,7 +890,7 @@ class MainActivity : AppCompatActivity() {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-                intent.setData(Uri.parse("package:$packageName"))
+                intent.setData("package:$packageName".toUri())
                 ActivityCompat.startActivity(this, intent, null)
             }
 

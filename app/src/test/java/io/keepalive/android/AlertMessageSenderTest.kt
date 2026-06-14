@@ -9,7 +9,6 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertSame
 import org.junit.Before
 import org.junit.Test
@@ -71,7 +70,7 @@ class AlertMessageSenderTest {
     ) = SMSEmergencyContactSetting(phone, msg, enabled, includeLocation)
 
     private fun seedContacts(vararg contacts: SMSEmergencyContactSetting) {
-        val prefs = getEncryptedSharedPreferences(appCtx)
+        val prefs = getAppSharedPreferences(appCtx)
         prefs.edit()
             .putString("PHONE_NUMBER_SETTINGS", gson.toJson(contacts.toList()))
             .commit()
@@ -217,7 +216,7 @@ class AlertMessageSenderTest {
 
     @Test fun `SecurityException from sendTextMessage posts the failure notification`() {
         val sms = mockSms(mapOf("help" to arrayListOf("help")))
-        io.mockk.every {
+        every {
             sms.sendTextMessage(any(), any(), any(), any(), any())
         } throws SecurityException("SEND_SMS denied")
 
@@ -244,7 +243,7 @@ class AlertMessageSenderTest {
             contact("+15550000002")
         )
         val sms = mockSms(mapOf("help" to arrayListOf("help")))
-        io.mockk.every {
+        every {
             sms.sendTextMessage("+15550000001", any(), any(), any(), any())
         } throws SecurityException("blocked")
 

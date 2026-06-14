@@ -15,6 +15,7 @@
 .cxx
 local.properties
 /app/release
+*.json
 
 app/fDroid/
 app/googlePlay/

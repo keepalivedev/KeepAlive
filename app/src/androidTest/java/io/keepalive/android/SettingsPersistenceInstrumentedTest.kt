@@ -70,7 +70,7 @@ class SettingsPersistenceInstrumentedTest {
             restPeriods = null
         )
 
-        val cred = getEncryptedSharedPreferences(targetContext)
+        val cred = getAppSharedPreferences(targetContext)
             .getLong("NextAlarmTimestamp", 0L)
         val dev = getDeviceProtectedPreferences(targetContext)
             .getLong("NextAlarmTimestamp", 0L)

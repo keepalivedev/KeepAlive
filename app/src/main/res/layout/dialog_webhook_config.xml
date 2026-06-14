@@ -70,6 +70,16 @@
                 android:text="@string/webhook_verify_certificate_label" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/textViewCertificateWarning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/webhook_verify_certificate_warning"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="?attr/colorError"
+            android:visibility="gone" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

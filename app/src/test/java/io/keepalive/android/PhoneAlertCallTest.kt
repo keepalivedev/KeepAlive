@@ -32,7 +32,7 @@ class PhoneAlertCallTest {
     @Before fun setUp() {
         // POST_NOTIFICATIONS is needed on Tiramisu+ or the status notif gets suppressed.
         shadowApp.grantPermissions(Manifest.permission.POST_NOTIFICATIONS)
-        getEncryptedSharedPreferences(appCtx).edit().clear().commit()
+        getAppSharedPreferences(appCtx).edit().clear().commit()
         nm.cancelAll()
         // Drain any previously-queued activities
         while (shadowApp.nextStartedActivity != null) { /* drain */ }
@@ -40,7 +40,7 @@ class PhoneAlertCallTest {
 
     @Test fun `no-op when phone number is blank`() {
         shadowApp.grantPermissions(Manifest.permission.CALL_PHONE)
-        getEncryptedSharedPreferences(appCtx).edit().putString("contact_phone", "").commit()
+        getAppSharedPreferences(appCtx).edit().putString("contact_phone", "").commit()
 
         makeAlertCall(appCtx)
 
@@ -59,7 +59,7 @@ class PhoneAlertCallTest {
     }
 
     @Test fun `no-op when CALL_PHONE permission is not granted`() {
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putString("contact_phone", "+15551234567")
             .commit()
         // deliberately do NOT grant CALL_PHONE
@@ -72,7 +72,7 @@ class PhoneAlertCallTest {
 
     @Test fun `fires ACTION_CALL with tel scheme for the configured number`() {
         shadowApp.grantPermissions(Manifest.permission.CALL_PHONE)
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putString("contact_phone", "+15551234567")
             .commit()
 
@@ -85,7 +85,7 @@ class PhoneAlertCallTest {
 
     @Test fun `enables speakerphone via TelecomManager extra`() {
         shadowApp.grantPermissions(Manifest.permission.CALL_PHONE)
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putString("contact_phone", "+15551234567")
             .commit()
 
@@ -98,7 +98,7 @@ class PhoneAlertCallTest {
 
     @Test fun `uses NEW_TASK flag to launch from a non-activity context`() {
         shadowApp.grantPermissions(Manifest.permission.CALL_PHONE)
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putString("contact_phone", "+15551234567")
             .commit()
 
@@ -111,7 +111,7 @@ class PhoneAlertCallTest {
 
     @Test fun `posts a call-sent notification`() {
         shadowApp.grantPermissions(Manifest.permission.CALL_PHONE)
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putString("contact_phone", "+15551234567")
             .commit()
 
@@ -144,7 +144,7 @@ class PhoneAlertCallTest {
         // is total — never throws to its caller (AlertService runAlertSteps
         // would otherwise mark the step incomplete and infinite-retry).
         shadowApp.grantPermissions(Manifest.permission.CALL_PHONE)
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putString("contact_phone", "+15551234567")
             .commit()
         val noDialer = NoDialerContext(appCtx)
@@ -164,7 +164,7 @@ class PhoneAlertCallTest {
         // will fail and the change-author can update it deliberately.
         org.robolectric.Shadows.shadowOf(appCtx as Application)
             .grantPermissions(Manifest.permission.CALL_PHONE)
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putString("contact_phone", "+15551234567")
             .commit()
         nm.cancelAll()

@@ -1,13 +1,11 @@
 package io.keepalive.android
 
 import android.Manifest
-import android.app.AlarmManager
 import android.app.AppOpsManager
 import android.app.Application
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.google.gson.Gson
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -40,10 +38,9 @@ class PermissionManagerTest {
     private val gson = Gson()
     private val shadowApp get() = shadowOf(appCtx as Application)
     private val opsMan get() = appCtx.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
-    private val alarmMan get() = appCtx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     @Before fun setUp() {
-        getEncryptedSharedPreferences(appCtx).edit().clear().commit()
+        getAppSharedPreferences(appCtx).edit().clear().commit()
         // Clean baseline: all runtime perms denied, all appops as Robolectric
         // defaults them. Each test grants what it needs.
         shadowApp.denyPermissions(
@@ -75,18 +72,18 @@ class PermissionManagerTest {
                 includeLocation = false
             )
         )
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putString("PHONE_NUMBER_SETTINGS", gson.toJson(contacts))
             .commit()
     }
 
     private fun seedCallTarget(phone: String = "+15552222222") {
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putString("contact_phone", phone).commit()
     }
 
     private fun enableLocation() {
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putBoolean("location_enabled", true).commit()
     }
 
@@ -241,6 +238,40 @@ class PermissionManagerTest {
         val pm = PermissionManager(appCtx, null)
         assertFalse(
             "no call target → overlay perm not required → no requests pending",
+            pm.checkNeedAnyPermissions()
+        )
+    }
+
+    @Test
+    @Config(sdk = [33, 34, 35, 36])
+    fun `overlay permission required when overlay prompt enabled without call target`() {
+        // No call target, but the user enabled the overlay prompt — overlay perm needed.
+        getAppSharedPreferences(appCtx).edit()
+            .putBoolean("are_you_there_overlay_enabled", true).commit()
+        grantUsageStats()
+        grantPostNotificationsIfApplicable()
+
+        // Robolectric defaults Settings.canDrawOverlays to false, so the overlay
+        // gate is the only outstanding permission.
+        val pm = PermissionManager(appCtx, null)
+        assertTrue(
+            "overlay pref enabled → overlay perm should be required",
+            pm.checkNeedAnyPermissions()
+        )
+    }
+
+    @Test
+    @Config(sdk = [33, 34, 35, 36])
+    fun `overlay permission not required when both call target and overlay pref are off`() {
+        // Explicitly opted out of the overlay; no call target → overlay gate bypassed.
+        getAppSharedPreferences(appCtx).edit()
+            .putBoolean("are_you_there_overlay_enabled", false).commit()
+        grantUsageStats()
+        grantPostNotificationsIfApplicable()
+
+        val pm = PermissionManager(appCtx, null)
+        assertFalse(
+            "neither call nor overlay → overlay perm not required",
             pm.checkNeedAnyPermissions()
         )
     }

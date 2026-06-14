@@ -42,7 +42,7 @@ class SetAlarmTest {
         // level) flag — bleed-over from a prior test would silently flip the
         // exact-alarm branch. Reset it here so individual tests own its value.
         org.robolectric.shadows.ShadowAlarmManager.setCanScheduleExactAlarms(true)
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putBoolean("use_exact_alarms", false)
             .commit()
     }
@@ -71,7 +71,7 @@ class SetAlarmTest {
         val now = System.currentTimeMillis()
         setAlarm(appCtx, now, desiredAlarmInMinutes = 30, alarmStage = "periodic")
 
-        val credSaved = getEncryptedSharedPreferences(appCtx).getLong("NextAlarmTimestamp", 0)
+        val credSaved = getAppSharedPreferences(appCtx).getLong("NextAlarmTimestamp", 0)
         assertTrue("credential prefs remembers next alarm time", credSaved > now)
     }
 
@@ -82,7 +82,7 @@ class SetAlarmTest {
         val now = System.currentTimeMillis()
         setAlarm(appCtx, now, desiredAlarmInMinutes = 30, alarmStage = "periodic")
 
-        val credSaved = getEncryptedSharedPreferences(appCtx).getLong("NextAlarmTimestamp", 0)
+        val credSaved = getAppSharedPreferences(appCtx).getLong("NextAlarmTimestamp", 0)
         val devSaved = getDeviceProtectedPreferences(appCtx).getLong("NextAlarmTimestamp", 0)
 
         assertTrue("device-protected prefs mirrors it for Direct Boot", devSaved > now)
@@ -112,7 +112,7 @@ class SetAlarmTest {
         val wayInThePast = System.currentTimeMillis() - 1000 * 60 * 60
         setAlarm(appCtx, wayInThePast, desiredAlarmInMinutes = 1, alarmStage = "periodic")
 
-        val credSaved = getEncryptedSharedPreferences(appCtx).getLong("NextAlarmTimestamp", 0)
+        val credSaved = getAppSharedPreferences(appCtx).getLong("NextAlarmTimestamp", 0)
         assertTrue("alarm must fire in the future, not the past",
             credSaved >= System.currentTimeMillis())
     }
@@ -130,7 +130,7 @@ class SetAlarmTest {
     }
 
     @Test fun `exact-alarm user preference is honored when the system permits`() {
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putBoolean("use_exact_alarms", true)
             .commit()
         val now = System.currentTimeMillis()
@@ -156,7 +156,7 @@ class SetAlarmTest {
         // use_exact_alarms=true we go down the setExactAndAllowWhileIdle branch.
         // If we deny exact alarms, setAlarm falls back to setAndAllowWhileIdle
         // (code path only reachable on API S+).
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putBoolean("use_exact_alarms", true)
             .commit()
         val now = System.currentTimeMillis()
@@ -168,7 +168,7 @@ class SetAlarmTest {
         // same SDK also uses ELAPSED_REALTIME_WAKEUP; we can't easily
         // discriminate the two via ShadowAlarmManager's scheduledAlarms list.
         // Smoke check: still scheduled, still wake-up.
-        assertEquals(android.app.AlarmManager.ELAPSED_REALTIME_WAKEUP, scheduled!!.type)
+        assertEquals(AlarmManager.ELAPSED_REALTIME_WAKEUP, scheduled!!.type)
     }
 
     // ---- SCHEDULE_EXACT_ALARM denied (API S/31+) ---------------------------
@@ -184,7 +184,7 @@ class SetAlarmTest {
     @Config(sdk = [33, 34, 35, 36])
     fun `periodic alarm is still scheduled when SCHEDULE_EXACT_ALARM is denied`() {
         org.robolectric.shadows.ShadowAlarmManager.setCanScheduleExactAlarms(false)
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putBoolean("use_exact_alarms", true)  // user wanted exact
             .commit()
 
@@ -194,7 +194,7 @@ class SetAlarmTest {
         assertNotNull("periodic must still schedule an inexact alarm when exact is denied",
             scheduled)
         // Periodic path on M+ without exact uses ELAPSED_REALTIME_WAKEUP.
-        assertEquals(android.app.AlarmManager.ELAPSED_REALTIME_WAKEUP, scheduled!!.type)
+        assertEquals(AlarmManager.ELAPSED_REALTIME_WAKEUP, scheduled!!.type)
     }
 
     @Test
@@ -213,7 +213,7 @@ class SetAlarmTest {
         // setAlarmClock — but canScheduleExactAlarms=false should prevent that).
         assertEquals(
             "denied exact must use ELAPSED_REALTIME_WAKEUP fallback, not RTC_WAKEUP alarmClock",
-            android.app.AlarmManager.ELAPSED_REALTIME_WAKEUP, scheduled!!.type
+            AlarmManager.ELAPSED_REALTIME_WAKEUP, scheduled!!.type
         )
         // ShadowAlarmManager exposes the AlarmClockInfo on the scheduled
         // entry; the fallback path leaves it null.

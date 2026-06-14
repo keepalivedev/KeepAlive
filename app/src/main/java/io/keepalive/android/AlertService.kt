@@ -50,9 +50,9 @@ class AlertService : Service() {
     override fun onCreate() {
         super.onCreate()
 
-        prefs = getEncryptedSharedPreferences(this)
+        prefs = getAppSharedPreferences(this)
 
-        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        val powerManager = getSystemService(POWER_SERVICE) as PowerManager
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, wakeLockTag)
         // Disable reference counting so repeated acquire() calls don't stack
         // (e.g., back-to-back alert intents, or START_REDELIVER_INTENT redelivery).
@@ -127,15 +127,13 @@ class AlertService : Service() {
                 when (decideAlertIntentAction(triggerTimestamp, savedTrigger, savedSteps, ALL_STEPS_COMPLETE)) {
                     AlertIntentAction.Skip -> {
                         DebugLogger.d("AlertService",
-                            "Skipping alert intent trigger=$triggerTimestamp " +
-                            "(savedTrigger=$savedTrigger, savedSteps=$savedSteps)")
+                            getString(R.string.debug_log_alert_intent_skipping, triggerTimestamp, savedTrigger, savedSteps))
                         stopService()
                         return START_REDELIVER_INTENT
                     }
                     AlertIntentAction.Resume -> {
                         DebugLogger.d("AlertService",
-                            "Resuming alert trigger=$triggerTimestamp " +
-                            "(completedSteps=$savedSteps)")
+                            getString(R.string.debug_log_alert_intent_resuming, triggerTimestamp, savedSteps))
                     }
                     AlertIntentAction.NewAlert -> {
                         prefs.edit(commit = true) {
@@ -309,10 +307,10 @@ class AlertService : Service() {
         val dispatcher = object : AlertDispatcher {
             override val isUserUnlocked: Boolean get() = isUserUnlocked(context)
             override val locationNeeded: Boolean
-                get() = prefs.getBoolean("location_enabled", false) ||
-                        prefs.getBoolean("webhook_location_enabled", false)
+                get() = prefs.getBoolean(PrefKeys.LOCATION_ENABLED, false) ||
+                        prefs.getBoolean(PrefKeys.WEBHOOK_LOCATION_ENABLED, false)
             override val webhookEnabled: Boolean
-                get() = prefs.getBoolean("webhook_enabled", false)
+                get() = prefs.getBoolean(PrefKeys.WEBHOOK_ENABLED, false)
 
             override fun cancelAreYouThereNotification() {
                 AlertNotificationHelper(context).cancelNotification(
@@ -323,7 +321,7 @@ class AlertService : Service() {
             override fun sendSmsAlert() = alertSender.sendAlertMessage()
             override fun makeCall() = makeAlertCall(context)
             override fun writeLastAlertAt(timestamp: Long) {
-                prefs.edit(commit = true) { putLong("LastAlertAt", timestamp) }
+                prefs.edit(commit = true) { putLong(PrefKeys.LAST_ALERT_AT, timestamp) }
             }
             override fun requestLocationAsync(onResult: (LocationResult) -> Unit) {
                 val helper = LocationHelper(context) { _, locationResult -> onResult(locationResult) }
@@ -339,4 +337,4 @@ class AlertService : Service() {
 
         runAlertSteps(steps, dispatcher)
     }
-}
+}

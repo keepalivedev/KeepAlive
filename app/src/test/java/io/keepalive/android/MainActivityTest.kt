@@ -9,10 +9,8 @@ import io.mockk.unmockkObject
 import io.mockk.verify
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
@@ -23,7 +21,7 @@ import org.robolectric.RobolectricTestRunner
  *
  * Focus: the non-UI side-effects — the `createAlertCheckIntent` factory, and
  * the Direct-Boot-notification safety-net check run from `onResume`. Full UI
- * flows stay in the Espresso instrumented tests ([AppScreenshotsInstrumentedTest]).
+ * flows stay in the Espresso instrumented tests (AppScreenshotsInstrumentedTest).
  */
 @RunWith(RobolectricTestRunner::class)
 class MainActivityTest {
@@ -35,7 +33,7 @@ class MainActivityTest {
         mockkObject(AcknowledgeAreYouThere)
         every { AcknowledgeAreYouThere.acknowledge(any()) } returns Unit
         // Clean prefs
-        getEncryptedSharedPreferences(appCtx).edit().clear().commit()
+        getAppSharedPreferences(appCtx).edit().clear().commit()
         getDeviceProtectedPreferences(appCtx).edit().clear().commit()
     }
 
@@ -72,7 +70,7 @@ class MainActivityTest {
         // creating + resuming a MainActivity instance.
         try {
             Robolectric.buildActivity(MainActivity::class.java).create().resume()
-        } catch (t: Throwable) {
+        } catch (_: Throwable) {
             // Activity may fail to inflate certain views under Robolectric; the
             // safety-net check runs near the top of onResume before most UI code.
         }
@@ -87,7 +85,7 @@ class MainActivityTest {
 
         try {
             Robolectric.buildActivity(MainActivity::class.java).create().resume()
-        } catch (t: Throwable) {
+        } catch (_: Throwable) {
             // See note above
         }
 

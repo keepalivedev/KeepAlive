@@ -13,7 +13,6 @@ import io.keepalive.android.AlertFlowTestUtil.waitUntil
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.BeforeClass
@@ -108,7 +107,7 @@ class AlarmFlowInstrumentedTest {
             "dispatchFinalAlert must reset last_alarm_stage to 'periodic' " +
                     "after attempting to start AlertService",
             waitUntil(timeoutMs = 5_000L) {
-                AlertFlowTestUtil.savedAlarmStage() == "periodic"
+                savedAlarmStage() == "periodic"
             }
         )
 
@@ -117,20 +116,26 @@ class AlarmFlowInstrumentedTest {
         // still in its "waiting for startForeground()" 5s window, Android
         // delivers ForegroundServiceDidNotStartInTimeException to the NEXT
         // instrumentation invocation — taking down whichever test runs after
-        // this one. Wait for AlertService to honor the contract, then stop
-        // it cleanly. waitForIdleSync gives onStartCommand a chance to run.
+        // this one. Wait for AlertService to honor the contract (the call
+        // step completing proves onStartCommand + startForeground ran), then
+        // stop it cleanly and wait for its foreground notification to clear.
         androidx.test.platform.app.InstrumentationRegistry.getInstrumentation()
             .waitForIdleSync()
-        Thread.sleep(1_000)
+        assertTrue("AlertService must run its steps before teardown stops it",
+            waitUntil(timeoutMs = 10_000L) {
+                AlertFlowTestUtil.isAlertStepComplete(STEP_CALL_MADE)
+            })
         targetContext.stopService(
             android.content.Intent(targetContext, AlertService::class.java)
         )
-        Thread.sleep(500)
+        waitUntil(timeoutMs = 10_000L) {
+            !hasNotification(AppController.ALERT_SERVICE_NOTIFICATION_ID)
+        }
     }
 
     @Test fun disabledAppDoesNothingOnAlarm() {
         // Disable the app but leave prefs otherwise intact.
-        getEncryptedSharedPreferences(targetContext).edit()
+        getAppSharedPreferences(targetContext).edit()
             .putBoolean("enabled", false).commit()
 
         fireAlarm("periodic")
@@ -179,7 +184,7 @@ class AlarmFlowInstrumentedTest {
     @Test fun seedingAnEnabledContactMakesItTheAlertTarget() {
         // Sanity check: the fake contact we seeded is what the alert code reads.
         val contacts: MutableList<SMSEmergencyContactSetting> = loadJSONSharedPreference(
-            getEncryptedSharedPreferences(targetContext), "PHONE_NUMBER_SETTINGS"
+            getAppSharedPreferences(targetContext), "PHONE_NUMBER_SETTINGS"
         )
         assertEquals(1, contacts.size)
         assertEquals(FAKE_CONTACT_A, contacts[0].phoneNumber)

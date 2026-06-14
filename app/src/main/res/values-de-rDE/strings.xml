@@ -14,12 +14,12 @@
     <string name="back">Zurück</string>
     <string name="go_to_settings">Einstellungen</string>
     <string name="enabled">Aktiv</string>
-    <string name="disabled">Inaktiv</string>
 
     <!-- webhook layout strings -->
     <string name="webhook_url_hint">Webhook-URL</string>
     <string name="webhook_http_method_hint">HTTP-Methode</string>
     <string name="webhook_verify_certificate_label">Zertifikat überprüfen</string>
+    <string name="webhook_verify_certificate_warning">Warnung: Bei deaktivierter Zertifikatsprüfung ist die Verbindung nicht gegen Abhören geschützt. Nur mit einem vertrauenswürdigen privaten Server verwenden.</string>
     <string name="webhook_timeout_hint">Zeitlimit (Sekunden)</string>
     <string name="webhook_retries_hint">Wiederholungen</string>
     <string name="webhook_include_location_hint">Standort in Anfrage einschließen?</string>
@@ -105,7 +105,6 @@
     <string name="test_sms_configured_contacts_message">Dies sendet einen Test-SMS-Alarm an Ihre konfigurierten Notfallkontakte: %1$s.</string>
     <string name="test_alert_confirmation_message_with_count"><![CDATA[Insgesamt werden <b>%1$d</b> SMS gesendet. Möchten Sie fortfahren?]]></string>
     <string name="test_alert_sms_default_message">Die folgenden Nachrichten sind ein Test der Keep Alive App. Bitte bestätigen Sie den Empfang!</string>
-    <string name="test_alert_warning_message_explanation">Die folgende Nachricht wird an jeden aktivierten Kontakt gesendet, bevor die konfigurierte Alarmmeldung gesendet wird.</string>
 
     <!-- notification strings -->
     <string name="default_notification_channel_title">Alarm-Benachrichtigungen</string>
@@ -130,8 +129,6 @@
     <string name="sms_alert_failure_notification_text_with_error">Beim Versuch, eine Alarm-SMS zu senden, ist ein Fehler aufgetreten: %1$s</string>
     <string name="sms_service_failure_notification_title">Alarm-SMS kann nicht gesendet werden</string>
     <string name="sms_service_failure_notification_text">Beim Versuch, eine Alarm-SMS zu senden, ist ein Fehler aufgetreten.  Bitte überprüfen Sie, ob Sie eine aktive SIM-Karte haben.</string>
-    <string name="sms_sent_toast_text">Keep Alive Alarm-SMS gesendet!</string>
-    <string name="sms_failure_toast_text">Versand der Keep Alive Alarm-SMS fehlgeschlagen?!</string>
     <string name="alert_service_notification_title">Alarm wird gesendet…</string>
     <string name="alert_service_notification_message">Alarm(e) werden an Ihre konfigurierten Kontakte gesendet, bitte warten.</string>
 
@@ -166,7 +163,6 @@
 
     <!-- Main Settings -->
     <string name="enabled_title">Überwachung aktiv</string>
-    <string name="disabled_title">Überwachung inaktiv</string>
     <string name="auto_restart_title">Automatischer Neustart der Überwachung nach Alarmierung</string>
     <string name="time_period_title">Stunden Inaktivität bis zur Aufforderung</string>
     <string name="time_period_description">Anzahl der Stunden der Inaktivität, bevor eine \"Bist du noch da?\"-Benachrichtigung erscheint.</string>
@@ -175,7 +171,6 @@
     <string name="exact_alarm_note">HINWEIS: Diese Zeitangabe ist nicht exakt und das System kann die Benachrichtigung um bis zu 1 Stunde verzögern.\n\nAktivieren Sie unten \"Exakte Alarmzeit verwenden\", wenn Sie präzise Überprüfungen benötigen. Dies kann den Akkuverbrauch leicht erhöhen.</string>
     <string name="rest_period_title">Ruhezeit</string>
     <string name="followup_time_period_description">Die Anzahl Minuten, die nach einer \"Sind Sie da?\"-Benachrichtigung gewartet wird, bevor ein Alarm an Ihre Notfallkontakte gesendet wird.</string>
-    <string name="contact_sms_phone_title">SMS-Telefonnummer</string>
     <string name="contact_phone_title">Telefonnummer anrufen (optional)</string>
     <string name="add_sms_contact_button_text">SMS-Notfallkontakt hinzufügen</string>
     <string name="contact_phone_description">Wenn ein Alarm ausgelöst wird, wird diese Telefonnummer mit aktivierter Freisprecheinrichtung angerufen.\n\nBitte beachten Sie, dass hierfür zusätzliche Berechtigungen erforderlich sind, damit Telefonanrufe im Hintergrund getätigt werden können.</string>
@@ -184,14 +179,12 @@
     <string name="add_emergency_contact_title">Notfallkontakt hinzufügen</string>
     <string name="edit_emergency_contact_title">Notfallkontakt bearbeiten</string>
     <string name="webhook_title">Alarm-Webhook</string>
-    <string name="webhook_url_title">Webhook-URL</string>
 
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Überwachungsmethode</string>
     <string name="monitored_apps_dialog_title">Wählen Sie 1 oder mehrere Apps auf Ihrem Gerät aus</string>
     <string name="monitored_apps_dialog_message">Die Nutzung der ausgewählten App(s) wird verwendet, um festzustellen, wann Ihr Gerät zuletzt verwendet wurde. Um zur Gerätesperre/-entsperrung zurückzukehren, drücken Sie \'Löschen\'.</string>
     <string name="monitored_apps_chosen_title">Ausgewählte App(s)</string>
-    <string name="monitored_apps_usage_history_dialog_title">App-Nutzungsverlauf (72 Stunden)</string>
     <string name="monitored_apps_usage_history_message">Diese Ereignisse können nicht immer auf Benutzeraktivität zurückzuführen sein. Bitte überprüfen Sie sie sorgfältig, bevor Sie diese App auswählen.</string>
     <string name="monitored_apps_recently_used_title">Kürzlich verwendete Apps (letzte 72 Stunden)</string>
     <string name="monitored_apps_not_configured_title">Überwachungsmethode nicht konfiguriert</string>
@@ -232,7 +225,7 @@
 
     <!-- MANAGE_OVERLAY_PERMISSION Permission -->
     <string name="permission_manage_overlay_title">Erlaubnis erforderlich: Am Anfang anzeigen (Manage Overlay)</string>
-    <string name="permission_manage_overlay_description">Eine Notrufnummer wurde angegeben, was die Möglichkeit erfordert, einen Anruf aus dem Hintergrund zu tätigen.\n\nBitte aktivieren Sie die Berechtigung "Über anderen Apps einblenden" für die Keep Alive App in Ihren Geräteeinstellungen</string>
+    <string name="permission_manage_overlay_description">Die Berechtigung "Über anderen Apps einblenden" wird benötigt um:\n\n• Bei der \'Sind Sie da?\'-Prüfung eine Vollbildabfrage über anderen Apps anzuzeigen, um einen Fehlalarm zu vermeiden.\n\n• Einen Anruf aus dem Hintergrund zu tätigen, wenn eine Notrufnummer konfiguriert ist.\n\nBitte aktivieren Sie diese Berechtigung für die Keep Alive App in Ihren Geräteeinstellungen.</string>
 
     <!-- ACCESS_FINE_LOCATION Permission -->
     <string name="permission_access_fine_location_title">Erlaubnis erforderlich: Genauer Standort</string>
@@ -273,7 +266,6 @@
     <string name="debug_log_failed_getting_last_phone_activity">Fehler beim Abrufen der letzten Telefonaktivität?!</string>
     <string name="debug_log_no_events_sending_notification">Keine Ereignisse in den letzten %1$.2f Stunden gefunden, sende \"Bist du da?\"-Benachrichtigung</string>
     <string name="debug_log_sending_alert">Sende Alarm!</string>
-    <string name="debug_log_sending_alert_failed">Fehler beim Abrufen und Senden des Standortalarms</string>
     <string name="debug_log_last_device_activity">Letztes Nutzungsereignis war %1$s von %2$s um %3$s UTC</string>
     <string name="debug_log_location_power_mode_warning">Der Energiesparmodus für Standorte kann verhindern, dass wir den Standort ermitteln: %1$s</string>
     <string name="debug_log_power_and_idle_status">Im Energiesparmodus? %1$b. Ist das Gerät im Ruhezustand? %2$b</string>
@@ -282,6 +274,7 @@
     <string name="debug_log_alert_service_start">Alarmdienst wird gestartet</string>
     <string name="debug_log_alert_service_stop">Alarmdienst wird gestoppt</string>
     <string name="debug_log_alert_service_error">Fehler im Alarmdienst aufgetreten: %1$s</string>
+    <string name="debug_log_failed_to_start_alert_service">AlertService konnte nicht gestartet werden: %1$s</string>
     <string name="debug_log_auto_restart_monitoring">Automatischer Neustart der Überwachung ist aktiviert, Alarm wird neu gestartet…</string>
     <string name="debug_log_sending_warning_sms">Sende Warn-SMS an %1$s</string>
 
@@ -289,14 +282,12 @@
     <string name="debug_log_starting_up">KeepAlive startet!</string>
 
     <!-- UtilityFunctions.kt -->
-    <string name="debug_log_failed_getting_shared_prefs">Fehler beim Abrufen der gemeinsamen Einstellungen?!</string>
     <string name="debug_log_failed_getting_alarm_manager">Fehler beim Abrufen des AlarmManagers?!</string>
     <string name="debug_log_setting_periodic_alarm">Setze neuen periodischen Alarm für ungefähr %1$s UTC</string>
     <string name="debug_log_setting_periodic_exact_alarm">Neue periodische exakte Alarmzeit für %1$s UTC festgelegt</string>
     <string name="debug_log_setting_final_exact_alarm">Setze endgültigen exakten Alarm, der um %1$s UTC ausgelöst wird</string>
     <string name="debug_log_unable_to_set_exact_alarm">Exakten Alarm nicht setzen können?! Setze normalen endgültigen Alarm, der um %1$s UTC ausgelöst wird</string>
     <string name="debug_log_api_22_unable_to_set_exact_alarm">Dies ist API 22, aber wir konnten keinen exakten Alarm setzen?!</string>
-    <string name="debug_log_returning_logs">Gebe %1$d Protokolle zurück</string>
 
     <!-- LogDisplayActivity.kt -->
     <string name="debug_log_log_display_activity_started">Debug-Protokollanzeige-Aktivität gestartet</string>
@@ -351,6 +342,8 @@
     <!-- AlertService.kt -->
     <string name="debug_log_wake_lock_acquired">Wake-Lock wird erworben</string>
     <string name="debug_log_wake_lock_released">Wake-Lock wird freigegeben</string>
+    <string name="debug_log_alert_intent_skipping">Alert-Intent wird übersprungen: trigger=%1$d (savedTrigger=%2$d, savedSteps=%3$d)</string>
+    <string name="debug_log_alert_intent_resuming">Alarm wird fortgesetzt: trigger=%1$d (completedSteps=%2$d)</string>
 
     <!-- SMSSentReceiver.kt -->
     <string name="debug_log_sms_sent">SMS gesendet!</string>
@@ -371,16 +364,15 @@
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Webhook-Konfiguration gespeichert</string>
     <string name="debug_log_webhook_config_deleted">Webhook-Konfiguration gelöscht</string>
-    <string name="debug_log_webhook_config_load_error">Fehler beim Laden der Webhook-Konfiguration</string>
     <string name="debug_log_invalid_header_json">Ungültiges Header-JSON</string>
 
     <!-- Are You There overlay strings -->
     <string name="are_you_there_title">Bist du noch da?</string>
     <string name="are_you_there_message">Tippe auf MIR GEHT\'S GUT, um den Alarm abzubrechen.</string>
     <string name="are_you_there_countdown">Alarm wird gesendet in …</string>
-    <string name="are_you_there_countdown_format">Alarm wird gesendet in %1$d:%2$02d</string>
     <string name="are_you_there_waiting_for_acknowledgement">Warte auf Bestätigung</string>
     <string name="are_you_there_im_ok">Mir geht\'s gut</string>
+    <string name="are_you_there_overlay_title">Vollbild-\'Sind Sie da?\'-Abfrage anzeigen</string>
 
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Webhook-Zertifikatsüberprüfung deaktivieren!</string>
@@ -399,4 +391,5 @@
     <string name="debug_log_direct_boot_final_alarm_due">Direct Boot: Letzter Alarm ist fällig — Alarm wird gesendet</string>
     <string name="debug_log_direct_boot_cleared_pending_flag">Direct Boot: direct_boot_notification_pending gelöscht</string>
     <string name="debug_log_direct_boot_set_pending_flag">Direct Boot: direct_boot_notification_pending=true gesetzt</string>
+    <string name="debug_log_direct_boot_activity_newer_skipping">Direct Boot: Aktivität um %1$s ist neuer als \'Bist du noch da?\' gesendet um %2$s; endgültiger Alarm wird übersprungen</string>
 </resources>

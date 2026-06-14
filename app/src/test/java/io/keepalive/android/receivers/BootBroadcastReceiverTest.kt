@@ -6,7 +6,7 @@ import androidx.test.core.app.ApplicationProvider
 import io.keepalive.android.AcknowledgeAreYouThere
 import io.keepalive.android.doAlertCheck
 import io.keepalive.android.getDeviceProtectedPreferences
-import io.keepalive.android.getEncryptedSharedPreferences
+import io.keepalive.android.getAppSharedPreferences
 import io.keepalive.android.isUserUnlocked
 import io.mockk.every
 import io.mockk.mockkObject
@@ -43,7 +43,7 @@ class BootBroadcastReceiverTest {
         every { AcknowledgeAreYouThere.acknowledge(any()) } returns Unit
         // Default: app enabled, user unlocked
         every { isUserUnlocked(any()) } returns true
-        getEncryptedSharedPreferences(appCtx).edit()
+        getAppSharedPreferences(appCtx).edit()
             .putBoolean("enabled", true)
             .commit()
         getDeviceProtectedPreferences(appCtx).edit()
@@ -59,7 +59,7 @@ class BootBroadcastReceiverTest {
     }
 
     @Test fun `receiver does nothing when app is disabled`() {
-        getEncryptedSharedPreferences(appCtx).edit().putBoolean("enabled", false).commit()
+        getAppSharedPreferences(appCtx).edit().putBoolean("enabled", false).commit()
         val intent = Intent(Intent.ACTION_BOOT_COMPLETED)
 
         BootBroadcastReceiver().onReceive(appCtx, intent)

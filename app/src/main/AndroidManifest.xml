@@ -4,26 +4,35 @@
 
     <uses-feature
         android:name="android.hardware.telephony"
-        android:required="true" />
+        android:required="true"
+        tools:ignore="UnnecessaryRequiredFeature" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS"
+        tools:ignore="SmsAndCallLogPolicy" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
+    <!-- Core to the app: when an alert triggers the device is idle/in the
+         background, so location must be captured then and sent to the emergency
+         contact(s). This is the app's primary purpose, justifying the permission
+         for Play review. -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"
+        tools:ignore="BackgroundLocationPolicy" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
+        tools:ignore="PackageVisibilityPolicy,QueryAllPackagesPermission" />
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"
+        tools:ignore="ForegroundServicesPolicy" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
@@ -74,7 +83,13 @@
         <service
             android:name="io.keepalive.android.AreYouThereOverlayService"
             android:exported="false"
-            android:foregroundServiceType="dataSync" />
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="If enabled by the user, displays a full-screen safety check prompt requiring user
+                 acknowledgement after inactivity is detected. Designed to prevent a false-positive alert from
+                  being sent to the user's emergency contact(s)" />
+        </service>
 
         <service
             android:name="io.keepalive.android.AlertService"

@@ -2,7 +2,7 @@
 
 ## 1. Information Collected
 
-- **Emergency Contact Phone Number(s)**: The phone number that will receive an SMS or phone call when an Alert is trigger.  This is configured by the user and is stored encrypted on the device.  It is not transmitted anywhere.
+- **Emergency Contact Phone Number(s)**: The phone number that will receive an SMS or phone call when an Alert is trigger.  This is configured by the user and is stored locally on the device.  It is not transmitted anywhere.
 
 - **Precise Location Information (Optional)**: If enabled, precise location information will be collected when an Alert is triggered and sent via SMS to your Emergency Contact.  This information is not stored or transmitted anywhere else.
 
@@ -23,7 +23,7 @@
 
 ## 5. Data Storage and Security
 
-- All user settings are encrypted and stored locally on your device. No other data is stored or transferred to cloud servers or any other external storage systems.
+- All user settings are stored locally on your device and never leave it. No other data is stored or transferred to cloud servers or any other external storage systems.
 
 ## 6. Your Rights and Choices
 

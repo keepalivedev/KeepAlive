@@ -2,8 +2,8 @@ package io.keepalive.android
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -19,9 +19,16 @@ class ToolchainSmokeTest {
     @Test fun `robolectric application context is available`() {
         val ctx = ApplicationProvider.getApplicationContext<Context>()
         assertNotNull(ctx)
-        // debug builds append ".debug" to the applicationId; accept either.
+        // the fDroidLite flavor uses applicationId io.keepalive.lite.android and
+        // debug builds append ".debug" — accept all flavor/build-type combinations.
         val pkg = ctx.packageName
-        assertEquals(true, pkg == "io.keepalive.android" || pkg == "io.keepalive.android.debug")
+        val expected = setOf(
+            "io.keepalive.android",
+            "io.keepalive.android.debug",
+            "io.keepalive.lite.android",
+            "io.keepalive.lite.android.debug",
+        )
+        assertTrue("unexpected applicationId: $pkg", pkg in expected)
     }
 
     @Test fun `mockk is on the classpath`() {

@@ -1,6 +1,5 @@
 package io.keepalive.android
 
-import android.app.AlarmManager
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
@@ -25,7 +24,6 @@ object AlertFlowTestUtil {
 
     /** Reserved-for-fiction US numbers — safe in tests. */
     const val FAKE_CONTACT_A = "+15550100"
-    const val FAKE_CONTACT_B = "+15550101"
     const val FAKE_CALL_TARGET = "+15550102"
 
     private val gson = Gson()
@@ -45,7 +43,7 @@ object AlertFlowTestUtil {
         includeSmsContact: Boolean = true
     ) {
         val ctx = targetContext
-        val prefs = getEncryptedSharedPreferences(ctx)
+        val prefs = getAppSharedPreferences(ctx)
         val contacts = if (includeSmsContact) {
             mutableListOf(
                 SMSEmergencyContactSetting(
@@ -74,7 +72,7 @@ object AlertFlowTestUtil {
 
         // Clear device-protected state FIRST so that on pre-N — where
         // getDeviceProtectedPreferences() falls back to the same default-prefs
-        // file as getEncryptedSharedPreferences() — we don't wipe out the
+        // file as getAppSharedPreferences() — we don't wipe out the
         // credential-store writes we're about to make.
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             try {
@@ -111,7 +109,7 @@ object AlertFlowTestUtil {
         // succeed for the assertions to be meaningful.
         try {
             shell("appops set ${ctx.packageName} SYSTEM_ALERT_WINDOW deny")
-        } catch (e: Exception) { /* pre-M / shell-blocked: no-op */ }
+        } catch (_: Exception) { /* pre-M / shell-blocked: no-op */ }
     }
 
     /** Cancel the KeepAlive AlarmManager alarm so tests start clean. */
@@ -154,21 +152,13 @@ object AlertFlowTestUtil {
 
     /** Returns whether any KeepAlive alarm is currently scheduled in the system AlarmManager. */
     fun hasPendingKeepAliveAlarm(): Boolean {
-        val am = targetContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         // The cleanest check is via dumpsys; on an emulator we can just look
         // at next-alarm-clock. Both have caveats. Use NextAlarmTimestamp the
         // app itself persists — if the app thinks an alarm is scheduled and
         // we haven't cancelled it, it's really scheduled.
-        val saved = getEncryptedSharedPreferences(targetContext)
+        val saved = getAppSharedPreferences(targetContext)
             .getLong("NextAlarmTimestamp", 0L)
         return saved > 0L
-    }
-
-    /** Count notifications currently posted by the app. */
-    fun activeNotificationCount(): Int {
-        val nm = targetContext.getSystemService(Context.NOTIFICATION_SERVICE)
-                as NotificationManager
-        return nm.activeNotifications.size
     }
 
     /** Check whether a notification with the given ID is currently visible. */
@@ -202,16 +192,16 @@ object AlertFlowTestUtil {
 
     /** Read a step-tracker bit to confirm the alert service reached a given stage. */
     fun isAlertStepComplete(stepBit: Int): Boolean {
-        val saved = getEncryptedSharedPreferences(targetContext)
+        val saved = getAppSharedPreferences(targetContext)
             .getInt("AlertStepsCompleted", 0)
         return (saved and stepBit) == stepBit
     }
 
     fun savedAlertTriggerTimestamp(): Long =
-        getEncryptedSharedPreferences(targetContext).getLong("AlertTriggerTimestamp", 0L)
+        getAppSharedPreferences(targetContext).getLong("AlertTriggerTimestamp", 0L)
 
     fun savedAlarmStage(): String? =
         try {
             getDeviceProtectedPreferences(targetContext).getString("last_alarm_stage", null)
-        } catch (e: Exception) { null }
+        } catch (_: Exception) { null }
 }

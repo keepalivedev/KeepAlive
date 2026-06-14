@@ -3,8 +3,8 @@ package io.keepalive.android
 /**
  * Bit flags for the idempotent step tracker used during alert dispatch.
  *
- * Must stay in sync with [AlertService.ALL_STEPS_COMPLETE] (the service holds
- * a private copy for the dedup guard; the two values must agree).
+ * These flags are also consumed by [AlertService] for the idempotent dedup
+ * guard, so their values must stay consistent across the alert pipeline.
  */
 internal const val STEP_SMS_SENT = 1       // SMS messages dispatched to all contacts
 internal const val STEP_CALL_MADE = 2      // Phone call placed
@@ -122,20 +122,25 @@ internal fun runAlertSteps(steps: AlertStepOps, disp: AlertDispatcher): Boolean 
         if (needLocationSms || needWebhook) {
             try {
                 disp.requestLocationAsync { locationResult ->
-                    if (!steps.isComplete(STEP_LOCATION_DONE)) {
-                        disp.sendLocationSms(locationResult.formattedLocationString)
-                        steps.markComplete(STEP_LOCATION_DONE)
+                    try {
+                        if (!steps.isComplete(STEP_LOCATION_DONE)) {
+                            disp.sendLocationSms(locationResult.formattedLocationString)
+                            steps.markComplete(STEP_LOCATION_DONE)
+                        }
+                        if (webhookEnabled && !steps.isComplete(STEP_WEBHOOK_DONE)) {
+                            disp.sendWebhook(locationResult)
+                            steps.markComplete(STEP_WEBHOOK_DONE)
+                        } else if (!webhookEnabled) {
+                            steps.markComplete(STEP_WEBHOOK_DONE)
+                        }
+                    } finally {
+                        // always stop the service, even if a location step throws —
+                        // otherwise it would linger until the service timeout fires
+                        disp.stopService()
                     }
-                    if (webhookEnabled && !steps.isComplete(STEP_WEBHOOK_DONE)) {
-                        disp.sendWebhook(locationResult)
-                        steps.markComplete(STEP_WEBHOOK_DONE)
-                    } else if (!webhookEnabled) {
-                        steps.markComplete(STEP_WEBHOOK_DONE)
-                    }
-                    disp.stopService()
                 }
                 return true  // async work pending — caller MUST NOT stop service
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 // Mark both done on failure so we don't endlessly retry a broken
                 // location provider; the core SMS + call already went through.
                 steps.markComplete(STEP_LOCATION_DONE)

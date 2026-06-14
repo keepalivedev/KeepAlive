@@ -1,9 +1,11 @@
 package io.keepalive.android
 
 import android.app.Application
+import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.os.Build
 import android.util.Log
+import androidx.core.content.edit
 
 
 class AppController : Application() {
@@ -44,6 +46,18 @@ class AppController : Application() {
 
         // we have to check this several times so use a variable so its more clear what its for
         const val MIN_API_LEVEL_FOR_DEVICE_LOCK_UNLOCK = Build.VERSION_CODES.P
+
+        /**
+         * One-time default: if the are-you-there overlay pref has never been set,
+         * default it to true. Preserves the previous always-on overlay behavior
+         * for upgraders and gives new installs the overlay by default.
+         */
+        fun migrateAreYouThereOverlayDefault(context: Context) {
+            val prefs = getAppSharedPreferences(context)
+            if (!prefs.contains(PrefKeys.ARE_YOU_THERE_OVERLAY_ENABLED)) {
+                prefs.edit { putBoolean(PrefKeys.ARE_YOU_THERE_OVERLAY_ENABLED, true) }
+            }
+        }
     }
 
     override fun onCreate() {
@@ -52,6 +66,8 @@ class AppController : Application() {
         DebugLogger.initialize(this)
 
         DebugLogger.d(TAG, getString(R.string.debug_log_starting_up))
+
+        migrateAreYouThereOverlayDefault(this)
 
         // alternative is to check BuildConfig.DEBUG?
         if ((this.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0) {

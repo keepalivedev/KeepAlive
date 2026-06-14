@@ -3,6 +3,7 @@ package io.keepalive.android
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -114,5 +115,25 @@ class AppControllerTest {
         // crashed before this method runs. Reaching this assertion proves
         // onCreate completed at least once cleanly.
         assertNotNull(app)
+    }
+
+    @Test fun `onCreate writes are_you_there_overlay_enabled = true when key absent`() {
+        // AppController.onCreate has already run as part of Robolectric setup.
+        // Verify the migration produced the expected pref state.
+        val prefs = getAppSharedPreferences(app)
+        assertTrue("migration must seed the new pref",
+            prefs.contains("are_you_there_overlay_enabled"))
+        assertTrue("default value is true",
+            prefs.getBoolean("are_you_there_overlay_enabled", false))
+    }
+
+    @Test fun `migration does not overwrite an existing false value`() {
+        val prefs = getAppSharedPreferences(app)
+        prefs.edit().putBoolean("are_you_there_overlay_enabled", false).commit()
+
+        AppController.migrateAreYouThereOverlayDefault(app)
+
+        assertFalse("must not overwrite an explicit false",
+            prefs.getBoolean("are_you_there_overlay_enabled", true))
     }
 }

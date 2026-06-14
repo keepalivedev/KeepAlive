@@ -105,7 +105,7 @@ class AlertMessageSender @JvmOverloads constructor(
         private const val SMS_RECEIVER_SAFETY_TIMEOUT_MS = 2 * 60 * 1000L
     }
 
-    private val prefs = getEncryptedSharedPreferences(context)
+    private val prefs = getAppSharedPreferences(context)
     private val alertNotificationHelper = AlertNotificationHelper(context)
     private val smsContacts: MutableList<SMSEmergencyContactSetting> = loadJSONSharedPreference(prefs,
         "PHONE_NUMBER_SETTINGS")
@@ -232,7 +232,7 @@ class AlertMessageSender @JvmOverloads constructor(
                 Handler(Looper.getMainLooper()).postDelayed({
                     try {
                         appContext.unregisterReceiver(receiver)
-                    } catch (e: IllegalArgumentException) {
+                    } catch (_: IllegalArgumentException) {
                         // already unregistered — all broadcasts arrived
                     }
                 }, SMS_RECEIVER_SAFETY_TIMEOUT_MS)
@@ -243,11 +243,6 @@ class AlertMessageSender @JvmOverloads constructor(
 
         // Now actually send the messages.
         for ((contact, messageParts) in pendingSmsList) {
-
-            Log.d(
-                "sendAlertMessage", "Alert message is ${contact.alertMessage}, " +
-                        "SMS contact number is ${contact.phoneNumber}"
-            )
 
             DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_text_message_to, maskPhoneNumber(contact.phoneNumber)))
 
@@ -261,7 +256,8 @@ class AlertMessageSender @JvmOverloads constructor(
                     smsManager.sendTextMessage(contact.phoneNumber, null, testWarningMessage, null, null)
                 }
 
-                Log.d("sendAlertMessage", "Message parts: $messageParts")
+                // don't log the parts themselves — they contain the alert message content
+                Log.d("sendAlertMessage", "Message has ${messageParts.size} part(s)")
 
                 // only use sendMultipartTextMessage if there is more than 1 part
                 if (messageParts.size > 1) {
@@ -269,7 +265,7 @@ class AlertMessageSender @JvmOverloads constructor(
 
                     // create an array with the same pending intent for each part
                     val sentPIList = ArrayList<PendingIntent>(messageParts.size)
-                    for (i in messageParts.indices) {
+                    repeat(messageParts.size) {
                         sentPIList.add(sentPI)
                     }
 
