@@ -92,12 +92,6 @@ class AppScreenshotsInstrumentedTest {
         Screengrab.screenshot("5-AddSMSPhoneNumberScreen")
         onView(withId(android.R.id.button2)).perform(click())
 
-        // open the configure webhook dialog and take a screenshot
-        onView(withId(R.id.alertWebhookRow)).perform(click())
-        Thread.sleep(2000)
-        Screengrab.screenshot("6-ConfigureWebhookScreen")
-        onView(withId(android.R.id.button2)).perform(click())
-
         // show the full-screen "Are you there?" overlay and take a screenshot.
         // This is the prompt the user sees after a period of inactivity — the
         //  headline safety feature, so it's worth a store screenshot.
@@ -115,9 +109,15 @@ class AppScreenshotsInstrumentedTest {
             )
         )
         Thread.sleep(2000)
-        Screengrab.screenshot("7-AreYouThereOverlayScreen")
+        Screengrab.screenshot("6-AreYouThereOverlayScreen")
         AreYouThereOverlay.dismiss(targetContext)
         Thread.sleep(1000)
+
+        // open the configure webhook dialog and take a screenshot
+        onView(withId(R.id.alertWebhookRow)).perform(click())
+        Thread.sleep(2000)
+        Screengrab.screenshot("7-ConfigureWebhookScreen")
+        onView(withId(android.R.id.button2)).perform(click())
     }
 
     // we can't do this with the other shared prefs because those are loaded before
