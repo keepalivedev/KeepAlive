@@ -21,7 +21,7 @@ import javax.xml.parsers.DocumentBuilderFactory
 class LocaleStringParityTest {
 
     private val locales = listOf(
-        "values-de-rDE", "values-fr-rCA", "values-it-rIT",
+        "values-es", "values-de-rDE", "values-fr-rCA", "values-it-rIT",
         "values-pl-rPL", "values-ru-rRU", "values-zh-rCN"
     )
 

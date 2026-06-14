@@ -1,0 +1,42 @@
+Keep Alive enviará un mensaje personalizado por SMS a una o más personas si no has usado tu dispositivo en un tiempo determinado. Pensada como medida de seguridad para quienes viven solos, en caso de accidente u otra emergencia. Una vez configurada, no requiere ninguna otra interacción.
+
+- 100 % basada en el dispositivo, sin servicios en la nube ni cuentas
+- Gratuita, sin anuncios ni rastreadores
+- Código abierto (https://github.com/keepalivedev/KeepAlive)
+- Uso mínimo de batería
+- Varios destinatarios de SMS
+- Mensaje de alerta personalizado
+- Opcional: incluir la ubicación en el SMS
+- Opcional: realizar una llamada con el altavoz activado
+- Opcional: enviar una solicitud HTTP a una URL personalizada
+
+Requisitos
+  Keep Alive requiere que el dispositivo tenga un plan de telefonía móvil activo. Se usarán llamadas y mensajes por WiFi si el dispositivo lo admite.
+
+Cómo funciona
+  Keep Alive usa la pantalla de bloqueo u otra(s) app(s) para detectar actividad. Si el dispositivo no se bloquea ni desbloquea durante cierto tiempo, o si no accedes a la(s) app(s) seleccionada(s), verás una notificación '¿Sigues ahí?'. Si no se confirma, se activará una alerta y, según los contactos de emergencia configurados, se enviarán uno o más SMS o se realizará una llamada para avisar de que podrías necesitar ayuda.
+
+ADVERTENCIA: Si el dispositivo se reinicia, Keep Alive no podrá comprobar la actividad reciente hasta que se desbloquee la pantalla. En Android 7.0+, aún puede enviar una alerta antes de desbloquearla, pero asumirá que has estado inactivo según su último estado guardado. En versiones anteriores, no puede ejecutarse hasta que se desbloquee la pantalla y no se enviarán alertas.
+
+Configuración principal
+- Método de monitoreo: usa la pantalla de bloqueo u otra(s) app(s) para detectar actividad. Si eliges app(s), se te pedirá seleccionarlas.
+- Horas de inactividad antes del aviso: horas desde el último bloqueo/desbloqueo antes de mostrar la notificación '¿Sigues ahí?'. Predeterminado: 12 horas.
+- Minutos de espera: si el aviso no se confirma en este tiempo, se enviará una alerta a los contactos configurados. Predeterminado: 60 minutos.
+- Rango de tiempo del período de descanso: intervalo en el que la inactividad no se cuenta. Por ejemplo, con 'Horas de inactividad' en 6 horas y un descanso de 22:00 – 6:00, si el dispositivo se usa por última vez a las 18:00, la verificación '¿Sigues ahí?' no se enviaría hasta las 8:00. Nota: aún puede enviarse una alerta durante el descanso si la verificación se envió ANTES de que comenzara.
+- Reiniciar el monitoreo automáticamente tras una alerta: si está activado, el monitoreo se reinicia tras enviar una alerta.
+- Webhook de alerta: configura una solicitud HTTP que se enviará al activarse una alerta.
+
+Ajustes de contactos de emergencia
+- Número de teléfono para llamada (opcional): al activarse una alerta, se realizará una llamada a este número con el altavoz activado.
+
+Se pueden configurar uno o más destinatarios de SMS con:
+- Número de teléfono: el número al que se enviará el SMS de alerta.
+- Mensaje de alerta: el mensaje que se enviará al activarse una alerta.
+- Incluir ubicación: si está activado, tu ubicación se incluirá en un segundo SMS.
+
+Privacidad/Recopilación de datos
+No se recopila ningún dato aparte de los ajustes configurados y no se comparte nada con los desarrolladores ni con terceros. Los únicos datos que se transmiten son a los contactos de emergencia configurados.
+
+Aviso legal
+- No nos hacemos responsables de los cargos por SMS o llamadas derivados del uso de Keep Alive.
+- El funcionamiento de Keep Alive depende del dispositivo, el software y la conectividad de red. Los desarrolladores no se hacen responsables de fallos por averías del dispositivo, incompatibilidades de software o problemas de red.

@@ -1,0 +1,6 @@
+* Añade el ajuste de alarma exacta
+* Enmascara el número de teléfono en los registros de depuración
+* Añade compatibilidad con iconos temáticos
+* Añade la traducción al chino (gracias @jondome)
+* Añade la traducción al italiano (gracias @albanobattistella)
+* Crea una versión 'Lite' que elimina la funcionalidad de webhook y el permiso de Internet
