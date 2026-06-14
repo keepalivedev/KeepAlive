@@ -1,0 +1,93 @@
+name: Generate screenshots
+
+# Manually-triggered store-screenshot capture on a CI emulator, using the
+# hardened ScreenshotCIInstrumentedTest + the `screenshot_ci` Fastlane lane.
+# Produces the PNGs as a downloadable artifact under fastlane/metadata/... —
+# it does NOT upload to Play (download the artifact, review, then commit/upload
+# yourself; per the project notes a Play upload auto-submits for review).
+#
+# GitHub runners have no GPU, so the emulator renders in software (slow); the CI
+# test is written to tolerate that. `phone` is the reliable default device type.
+# Tablet device types (sevenInch/tenInch) render on whatever default device the
+# runner's cmdline-tools provide — the crops may need tuning, since we don't set
+# an emulator `profile:` (those are frequently unavailable on the runner).
+
+on:
+  workflow_dispatch:
+    inputs:
+      device_type:
+        description: 'Device type (drives crop %, see process_screenshots.py)'
+        type: choice
+        options:
+          - phone
+          - sevenInch
+          - tenInch
+        default: phone
+      locales:
+        description: 'Comma-separated locales'
+        default: 'en-US,es-ES,de-DE,fr-CA,it-IT,pl-PL,ru-RU,zh-CN'
+      api_level:
+        description: 'Emulator API level'
+        default: '34'
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    # software-GPU emulator + 8 locales is slow; give it room
+    timeout-minutes: 90
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+          cache: 'gradle'
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Set up Ruby + Fastlane
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+      - name: Install Fastlane
+        run: gem install fastlane
+
+      - name: Install screenshot post-processing tools
+        # process_screenshots.py needs Pillow (python3-pil) and optipng
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y optipng python3-pil
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Capture screenshots
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ inputs.api_level }}
+          # google_apis (userdebug) is required: the test runs `locksettings`,
+          # `appops` and `svc power` which Play-store images block.
+          target: google_apis
+          arch: x86_64
+          disable-animations: true
+          # GMT timezone keeps the status-bar clock consistent; software GPU
+          # since the runner has none.
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -timezone GMT
+          # Runs after the emulator has booted. One physical line — emulator-runner
+          # executes each line as its own `sh -c`, so no line continuations.
+          script: fastlane screenshot_ci device_type:${{ inputs.device_type }} locales:${{ inputs.locales }}
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-${{ inputs.device_type }}
+          path: fastlane/metadata/android/*/images/${{ inputs.device_type }}Screenshots/
+          if-no-files-found: warn
