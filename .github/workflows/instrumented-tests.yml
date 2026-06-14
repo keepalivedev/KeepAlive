@@ -8,8 +8,9 @@ name: Instrumented tests
 # Acknowledge, SettingsPersistence) — skips the screenshot flow which is
 # handled by Fastlane.
 #
-# The googlePlay flavor runs across the full API matrix; the fDroid flavor
-# (android.location LocationHelper) additionally runs once on the newest API.
+# The googlePlay flavor runs across the full API matrix; the fDroid and
+# fDroidLite flavors (android.location LocationHelper) each additionally run
+# once on the newest API.
 
 on:
   push:
@@ -43,6 +44,11 @@ jobs:
           # Robolectric unit tests
           - api-level: 35
             flavor: FDroid
+          # smoke-test the fDroidLite build on a device too: it ships a separate
+          # applicationId and INCLUDE_WEBHOOK=false, and reuses fDroid's
+          # android.location code. Otherwise only covered by unit tests.
+          - api-level: 35
+            flavor: FDroidLite
 
     steps:
       - uses: actions/checkout@v6
