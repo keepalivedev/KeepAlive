@@ -11,6 +11,25 @@ kotlin {
     jvmToolchain(21)
 }
 
+// Optional custom build folder for local dev. Set `keepalive.buildDir` in
+// local.properties (git-ignored) to relocate build output off the project
+// tree. The path must be absolute. When unset (CI and most devs),
+// Gradle's default build dir is used.
+// IMPORTANT: this must run BEFORE the android {} block. getDefaultProguardFile()
+//  (called in buildTypes.release below) resolves its path eagerly against the
+//  current build dir, so if the override ran afterward the release build would
+//  look for the proguard file under app/build while it was extracted into the
+//  custom dir — failing with "Supplied proguard configuration does not exist".
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withInputStream { localProperties.load(it) }
+}
+def customBuildDir = localProperties.getProperty('keepalive.buildDir')
+if (customBuildDir?.trim()) {
+    layout.buildDirectory = file("${customBuildDir}/${project.name}")
+}
+
 android {
     compileSdk = 36
 
@@ -67,6 +86,8 @@ android {
         unitTests {
             includeAndroidResources = true
             returnDefaultValues = true
+            // NOTE: AGP's UnitTestOptions only exposes all{} (no configureEach) —
+            //  the IDE's "use configureEach" hint is a false positive here.
             all {
                 // required for JaCoCo to see coverage from Robolectric tests
                 jacoco {
@@ -89,10 +110,10 @@ android {
     flavorDimensions += "platform"
     productFlavors {
         // we don't need to define anything else
-        create("googlePlay") {}
+        register("googlePlay") {}
 
         // only disable metadata for f-droid builds
-        create("fDroid") {
+        register("fDroid") {
             dependenciesInfo {
                 // Disables dependency metadata when building APKs.
                 includeInApk = false
@@ -101,7 +122,7 @@ android {
             }
         }
 
-        create("fDroidLite") {
+        register("fDroidLite") {
 
             // disable the webhook functionality
             buildConfigField "boolean", "INCLUDE_WEBHOOK", "false"
@@ -125,20 +146,6 @@ android {
     sourceSets.named("fDroidLite") {
         java.srcDirs("src/fDroid/java")
     }
-}
-
-// Optional custom build folder for local dev. Set `keepalive.buildDir` in
-// local.properties (git-ignored) to relocate build output off the project
-// tree. The path must be absolute. When unset (CI and most devs),
-// Gradle's default build dir is used.
-def localProperties = new Properties()
-def localPropertiesFile = rootProject.file('local.properties')
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.withInputStream { localProperties.load(it) }
-}
-def customBuildDir = localProperties.getProperty('keepalive.buildDir')
-if (customBuildDir?.trim()) {
-    layout.buildDirectory = file("${customBuildDir}/${project.name}")
 }
 
 dependencies {
