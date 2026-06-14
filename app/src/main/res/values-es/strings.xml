@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Common strings -->
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+    <string name="ok">Aceptar</string>
+    <string name="save">Guardar</string>
+    <string name="add">Agregar</string>
+    <string name="delete">Eliminar</string>
+    <string name="close">Cerrar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="confirm">Confirmar</string>
+    <string name="back">Atrás</string>
+    <string name="go_to_settings">Ir a Configuración</string>
+    <string name="enabled">Activado</string>
+
+    <!-- webhook layout strings -->
+    <string name="webhook_url_hint">URL del webhook</string>
+    <string name="webhook_http_method_hint">Método HTTP</string>
+    <string name="webhook_verify_certificate_label">Verificar certificado</string>
+    <string name="webhook_verify_certificate_warning">Advertencia: con la verificación de certificado desactivada, la conexión no está protegida contra interceptaciones. Úsalo solo con un servidor privado de confianza.</string>
+    <string name="webhook_timeout_hint">Tiempo de espera (segundos)</string>
+    <string name="webhook_retries_hint">Reintentos</string>
+    <string name="webhook_include_location_hint">¿Incluir la ubicación en la solicitud?</string>
+    <string name="webhook_headers_title">Encabezados</string>
+    <string name="webhook_add_header_button">Agregar encabezado</string>
+    <string name="webhook_remove_header_button">Eliminar encabezado</string>
+    <string name="webhook_test_button">Probar webhook</string>
+    <string name="webhook_toast_max_headers">Se alcanzó el número máximo de encabezados (%1$s)</string>
+    <string name="webhook_dialog_title">Configuración del webhook</string>
+    <string name="webhook_dialog_description">Cuando se activa una alerta, se enviará una solicitud HTTP usando la configuración siguiente. De forma predeterminada, no se incluye ningún otro dato en la solicitud. Si está activado, los datos de ubicación se envían en el siguiente formato:\n{\"lat\": latitud, \"lon\": longitud, \"acc\": precisión, \"address\": \"dirección\", \"loc_message\": \"mensaje de ubicación\"}.</string>
+    <string name="webhook_not_configured">No configurado</string>
+    <string name="webhook_location_do_not_include">No incluir</string>
+    <string name="webhook_location_body_json">Cuerpo - JSON</string>
+    <string name="webhook_location_body_form">Cuerpo - Formulario</string>
+    <string name="webhook_location_query_parameters">Parámetros de consulta</string>
+    <string name="webhook_url_empty_error">Por favor, ingresa una URL de webhook</string>
+    <string name="webhook_url_invalid_error">URL no válida</string>
+    <string name="webhook_url_invalid_error_with_url">URL no válida: %1$s</string>
+    <string name="webhook_timeout_invalid_error">Valor de tiempo de espera no válido</string>
+    <string name="webhook_retries_invalid_error">Valor de reintentos no válido</string>
+    <string name="webhook_timeout_max_error">El tiempo de espera máximo es %1$s</string>
+    <string name="webhook_retries_max_error">El número máximo de reintentos es %1$s</string>
+    <string name="webhook_header_name">Nombre</string>
+    <string name="webhook_header_value">Valor</string>
+    <string name="webhook_header_name_empty_error">El nombre no puede estar vacío</string>
+    <string name="webhook_header_name_length_error">La longitud máxima del nombre es %1$s</string>
+    <string name="webhook_header_value_length_error">La longitud máxima del valor es %1$s</string>
+    <string name="webhook_header_name_invalid_error">El nombre tiene caracteres no válidos</string>
+    <string name="webhook_header_value_invalid_error">El valor tiene caracteres no válidos</string>
+    <string name="webhook_request_success_toast_text">¡Éxito! El código de respuesta fue %1$d</string>
+    <string name="webhook_request_error_code_toast_text">¡Falló! El código de respuesta fue %1$d</string>
+    <string name="webhook_request_failure_toast_text">¡Falló! El error fue %1$s</string>
+    <string name="webhook_request_success_notification_title">¡Webhook de Keep Alive exitoso!</string>
+    <string name="webhook_request_success_notification_text">El código de respuesta fue %1$d</string>
+    <string name="webhook_request_failure_notification_title">¡El webhook de Keep Alive falló!</string>
+    <string name="webhook_request_failure_code_notification_text">El código de respuesta fue %1$d</string>
+    <string name="webhook_request_failure_error_notification_text">Error: %1$s</string>
+
+    <!-- action settings -->
+    <string name="action_settings">Configuración</string>
+    <string name="action_about">Acerca de</string>
+    <string name="action_logdisplay">Registros de depuración</string>
+    <string name="about_dialog_title">Acerca de Keep Alive</string>
+
+    <!-- item_phone_number content descriptions that are set based on the item position -->
+    <string name="enable_switch_enabled_content_desc">Entrada %1$s activada</string>
+    <string name="location_switch_enabled_content_desc">Ubicación de la entrada %1$s activada</string>
+    <string name="main_scroll_view_content_description">Página principal desplazable</string>
+
+    <!-- app hibernation/restriction stuff -->
+    <string name="hibernation_dialog_title">Desactivar la restricción de la app</string>
+    <string name="hibernation_dialog_message"><![CDATA[Android ahora elimina automáticamente los permisos de las apps que no se han usado recientemente. Keep Alive, una vez configurado, no necesita ninguna interacción adicional y podría perder sus permisos.<br/><br/>Para asegurarte de que los permisos no se revoquen, desactiva la opción <b>\'Pausar actividad de la app si no se usa\'</b> para la app Keep Alive.]]></string>
+    <string name="hibernation_dialog_message_api35"><![CDATA[Android ahora elimina automáticamente los permisos de las apps que no se han usado recientemente. Keep Alive, una vez configurado, no necesita ninguna interacción adicional y podría perder sus permisos.<br/><br/>Para asegurarte de que los permisos no se revoquen, desactiva la opción <b>\'Gestionar app si no se usa\'</b> para la app Keep Alive.]]></string>
+    <string name="hibernation_dialog_message_api30"><![CDATA[Android ahora elimina automáticamente los permisos de las apps que no se han usado recientemente. Keep Alive, una vez configurado, no necesita ninguna interacción adicional a menos que se active una alerta.<br/><br/>Para asegurarte de que los permisos no se revoquen, ve a la sección <b>Permisos</b> de Keep Alive y desactiva la opción <b>\'Quitar permisos si no se usa la app\'</b>.]]></string>
+    <string name="hibernation_dialog_message_api31"><![CDATA[Android ahora elimina automáticamente los permisos de las apps que no se han usado recientemente. Keep Alive, una vez configurado, no necesita ninguna interacción adicional a menos que se active una alerta.<br/><br/>Para asegurarte de que los permisos no se revoquen, desactiva la opción <b>\'Quitar permisos y liberar espacio\'</b> para la app Keep Alive.]]></string>
+    <string name="hibernation_dialog_message_api_backport"><![CDATA[Android ahora elimina automáticamente los permisos de las apps que no se han usado recientemente. Keep Alive, una vez configurado, no necesita ninguna interacción adicional a menos que se active una alerta.<br/><br/>Para asegurarte de que los permisos no se revoquen, desactiva la opción <b>\'Quitar permisos si no se usa la app\'</b>.]]></string>
+
+    <!-- MainActivity textview and button messages -->
+    <string name="monitoring_active_message">Última actividad detectada a las: %1$s\nPróxima verificación de actividad en: %2$s horas y %3$s minutos</string>
+    <string name="monitoring_active_title">Monitoreo activo</string>
+    <string name="monitoring_impaired_title">Monitoreo activo\nPero podría estar afectado</string>
+    <string name="monitoring_inactive_message">El monitoreo no está activo.\nToca el botón para reiniciarlo.</string>
+    <string name="monitoring_disabled_title">Monitoreo desactivado</string>
+    <string name="monitoring_disabled_message">Usa la Configuración para activarlo</string>
+    <string name="monitoring_no_activity_detected_title">Monitoreo no posible</string>
+    <string name="monitoring_permissions_required_title">Permisos necesarios</string>
+    <string name="monitoring_no_activity_detected_message">El monitoreo está activado pero no se ha detectado actividad en las últimas %1$s horas. Asegúrate de tener una pantalla de bloqueo activada y de haber concedido el permiso de Acceso de uso.</string>
+    <string name="monitoring_permissions_required_message">El monitoreo está activado pero no se han concedido todos los permisos. Toca el botón "Conceder permisos" de abajo.</string>
+    <string name="alarm_message_too_long_message">El mensaje no puede tener más de 160 caracteres.</string>
+    <string name="phone_number_invalid_message">Por favor, ingresa un número de teléfono válido.</string>
+    <string name="time_period_too_short_message">El intervalo debe ser de al menos 10 minutos.</string>
+    <string name="test_phone_call_message">Se realizará una llamada telefónica a:\n%1$s</string>
+    <string name="test_sms_message">Se enviará(n) mensaje(s) SMS a:\n%1$s</string>
+    <string name="unable_to_send_sms_message">No se puede enviar el SMS\nVerifica que tengas una SIM activa</string>
+    <string name="no_configured_contacts_message">No se han configurado contactos de emergencia</string>
+    <string name="permissions_button_text">Conceder permisos</string>
+    <string name="restart_monitoring_button_text">Reiniciar monitoreo</string>
+    <string name="check_app_restrictions_button_text">Desactivar restricciones de la app</string>
+    <string name="test_sms_alert_button_text">Probar alerta SMS</string>
+    <string name="test_phone_alert_button_text">Probar alerta de llamada</string>
+    <string name="test_alert_confirmation_title">Confirmar prueba de alerta SMS</string>
+    <string name="test_alert_switch_include_warning_text">Incluir un mensaje de advertencia</string>
+    <string name="test_sms_configured_contacts_message">Esto enviará una alerta SMS de prueba a tus contactos de emergencia configurados: %1$s.</string>
+    <string name="test_alert_confirmation_message_with_count"><![CDATA[Se enviará un total de <b>%1$d</b> SMS. ¿Deseas continuar?]]></string>
+    <string name="test_alert_sms_default_message">Los siguientes mensajes son una prueba de la app Keep Alive. ¡Por favor, confirma la recepción!</string>
+
+    <!-- notification strings -->
+    <string name="default_notification_channel_title">Notificaciones de alerta</string>
+    <string name="sms_sent_notification_channel_title">Notificaciones de SMS enviado</string>
+    <string name="call_sent_notification_channel_title">Notificaciones de llamada realizada</string>
+    <string name="webhook_sent_notification_channel_title">Notificaciones de webhook enviado</string>
+    <string name="alert_service_notification_channel_title">Notificaciones del servicio de alerta</string>
+    <string name="default_notification_channel_description">Avisos de ¿Sigues ahí?</string>
+    <string name="sms_sent_notification_channel_description">Se envía cuando se activa una alerta por SMS</string>
+    <string name="call_sent_notification_channel_description">Se envía cuando se activa una alerta por llamada telefónica</string>
+    <string name="webhook_sent_notification_channel_description">Se envía cuando se activa una alerta por webhook</string>
+    <string name="alert_service_notification_channel_description">Se muestra mientras se envía una alerta</string>
+    <string name="activity_notification_message">¡Qué bueno ver que sigues bien! Cancelando la alerta.</string>
+    <string name="initial_check_notification_title">¿Sigues ahí?</string>
+    <string name="overlay_countdown_format">La alerta se enviará en %1$d:%2$02d</string>
+    <string name="initial_check_notification_text">¡Toca aquí si sigues bien! De lo contrario, se enviará una alerta en %1$s minutos.</string>
+    <string name="alert_notification_title">¡Alerta de Keep Alive activada!</string>
+    <string name="call_alert_notification_text">Se ha realizado una llamada telefónica a tu contacto de emergencia: %1$s</string>
+    <string name="sms_alert_notification_text">¡Se ha enviado un SMS a tu(s) contacto(s) de emergencia!</string>
+    <string name="sms_alert_failure_notification_title">Error al enviar la alerta SMS</string>
+    <string name="sms_alert_failure_notification_text">Ocurrió un error al intentar enviar la alerta SMS</string>
+    <string name="sms_alert_failure_notification_text_with_error">Ocurrió un error al intentar enviar la alerta SMS: %1$s</string>
+    <string name="sms_service_failure_notification_title">No se puede enviar la alerta SMS</string>
+    <string name="sms_service_failure_notification_text">Ocurrió un error al intentar enviar la alerta SMS, verifica que tengas una SIM activa</string>
+    <string name="alert_service_notification_title">Enviando alerta…</string>
+    <string name="alert_service_notification_message">Se están enviando alertas a tus contactos configurados, por favor espera.</string>
+
+    <!-- alert location strings -->
+    <string name="location_invalid_message">No se puede determinar la ubicación.</string>
+    <string name="geocode_invalid_message">No se puede geocodificar la ubicación. Las coordenadas GPS son (%1$s, %2$s). Precisión (m): %3$s.</string>
+    <string name="geocode_valid_message">Coordenadas GPS: (%1$s, %2$s). Precisión (m): %3$s. Posible dirección: %4$s</string>
+
+    <!-- Preference Titles -->
+    <string name="main_header">Configuración principal</string>
+    <string name="contact_header">Números de contacto de emergencia</string>
+
+    <!-- SMS settings layout text view strings, some are just placeholders -->
+    <string name="phone_number_title">Número de teléfono</string>
+    <string name="alert_message_title">Mensaje de alerta</string>
+    <string name="include_location_title">Incluir ubicación</string>
+    <string name="sample_alert_message">Mensaje de alerta de ejemplo</string>
+    <string name="include_location_information">Incluir información de ubicación</string>
+    <string name="phone_number_hint">Ingresa el número de teléfono</string>
+    <string name="alert_message_hint">Ingresa el mensaje de alerta</string>
+    <string name="delete_phone_number_dialog_title">Eliminar contacto de emergencia</string>
+    <string name="delete_phone_number_dialog_description">¿Estás seguro de que deseas eliminar esta entrada?</string>
+
+    <!-- rest period dialog strings -->
+    <string name="rest_period_dialog_title">Configurar período de descanso</string>
+    <string name="rest_period_dialog_message">Establece un rango de tiempo durante el cual la inactividad no se contará. Por ejemplo, con \'Horas de inactividad\' configurado en 6 horas y un período de descanso de 22:00 – 6:00, si el dispositivo se usa por última vez a las 18:00, la verificación \'¿Sigues ahí?\' no se enviaría hasta las 8:00.\n\nNOTA: Aún se puede enviar una alerta durante un período de descanso si la verificación \'¿Sigues ahí?\' se envió ANTES del inicio de un período de descanso.</string>
+    <string name="rest_period_dialog_time_zone_message"><![CDATA[Las horas usan la zona horaria predeterminada del sistema: <b>%1$s</b>]]></string>
+    <string name="rest_period_not_set_message">No establecido</string>
+    <string name="rest_period_start_time">Hora de inicio</string>
+    <string name="rest_period_end_time">Hora de fin</string>
+    <string name="rest_period_invalid_range_message">La hora de inicio y la de fin no pueden ser iguales</string>
+
+    <!-- Main Settings -->
+    <string name="enabled_title">Monitoreo activado</string>
+    <string name="auto_restart_title">Reiniciar el monitoreo automáticamente después de una alerta</string>
+    <string name="time_period_title">Horas de inactividad antes del aviso</string>
+    <string name="time_period_description">El número de horas de inactividad antes de que se te muestre una notificación \'¿Sigues ahí?\'.</string>
+    <string name="followup_time_period_title">Minutos de espera para la confirmación</string>
+    <string name="exact_alarm_toggle_title">Usar temporización exacta de alarmas</string>
+    <string name="exact_alarm_note">NOTA: Esta temporización no es exacta y el sistema puede retrasar esta notificación hasta 1 hora.\n\nActiva \'Usar temporización exacta de alarmas\' abajo si necesitas verificaciones precisas, lo que puede aumentar ligeramente el uso de la batería.</string>
+    <string name="rest_period_title">Rango de tiempo del período de descanso</string>
+    <string name="followup_time_period_description">El número de minutos a esperar después de enviar una notificación \'¿Sigues ahí?\' antes de que se envíe una alerta a tu(s) contacto(s) de emergencia</string>
+    <string name="contact_phone_title">Número de teléfono para llamada (opcional)</string>
+    <string name="add_sms_contact_button_text">Agregar contacto de emergencia SMS</string>
+    <string name="contact_phone_description">Cuando se activa una alerta, se realizará una llamada telefónica a este número con el altavoz activado.\n\nTen en cuenta que esto requiere permisos adicionales para poder realizar llamadas desde el segundo plano.</string>
+    <string name="default_alert_message">¡Hola! No he usado mi teléfono en un buen rato y podría necesitar ayuda. ¡Por favor, envíen ayuda!</string>
+    <string name="default_alert_message_alt">Oye, podría estar muerto; si no me comunico contigo en las próximas 24 horas, ya sabes qué hacer.</string>
+    <string name="add_emergency_contact_title">Agregar contacto de emergencia</string>
+    <string name="edit_emergency_contact_title">Editar contacto de emergencia</string>
+    <string name="webhook_title">Webhook de alerta</string>
+
+    <!-- Monitored Apps strings -->
+    <string name="monitored_apps_title">Método de monitoreo</string>
+    <string name="monitored_apps_dialog_title">Selecciona 1 o más apps en tu dispositivo</string>
+    <string name="monitored_apps_dialog_message">El uso de la(s) app(s) seleccionada(s) se usará para determinar cuándo se interactuó por última vez con tu dispositivo. Para volver al bloqueo/desbloqueo del dispositivo, presiona \'Eliminar\'.</string>
+    <string name="monitored_apps_chosen_title">App(s) seleccionada(s)</string>
+    <string name="monitored_apps_usage_history_message">Estos eventos no siempre son resultado de la actividad del usuario. Por favor, revísalos cuidadosamente antes de elegir esta app.</string>
+    <string name="monitored_apps_recently_used_title">Apps usadas recientemente (últimas 72 horas)</string>
+    <string name="monitored_apps_not_configured_title">Método de monitoreo no configurado</string>
+    <string name="monitored_apps_not_configured_message">Tu dispositivo ejecuta Android 8 o anterior. Para usar Keep Alive primero debes seleccionar la(s) otra(s) app(s) que se usarán para monitorear la actividad. Toca el ajuste Método de monitoreo para configurarlo.</string>
+    <string name="monitored_apps_warning_dialog_title">Monitoreo de apps</string>
+    <string name="monitored_apps_warning_dialog_message">Esta función está en desarrollo y el comportamiento puede variar según la(s) app(s) seleccionada(s). Keep Alive busca un evento MOVE_TO_FOREGROUND de la(s) app(s), que no siempre es resultado de la interacción del usuario. No se deben usar apps que puedan activar tu dispositivo, como apps de alarma, teléfono o multimedia.</string>
+    <string name="monitored_apps_warning_dialog_message_alt">\n\nNOTA: Este dispositivo ejecuta Android 9 o posterior; se recomienda encarecidamente usar los eventos de bloqueo/desbloqueo del dispositivo en lugar del monitoreo de apps.</string>
+    <string name="monitored_apps_view_history_text">Ver historial</string>
+    <string name="monitored_apps_view_history_title">Historial de la app: %1$s</string>
+    <string name="monitored_apps_history_date_header">Usado a las</string>
+    <string name="monitored_apps_history_name_header">Nombre de la actividad</string>
+    <string name="monitored_apps_no_usage_stats_permissions_dialog_title">Permisos necesarios</string>
+    <string name="monitored_apps_no_usage_stats_permissions_dialog_message">Para configurar este ajuste primero debes conceder el permiso de Estadísticas de uso. Toca el botón Atrás para volver a la página principal y toca el botón \'Conceder permisos\'.</string>
+
+    <!-- Log Display strings -->
+    <string name="log_display_increase_size_button_text">Tamaño +</string>
+    <string name="log_display_decrease_size_button_text">Tamaño -</string>
+    <string name="log_display_copy_button_text">Copiar</string>
+    <string name="log_display_copy_button_toast">Texto copiado</string>
+    <string name="log_display_delete_dialog_title">¿Eliminar registros?</string>
+    <string name="log_display_delete_dialog_message">¿Estás seguro de que deseas eliminar todos los registros guardados?</string>
+
+    <!-- SEND_SMS Permission -->
+    <string name="permission_send_sms_title">Permiso necesario: Enviar mensajes SMS</string>
+    <string name="permission_send_sms_description">El SMS se usa como método principal de notificación cuando se activa una alerta.</string>
+
+    <!-- CALL_PHONE Permission -->
+    <string name="permission_call_phone_title">Permiso necesario: Realizar llamadas telefónicas</string>
+    <string name="permission_call_phone_description">Se ha proporcionado un número de teléfono para llamada de contacto de emergencia, lo que requiere la capacidad de realizar una llamada telefónica.</string>
+
+    <!-- READ_PHONE_STATE Permission -->
+    <string name="permission_read_phone_state_title">Permiso necesario: Gestionar llamadas telefónicas</string>
+    <string name="permission_read_phone_state_description">Debido a un error en Android 8, se requiere el permiso Gestionar llamadas telefónicas para poder enviar SMS.</string>
+
+    <!-- USAGE_ACCESS_SETTINGS Permission -->
+    <string name="permission_usage_access_title">Permiso necesario: Estadísticas de acceso de uso</string>
+    <string name="permission_usage_access_description">Para determinar cuándo se usó tu dispositivo por última vez, se requiere un permiso especial llamado Estadísticas de acceso de uso.\n\nPor favor, activa este permiso para la app Keep Alive.</string>
+
+    <!-- MANAGE_OVERLAY_PERMISSION Permission -->
+    <string name="permission_manage_overlay_title">Permiso necesario: Gestionar superposición</string>
+    <string name="permission_manage_overlay_description">El permiso Gestionar superposición es necesario para:\n\n• Mostrar un aviso a pantalla completa sobre otras apps cuando se activa la verificación \'¿Sigues ahí?\' para ayudar a evitar el envío de una alerta de falso positivo.\n\n• Realizar una llamada telefónica desde el segundo plano cuando se configura un número de teléfono para llamada.\n\nPor favor, activa el permiso Gestionar superposición para la app Keep Alive en la configuración de tu dispositivo.</string>
+
+    <!-- ACCESS_FINE_LOCATION Permission -->
+    <string name="permission_access_fine_location_title">Permiso necesario: Acceder a la ubicación precisa</string>
+    <string name="permission_access_fine_location_description">\'Incluir información de ubicación\' está activado, lo que requiere la capacidad de obtener información de ubicación precisa para que sea lo más exacta posible, lo que puede ayudar a tu contacto de emergencia a localizarte.</string>
+
+    <!-- POST_NOTIFICATIONS Permission (For TIRAMISU and above) -->
+    <string name="permission_post_notifications_title">Permiso necesario: Enviar notificaciones</string>
+    <string name="permission_post_notifications_description">Las notificaciones solo se envían cuando se activa una alerta</string>
+
+    <!-- ACCESS_BACKGROUND_LOCATION Permission (For Q and above) -->
+    <string name="permission_access_background_location_title">Permiso necesario: Acceder a la ubicación en segundo plano</string>
+    <string name="permission_access_background_location_description">\'Incluir información de ubicación\' está activado, lo que requiere la capacidad de obtener información de ubicación mientras se ejecuta en segundo plano. La ubicación solo se obtiene cuando se activa una alerta, cuyas condiciones solo deberían ocurrir cuando la app está en segundo plano y el dispositivo está inactivo. Por favor, activa este permiso para la app Keep Alive en la configuración de tu dispositivo seleccionando \'Permitir todo el tiempo\'.</string>
+
+    <!-- REQUEST_SCHEDULE_EXACT_ALARM Permission (For S and above) -->
+    <string name="permission_schedule_alarms_title">Permiso necesario: Programar alarmas</string>
+    <string name="permission_schedule_alarms_description">Programar alarmas es necesario para que la alerta pueda activarse incluso cuando tu dispositivo está suspendido o en modo No molestar.\n\nPor favor, activa este permiso para la app KeepAlive en la configuración de tu dispositivo.</string>
+
+    <!-- AlertFunctions.kt -->
+    <string name="debug_log_doing_alert_check">Realizando verificación periódica, la etapa de alarma es %1$s</string>
+    <string name="debug_log_sending_alert_sms">¡Enviando alerta SMS!</string>
+    <string name="debug_log_getting_sms_manager_with_sub_id">Obteniendo el gestor de SMS con context.getSystemService y el id de suscripción %1$d</string>
+    <string name="debug_log_getting_sms_manager_with_context">Obteniendo el gestor de SMS con context.getSystemService</string>
+    <string name="debug_log_getting_default_sms_manager">Obteniendo el gestor de SMS predeterminado</string>
+    <string name="debug_log_getting_default_sms_manager_for_sub_id">Obteniendo el gestor de SMS predeterminado para el id de suscripción %1$d</string>
+    <string name="debug_log_exception_while_getting_sms_manager">Excepción al obtener el gestor de SMS: %1$s</string>
+    <string name="debug_log_failed_getting_sms_manager">¿Error al obtener el gestor de SMS?</string>
+    <string name="debug_log_sending_text_message_to">Enviando mensaje de texto a: %1$s</string>
+    <string name="debug_log_sending_multipart_sms">Enviando mensaje SMS multiparte con %1$d partes</string>
+    <string name="debug_log_sending_single_sms">Enviando un único mensaje SMS</string>
+    <string name="debug_log_failed_sending_sms">¿Error al enviar el mensaje SMS a %1$s? %2$s</string>
+    <string name="debug_log_sms_phone_blank">¿El número de teléfono SMS estaba en blanco?</string>
+    <string name="debug_log_sending_location_message_to">Enviando mensaje de ubicación a: %1$s</string>
+    <string name="debug_log_failed_sending_location_sms">¿Error al enviar el SMS de ubicación a %1$s?</string>
+    <string name="debug_log_placing_alert_phone_call">Realizando llamada de alerta a %1$s</string>
+    <string name="debug_log_no_call_phone_permission">No se puede realizar la llamada, ¿no tenemos permisos?</string>
+    <string name="debug_log_checking_for_activity">verificando actividad a partir de las %1$s hora local</string>
+    <string name="debug_log_checking_for_system_events">Verificando eventos de bloqueo/desbloqueo del sistema</string>
+    <string name="debug_log_failed_getting_last_phone_activity">¿Error al obtener la última actividad del teléfono?</string>
+    <string name="debug_log_no_events_sending_notification">no se encontraron eventos en las últimas %1$.2f horas, enviando notificación ¿Sigues ahí?</string>
+    <string name="debug_log_sending_alert">¡Enviando alerta!</string>
+    <string name="debug_log_last_device_activity">El último evento de uso fue %1$s de %2$s a las %3$s UTC</string>
+    <string name="debug_log_location_power_mode_warning">El modo de ahorro de energía de ubicación puede impedir que obtengamos la ubicación: %1$s</string>
+    <string name="debug_log_power_and_idle_status">¿En modo de ahorro de energía? %1$b. ¿El dispositivo está inactivo? %2$b</string>
+    <string name="debug_log_failed_registering_sms_sent_receiver">Error al registrar el receptor de SMS enviado.</string>
+    <string name="debug_log_failed_getting_sms_sub_id">Error al obtener el id de suscripción de SMS predeterminado.</string>
+    <string name="debug_log_alert_service_start">Iniciando el servicio de alerta</string>
+    <string name="debug_log_alert_service_stop">Deteniendo el servicio de alerta</string>
+    <string name="debug_log_alert_service_error">Ocurrió un error en el servicio de alerta: %1$s</string>
+    <string name="debug_log_failed_to_start_alert_service">Error al iniciar AlertService: %1$s</string>
+    <string name="debug_log_auto_restart_monitoring">El reinicio automático del monitoreo está activado, reiniciando la alarma…</string>
+    <string name="debug_log_sending_warning_sms">Enviando SMS de advertencia a %1$s</string>
+
+    <!-- AppController.kt -->
+    <string name="debug_log_starting_up">¡KeepAlive iniciándose!</string>
+
+    <!-- UtilityFunctions.kt -->
+    <string name="debug_log_failed_getting_alarm_manager">¿Error al obtener AlarmManager?</string>
+    <string name="debug_log_setting_periodic_alarm">Estableciendo nueva alarma periódica para aproximadamente las %1$s UTC</string>
+    <string name="debug_log_setting_periodic_exact_alarm">Estableciendo nueva alarma periódica exacta para las %1$s UTC</string>
+    <string name="debug_log_setting_final_exact_alarm">Estableciendo alarma final exacta para que se active a las %1$s UTC</string>
+    <string name="debug_log_unable_to_set_exact_alarm">¿No se puede establecer la alarma exacta? Estableciendo alarma final normal para que se active a las %1$s UTC</string>
+    <string name="debug_log_api_22_unable_to_set_exact_alarm">¿Esto es API 22 pero no pudimos establecer una alarma exacta?</string>
+
+    <!-- LogDisplayActivity.kt -->
+    <string name="debug_log_log_display_activity_started">Actividad de visualización de registros de depuración iniciada</string>
+    <string name="debug_log_logs_deleted">Registros de depuración eliminados</string>
+    <string name="debug_log_logs_copied_to_clipboard">Registros de depuración copiados al portapapeles</string>
+
+    <!-- LocationHelperBase.kt -->
+    <string name="debug_log_timeout_reached_getting_location">¿Se alcanzó el tiempo de espera al obtener la ubicación?</string>
+    <string name="debug_log_attempting_to_get_location">Intentando obtener la ubicación…</string>
+    <string name="debug_log_device_idle_not_getting_current_location">El dispositivo está en modo inactivo, no se obtiene la ubicación actual</string>
+    <string name="debug_log_no_location_permission_executing_callback">No tenemos permiso de ubicación, ejecutando la devolución de llamada</string>
+    <string name="debug_log_failed_getting_current_location">¿Error al obtener la ubicación actual?</string>
+    <string name="debug_log_geocoding_timeout_reached">Se alcanzó el tiempo de espera, locationString es %1$s</string>
+    <string name="debug_log_failed_geocoding_gps_coordinates">¿Error al geocodificar las coordenadas GPS?</string>
+    <string name="debug_log_no_address_results">Sin resultados de dirección</string>
+    <string name="debug_log_location_helper_init_error">Error al verificar el proveedor de GPS o de red</string>
+
+    <!-- LocationHelper.kt -->
+    <string name="debug_log_attempting_to_get_last_location">Intentando obtener lastLocation…</string>
+    <string name="debug_log_best_last_known_location">la mejor lastKnownLocation es del proveedor %1$s con precisión %2$f</string>
+    <string name="debug_log_unable_to_determine_location">No se puede determinar la ubicación</string>
+    <string name="debug_log_failed_getting_last_location">Error al obtener la última ubicación:</string>
+    <string name="debug_log_unable_to_get_current_location">No se puede obtener la ubicación actual</string>
+    <string name="debug_log_location_timeout_reached">Se alcanzó el tiempo de espera</string>
+    <string name="debug_log_timeout_reached_getting_location_from_google_play">¿Se alcanzó el tiempo de espera al obtener la ubicación de Google Play?</string>
+    <string name="debug_log_failed_getting_location_from_source">Error al intentar obtener la ubicación de %1$s</string>
+
+    <!-- MainActivity.kt -->
+    <string name="debug_log_no_alarm_or_monitoring_disabled">No se encontró ninguna alarma o el monitoreo está desactivado</string>
+    <string name="debug_log_no_events_found_lock_screen">No se encontraron eventos, ¿quizás no hay pantalla de bloqueo?</string>
+    <string name="debug_log_no_active_alarm_showing_restart_button">No se encontró ninguna alarma activa, mostrando el botón para reiniciar</string>
+    <string name="debug_log_failed_getting_sms_manager_disable_button">¿Error al obtener el gestor de SMS? Desactivando el botón de prueba de SMS</string>
+    <string name="debug_log_current_alarm_time">Alarma actual establecida para las %1$s hora local</string>
+    <string name="debug_log_direct_boot_notification_pending_app_open">Notificación de Direct Boot aún pendiente al abrir la app — confirmando</string>
+
+    <!-- PermissionManager.kt -->
+    <string name="debug_log_still_need_some_permissions">Aún se necesitan algunos permisos</string>
+    <string name="debug_log_have_all_permissions">Tenemos todos los permisos</string>
+    <string name="debug_log_finished_requesting_permissions">Solicitud de permisos finalizada</string>
+
+    <!-- AlarmReceiver.kt -->
+    <string name="debug_log_alarm_just_fired">¡La alarma acaba de activarse!</string>
+    <string name="debug_log_app_not_enabled_alarm_went_off">La app no está activada, ¿por qué se activó la alarma?</string>
+    <string name="debug_log_alarm_time_comparison">La hora es %1$s UTC, la alarma debía activarse a las %2$s UTC, que fue hace %3$d segundos</string>
+    <string name="debug_log_failed_processing_alarm">Error al procesar la alarma:</string>
+    <string name="debug_log_app_in_foreground">KeepAlive está actualmente en primer plano</string>
+    <string name="debug_log_app_in_background">KeepAlive está actualmente en segundo plano</string>
+    <string name="debug_log_flag_receiver_true">FLAG_RECEIVER_FOREGROUND es verdadero</string>
+    <string name="debug_log_flag_receiver_false">FLAG_RECEIVER_FOREGROUND es falso</string>
+    <string name="debug_log_final_alarm_stale">La alarma final está obsoleta: se activó %1$ds tarde (umbral: %2$ds). Degradando a \'periódica\' para evitar una alerta falsa.</string>
+
+    <!-- AlertService.kt -->
+    <string name="debug_log_wake_lock_acquired">Adquiriendo wake lock</string>
+    <string name="debug_log_wake_lock_released">Liberando wake lock</string>
+    <string name="debug_log_alert_intent_skipping">Omitiendo el intent de alerta trigger=%1$d (savedTrigger=%2$d, savedSteps=%3$d)</string>
+    <string name="debug_log_alert_intent_resuming">Reanudando la alerta trigger=%1$d (completedSteps=%2$d)</string>
+
+    <!-- SMSSentReceiver.kt -->
+    <string name="debug_log_sms_sent">¡SMS enviado!</string>
+    <string name="debug_log_sms_send_error">Error al enviar SMS: %1$s</string>
+    <string name="debug_log_sms_receiver_not_registered">Receptor no registrado</string>
+
+    <!-- BootBroadcastReceiver.kt -->
+    <string name="debug_log_boot_completed">¿Arranque completado? %1$s</string>
+    <string name="debug_log_app_is_disabled">¿La app está desactivada?</string>
+    <string name="debug_log_boot_receiver_exception">Excepción en BootBroadcastReceiver: %1$s</string>
+    <string name="debug_log_boot_completed_flag_status">BOOT_COMPLETED: direct_boot_notification_pending=%1$b, isUserUnlocked=%2$b</string>
+    <string name="debug_log_boot_completed_user_unlocked">BOOT_COMPLETED: El usuario desbloqueó el dispositivo - tratando como actividad, cancelando la notificación y restableciendo la alarma</string>
+    <string name="debug_log_boot_completed_no_pending_notification">BOOT_COMPLETED: No hay notificación de Direct Boot pendiente, procediendo normalmente</string>
+    <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED recibido, omitiendo la verificación de notificación de Direct Boot. %1$s</string>
+    <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: El usuario ya está desbloqueado, difiriendo a BOOT_COMPLETED</string>
+    <string name="debug_log_restored_alarm_stage">Etapa de alarma restaurada desde el almacenamiento protegido del dispositivo: %1$s, llamando a doAlertCheck()</string>
+
+    <!-- WebhookConfigManager.kt -->
+    <string name="debug_log_webhook_config_saved">Configuración del webhook guardada</string>
+    <string name="debug_log_webhook_config_deleted">Configuración del webhook eliminada</string>
+    <string name="debug_log_invalid_header_json">JSON de encabezado no válido</string>
+
+    <!-- AlertFunctions.kt -->
+    <string name="debug_log_direct_boot_final_alarm_due">Direct Boot: La alarma final está vencida — enviando alerta</string>
+    <string name="debug_log_direct_boot_cleared_pending_flag">Direct Boot: Se borró direct_boot_notification_pending</string>
+    <string name="debug_log_direct_boot_set_pending_flag">Direct Boot: Se estableció direct_boot_notification_pending=true</string>
+    <string name="debug_log_direct_boot_activity_newer_skipping">Direct Boot: la actividad a las %1$s es más reciente que el \'¿Sigues ahí?\' publicado a las %2$s; omitiendo la alerta final</string>
+
+    <!-- Are You There overlay strings -->
+    <string name="are_you_there_title">¿Sigues ahí?</string>
+    <string name="are_you_there_message">Toca ESTOY BIEN para cancelar la alerta.</string>
+    <string name="are_you_there_countdown">La alerta se enviará en …</string>
+    <string name="are_you_there_waiting_for_acknowledgement">Esperando confirmación</string>
+    <string name="are_you_there_im_ok">Estoy bien</string>
+    <string name="are_you_there_overlay_title">Mostrar el aviso \'¿Sigues ahí?\' a pantalla completa</string>
+
+    <!-- WebhookSender.kt -->
+    <string name="debug_log_disable_certificate_verification">¡Desactivando la verificación de certificado del webhook!</string>
+    <string name="debug_log_request_successful">Solicitud exitosa con código: %1$d</string>
+    <string name="debug_log_request_failed">Solicitud fallida con código: %1$d</string>
+    <string name="debug_log_request_failed_no_retry">Solicitud fallida con código %1$d, sin reintentar.</string>
+    <string name="debug_log_unknown_exception_sending_webhook">Excepción desconocida al enviar el webhook: %1$s</string>
+    <string name="debug_log_io_exception_sending_webhook">IOException al enviar el webhook: %1$s</string>
+    <string name="debug_log_webhook_attempt">Intento n.º %1$d de %2$d</string>
+    <string name="debug_log_failed_max_retries">Error al enviar el webhook, se excedió el número máximo de reintentos</string>
+    <string name="debug_log_sending_request">Enviando solicitud a: %1$s. La ubicación es %2$s</string>
+    <string name="debug_log_webhook_test_error">Error al probar el webhook: %1$s</string>
+    <string name="debug_log_sending_webhook_failed">Error al enviar el webhook: %1$s</string>
+
+</resources>

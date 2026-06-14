@@ -1,0 +1,3 @@
+Avisa a amigos o seres queridos mediante SMS o una llamada telefónica si no has usado tu dispositivo en un período de tiempo determinado
+
+Diseñada para servir como medida de seguridad para quienes viven solos, en caso de un accidente u otra emergencia
