@@ -1,6 +1,7 @@
 
 # Helper method for capturing screenshots based on the device type (phone, sevenInch, tenInch)
-def capture_screenshots_for_device_type(device_type:, locales:)
+# test_classes defaults to the local screenshot test; CI passes the hardened variant.
+def capture_screenshots_for_device_type(device_type:, locales:, test_classes: ["io.keepalive.android.AppScreenshotsInstrumentedTest"])
 
     # https://docs.fastlane.tools/actions/capture_android_screenshots/
     capture_android_screenshots(
@@ -15,7 +16,7 @@ def capture_screenshots_for_device_type(device_type:, locales:)
         # specify exactly what we want to test
         app_package_name: "io.keepalive.android.debug",
         tests_package_name: "io.keepalive.android.debug.test",
-        use_tests_in_classes: "io.keepalive.android.AppScreenshotsInstrumentedTest",
+        use_tests_in_classes: test_classes,
 
         # shouldn't matter but use the googlePlay variant for the screenshots
         app_apk_path: "app/build/outputs/apk/googlePlay/debug/app-googlePlay-debug.apk",
@@ -60,6 +61,31 @@ lane :screenshot do |options|
 
     # take the screenshots
     capture_screenshots_for_device_type(device_type: device_type, locales: locales)
+end
+
+# CI variant of :screenshot — runs on a fresh GitHub Actions emulator using the
+# hardened ScreenshotCIInstrumentedTest. Skips clean/uninstallAll (the emulator
+# is brand new) and only builds the googlePlay debug app + its test APK.
+# Driven by .github/workflows/screenshots.yml.
+lane :screenshot_ci do |options|
+    device_type = options[:device_type] || 'phone'
+
+    # accept multiple locales as a CSV string
+    locales = options[:locales] ? options[:locales].split(',') : nil
+
+    if locales.nil?
+        UI.user_error!("No locale(s) passed. Usage: 'fastlane screenshot_ci device_type:[device_type] locales:[locales]'")
+    end
+
+    # only the googlePlay debug app + its test APK are needed for screenshots
+    gradle(task: 'assembleGooglePlayDebug')
+    gradle(task: 'assembleGooglePlayDebugAndroidTest')
+
+    capture_screenshots_for_device_type(
+        device_type: device_type,
+        locales: locales,
+        test_classes: ["io.keepalive.android.ScreenshotCIInstrumentedTest"]
+    )
 end
 
 # translate the changelogs from english to the specified locale(s)
