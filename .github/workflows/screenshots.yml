@@ -68,6 +68,13 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
+      # Logged before the emulator step so the valid `profile:` ids are visible
+      # even when a bad profile makes AVD creation fail below.
+      - name: List available device profiles
+        run: |
+          echo "=== avdmanager device profiles (valid 'profile:' values) ==="
+          avdmanager list device -c | sort
+
       - name: Capture screenshots
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -76,6 +83,17 @@ jobs:
           # `appops` and `svc power` which Play-store images block.
           target: google_apis
           arch: x86_64
+          # Device profile per device_type so tablet screenshots come out at
+          #  tablet dimensions (process_screenshots.py's crop %s assume them).
+          #  Nexus 7 / Nexus 10 are old, stable profiles present in the runner's
+          #  cmdline-tools (unlike newer pixel_* which can be missing).
+          #  phone -> pixel_7 to match the locally-captured phone screenshots
+          #  (and so tall dialogs fit). Falls back at AVD creation with a clear
+          #  error if a profile isn't on the runner — check the step below.
+          profile: ${{ inputs.device_type == 'sevenInch' && 'Nexus 7 2013' || inputs.device_type == 'tenInch' && 'Nexus 10' || 'pixel_7' }}
+          # Tablets (esp. Nexus 10, 2560x1600) render heavy on the software GPU;
+          #  give the emulator extra RAM to cut GC/OOM pressure.
+          ram-size: 4096M
           disable-animations: true
           # GMT timezone keeps the status-bar clock consistent; software GPU
           # since the runner has none.
