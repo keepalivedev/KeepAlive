@@ -101,7 +101,7 @@ jobs:
 
       - name: Upload instrumented test report
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: instrumented-test-report-api${{ matrix.api-level }}-${{ matrix.flavor }}
           path: |

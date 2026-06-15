@@ -104,7 +104,7 @@ jobs:
 
       - name: Upload screenshots
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: screenshots-${{ inputs.device_type }}
           path: fastlane/metadata/android/*/images/${{ inputs.device_type }}Screenshots/
