@@ -7,10 +7,9 @@ name: Generate screenshots
 # yourself; per the project notes a Play upload auto-submits for review).
 #
 # GitHub runners have no GPU, so the emulator renders in software (slow); the CI
-# test is written to tolerate that. `phone` is the reliable default device type.
-# Tablet device types (sevenInch/tenInch) render on whatever default device the
-# runner's cmdline-tools provide — the crops may need tuning, since we don't set
-# an emulator `profile:` (those are frequently unavailable on the runner).
+# test is written to tolerate that. Each device_type maps to a device profile
+# (phone -> pixel_7, sevenInch -> Nexus 7 2013, tenInch -> Nexus 10); the
+# "List available device profiles" step prints the valid ids for the runner.
 
 on:
   workflow_dispatch:
@@ -40,7 +39,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version: '21'
@@ -73,7 +72,8 @@ jobs:
       - name: List available device profiles
         run: |
           echo "=== avdmanager device profiles (valid 'profile:' values) ==="
-          avdmanager list device -c | sort
+          AVDMANAGER="$(find "${ANDROID_HOME:-/usr/local/lib/android/sdk}" -name avdmanager -type f 2>/dev/null | head -n1)"
+          if [ -n "$AVDMANAGER" ]; then "$AVDMANAGER" list device -c | sort; else echo "avdmanager not found under ANDROID_HOME"; fi
 
       - name: Capture screenshots
         uses: reactivecircus/android-emulator-runner@v2
@@ -104,7 +104,7 @@ jobs:
 
       - name: Upload screenshots
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: screenshots-${{ inputs.device_type }}
           path: fastlane/metadata/android/*/images/${{ inputs.device_type }}Screenshots/
