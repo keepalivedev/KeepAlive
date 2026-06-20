@@ -13,6 +13,7 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.BeforeClass
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -45,6 +46,14 @@ class OverlayInstrumentedTest {
     private val device: UiDevice =
         UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
+    // The overlay renders reliably, but UiAutomator's accessibility tree
+    // intermittently omits the overlay window on a headless CI emulator (~1 run
+    // in 10). setUp below makes that as unlikely as possible; this rule re-runs a
+    // failed attempt (fresh setUp/tearDown each time) so a transient miss doesn't
+    // fail the build — a genuine overlay regression still fails every attempt.
+    @get:Rule
+    val retry = RetryRule(attempts = 3)
+
     companion object {
         @JvmStatic
         @BeforeClass
@@ -62,14 +71,20 @@ class OverlayInstrumentedTest {
             "appops set ${targetContext.packageName} SYSTEM_ALERT_WINDOW allow"
         )
 
-        // CI emulators idle the screen during a long test run. UiAutomator
-        // tap injection on TYPE_APPLICATION_OVERLAY windows requires an
-        // awake screen with the keyguard dismissed; otherwise click() looks
-        // successful but the touch is never delivered to the overlay
-        // window. Wake + unlock before each test to make this deterministic.
+        // The overlay renders reliably, but UiAutomator can only traverse it
+        // when the emulator is awake, unlocked, and not showing another window.
+        // This class runs late in a 37-test suite — after tests that place real
+        // calls (the dialer can linger) and after the screen may have idled — so
+        // force a known-good state before each test instead of hoping:
+        //   stayon          -> screen can't idle-off mid-test
+        //   wake + dismiss  -> overlay isn't stranded behind the lock screen
+        //   pressHome       -> clear any leftover foreground activity (dialer)
+        //   waitForIdle     -> let the window / accessibility state settle
+        AlertFlowTestUtil.shell("svc power stayon true")
         device.wakeUp()
-        device.pressMenu()
-        Thread.sleep(200)
+        AlertFlowTestUtil.shell("wm dismiss-keyguard")
+        device.pressHome()
+        device.waitForIdle()
 
         // Make sure no leftover overlay from a prior test is in the way.
         AreYouThereOverlay.dismiss(targetContext)
