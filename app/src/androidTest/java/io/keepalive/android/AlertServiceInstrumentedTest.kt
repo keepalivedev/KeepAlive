@@ -153,7 +153,11 @@ class AlertServiceInstrumentedTest {
 
     @Test fun serviceEventuallyStopsItself() {
         startAlertService()
-        assertTrue(waitUntil { AlertFlowTestUtil.isAlertStepComplete(STEP_CALL_MADE) })
+        // A real ACTION_CALL (telecom + dialer) is slow on a loaded CI emulator;
+        // give the CALL step longer than the 5s default — this wait flaked under
+        // a monitor-contention spike even though the call had already been placed.
+        assertTrue("CALL step should complete",
+            waitUntil(timeoutMs = 10_000L) { AlertFlowTestUtil.isAlertStepComplete(STEP_CALL_MADE) })
 
         // AlertService stops itself after the sync steps complete (no async
         // location in this config). Notification should be cleared within a
