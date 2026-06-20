@@ -15,7 +15,7 @@ There is also a 'Lite' version available for F-Droid that removes the Internet p
 alt="Get it on F-Droid (Lite)"
 height="80">](https://f-droid.org/packages/io.keepalive.lite.android/)
 
-Available Translations: French (CA), German (DE), Polish (PL), Russian (RU), Chinese (CN), Italian (IT) <br/>
+Available Translations: Chinese (CN), French (CA), German (DE), Italian (IT), Polish (PL), Russian (RU), Spanish (ES) <br/>
 Supports Android 5.1 (API 22) and up
 
 ## How it Works
@@ -65,6 +65,9 @@ Supports Android 5.1 (API 22) and up
   - If the 'Are you there?' prompt is not acknowledged within this time, an Alert will be sent
   - Will not be delayed
   - Default is 60 minutes
+- **Show Full-Screen 'Are you there?' Prompt**
+  - If enabled, a full-screen prompt is displayed over other apps when the 'Are you there?' check is triggered, making it harder to miss and helping to prevent a false alert
+  - Requires the Manage Overlay permission
 - **Rest Period Time Range**
   - A range of time during which inactivity will not be counted
   - For example, with 'Hours of Inactivity' set at 6 hours and a Rest Period of 22:00 – 6:00, if the device is last used at 18:00, the 'Are you there?' check would not be sent until 8:00  
@@ -98,7 +101,9 @@ If Include Location is enabled:
 
 If a Phone Call number is configured:
 * **Make and Manage Calls**: Basic permission to make phone calls
-* **Manage Overlays**: Necessary to be able to make phone calls when the device is idle
+
+If the full-screen 'Are you there?' prompt is enabled or a Phone Call number is configured:
+* **Manage Overlays**: Necessary to show the full-screen prompt over other apps and to place phone calls when the device is idle
 
 
 ## App Restrictions / App Hibernation 
