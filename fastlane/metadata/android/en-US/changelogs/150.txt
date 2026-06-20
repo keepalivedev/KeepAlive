@@ -1,0 +1,3 @@
+* Add full-screen "Are you there?" prompt
+* Add Spanish translation
+* Alerting now works after a reboot before first unlock
