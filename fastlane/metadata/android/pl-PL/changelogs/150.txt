@@ -1,0 +1,3 @@
+* Dodanie pełnoekranowego monitu „Jesteś tam?"
+* Dodanie tłumaczenia hiszpańskiego
+* Alerty działają teraz po ponownym uruchomieniu, przed pierwszym odblokowaniem

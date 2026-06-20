@@ -1,0 +1,3 @@
+* Aggiungere l'avviso a schermo intero «Ci sei ancora?»
+* Aggiungere la traduzione spagnola
+* Gli avvisi ora funzionano dopo un riavvio, prima del primo sblocco

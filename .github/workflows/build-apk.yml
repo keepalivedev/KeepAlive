@@ -42,7 +42,7 @@ jobs:
         run: echo "repository_name=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
 
       - name: Set Up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu' # See 'Supported distributions' for available options
           java-version: '21'
@@ -66,7 +66,7 @@ jobs:
 
       # Outputs land in app/build/outputs/apk/<flavor>/<buildType>/*.apk
       - name: Upload APK(s) - ${{ env.repository_name }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.date_today }} - ${{ env.repository_name }} - ${{ inputs.flavor }} ${{ inputs.build_type }} APK
           path: ${{ env.main_project_module }}/build/outputs/apk/**/*.apk

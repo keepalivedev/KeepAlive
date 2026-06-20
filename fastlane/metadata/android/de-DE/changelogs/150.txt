@@ -1,0 +1,3 @@
+* Vollbild-Aufforderung „Sind Sie noch da?" hinzufügen
+* Spanische Übersetzung hinzufügen
+* Alarme funktionieren jetzt nach einem Neustart schon vor dem ersten Entsperren
