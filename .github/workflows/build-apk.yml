@@ -1,0 +1,73 @@
+name: Build APK
+
+env:
+  # The name of the main module repository
+  main_project_module: app
+
+on:
+  # Manual builds only — pick a flavor and build type from the Actions tab.
+  workflow_dispatch:
+    inputs:
+      flavor:
+        description: 'Product flavor to build'
+        type: choice
+        default: FDroid
+        options:
+          - All
+          - GooglePlay
+          - FDroid
+          - FDroidLite
+      build_type:
+        description: 'Build type'
+        type: choice
+        default: Release
+        options:
+          - Release
+          - Debug
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      # Set Current Date As Env Variable
+      - name: Set current date as env variable
+        run: echo "date_today=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
+      # Set Repository Name As Env Variable
+      - name: Set repository name as env variable
+        run: echo "repository_name=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
+
+      - name: Set Up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu' # See 'Supported distributions' for available options
+          java-version: '21'
+          cache: 'gradle'
+
+      - name: Change wrapper permissions
+        run: chmod +x ./gradlew
+
+      # "All" maps to gradle's aggregate assemble<BuildType> task, which builds
+      # every flavor's APK for that build type. A specific flavor maps to
+      # assemble<Flavor><BuildType> (e.g. assembleFDroidRelease).
+      - name: Build APK(s) - ${{ inputs.flavor }} ${{ inputs.build_type }}
+        run: |
+          if [ "${{ inputs.flavor }}" = "All" ]; then
+            task="assemble${{ inputs.build_type }}"
+          else
+            task="assemble${{ inputs.flavor }}${{ inputs.build_type }}"
+          fi
+          echo "Running ./gradlew $task"
+          ./gradlew "$task" --no-daemon
+
+      # Outputs land in app/build/outputs/apk/<flavor>/<buildType>/*.apk
+      - name: Upload APK(s) - ${{ env.repository_name }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ env.date_today }} - ${{ env.repository_name }} - ${{ inputs.flavor }} ${{ inputs.build_type }} APK
+          path: ${{ env.main_project_module }}/build/outputs/apk/**/*.apk
+          if-no-files-found: error

@@ -4,9 +4,11 @@ name: Instrumented tests
 # workflow from the unit tests so a unit-test-only CI cycle stays fast.
 #
 # Uses the `reactivecircus/android-emulator-runner` action which boots an AVD
-# in-CI. Runs all behavioral tests (AlarmFlow, BootFlow, AlertService,
-# Acknowledge, SettingsPersistence) — skips the screenshot flow which is
-# handled by Fastlane.
+# in-CI. Runs the behavioral tests (AlarmFlow, BootFlow, AlertService,
+# Acknowledge, SettingsPersistence) and the OverlayInstrumentedTest UI test.
+# Excludes (via notClass) only the screenshot-capture tests (AppScreenshots and
+# ScreenshotCI) — those are Fastlane-driven (the screenshots workflow) and
+# assert nothing on their own, so there's no reason to run them here.
 #
 # The googlePlay flavor runs across the full API matrix; the fDroid and
 # fDroidLite flavors (android.location LocationHelper) each additionally run
@@ -54,7 +56,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version: '21'
@@ -78,12 +80,16 @@ jobs:
           # the only reliable image for older levels (API 22).
           target: ${{ matrix.api-level < 28 && 'default' || 'google_apis' }}
           arch: x86_64
-          # No `profile:` set — device profile availability depends on the
-          # cmdline-tools version on the runner, NOT just the API level.
-          # We hit "No device found matching --device pixel_8" on API 22
-          # AND on API 33+, suggesting pixel_8 isn't in whatever cmdline-tools
-          # ships with the runner currently. Letting the runner pick its
-          # default device avoids this whole class of mismatch.
+          # A real device profile is needed for the UI test (Overlay): the bare
+          # default AVD boots a tiny 320x640 screen whose window never gains
+          # focus on a headless runner, so Espresso/UiAutomator can't see the
+          # overlay views even though it renders ("Overlay shown" logs).
+          # pixel_7 is the same profile the screenshots workflow uses
+          # successfully on a headless emulator. Gated to API 28+ (Overlay is
+          # API 26+ anyway) — older system images don't reliably ship modern
+          # device profiles (an earlier pixel_8 attempt failed AVD creation on
+          # API 22), so API 22 keeps the runner's default device.
+          profile: ${{ matrix.api-level >= 28 && 'pixel_7' || '' }}
           disable-animations: true
           # The script runs after the AVD is created and the emulator booted.
           # Logging `avdmanager list devices` first surfaces which device
@@ -97,11 +103,11 @@ jobs:
             echo "=== Available device profiles on API ${{ matrix.api-level }} ==="
             avdmanager list devices -c | sort -u | head -40
             echo "==="
-            ./gradlew connected${{ matrix.flavor }}DebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.notClass=io.keepalive.android.AppScreenshotsInstrumentedTest --no-daemon
+            ./gradlew connected${{ matrix.flavor }}DebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.notClass=io.keepalive.android.AppScreenshotsInstrumentedTest,io.keepalive.android.ScreenshotCIInstrumentedTest --no-daemon
 
       - name: Upload instrumented test report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: instrumented-test-report-api${{ matrix.api-level }}-${{ matrix.flavor }}
           path: |
