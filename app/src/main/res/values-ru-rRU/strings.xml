@@ -117,10 +117,10 @@
     <string name="call_sent_notification_channel_description">Отправляется при срабатывании оповещения о телефонном звонке</string>
     <string name="webhook_sent_notification_channel_description">Отправляется при срабатывании оповещения вебхука</string>
     <string name="alert_service_notification_channel_description">Отображается при отправке оповещения</string>
-    <string name="activity_notification_message">Замечательно, что ты все еще здесь! Отмена оповещений</string>
+    <string name="activity_notification_message">Замечательно, что с тобой всё в порядке! Отмена оповещений</string>
     <string name="initial_check_notification_title">Вы всё еще здесь?</string>
     <string name="overlay_countdown_format">Оповещение будет отправлено через %1$d:%2$02d</string>
-    <string name="initial_check_notification_text">Нажмите здесь если вы тут! В противном случае оповещение будет отправлено через %1$s минут.</string>
+    <string name="initial_check_notification_text">Нажмите здесь, чтобы подтвердить, что вы в порядке. В противном случае оповещение будет отправлено через %1$s минут.</string>
     <string name="alert_notification_title">Keep Alive Alert сработало!</string>
     <string name="call_alert_notification_text">Звонок отправлен вашему контактному лицу: %1$s</string>
     <string name="sms_alert_notification_text">SMS было отправлено вашим экстренным контактам!</string>
@@ -175,7 +175,7 @@
     <string name="add_sms_contact_button_text">Добавить экстренный контакт по SMS</string>
     <string name="contact_phone_description">При срабатывании оповещения на этот номер телефона будет совершен телефонный звонок с включенной громкой связью.\n\nОбратите внимание, что для этого требуются дополнительные разрешения, чтобы телефонные звонки можно было совершать в фоновом режиме.</string>
     <string name="default_alert_message">Привет! Я давно не пользовался телефоном и, возможно, мне нужна помощь. Пожалуйста, пришлите помощь!</string>
-    <string name="default_alert_message_alt">Эй, возможно, я мертв, если я не свяжусь с тобой в ближайшие 24 часа, ты знаешь, что делать.</string>
+    <string name="default_alert_message_alt">Эй, если я не свяжусь с тобой в ближайшие 24 часа, ты знаешь, что делать.</string>
     <string name="add_emergency_contact_title">Добавить экстренный контакт</string>
     <string name="edit_emergency_contact_title">Редактировать экстренный контакт</string>
     <string name="webhook_title">Вебхук оповещения</string>

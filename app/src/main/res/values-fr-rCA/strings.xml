@@ -117,10 +117,10 @@
     <string name="call_sent_notification_channel_description">Envoyé lorsqu\'une alerte d\'appel téléphonique est déclenchée</string>
     <string name="webhook_sent_notification_channel_description">Envoyé lorsqu\'une alerte webhook est déclenchée</string>
     <string name="alert_service_notification_channel_description">Affiché lors de l\'envoi d\'une alerte</string>
-    <string name="activity_notification_message">Ravi de voir que vous êtes toujours en vie! Annulation de l\'alerte.</string>
+    <string name="activity_notification_message">Ravi de voir que vous allez bien! Annulation de l\'alerte.</string>
     <string name="initial_check_notification_title">Êtes-vous toujours là?</string>
     <string name="overlay_countdown_format">L\'alerte sera envoyée dans %1$d:%2$02d</string>
-    <string name="initial_check_notification_text">Cliquez ici si vous êtes toujours en vie! Sinon, une alerte sera envoyée dans %1$s minutes.</string>
+    <string name="initial_check_notification_text">Appuyez ici pour confirmer que vous allez bien. Sinon, une alerte sera envoyée dans %1$s minutes.</string>
     <string name="alert_notification_title">Alerte Keep Alive enclenché!</string>
     <string name="call_alert_notification_text">Un appel téléphonique a été passé à votre contact d\'urgence: %1$s</string>
     <string name="sms_alert_notification_text">Un SMS a été envoyé à votre(vos) contact(s) d\'urgence!</string>
@@ -175,7 +175,7 @@
     <string name="add_sms_contact_button_text">Ajouter un contact d\'urgence SMS</string>
     <string name="contact_phone_description">Lorsqu\'une alerte est déclenchée, un appel téléphonique sera passé vers ce numéro de téléphone avec le haut-parleur activé.\n\nVeuillez noter que cela nécessite des autorisations supplémentaires afin que les appels téléphoniques puissent être passés en arrière-plan.</string>
     <string name="default_alert_message">Bonjour! Je n\'ai pas utilisé mon téléphone depuis un certain temps et j\'ai peut-être besoin d\'aide. S\'il vous plaît envoyez de l\'aide!</string>
-    <string name="default_alert_message_alt">Hé, je suis peut-être mort, si je ne te contacte pas dans les prochaines 24 heures, tu sais quoi faire.</string>
+    <string name="default_alert_message_alt">Hé, si je ne te contacte pas dans les prochaines 24 heures, tu sais quoi faire.</string>
     <string name="add_emergency_contact_title">Ajouter un contact d\'urgence</string>
     <string name="edit_emergency_contact_title">Modifier un contact d\'urgence</string>
     <string name="webhook_title">Webhook d\'alerte</string>

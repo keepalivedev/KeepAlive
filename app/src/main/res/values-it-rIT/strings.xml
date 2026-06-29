@@ -117,10 +117,10 @@
         <string name="call_sent_notification_channel_description">Inviato quando viene attivato un avviso di chiamata telefonica</string>  
         <string name="webhook_sent_notification_channel_description">Inviato quando viene attivato un avviso webhook</string>  
         <string name="alert_service_notification_channel_description">Visualizzato durante l\'invio di un avviso</string>  
-        <string name="activity_notification_message">Contento di vedere che sei ancora vivo! Annullamento dell\'avviso.</string>  
+        <string name="activity_notification_message">Felice di vederti bene! Annullamento dell\'avviso.</string>  
         <string name="initial_check_notification_title">Ci sei ancora?</string>
         <string name="overlay_countdown_format">L\'avviso verrà inviato tra %1$d:%2$02d</string>
-        <string name="initial_check_notification_text">Clicca qui se sei ancora vivo! Altrimenti, un avviso verrà inviato tra %1$s minuti.</string>
+        <string name="initial_check_notification_text">Tocca qui per confermare che stai bene. Altrimenti, un avviso verrà inviato tra %1$s minuti.</string>
         <string name="alert_notification_title">Avviso Keep Alive attivato!</string>  
         <string name="call_alert_notification_text">Una telefonata è stata effettuata al tuo contatto di emergenza: %1$s</string>  
         <string name="sms_alert_notification_text">Un SMS è stato inviato al tuo contatto di emergenza!</string>
@@ -175,7 +175,7 @@
         <string name="add_sms_contact_button_text">Aggiungi un contatto di emergenza SMS</string>  
         <string name="contact_phone_description">Quando viene attivato un avviso, verrà effettuata una telefonata a questo numero di telefono con l\'altoparlante attivato.\n\nSi prega di notare che ciò richiede autorizzazioni aggiuntive affinché le telefonate possano essere effettuate in background.</string>  
         <string name="default_alert_message">Ciao! Non uso il mio telefono da un po\' e potrei aver bisogno di aiuto. Per favore, mandate aiuto!</string>  
-        <string name="default_alert_message_alt">Ehi, potrei essere morto, se non ti contatto nelle prossime 24 ore, sai cosa fare.</string>  
+        <string name="default_alert_message_alt">Ehi, se non ti contatto nelle prossime 24 ore, sai cosa fare.</string>  
         <string name="add_emergency_contact_title">Aggiungi un contatto di emergenza</string>  
         <string name="edit_emergency_contact_title">Modifica un contatto di emergenza</string>  
         <string name="webhook_title">Webhook di avviso</string>  
