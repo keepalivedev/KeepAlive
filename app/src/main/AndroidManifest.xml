@@ -32,7 +32,6 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"
         tools:ignore="ForegroundServicesPolicy" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
@@ -79,17 +78,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="io.keepalive.android.MainActivity" />
         </activity>
-
-        <service
-            android:name="io.keepalive.android.AreYouThereOverlayService"
-            android:exported="false"
-            android:foregroundServiceType="specialUse">
-            <property
-                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                android:value="If enabled by the user, displays a full-screen safety check prompt requiring user
-                 acknowledgement after inactivity is detected. Designed to prevent a false-positive alert from
-                  being sent to the user's emergency contact(s)" />
-        </service>
 
         <service
             android:name="io.keepalive.android.AlertService"
