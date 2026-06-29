@@ -117,10 +117,10 @@
     <string name="call_sent_notification_channel_description">Wird gesendet, wenn ein Alarm-Anruf ausgelöst wird</string>
     <string name="webhook_sent_notification_channel_description">Wird gesendet, wenn ein Webhook-Alarm ausgelöst wird</string>
     <string name="alert_service_notification_channel_description">Wird beim Senden eines Alarms angezeigt</string>
-    <string name="activity_notification_message">Schön, dass Sie noch am Leben sind! Alarm wird aufgehoben.</string>
+    <string name="activity_notification_message">Schön, dass es Ihnen gut geht! Alarm wird aufgehoben.</string>
     <string name="initial_check_notification_title">Sind Sie noch da?</string>
     <string name="overlay_countdown_format">Alarm wird in %1$d:%2$02d gesendet</string>
-    <string name="initial_check_notification_text">Klicken Sie hier, wenn Sie noch am Leben sind! Andernfalls wird in %1$s Minuten ein Alarm gesendet.</string>
+    <string name="initial_check_notification_text">Tippen Sie hier, um zu bestätigen, dass es Ihnen gut geht. Andernfalls wird in %1$s Minuten ein Alarm gesendet.</string>
     <string name="alert_notification_title">Keep Alive Alarm ausgelöst!</string>
     <string name="call_alert_notification_text">Ihr Notfallkontakt wurde angerufen: %1$s</string>
     <string name="sms_alert_notification_text">Eine SMS wurde an Ihre(n) Notfallkontakt(e) gesendet!</string>
@@ -175,7 +175,7 @@
     <string name="add_sms_contact_button_text">SMS-Notfallkontakt hinzufügen</string>
     <string name="contact_phone_description">Wenn ein Alarm ausgelöst wird, wird diese Telefonnummer mit aktivierter Freisprecheinrichtung angerufen.\n\nBitte beachten Sie, dass hierfür zusätzliche Berechtigungen erforderlich sind, damit Telefonanrufe im Hintergrund getätigt werden können.</string>
     <string name="default_alert_message">Hallo! Ich habe mein Telefon seit einiger Zeit nicht mehr benutzt und benötige vielleicht Unterstützung.  Bitte Hilfe schicken!</string>
-    <string name="default_alert_message_alt">Hey, ich bin vielleicht tot. Wenn ich dich in den nächsten 24 Stunden nicht melde, weißt du, was zu tun ist.</string>
+    <string name="default_alert_message_alt">Hey, wenn ich dich in den nächsten 24 Stunden nicht melde, weißt du, was zu tun ist.</string>
     <string name="add_emergency_contact_title">Notfallkontakt hinzufügen</string>
     <string name="edit_emergency_contact_title">Notfallkontakt bearbeiten</string>
     <string name="webhook_title">Alarm-Webhook</string>

@@ -129,10 +129,10 @@
     <string name="call_sent_notification_channel_description">Sent when an Phone Call alert is triggered</string>
     <string name="webhook_sent_notification_channel_description">Sent when a Webhook alert is triggered</string>
     <string name="alert_service_notification_channel_description">Displayed while sending an Alert</string>
-    <string name="activity_notification_message">Glad to see you are still alive! Cancelling Alert.</string>
+    <string name="activity_notification_message">Glad you\'re OK! Cancelling Alert.</string>
     <string name="initial_check_notification_title">Are you still there?</string>
     <string name="overlay_countdown_format">Alert will be sent in %1$d:%2$02d</string>
-    <string name="initial_check_notification_text">Click here if you are still alive! Otherwise an alert will be sent in %1$s minutes.</string>
+    <string name="initial_check_notification_text">Tap here to confirm you\'re OK. Otherwise an alert will be sent in %1$s minutes.</string>
     <string name="alert_notification_title">Keep Alive Alert triggered!</string>
     <string name="call_alert_notification_text">A phone call has been placed to your emergency contact: %1$s</string>
     <string name="sms_alert_notification_text">An SMS has been sent to your emergency contact(s)!</string>
@@ -187,7 +187,7 @@
     <string name="add_sms_contact_button_text">Add SMS Emergency Contact</string>
     <string name="contact_phone_description">When an Alert is triggered, a phone call will be placed to this phone number with speakerphone enabled.\n\nPlease note that this requires additional permissions so that phone calls can be placed from the background.</string>
     <string name="default_alert_message">Hello! I have not used my phone in a while and may be in need of assistance. Please send help!</string>
-    <string name="default_alert_message_alt">Hey I may be dead, if I do not contact you in the next 24 hours, you know what to do.</string>
+    <string name="default_alert_message_alt">Hey, if I do not contact you in the next 24 hours, you know what to do.</string>
     <string name="add_emergency_contact_title">Add Emergency Contact</string>
     <string name="edit_emergency_contact_title">Edit Emergency Contact</string>
     <string name="webhook_title">Alert Webhook</string>

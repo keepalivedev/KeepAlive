@@ -117,10 +117,10 @@
     <string name="call_sent_notification_channel_description">Wysyłane kiedy alert z połączeniem telefonicznym zostanie aktywowany</string>
     <string name="webhook_sent_notification_channel_description">Wysyłane kiedy alert webhooka zostanie aktywowany</string>
     <string name="alert_service_notification_channel_description">Wyświetlane podczas wysyłania alertu</string>
-    <string name="activity_notification_message">Cieszę się że żyjesz! Anuluję Alert.</string>
+    <string name="activity_notification_message">Cieszę się, że wszystko w porządku! Anuluję Alert.</string>
     <string name="initial_check_notification_title">Jesteś tam?</string>
     <string name="overlay_countdown_format">Alert zostanie wysłany za %1$d:%2$02d</string>
-    <string name="initial_check_notification_text">Kliknij tu jeśli wciąż żyjesz! W przeciwnym wypadku alert aktywuje się za %1$s minut.</string>
+    <string name="initial_check_notification_text">Kliknij tutaj, aby potwierdzić, że wszystko w porządku. W przeciwnym wypadku alert aktywuje się za %1$s minut.</string>
     <string name="alert_notification_title">Keep Alive Alert aktywowany!</string>
     <string name="call_alert_notification_text">Rozmowa telefoniczna została wykonana do Kontaktu Alarmowego: %1$s</string>
     <string name="sms_alert_notification_text">SMS został wysłany do Twoich kontaktów alarmowych!</string>
@@ -175,7 +175,7 @@
     <string name="add_sms_contact_button_text">Dodaj Numer Alerów SMS</string>
     <string name="contact_phone_description">Kiedy Alert zostanie wywołany, telefon zadzwoni na ten numer telefonu z włączonym trybem głośnomówiącym.\n\nWymaga to dodatkowych uprawnień, żeby telefon mógł dzwonić w tle.</string>
     <string name="default_alert_message">Hej! Nie używałem telefonu już od dłuższego czasu i mogę potrzebować wsparcia. Pomóż proszę!</string>
-    <string name="default_alert_message_alt">Hej mogę już nie żyć, jeśli nie skontaktuję się z Tobą przez 24 godziny to wiesz co robić.</string>
+    <string name="default_alert_message_alt">Hej, jeśli nie skontaktuję się z Tobą przez 24 godziny to wiesz co robić.</string>
     <string name="add_emergency_contact_title">Dodaj Kontakt Alarmowy</string>
     <string name="edit_emergency_contact_title">Zmień Kontakt Alarmowy</string>
     <string name="webhook_title">Alert Webhooka</string>

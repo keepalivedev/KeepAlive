@@ -175,7 +175,7 @@
     <string name="add_sms_contact_button_text">Agregar contacto de emergencia SMS</string>
     <string name="contact_phone_description">Cuando se activa una alerta, se realizará una llamada telefónica a este número con el altavoz activado.\n\nTen en cuenta que esto requiere permisos adicionales para poder realizar llamadas desde el segundo plano.</string>
     <string name="default_alert_message">¡Hola! No he usado mi teléfono en un buen rato y podría necesitar ayuda. ¡Por favor, envíen ayuda!</string>
-    <string name="default_alert_message_alt">Oye, podría estar muerto; si no me comunico contigo en las próximas 24 horas, ya sabes qué hacer.</string>
+    <string name="default_alert_message_alt">Oye, si no me comunico contigo en las próximas 24 horas, ya sabes qué hacer.</string>
     <string name="add_emergency_contact_title">Agregar contacto de emergencia</string>
     <string name="edit_emergency_contact_title">Editar contacto de emergencia</string>
     <string name="webhook_title">Webhook de alerta</string>
