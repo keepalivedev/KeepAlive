@@ -1,7 +1,6 @@
 package io.keepalive.android
 
 import android.content.Context
-import android.content.Intent
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SdkSuppress
 import androidx.test.platform.app.InstrumentationRegistry
@@ -20,15 +19,13 @@ import org.junit.runner.RunWith
 /**
  * Instrumented end-to-end test for the "Are you there?" overlay on a real
  * device, with overlay permission GRANTED. Complements the Robolectric
- * [AreYouThereOverlayServiceTest] (which mocks `Settings.canDrawOverlays`)
+ * [AreYouThereOverlayTest] (which mocks `Settings.canDrawOverlays`)
  * and the other instrumented tests (which deny the permission so the
- * alert flow doesn't trip the foreground-service contract under
- * synthetic-broadcast conditions).
+ * overlay branch of the alert flow is bypassed).
  *
- * Drives the service directly via `startForegroundService(ACTION_SHOW)` —
- * instrumentation context has the foreground-service-start exemption so
- * we don't hit the same async crash that synthetic AlarmReceiver
- * invocations do.
+ * Drives [AreYouThereOverlay.show] directly, which adds the overlay window
+ * via WindowManager.addView() under the SYSTEM_ALERT_WINDOW grant — no
+ * foreground service is involved.
  *
  * Uses UI Automator to assert that the overlay window is actually
  * rendered, and that tapping "I'm OK" dismisses it.
@@ -92,24 +89,16 @@ class OverlayInstrumentedTest {
     }
 
     @After fun tearDown() {
-        // Stop the overlay service so it doesn't leak into the next class.
-        targetContext.stopService(
-            Intent(targetContext, AreYouThereOverlayService::class.java)
-        )
+        // Remove any overlay so it doesn't leak into the next class.
+        AreYouThereOverlay.dismiss(targetContext)
         Thread.sleep(300)
     }
 
     @Test fun overlayAppearsAndDismissesWhenPermissionGranted() {
-        val intent = Intent(targetContext, AreYouThereOverlayService::class.java).apply {
-            action = AreYouThereOverlayService.ACTION_SHOW
-            putExtra(AreYouThereOverlayService.EXTRA_MESSAGE, "test message")
-        }
-
-        // Direct invocation from the instrumentation context. This path
-        // hits the real Service.onCreate → startForeground contract and
-        // the real WindowManager.addView — i.e., the production code path
-        // that Robolectric can't simulate.
-        targetContext.startForegroundService(intent)
+        // Direct invocation from the instrumentation context. This hits the
+        // real WindowManager.addView — i.e., the production code path that
+        // Robolectric can't simulate.
+        AreYouThereOverlay.show(targetContext, "test message")
 
         val okButton = device.wait(
             Until.findObject(By.res(targetContext.packageName, "buttonImOk")),
@@ -159,11 +148,7 @@ class OverlayInstrumentedTest {
 
     @Test fun overlayShowsConfiguredMessage() {
         val message = "please respond within 60 minutes"
-        val intent = Intent(targetContext, AreYouThereOverlayService::class.java).apply {
-            action = AreYouThereOverlayService.ACTION_SHOW
-            putExtra(AreYouThereOverlayService.EXTRA_MESSAGE, message)
-        }
-        targetContext.startForegroundService(intent)
+        AreYouThereOverlay.show(targetContext, message)
 
         val messageView = device.wait(
             Until.findObject(By.res(targetContext.packageName, "textAreYouThereMessage")),
@@ -177,11 +162,7 @@ class OverlayInstrumentedTest {
     }
 
     @Test fun dismissActionRemovesTheOverlayWithoutAcknowledging() {
-        val show = Intent(targetContext, AreYouThereOverlayService::class.java).apply {
-            action = AreYouThereOverlayService.ACTION_SHOW
-            putExtra(AreYouThereOverlayService.EXTRA_MESSAGE, "test")
-        }
-        targetContext.startForegroundService(show)
+        AreYouThereOverlay.show(targetContext, "test")
 
         // Wait for it to be visible, then dismiss via stopService (which is
         // what the static AreYouThereOverlay.dismiss() does).

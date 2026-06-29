@@ -184,8 +184,8 @@ internal fun doAlertCheck(deps: AlertCheckDeps, alarmStage: String) {
                 Log.e("doAlertCheck", "Error saving Direct Boot notification flag", e)
             }
 
-            // skip the overlay during Direct Boot — AreYouThereOverlayService is not
-            // directBootAware and the screen isn't accessible before unlock anyway
+            // skip the overlay during Direct Boot — the overlay window can't be
+            // drawn before unlock and the screen isn't accessible anyway
 
             // set the final alarm to follow up
             deps.scheduleAlarm(nowTimestamp, followupPeriodMinutes, "final", null)
