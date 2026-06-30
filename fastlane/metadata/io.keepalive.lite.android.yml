@@ -33,5 +33,5 @@ AllowedAPKSigningKeys: c45567b712d6fd7979df14f66f8a5c25859ee223e1f07e915a7eee201
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: 1.5.0-lite
-CurrentVersionCode: 150
+CurrentVersion: 1.5.1-lite
+CurrentVersionCode: 151
