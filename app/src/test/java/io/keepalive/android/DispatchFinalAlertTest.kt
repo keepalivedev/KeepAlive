@@ -20,11 +20,11 @@ import org.robolectric.annotation.Config
  * concern: a `BackgroundServiceStartNotAllowedException` (API 31+) or
  * `ForegroundServiceStartNotAllowedException` from a non-exempt context
  * MUST NOT prevent the rest of dispatchFinalAlert from running. The
- * post-startForegroundService work writes `last_alarm_stage = "periodic"`
- * (so a Direct-Boot reboot after the alert doesn't replay) and optionally
- * re-schedules the periodic alarm — both of which the AlarmReceiver's
- * outer catch-all would silently swallow if the service-start exception
- * propagated.
+ * post-startForegroundService work writes `last_alarm_stage = "alert_sent"`
+ * (so a Direct-Boot reboot after the alert neither replays the alert nor
+ * silently re-arms monitoring, issue #181) and optionally re-schedules the
+ * periodic alarm — both of which the AlarmReceiver's outer catch-all would
+ * silently swallow if the service-start exception propagated.
  *
  * Setup: wrap the Robolectric Application with a Context that throws on
  * any startForegroundService / startService call. Then drive
@@ -96,7 +96,7 @@ class DispatchFinalAlertTest {
         // No assertion failure thrown to here = exception was caught.
     }
 
-    @Test fun `last_alarm_stage is reset to periodic even when service-start throws`() {
+    @Test fun `last_alarm_stage becomes alert_sent even when service-start throws`() {
         // This is the assertion the instrumented test (AlarmFlowInstrumentedTest
         // .finalAlarmWithNoActivityStartsAlertService) relies on. If a future
         // refactor moves the device-protected write INSIDE the try block, the
@@ -104,6 +104,9 @@ class DispatchFinalAlertTest {
         // start happens to succeed, but silently regress on machines (or APIs)
         // where it throws. This unit test pins the order so the regression
         // would surface here regardless of environment.
+        //
+        // "alert_sent" (not "periodic") so the BootBroadcastReceiver stays
+        // disarmed after a reboot when Auto-Restart is off (issue #181).
         val devPrefs = getDeviceProtectedPreferences(realCtx)
         devPrefs.edit().putString("last_alarm_stage", "final").commit()
 
@@ -115,9 +118,9 @@ class DispatchFinalAlertTest {
             restPeriods = mutableListOf()
         )
 
-        assertEquals("last_alarm_stage must be reset to 'periodic' even when " +
+        assertEquals("last_alarm_stage must become 'alert_sent' even when " +
                 "startForegroundService throws",
-            "periodic", devPrefs.getString("last_alarm_stage", null))
+            "alert_sent", devPrefs.getString("last_alarm_stage", null))
     }
 
     @Test fun `auto_restart_monitoring still re-schedules when service-start throws`() {
@@ -148,6 +151,14 @@ class DispatchFinalAlertTest {
                     "scheduleAlarm call after dispatchFinalAlert; got $saved",
             saved >= before
         )
+
+        // the auto-restart scheduleAlarm runs after the "alert_sent" write and
+        // must overwrite it — the new periodic cycle is what a reboot should
+        // restore, not the disarmed post-alert state
+        assertEquals("with auto_restart_monitoring=true, the re-arm must " +
+                "overwrite the post-alert stage with 'periodic'",
+            "periodic",
+            getDeviceProtectedPreferences(realCtx).getString("last_alarm_stage", null))
     }
 
     @Test fun `auto_restart_monitoring disabled means no reschedule after dispatch`() {

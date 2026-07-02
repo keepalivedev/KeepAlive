@@ -360,6 +360,7 @@
     <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED empfangen, Direct-Boot-Benachrichtigungsprüfung wird übersprungen. %1$s</string>
     <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: Benutzer ist bereits entsperrt, Verarbeitung wird an BOOT_COMPLETED übergeben</string>
     <string name="debug_log_restored_alarm_stage">Alarmstufe aus gerätegeschütztem Speicher wiederhergestellt: %1$s, doAlertCheck() wird aufgerufen</string>
+    <string name="debug_log_boot_alert_already_sent">Alarm wurde bereits gesendet und der automatische Neustart der Überwachung ist deaktiviert, bleibt nach dem Neustart deaktiviert</string>
 
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Webhook-Konfiguration gespeichert</string>

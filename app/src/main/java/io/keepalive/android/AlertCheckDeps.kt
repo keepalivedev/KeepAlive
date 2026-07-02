@@ -72,7 +72,7 @@ interface AlertCheckDeps {
     /** Cancel the "Are you there?" prompt and reset monitoring to periodic. */
     fun acknowledgeAreYouThere()
 
-    /** Dispatch the real alert via AlertService, reset the alarm stage, and optionally restart periodic. */
+    /** Dispatch the real alert via AlertService, persist the post-alert stage, and optionally restart periodic. */
     fun dispatchFinalAlert(prefs: SharedPreferences, nowTimestamp: Long, checkPeriodHours: Float, restPeriods: MutableList<RestPeriod>)
 }
 
@@ -163,14 +163,19 @@ class ProductionAlertCheckDeps(private val context: Context) : AlertCheckDeps {
             }
         }
 
-        // Reset last_alarm_stage to "periodic" now that the alert has been dispatched.
-        // Without this, the BootBroadcastReceiver would read a stale "final" stage from
-        // device-protected storage after a reboot and call doAlertCheck("final"), which
-        // would immediately resend the alert because there's no recent activity yet.
+        // Set last_alarm_stage to "alert_sent" now that the alert has been dispatched.
+        // This serves two purposes after a reboot:
+        //  - a stale "final" stage can't replay the alert (BootBroadcastReceiver would
+        //    call doAlertCheck("final") and immediately resend it)
+        //  - with Auto-Restart Monitoring off, the BootBroadcastReceiver stays disarmed
+        //    instead of restoring a periodic cycle — otherwise a reboot would silently
+        //    re-arm monitoring and cause false alerts (issue #181)
+        // Every path that re-arms monitoring goes through setAlarm(), which overwrites
+        // this with the new stage — including the auto-restart scheduleAlarm() below.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             try {
                 getDeviceProtectedPreferences(context).edit(commit = true) {
-                    putString(PrefKeys.LAST_ALARM_STAGE, "periodic")
+                    putString(PrefKeys.LAST_ALARM_STAGE, "alert_sent")
                 }
             } catch (e: Exception) {
                 Log.e("doAlertCheck", "Error resetting alarm stage after sending alert", e)

@@ -97,17 +97,19 @@ class AlarmFlowInstrumentedTest {
         // contractually obligates the OS to expect Service.startForeground()
         // within ~5 seconds. We assert via the side effect that
         // dispatchFinalAlert writes AFTER attempting to start the service:
-        //   - last_alarm_stage gets reset to "periodic"
+        //   - last_alarm_stage becomes "alert_sent" (auto-restart is off in
+        //     this test's setup, so the boot receiver must stay disarmed
+        //     after a reboot — issue #181)
         // (the full AlertService internals are covered by
         // AlertServiceInstrumentedTest, which drives the service directly
         // from the instrumentation context).
         fireAlarm("final")
 
         assertTrue(
-            "dispatchFinalAlert must reset last_alarm_stage to 'periodic' " +
+            "dispatchFinalAlert must set last_alarm_stage to 'alert_sent' " +
                     "after attempting to start AlertService",
             waitUntil(timeoutMs = 5_000L) {
-                savedAlarmStage() == "periodic"
+                savedAlarmStage() == "alert_sent"
             }
         )
 

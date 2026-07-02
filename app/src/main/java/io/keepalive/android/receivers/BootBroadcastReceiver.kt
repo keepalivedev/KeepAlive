@@ -103,6 +103,16 @@ class BootBroadcastReceiver : BroadcastReceiver() {
                     val devicePrefs = getDeviceProtectedPreferences(context)
                     val savedAlarmStage = devicePrefs.getString(PrefKeys.LAST_ALARM_STAGE, "periodic") ?: "periodic"
 
+                    // "alert_sent" means the final alert already went out and monitoring
+                    // was not re-armed (Auto-Restart Monitoring off). Stay disarmed —
+                    // restoring a periodic cycle here would silently re-arm monitoring
+                    // after a reboot and cause false alerts (issue #181). The stage is
+                    // overwritten by setAlarm() whenever monitoring is re-armed.
+                    if (savedAlarmStage == "alert_sent") {
+                        DebugLogger.d(tag, context.getString(R.string.debug_log_boot_alert_already_sent))
+                        return
+                    }
+
                     DebugLogger.d(tag, context.getString(R.string.debug_log_restored_alarm_stage, savedAlarmStage))
 
                     // since we can't assume that the user initiated the reboot, run the alert

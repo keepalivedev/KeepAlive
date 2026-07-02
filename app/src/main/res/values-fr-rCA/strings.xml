@@ -360,6 +360,7 @@
     <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED reçu, vérification de la notification Direct Boot ignorée. %1$s</string>
     <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED : L\'utilisateur est déjà déverrouillé, report vers BOOT_COMPLETED</string>
     <string name="debug_log_restored_alarm_stage">Étape d\'alarme restaurée depuis le stockage protégé de l\'appareil : %1$s, appel de doAlertCheck()</string>
+    <string name="debug_log_boot_alert_already_sent">L\'alerte a déjà été envoyée et le redémarrage automatique de la surveillance est désactivé, reste désarmé après le redémarrage</string>
 
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Configuration du webhook enregistrée</string>
