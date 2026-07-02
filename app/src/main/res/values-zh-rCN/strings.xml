@@ -91,6 +91,9 @@
     <string name="alarm_message_too_long_message">短信不得超过 160 个字符。</string>
     <string name="phone_number_invalid_message">请输入一个有效的电话号码。</string>
     <string name="time_period_too_short_message">时间间隔不应小于 10 分钟。</string>
+    <string name="time_period_too_long_message">时间间隔不应超过 7 天。</string>
+    <string name="followup_period_whole_minutes_message">分钟必须为整数。</string>
+    <string name="time_period_too_many_decimals_message">小时最多保留 2 位小数。</string>
     <string name="test_phone_call_message">将至电:\n%1$s</string>
     <string name="test_sms_message">短信将发送至:\n%1$s</string>
     <string name="unable_to_send_sms_message">无法发送短信\n请插入有效的SIM卡</string>

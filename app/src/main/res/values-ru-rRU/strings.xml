@@ -91,6 +91,9 @@
     <string name="alarm_message_too_long_message">Сообщение не может содержать более 160 символов.</string>
     <string name="phone_number_invalid_message">Введите корректный телефонный номер</string>
     <string name="time_period_too_short_message">Интервал должен быть не менее 10 минут.</string>
+    <string name="time_period_too_long_message">Интервал не должен превышать 7 дней.</string>
+    <string name="followup_period_whole_minutes_message">Минуты должны быть целым числом.</string>
+    <string name="time_period_too_many_decimals_message">Часы могут иметь не более 2 знаков после запятой.</string>
     <string name="test_phone_call_message">Будет совершен вызов на:\n%1$s</string>
     <string name="test_sms_message">SMS сообщение будет отправлено на:\n%1$s</string>
     <string name="unable_to_send_sms_message">Невозможно отправить SMS\nУбедитесь, что у вас активна SIM-карта.</string>

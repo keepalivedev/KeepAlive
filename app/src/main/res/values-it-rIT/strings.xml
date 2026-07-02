@@ -91,6 +91,9 @@
         <string name="alarm_message_too_long_message">Il messaggio non può contenere più di 160 caratteri.</string>  
         <string name="phone_number_invalid_message">Si prega di inserire un numero di telefono valido.</string>  
         <string name="time_period_too_short_message">L\'intervallo deve essere di almeno 10 minuti.</string>  
+        <string name="time_period_too_long_message">L\'intervallo non può superare i 7 giorni.</string>
+        <string name="followup_period_whole_minutes_message">I minuti devono essere un numero intero.</string>
+        <string name="time_period_too_many_decimals_message">Le ore possono avere al massimo 2 cifre decimali.</string>
         <string name="test_phone_call_message">Verrà effettuata una telefonata a:\n%1$s</string>  
         <string name="test_sms_message">Il messaggio SMS verranno inviati a:\n%1$s</string>
         <string name="unable_to_send_sms_message">Impossibile inviare SMS\nVerifica di avere una SIM attiva</string>  

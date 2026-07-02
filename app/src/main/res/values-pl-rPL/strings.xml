@@ -91,6 +91,9 @@
     <string name="alarm_message_too_long_message">Wiadomość nie może mieć więcej niż 160 znaków.</string>
     <string name="phone_number_invalid_message">Wpisz poprawny numer telefonu.</string>
     <string name="time_period_too_short_message">Na potwierdzenie musi być przynajmniej 10 minut.</string>
+    <string name="time_period_too_long_message">Interwał nie może być dłuższy niż 7 dni.</string>
+    <string name="followup_period_whole_minutes_message">Minuty muszą być liczbą całkowitą.</string>
+    <string name="time_period_too_many_decimals_message">Godziny mogą mieć najwyżej 2 miejsca po przecinku.</string>
     <string name="test_phone_call_message">Połączenie telefoniczne zostanie nawiązane z:\n%1$s</string>
     <string name="test_sms_message">Wiadomości SMS zostaną wysłane do:\n%1$s</string>
     <string name="unable_to_send_sms_message">Nie można wysłać SMS\nUpewnij się, że masz aktywną kartę SIM</string>
