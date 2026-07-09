@@ -60,7 +60,7 @@
 
     <!-- action settings -->
     <string name="action_settings">Einstellungen</string>
-    <string name="action_about">Über</string>
+    <string name="action_about">Über Keep Alive</string>
     <string name="action_logdisplay">Debug Logs</string>
     <string name="about_dialog_title">Über Keep Alive</string>
 
@@ -183,7 +183,7 @@
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Überwachungsmethode</string>
     <string name="monitored_apps_dialog_title">Wählen Sie 1 oder mehrere Apps auf Ihrem Gerät aus</string>
-    <string name="monitored_apps_dialog_message">Die Nutzung der ausgewählten App(s) wird verwendet, um festzustellen, wann Ihr Gerät zuletzt verwendet wurde. Um zur Gerätesperre/-entsperrung zurückzukehren, drücken Sie \'Löschen\'.</string>
+    <string name="monitored_apps_dialog_message">Die Nutzung der ausgewählten App(s) wird verwendet, um festzustellen, wann Ihr Gerät zuletzt verwendet wurde. Um zur Methode Displaysperre zurückzukehren, drücken Sie \'Löschen\'.</string>
     <string name="monitored_apps_chosen_title">Ausgewählte App(s)</string>
     <string name="monitored_apps_usage_history_message">Diese Ereignisse können nicht immer auf Benutzeraktivität zurückzuführen sein. Bitte überprüfen Sie sie sorgfältig, bevor Sie diese App auswählen.</string>
     <string name="monitored_apps_recently_used_title">Kürzlich verwendete Apps (letzte 72 Stunden)</string>
