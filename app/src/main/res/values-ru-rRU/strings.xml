@@ -134,6 +134,8 @@
     <string name="sms_alert_failure_notification_text_with_error">Произошла ошибка при попытке отправить SMS-оповещение: %1$s</string>
     <string name="sms_service_failure_notification_title">Невозможно отправить SMS-оповещение</string>
     <string name="sms_service_failure_notification_text">Произошла ошибка при попытке отправить SMS-сообщение с оповещением. Убедитесь, что у вас активна SIM-карта.</string>
+    <string name="sms_permission_revoked_notification_title">Разрешение на отправку SMS было отозвано!</string>
+    <string name="sms_permission_revoked_notification_text">Keep Alive больше не может отправлять SMS-оповещения. Нажмите здесь, чтобы открыть приложение и снова предоставить разрешение на SMS.</string>
     <string name="alert_service_notification_title">Отправка оповещения…</string>
     <string name="alert_service_notification_message">Оповещение(я) отправляются вашим настроенным контактам, пожалуйста, подождите.</string>
 
@@ -336,6 +338,7 @@
 
     <!-- AlarmReceiver.kt -->
     <string name="debug_log_alarm_just_fired">Будильник только что сработал!</string>
+    <string name="debug_log_sms_permission_revoked">Разрешение SEND_SMS больше не предоставлено!</string>
     <string name="debug_log_app_not_enabled_alarm_went_off">Приложение не включено, почему сработал будильник?!</string>
     <string name="debug_log_alarm_time_comparison">Время %1$s UTC, будильник должен был сработать в %2$s UTC, что было %3$d секунд назад</string>
     <string name="debug_log_failed_processing_alarm">Не удалось обработать будильник:</string>

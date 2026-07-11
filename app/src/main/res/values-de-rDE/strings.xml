@@ -134,6 +134,8 @@
     <string name="sms_alert_failure_notification_text_with_error">Beim Versuch, eine Alarm-SMS zu senden, ist ein Fehler aufgetreten: %1$s</string>
     <string name="sms_service_failure_notification_title">Alarm-SMS kann nicht gesendet werden</string>
     <string name="sms_service_failure_notification_text">Beim Versuch, eine Alarm-SMS zu senden, ist ein Fehler aufgetreten.  Bitte überprüfen Sie, ob Sie eine aktive SIM-Karte haben.</string>
+    <string name="sms_permission_revoked_notification_title">SMS-Berechtigung wurde entzogen!</string>
+    <string name="sms_permission_revoked_notification_text">Keep Alive kann keine SMS-Alarme mehr senden. Tippen Sie hier, um die App zu öffnen und die SMS-Berechtigung erneut zu erteilen.</string>
     <string name="alert_service_notification_title">Alarm wird gesendet…</string>
     <string name="alert_service_notification_message">Alarm(e) werden an Ihre konfigurierten Kontakte gesendet, bitte warten.</string>
 
@@ -336,6 +338,7 @@
 
     <!-- AlarmReceiver.kt -->
     <string name="debug_log_alarm_just_fired">Alarm gerade ausgelöst!</string>
+    <string name="debug_log_sms_permission_revoked">Die Berechtigung SEND_SMS ist nicht mehr erteilt!</string>
     <string name="debug_log_app_not_enabled_alarm_went_off">App ist nicht aktiviert, warum wurde der Alarm ausgelöst?!</string>
     <string name="debug_log_alarm_time_comparison">Uhrzeit ist %1$s UTC, Alarm sollte um %2$s UTC ausgelöst werden, was %3$d Sekunden her ist</string>
     <string name="debug_log_failed_processing_alarm">Fehler bei der Alarmverarbeitung:</string>

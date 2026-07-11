@@ -26,6 +26,7 @@ class AppController : Application() {
         const val SMS_ALERT_FAILURE_NOTIFICATION_ID = 4
         const val ALERT_SERVICE_NOTIFICATION_ID = 5
         const val WEBHOOK_ALERT_SENT_NOTIFICATION_ID = 6
+        const val PERMISSION_REVOKED_NOTIFICATION_ID = 7
 
         // when doing a sanity check to see if we can see ANY events, this is the # of hours
         //  to use with getLastDeviceActivity().  if the user has a higher value set it

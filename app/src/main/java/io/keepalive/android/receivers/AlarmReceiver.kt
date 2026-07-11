@@ -1,13 +1,18 @@
 package io.keepalive.android.receivers
 
 
+import android.Manifest
 import android.app.ActivityManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import io.keepalive.android.*
 
 
@@ -47,11 +52,10 @@ class AlarmReceiver : BroadcastReceiver() {
                 return
             }
 
-            /*
-            if (!PermissionManager(context, null).checkHavePermissions()) {
-                Log.d(tag, "We still need some permissions?!")
-            }
-            */
+            // surface a revoked SEND_SMS permission from the background (issue #192).
+            // the alert check still runs regardless — the send path has its own
+            // failure notification if an SMS attempt actually fails
+            checkSmsPermissionStillGranted(context, prefs)
 
             // get the current alarm stage from the intent extras
             val alarmStage = getAlarmStage(context, intent)
@@ -63,6 +67,53 @@ class AlarmReceiver : BroadcastReceiver() {
 
         } catch (e: Exception) {
             DebugLogger.d(tag, context.getString(R.string.debug_log_failed_processing_alarm), e)
+        }
+    }
+
+    // A permission revoked after setup (battery sweep, OS update, someone
+    // adjusting settings) was previously only detected when the app was next
+    // opened. Since this receiver already wakes periodically, use it to check
+    // that SEND_SMS is still granted and notify the user if not (issue #192).
+    private fun checkSmsPermissionStillGranted(context: Context, prefs: SharedPreferences) {
+        try {
+            // only relevant if an enabled SMS contact is configured
+            val smsContacts: MutableList<SMSEmergencyContactSetting> =
+                loadJSONSharedPreference(prefs, PrefKeys.PHONE_NUMBER_SETTINGS)
+            if (smsContacts.none { it.isEnabled && it.phoneNumber.isNotEmpty() }) {
+                return
+            }
+
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) ==
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                // permission is fine - clear the notified marker so a future
+                //  revocation notifies immediately
+                if (prefs.getLong(PrefKeys.SMS_PERMISSION_NOTIFIED_AT, 0L) != 0L) {
+                    prefs.edit { putLong(PrefKeys.SMS_PERMISSION_NOTIFIED_AT, 0L) }
+                }
+                return
+            }
+
+            DebugLogger.d(tag, context.getString(R.string.debug_log_sms_permission_revoked))
+
+            // notify at most once per day while the permission stays revoked
+            val lastNotifiedAt = prefs.getLong(PrefKeys.SMS_PERMISSION_NOTIFIED_AT, 0L)
+            if (System.currentTimeMillis() - lastNotifiedAt < 24 * 60 * 60 * 1000L) {
+                return
+            }
+
+            // tapping the notification opens MainActivity, which runs the normal
+            //  permission checks and prompts
+            AlertNotificationHelper(context).sendNotification(
+                context.getString(R.string.sms_permission_revoked_notification_title),
+                context.getString(R.string.sms_permission_revoked_notification_text),
+                AppController.PERMISSION_REVOKED_NOTIFICATION_ID
+            )
+
+            prefs.edit { putLong(PrefKeys.SMS_PERMISSION_NOTIFIED_AT, System.currentTimeMillis()) }
+        } catch (e: Exception) {
+            // never let the permission check interfere with the alert check
+            Log.e(tag, "Error checking SMS permission from background", e)
         }
     }
 

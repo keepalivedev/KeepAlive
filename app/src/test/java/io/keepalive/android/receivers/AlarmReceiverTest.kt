@@ -1,8 +1,12 @@
 package io.keepalive.android.receivers
 
+import android.Manifest
+import android.app.Application
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
+import io.keepalive.android.AppController
 import io.keepalive.android.doAlertCheck
 import io.keepalive.android.getAppSharedPreferences
 import io.mockk.every
@@ -10,10 +14,14 @@ import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
 import io.mockk.verify
 import org.junit.After
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows.shadowOf
 
 private const val ALERT_FUNCTIONS_KT = "io.keepalive.android.AlertFunctionsKt"
 
@@ -105,5 +113,84 @@ class AlarmReceiverTest {
         AlarmReceiver().onReceive(appCtx, intent)
 
         verify(exactly = 1) { doAlertCheck(any<Context>(), "final") }
+    }
+
+    // --- background SEND_SMS permission check (issue #192) -----------------
+
+    private val enabledContactJson =
+        """[{"phoneNumber":"5550100","alertMessage":"test","isEnabled":true,"includeLocation":false}]"""
+
+    private fun seedSmsContact(json: String = enabledContactJson) {
+        getAppSharedPreferences(appCtx).edit()
+            .putString("PHONE_NUMBER_SETTINGS", json)
+            .commit()
+    }
+
+    private fun grantPermissions(vararg permissions: String) {
+        shadowOf(appCtx as Application).grantPermissions(*permissions)
+    }
+
+    private fun hasPermissionNotification(): Boolean {
+        val nm = appCtx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        return shadowOf(nm).getNotification(null, AppController.PERMISSION_REVOKED_NOTIFICATION_ID) != null
+    }
+
+    @Test fun `revoked SMS permission with enabled contact posts a notification`() {
+        // POST_NOTIFICATIONS granted so the helper can post; SEND_SMS not granted
+        grantPermissions(Manifest.permission.POST_NOTIFICATIONS)
+        seedSmsContact()
+
+        AlarmReceiver().onReceive(appCtx, Intent().putExtra("AlarmStage", "periodic"))
+
+        assertTrue("permission-revoked notification should be posted",
+            hasPermissionNotification())
+        assertNotEquals("notified-at marker should be written",
+            0L, getAppSharedPreferences(appCtx).getLong("sms_permission_notified_at", 0L))
+        // the alert check must still run — the permission check never blocks it
+        verify(exactly = 1) { doAlertCheck(any<Context>(), "periodic") }
+    }
+
+    @Test fun `revoked SMS permission without any enabled contact stays silent`() {
+        grantPermissions(Manifest.permission.POST_NOTIFICATIONS)
+        seedSmsContact("""[{"phoneNumber":"5550100","alertMessage":"test","isEnabled":false,"includeLocation":false}]""")
+
+        AlarmReceiver().onReceive(appCtx, Intent().putExtra("AlarmStage", "periodic"))
+
+        assertTrue("no notification expected when no enabled contact",
+            !hasPermissionNotification())
+    }
+
+    @Test fun `revoked SMS permission notifies at most once per day`() {
+        grantPermissions(Manifest.permission.POST_NOTIFICATIONS)
+        seedSmsContact()
+
+        AlarmReceiver().onReceive(appCtx, Intent().putExtra("AlarmStage", "periodic"))
+        val firstNotifiedAt = getAppSharedPreferences(appCtx).getLong("sms_permission_notified_at", 0L)
+
+        // clear the posted notification, then fire again — the rate limit
+        // (not the still-posted guard) must prevent a second post
+        val nm = appCtx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        nm.cancelAll()
+
+        AlarmReceiver().onReceive(appCtx, Intent().putExtra("AlarmStage", "periodic"))
+
+        assertTrue("no second notification within 24h", !hasPermissionNotification())
+        assertEquals("notified-at marker unchanged on rate-limited run",
+            firstNotifiedAt,
+            getAppSharedPreferences(appCtx).getLong("sms_permission_notified_at", 0L))
+    }
+
+    @Test fun `granted SMS permission clears the notified marker`() {
+        grantPermissions(Manifest.permission.POST_NOTIFICATIONS, Manifest.permission.SEND_SMS)
+        seedSmsContact()
+        getAppSharedPreferences(appCtx).edit()
+            .putLong("sms_permission_notified_at", 12345L)
+            .commit()
+
+        AlarmReceiver().onReceive(appCtx, Intent().putExtra("AlarmStage", "periodic"))
+
+        assertTrue("no notification when permission is granted", !hasPermissionNotification())
+        assertEquals("marker cleared once permission is granted again",
+            0L, getAppSharedPreferences(appCtx).getLong("sms_permission_notified_at", 0L))
     }
 }

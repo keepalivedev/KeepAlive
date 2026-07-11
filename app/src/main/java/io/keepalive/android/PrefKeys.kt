@@ -43,6 +43,9 @@ object PrefKeys {
     const val NEXT_ALARM_TIMESTAMP = "NextAlarmTimestamp"
     const val LAST_ALERT_AT = "LastAlertAt"
 
+    // when the user was last notified about a revoked SMS permission
+    const val SMS_PERMISSION_NOTIFIED_AT = "sms_permission_notified_at"
+
     // runtime state in device-protected storage (Direct Boot)
     const val LAST_ALARM_STAGE = "last_alarm_stage"
     const val LAST_ACTIVITY_TIMESTAMP = "last_activity_timestamp"

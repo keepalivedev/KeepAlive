@@ -134,6 +134,8 @@
     <string name="sms_alert_failure_notification_text_with_error">Une erreur s\'est produite lors de la tentative d\'envoi d\'un SMS d\'alerte: %1$s</string>
     <string name="sms_service_failure_notification_title">Impossible de transmettre l\'alerte SMS</string>
     <string name="sms_service_failure_notification_text">Une erreur s\'est produite lors de la tentative d\'envoi d\'un SMS d\'alerte, veuillez vérifier que vous disposez d\'une carte SIM active</string>
+    <string name="sms_permission_revoked_notification_title">L\'autorisation SMS a été révoquée!</string>
+    <string name="sms_permission_revoked_notification_text">Keep Alive ne peut plus envoyer d\'alertes SMS. Touchez ici pour ouvrir l\'application et accorder de nouveau l\'autorisation SMS.</string>
     <string name="alert_service_notification_title">Envoi de l\'alerte en cours…</string>
     <string name="alert_service_notification_message">L\'alerte (ou les alertes) est en cours d\'envoi à vos contacts configurés, veuillez patienter.</string>
 
@@ -336,6 +338,7 @@
 
     <!-- AlarmReceiver.kt -->
     <string name="debug_log_alarm_just_fired">L\'alarme vient de se déclencher!</string>
+    <string name="debug_log_sms_permission_revoked">L\'autorisation SEND_SMS n\'est plus accordée!</string>
     <string name="debug_log_app_not_enabled_alarm_went_off">L\'application n\'est pas activée, pourquoi l\'alarme s\'est-elle déclenchée?!</string>
     <string name="debug_log_alarm_time_comparison">L\'heure est %1$s UTC, l\'alarme était censée se déclencher à %2$s UTC, c\'est-à-dire il y a %3$d secondes</string>
     <string name="debug_log_failed_processing_alarm">Échec lors du traitement de l\'alarme:</string>
