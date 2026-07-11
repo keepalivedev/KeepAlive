@@ -72,8 +72,8 @@
 
     <!-- app hibernation/restriction stuff -->
     <string name="hibernation_dialog_title">解除App限制</string>
-    <string name="hibernation_dialog_message"><![CDATA[Android会自动清除长期未使用App的隐私权限。  KeepAlive一旦完成初次设置，无需任何进一步的交互操作，权限可能被撤销并导致提醒无法发送。<br/><br/>为了确保权限不被撤销, 请禁用 <b>暂停闲置应用的活动</b> 的选项。]]></string>
-    <string name="hibernation_dialog_message_api35"><![CDATA[Android会自动清除长期未使用App的隐私权限。  KeepAlive一旦完成初次设置，无需任何进一步的交互操作，权限可能被撤销并导致提醒无法发送。<br/><br/>为了确保权限不被撤销, 请禁用 <b>管理闲置应用</b> 的选项。]]></string>
+    <string name="hibernation_dialog_message"><![CDATA[Android会自动清除长期未使用App的隐私权限。  KeepAlive一旦完成初次设置，无需任何进一步的交互操作，权限可能被撤销并导致提醒无法发送。<br/><br/>为了确保权限不被撤销, 请禁用 <b>管理闲置应用</b> 的选项。]]></string>
+    <string name="hibernation_dialog_message_api32"><![CDATA[Android会自动清除长期未使用App的隐私权限。  KeepAlive一旦完成初次设置，无需任何进一步的交互操作，权限可能被撤销并导致提醒无法发送。<br/><br/>为了确保权限不被撤销, 请禁用 <b>暂停闲置应用的活动</b> 的选项。]]></string>
     <string name="hibernation_dialog_message_api30"><![CDATA[Android会自动清除长期未使用App的隐私权限。  KeepAlive一旦设置完成，除非触发提醒，否则无需任何进一步的交互操作。<br/><br/>为了确保权限不被撤销, 请打开 <b>权限</b> 设置并禁用 <b>如果未使用此应用，则移除相关权限</b> 的选项。]]></string>
     <string name="hibernation_dialog_message_api31"><![CDATA[Android会自动清除长期未使用App的隐私权限。  KeepAlive一旦设置完成，除非触发提醒，否则无需任何进一步的交互操作。<br/><br/>为了确保权限不被撤销, 请禁用 <b>移除权限并释放空间</b> 的选项。]]></string>
     <string name="hibernation_dialog_message_api_backport"><![CDATA[Android会自动清除长期未使用App的隐私权限。  KeepAlive一旦设置完成，除非触发提醒，否则无需任何进一步的交互操作。<br/><br/>为了确保权限不被撤销， 请禁用 <b>如果未使用此应用，则移除相关权限</b> 的选项。]]></string>
