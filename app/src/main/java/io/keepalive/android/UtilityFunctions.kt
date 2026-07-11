@@ -8,6 +8,7 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.os.SystemClock
 import android.os.UserManager
+import android.text.format.DateFormat
 import android.util.Log
 import androidx.annotation.ColorRes
 import androidx.preference.PreferenceManager
@@ -70,6 +71,37 @@ fun hasActiveAlertChannel(sharedPrefs: SharedPreferences): Boolean {
     }
 
     return false
+}
+
+// format the last-activity timestamp for the main screen: time only (no
+//  seconds) when it is today, date and time otherwise. the platform
+//  formatters handle the locale and the device's 12/24 hour setting (issue #189)
+fun formatLastActivityTimestamp(context: Context, timestamp: Long): String {
+    val date = Date(timestamp)
+    val timeStr = DateFormat.getTimeFormat(context).format(date)
+
+    val now = Calendar.getInstance()
+    val then = Calendar.getInstance().apply { timeInMillis = timestamp }
+    val isToday = now.get(Calendar.YEAR) == then.get(Calendar.YEAR) &&
+            now.get(Calendar.DAY_OF_YEAR) == then.get(Calendar.DAY_OF_YEAR)
+
+    return if (isToday) {
+        timeStr
+    } else {
+        "${DateFormat.getDateFormat(context).format(date)} $timeStr"
+    }
+}
+
+// format the time until the next activity check without a leading zero-hours
+//  unit: "57 min" rather than "0 hours and 57 minutes" (issue #189)
+fun formatCountdown(context: Context, totalMinutes: Long): String {
+    val hours = totalMinutes / 60
+    val minutes = totalMinutes % 60
+    return if (hours > 0) {
+        context.getString(R.string.countdown_format_hours_minutes, hours.toString(), minutes.toString())
+    } else {
+        context.getString(R.string.countdown_format_minutes, minutes.toString())
+    }
 }
 
 // load a JSON string from shared preferences and convert it to a list of objects

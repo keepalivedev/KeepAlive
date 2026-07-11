@@ -79,7 +79,9 @@
     <string name="hibernation_dialog_message_api_backport"><![CDATA[Android теперь автоматически удаляет разрешения для приложений, которые в последнее время не использовались. Keep Alive после настройки параметров не требует какого-либо дальнейшего взаимодействия, если только не сработает оповещение.<br/><br/>Чтобы гарантировать, что разрешения не будут отозваны, отключите опцию <b>Отзывать разрешения, если приложение не используется</b>.]]></string>
 
     <!-- MainActivity textview and button messages -->
-    <string name="monitoring_active_message">Последняя активность обнаружена: %1$s\nСледующая проверка активности: %2$s часов and %3$s минут</string>
+    <string name="monitoring_active_message">Последняя активность обнаружена: %1$s\nСледующая проверка активности: %2$s</string>
+    <string name="countdown_format_hours_minutes">%1$s ч %2$s мин</string>
+    <string name="countdown_format_minutes">%1$s мин</string>
     <string name="monitoring_active_title">Мониторинг активен</string>
     <string name="monitoring_impaired_title">Мониторинг активен\nНо может работать некорректно</string>
     <string name="monitoring_inactive_message">Мониторинг неактивен.\nНажмите на кнопку для перезапуска.</string>

@@ -79,7 +79,9 @@
     <string name="hibernation_dialog_message_api_backport"><![CDATA[Android supprime désormais automatiquement les autorisations pour les applications qui n\'ont pas été utilisées récemment. Keep Alive, une fois les paramètres configurés, ne nécessite aucune autre interaction à moins qu\'une alerte ne soit déclenchée.<br/><br/>Pour garantir que les autorisations ne sont pas révoquées, veuillez désactiver l\'option <b>Supprimer les autorisations si l\'appli n\'est pas utilisée</b>.]]></string>
 
     <!-- MainActivity textview and button messages -->
-    <string name="monitoring_active_message">Dernière activité détectée à: %1$s\nProchain enregistrement d\'activité: %2$s heures et %3$s minutes</string>
+    <string name="monitoring_active_message">Dernière activité détectée à: %1$s\nProchain enregistrement d\'activité: %2$s</string>
+    <string name="countdown_format_hours_minutes">%1$s h %2$s min</string>
+    <string name="countdown_format_minutes">%1$s min</string>
     <string name="monitoring_active_title">Surveillance active</string>
     <string name="monitoring_impaired_title">Surveillance active\nMais peut être altérée</string>
     <string name="monitoring_inactive_message">La surveillance n\'est pas active.\nCliquez sur le bouton pour la redémarrer.</string>

@@ -79,7 +79,9 @@
     <string name="hibernation_dialog_message_api_backport"><![CDATA[Android automatycznie usuwa uprawnienia aplikacji, które nie były ostatnio używane.  Aplikacja Keep Alive nie potrzebuje żadnej interakcji po jej pierwszej konfiguracji i może przez to stracić uprawnienia.<br/><br/>Żeby mieć pewność, że Keep Alive może działać poprawnie wyłącz opcje <b>Usuń uprawnienia, jeśli aplikacja jest nieużywana</b>.]]></string>
 
     <!-- MainActivity textview and button messages -->
-    <string name="monitoring_active_message">Ostatnia wykryta aktywność: %1$s\nNastępne sprawdzenie za: %2$s godzin %3$s minut</string>
+    <string name="monitoring_active_message">Ostatnia wykryta aktywność: %1$s\nNastępne sprawdzenie za: %2$s</string>
+    <string name="countdown_format_hours_minutes">%1$s godz. %2$s min</string>
+    <string name="countdown_format_minutes">%1$s min</string>
     <string name="monitoring_active_title">Monitorowanie Aktywne</string>
     <string name="monitoring_impaired_title">Monitorowanie Aktywne\nAle może być zakłócone</string>
     <string name="monitoring_inactive_message">Monitorowanie nie jest aktywne.\nKliknij przycisk aby je ponownie uruchomić.</string>
