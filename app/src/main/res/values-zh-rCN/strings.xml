@@ -79,7 +79,9 @@
     <string name="hibernation_dialog_message_api_backport"><![CDATA[Android会自动清除长期未使用App的隐私权限。  KeepAlive一旦设置完成，除非触发提醒，否则无需任何进一步的交互操作。<br/><br/>为了确保权限不被撤销， 请禁用 <b>如果未使用此应用，则移除相关权限</b> 的选项。]]></string>
 
     <!-- MainActivity textview and button messages -->
-    <string name="monitoring_active_message">上一次活动: %1$s\n下一次检测: %2$s小时%3$s分钟后</string>
+    <string name="monitoring_active_message">上一次活动: %1$s\n下一次检测: %2$s后</string>
+    <string name="countdown_format_hours_minutes">%1$s小时%2$s分钟</string>
+    <string name="countdown_format_minutes">%1$s分钟</string>
     <string name="monitoring_active_title">监测器正常运行</string>
     <string name="monitoring_impaired_title">监测器正在运行\n但受损</string>
     <string name="monitoring_inactive_message">监测器已停止。\n点击按钮重新启动。</string>

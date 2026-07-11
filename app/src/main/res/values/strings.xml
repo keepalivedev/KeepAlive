@@ -91,7 +91,9 @@
     <string name="hibernation_dialog_message_api_backport"><![CDATA[Android now automatically removes permissions for Apps that have not been used recently.  Keep Alive, once the settings are configured, does not need any further interaction unless an Alert is triggered.<br/><br/>To ensure that permissions are not revoked, please disable the <b>\'Remove permissions if app isn\'t used\'</b> option.]]></string>
 
     <!-- MainActivity textview and button messages -->
-    <string name="monitoring_active_message">Last activity detected at: %1$s\nNext activity check in: %2$s hours and %3$s minutes</string>
+    <string name="monitoring_active_message">Last activity detected at: %1$s\nNext activity check in: %2$s</string>
+    <string name="countdown_format_hours_minutes">%1$s h %2$s min</string>
+    <string name="countdown_format_minutes">%1$s min</string>
     <string name="monitoring_active_title">Monitoring Active</string>
     <string name="monitoring_impaired_title">Monitoring Active\nBut May Be Impaired</string>
     <string name="monitoring_inactive_message">Monitoring is not active.\nClick the button to restart it.</string>

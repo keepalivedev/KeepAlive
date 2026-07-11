@@ -530,12 +530,10 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         Log.d(tag, "Don't need any permissions, we are all set?!")
 
-                        // get the hours and minutes so we can show the time until the next
-                        //  activity check in a friendly format
-                        val alarmTimestampInSec =
-                            (alarmTimestamp - System.currentTimeMillis()) / 1000
-                        val hours = alarmTimestampInSec / 3600
-                        val minutes = (alarmTimestampInSec % 3600) / 60
+                        // minutes until the next activity check, shown in a
+                        //  friendly format without a leading zero-hours unit
+                        val minutesUntilCheck =
+                            (alarmTimestamp - System.currentTimeMillis()) / 1000 / 60
 
                         // set a big green message indicating that monitoring is active
                         monitoringStatusTextView.text = getString(R.string.monitoring_active_title)
@@ -546,10 +544,8 @@ class MainActivity : AppCompatActivity() {
                         // set the message to show the last detected activity and when the next check is
                         monitoringMessageTextView.text = String.format(
                             getString(R.string.monitoring_active_message),
-                            getDateTimeStrFromTimestamp(
-                                lastInteractiveEvent.timeStamp,
-                                TimeZone.getDefault().id
-                            ), hours.toString(), minutes.toString()
+                            formatLastActivityTimestamp(this, lastInteractiveEvent.timeStamp),
+                            formatCountdown(this, minutesUntilCheck)
                         )
 
                         // check whether app restrictions are enabled and adjust the components based

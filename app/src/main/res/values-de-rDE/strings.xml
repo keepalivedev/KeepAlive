@@ -79,7 +79,9 @@
     <string name="hibernation_dialog_message_api_backport"><![CDATA[Android entfernt jetzt automatisch die Berechtigungen für Apps, die in letzter Zeit nicht verwendet wurden.  Sobald die Einstellungen konfiguriert sind, benötigt Keep Alive keine weitere Interaktion, es sei denn, ein Alarm wird ausgelöst.<br/><br/>Um sicherzustellen, dass die Berechtigungen nicht entzogen werden, deaktivieren Sie bitte die Option <b>Berechtigungen entfernen, wenn die App nicht verwendet wird</b>.]]></string>
 
     <!-- MainActivity textview and button messages -->
-    <string name="monitoring_active_message">Letzte Aktivität erkannt um: %1$s\nNächster Aktivitäts-Check in: %2$s Stunden und %3$s Minuten</string>
+    <string name="monitoring_active_message">Letzte Aktivität erkannt um: %1$s\nNächster Aktivitäts-Check in: %2$s</string>
+    <string name="countdown_format_hours_minutes">%1$s Std. %2$s Min.</string>
+    <string name="countdown_format_minutes">%1$s Min.</string>
     <string name="monitoring_active_title">Überwachung aktiv</string>
     <string name="monitoring_impaired_title">Überwachung aktiv,\n aber evtl. beeinträchtigt</string>
     <string name="monitoring_inactive_message">Überwachung ist nicht aktiv.\nSchaltfläche drücken, um sie wieder zu starten.</string>
