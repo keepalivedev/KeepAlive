@@ -18,6 +18,22 @@ There is also a 'Lite' version available for F-Droid that removes the Internet p
 alt="Get it on F-Droid (Lite)"
 height="80">](https://f-droid.org/packages/io.keepalive.lite.android/)
 
+### Verifying GitHub releases
+
+All APKs published on the [Releases](https://github.com/keepalivedev/KeepAlive/releases) page (including the Lite variant) are signed with the same certificate. To verify a downloaded APK before installing it:
+
+```
+apksigner verify --print-certs KeepAlive.apk
+```
+
+The certificate SHA-256 digest should be:
+
+```
+c45567b712d6fd7979df14f66f8a5c25859ee223e1f07e915a7eee201c14baef
+```
+
+Note that builds installed from an app store may be signed differently (for example by Google's Play App Signing); the digest above applies to the APKs from the GitHub Releases page.
+
 Available Translations: Chinese (CN), French (CA), German (DE), Italian (IT), Polish (PL), Russian (RU), Spanish (ES) <br/>
 Supports Android 5.1 (API 22) and up
 
