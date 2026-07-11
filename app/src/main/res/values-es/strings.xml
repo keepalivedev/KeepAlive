@@ -175,6 +175,8 @@
     <string name="time_period_description">El número de horas de inactividad antes de que se te muestre una notificación \'¿Sigues ahí?\'.</string>
     <string name="followup_time_period_title">Minutos de espera para la confirmación</string>
     <string name="exact_alarm_toggle_title">Usar temporización exacta de alarmas</string>
+    <string name="exact_alarm_status_exact">Temporización exacta de alarmas: Activada</string>
+    <string name="exact_alarm_status_inexact">Temporización exacta de alarmas: Desactivada</string>
     <string name="exact_alarm_note">NOTA: Esta temporización no es exacta y el sistema puede retrasar esta notificación hasta 1 hora.\n\nActiva \'Usar temporización exacta de alarmas\' abajo si necesitas verificaciones precisas, lo que puede aumentar ligeramente el uso de la batería.</string>
     <string name="rest_period_title">Rango de tiempo del período de descanso</string>
     <string name="followup_time_period_description">El número de minutos a esperar después de enviar una notificación \'¿Sigues ahí?\' antes de que se envíe una alerta a tu(s) contacto(s) de emergencia</string>

@@ -1,6 +1,9 @@
 <resources>
     <dimen name="default_text_size">16sp</dimen>
 
+    <!-- secondary/subtitle text shown beneath a setting's title -->
+    <dimen name="subtitle_text_size">14sp</dimen>
+
     <!-- size set to 18 for some things so that the contrast requirement is lower when
           google play store does accessibility checks -->
     <dimen name="header_text_size">18sp</dimen>

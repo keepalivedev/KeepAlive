@@ -254,6 +254,17 @@ class SettingsActivity : AppCompatActivity() {
         val timePeriodValueTextView: TextView = findViewById(R.id.edit_time_period_hours)
         timePeriodValueTextView.text = sharedPrefs!!.getString(PrefKeys.TIME_PERIOD_HOURS, "12")
 
+        // subtitle showing whether the check period uses exact or inexact alarm
+        //  timing; the toggle itself lives in this row's edit dialog
+        val exactAlarmStatusTextView: TextView = findViewById(R.id.edit_exact_alarm_status)
+        exactAlarmStatusTextView.text = getString(
+            if (sharedPrefs!!.getBoolean(PrefKeys.USE_EXACT_ALARMS, false)) {
+                R.string.exact_alarm_status_exact
+            } else {
+                R.string.exact_alarm_status_inexact
+            }
+        )
+
         val monitoredAppsValueTextView: TextView = findViewById(R.id.edit_monitored_apps)
         val appsToMonitor: MutableList<MonitoredAppDetails> = loadJSONSharedPreference(
             sharedPrefs!!,"APPS_TO_MONITOR")

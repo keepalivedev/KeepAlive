@@ -175,6 +175,8 @@
     <string name="time_period_description">Anzahl der Stunden der Inaktivität, bevor eine \"Bist du noch da?\"-Benachrichtigung erscheint.</string>
     <string name="followup_time_period_title">Minuten bis zur Bestätigung warten</string>
     <string name="exact_alarm_toggle_title">Exakte Alarmzeit verwenden</string>
+    <string name="exact_alarm_status_exact">Exakte Alarmzeit: Aktiviert</string>
+    <string name="exact_alarm_status_inexact">Exakte Alarmzeit: Deaktiviert</string>
     <string name="exact_alarm_note">HINWEIS: Diese Zeitangabe ist nicht exakt und das System kann die Benachrichtigung um bis zu 1 Stunde verzögern.\n\nAktivieren Sie unten \"Exakte Alarmzeit verwenden\", wenn Sie präzise Überprüfungen benötigen. Dies kann den Akkuverbrauch leicht erhöhen.</string>
     <string name="rest_period_title">Ruhezeit</string>
     <string name="followup_time_period_description">Die Anzahl Minuten, die nach einer \"Sind Sie da?\"-Benachrichtigung gewartet wird, bevor ein Alarm an Ihre Notfallkontakte gesendet wird.</string>
