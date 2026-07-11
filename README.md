@@ -9,6 +9,9 @@ height="80">](https://play.google.com/store/apps/details?id=io.keepalive.android
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
      alt="Get it on F-Droid"
      height="80">](https://f-droid.org/packages/io.keepalive.android/)
+[<img src="assets/get-it-on-github.svg"
+     alt="Get it on GitHub"
+     height="80">](https://github.com/keepalivedev/KeepAlive/releases)
 
 There is also a 'Lite' version available for F-Droid that removes the Internet permission and Webhook functionality. 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
