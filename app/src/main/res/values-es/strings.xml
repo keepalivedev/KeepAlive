@@ -87,6 +87,8 @@
     <string name="monitoring_no_activity_detected_title">Monitoreo no posible</string>
     <string name="monitoring_permissions_required_title">Permisos necesarios</string>
     <string name="monitoring_no_activity_detected_message">El monitoreo está activado pero no se ha detectado actividad en las últimas %1$s horas. Asegúrate de tener una pantalla de bloqueo activada y de haber concedido el permiso de Acceso de uso.</string>
+    <string name="monitoring_no_recipient_title">Sin destinatario de alerta</string>
+    <string name="monitoring_no_recipient_message">La supervisión está en marcha, pero ningún contacto de emergencia está activo, por lo que no se puede enviar ninguna alerta. Añada o active un contacto de emergencia en los ajustes.</string>
     <string name="monitoring_permissions_required_message">El monitoreo está activado pero no se han concedido todos los permisos. Toca el botón "Conceder permisos" de abajo.</string>
     <string name="alarm_message_too_long_message">El mensaje no puede tener más de 160 caracteres.</string>
     <string name="phone_number_invalid_message">Por favor, ingresa un número de teléfono válido.</string>
@@ -321,6 +323,7 @@
     <!-- MainActivity.kt -->
     <string name="debug_log_no_alarm_or_monitoring_disabled">No se encontró ninguna alarma o el monitoreo está desactivado</string>
     <string name="debug_log_no_events_found_lock_screen">No se encontraron eventos, ¿quizás no hay pantalla de bloqueo?</string>
+    <string name="debug_log_no_alert_channel">¡La supervisión está activada pero no hay ningún destinatario de alerta configurado!</string>
     <string name="debug_log_no_active_alarm_showing_restart_button">No se encontró ninguna alarma activa, mostrando el botón para reiniciar</string>
     <string name="debug_log_failed_getting_sms_manager_disable_button">¿Error al obtener el gestor de SMS? Desactivando el botón de prueba de SMS</string>
     <string name="debug_log_current_alarm_time">Alarma actual establecida para las %1$s hora local</string>

@@ -87,6 +87,8 @@
         <string name="monitoring_no_activity_detected_title">Monitoraggio impossibile</string>  
         <string name="monitoring_permissions_required_title">Autorizzazioni richieste</string>  
         <string name="monitoring_no_activity_detected_message">Il monitoraggio è attivato, ma non è stata rilevata alcuna attività nelle ultime %1$s ore. Assicurati che il tuo blocco schermo sia attivo e di aver concesso le autorizzazioni di accesso all\'utilizzo.</string>  
+        <string name="monitoring_no_recipient_title">Nessun destinatario di avviso</string>
+        <string name="monitoring_no_recipient_message">Il monitoraggio è in corso, ma nessun contatto di emergenza è attivo, quindi non è possibile inviare alcun avviso. Aggiungi o attiva un contatto di emergenza nelle impostazioni.</string>
         <string name="monitoring_permissions_required_message">Il monitoraggio è attivato, ma non tutte le autorizzazioni sono state concesse. Fare clic sul pulsante "Concedi autorizzazioni" sottostante.</string>  
         <string name="alarm_message_too_long_message">Il messaggio non può contenere più di 160 caratteri.</string>  
         <string name="phone_number_invalid_message">Si prega di inserire un numero di telefono valido.</string>  
@@ -321,6 +323,7 @@
 <!-- MainActivity.kt -->  
 <string name="debug_log_no_alarm_or_monitoring_disabled">Nessun allarme trovato o monitoraggio disabilitato</string>  
 <string name="debug_log_no_events_found_lock_screen">Nessun evento trovato, forse nessuna schermata di blocco?</string>  
+<string name="debug_log_no_alert_channel">Il monitoraggio è attivato ma non è configurato alcun destinatario di avviso!</string>
 <string name="debug_log_no_active_alarm_showing_restart_button">Nessun allarme attivo trovato, visualizzazione del pulsante di riavvio</string>  
 <string name="debug_log_failed_getting_sms_manager_disable_button">Impossibile ottenere il gestore SMS? Disabilitazione del pulsante di test SMS</string>  
 <string name="debug_log_current_alarm_time">Allarme attuale impostato per le %1$s ora locale</string>  

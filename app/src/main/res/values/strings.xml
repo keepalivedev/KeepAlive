@@ -99,6 +99,8 @@
     <string name="monitoring_no_activity_detected_title">Monitoring Not Possible</string>
     <string name="monitoring_permissions_required_title">Permissions Required</string>
     <string name="monitoring_no_activity_detected_message">Monitoring is enabled but no activity has been detected in the last %1$s hours. Please ensure you have a lock screen enabled and have granted Usage access permissions.</string>
+    <string name="monitoring_no_recipient_title">No Alert Recipient</string>
+    <string name="monitoring_no_recipient_message">Monitoring is running but no emergency contact is active, so no Alert can be sent. Please add or enable an emergency contact in the Settings.</string>
     <string name="monitoring_permissions_required_message">Monitoring is enabled but not all permissions have been granted. Please click the "Grant Permissions" button below.</string>
     <string name="alarm_message_too_long_message">The message cannot be more than 160 characters.</string>
     <string name="phone_number_invalid_message">Please enter a valid phone number.</string>
@@ -333,6 +335,7 @@
     <!-- MainActivity.kt -->
     <string name="debug_log_no_alarm_or_monitoring_disabled">No alarm found or monitoring is disabled</string>
     <string name="debug_log_no_events_found_lock_screen">No events found, may not have lock screen?</string>
+    <string name="debug_log_no_alert_channel">Monitoring is enabled but no alert recipient is configured!</string>
     <string name="debug_log_no_active_alarm_showing_restart_button">No active alarm found, showing button to restart</string>
     <string name="debug_log_failed_getting_sms_manager_disable_button">Failed to get SMS manager? Disabling SMS test button</string>
     <string name="debug_log_current_alarm_time">Current alarm set for %1$s local time</string>

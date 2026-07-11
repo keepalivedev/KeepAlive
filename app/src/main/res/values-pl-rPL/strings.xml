@@ -87,6 +87,8 @@
     <string name="monitoring_no_activity_detected_title">Monitorowanie nie jest możliwe</string>
     <string name="monitoring_permissions_required_title">Potrzebuje Uprawnień</string>
     <string name="monitoring_no_activity_detected_message">Monitorowanie jest włączone ale nie wykryto żadnej aktywności przez ostatnie %1$s godzin. Sprawdź czy masz skonfigurowany ekran blokady i czy aplikacja ma Dostęp do Informacji o Korzystaniu z Aplikacji.</string>
+    <string name="monitoring_no_recipient_title">Brak odbiorcy alarmu</string>
+    <string name="monitoring_no_recipient_message">Monitorowanie działa, ale żaden kontakt alarmowy nie jest aktywny, więc nie można wysłać alarmu. Dodaj lub włącz kontakt alarmowy w ustawieniach.</string>
     <string name="monitoring_permissions_required_message">Monitorowanie jest włączone lecz nie wszystkie uprawnienia zostały przyznane. Kliknij przycisk "Udziel Uprawnień" poniżej.</string>
     <string name="alarm_message_too_long_message">Wiadomość nie może mieć więcej niż 160 znaków.</string>
     <string name="phone_number_invalid_message">Wpisz poprawny numer telefonu.</string>
@@ -321,6 +323,7 @@
     <!-- MainActivity.kt -->
     <string name="debug_log_no_alarm_or_monitoring_disabled">Nie znaleziono alarmu lub monitorowanie jest wyłączone</string>
     <string name="debug_log_no_events_found_lock_screen">Nie znaleziono zdarzeń, może nie ma ekranu blokady?</string>
+    <string name="debug_log_no_alert_channel">Monitorowanie jest włączone, ale nie skonfigurowano odbiorcy alarmu!</string>
     <string name="debug_log_no_active_alarm_showing_restart_button">Nie znaleziono aktywnego alarmu, pokazywanie przycisku ponownego uruchomienia</string>
     <string name="debug_log_failed_getting_sms_manager_disable_button">Nie udało się pobrać menedżera SMS? Wyłączanie przycisku testowego SMS</string>
     <string name="debug_log_current_alarm_time">Bieżący alarm ustawiony na %1$s czasu lokalnego</string>
