@@ -173,6 +173,8 @@
     <string name="time_period_description">设备超过 # 小时不活动，系统将弹出 \'Are you there?\' 的通知。</string>
     <string name="followup_time_period_title">等待多久后发出提醒</string>
     <string name="exact_alarm_toggle_title">使用精确闹钟计时</string>
+    <string name="exact_alarm_status_exact">精确闹钟计时：已启用</string>
+    <string name="exact_alarm_status_inexact">精确闹钟计时：已禁用</string>
     <string name="exact_alarm_note">注意：此时间并非精确值，系统可能延迟最多1小时发送通知。\n\n若需精确检测，请启用下方的“使用精确闹钟计时”功能，可能略微增加电池电量消耗。</string>
     <string name="rest_period_title">休眠期</string>
     <string name="followup_time_period_description">弹出 \'Are you there?\' 的通知后，等待 # 分钟无人响应才会向您的联系人发出提醒。</string>

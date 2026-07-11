@@ -173,6 +173,8 @@
     <string name="time_period_description">Количество часов бездействия перед появлением уведомления \'Вы здесь?\'</string>
     <string name="followup_time_period_title">Сколько минут ожидать подтверждения</string>
     <string name="exact_alarm_toggle_title">Использовать точное время сигнала</string>
+    <string name="exact_alarm_status_exact">Точное время сигнала: Включено</string>
+    <string name="exact_alarm_status_inexact">Точное время сигнала: Выключено</string>
     <string name="exact_alarm_note">ПРИМЕЧАНИЕ: Это время неточное, и система может задержать уведомление до 1 часа.\n\nВключите \'Использовать точное время сигнала\' ниже, если вам нужны точные проверки — это может немного увеличить расход батареи.</string>
     <string name="rest_period_title">Период отдыха</string>
     <string name="followup_time_period_description">Количество минут ожидания после отправки уведомления \'Вы здесь?\', прежде чем оповещение будет отправлено вашим контактам для экстренных случаев.</string>

@@ -173,6 +173,8 @@
         <string name="time_period_description">Il numero di ore di inattività prima di ricevere una notifica "Ci sei?".\n\nNOTA: Questo ritardo non è esatto e il sistema potrebbe ritardare questa notifica fino a un\'ora.</string>  
         <string name="followup_time_period_title">Minuti di attesa per la conferma</string>  
         <string name="exact_alarm_toggle_title">Usa Temporizzazione Allarme Esatta</string>
+        <string name="exact_alarm_status_exact">Temporizzazione Allarme Esatta: Attivata</string>
+        <string name="exact_alarm_status_inexact">Temporizzazione Allarme Esatta: Disattivata</string>
         <string name="exact_alarm_note">NOTA: Questa temporizzazione non è esatta e il sistema potrebbe ritardare questa notifica fino a 1 ora.\n\nAbilita \'Usa Temporizzazione Allarme Esatta\' qui sotto se hai bisogno di controlli precisi, il che potrebbe aumentare leggermente il consumo della batteria.</string>
         <string name="rest_period_title">Intervallo di tempo del periodo di riposo</string>
         <string name="followup_time_period_description">Il numero di minuti da attendere dopo l\'invio di una notifica "Ci sei?" prima che un avviso venga inviato ai tuoi contatti di emergenza</string>  
