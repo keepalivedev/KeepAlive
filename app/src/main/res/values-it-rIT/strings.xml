@@ -184,7 +184,7 @@
         <string name="contact_phone_title">Numero di telefono da chiamare (facoltativo)</string>  
         <string name="add_sms_contact_button_text">Aggiungi un contatto di emergenza SMS</string>  
         <string name="contact_phone_description">Quando viene attivato un avviso, verrà effettuata una telefonata a questo numero di telefono con l\'altoparlante attivato.\n\nSi prega di notare che ciò richiede autorizzazioni aggiuntive affinché le telefonate possano essere effettuate in background.</string>  
-        <string name="default_alert_message">Ciao! Non uso il mio telefono da un po\' e potrei aver bisogno di aiuto. Per favore, mandate aiuto!</string>  
+        <string name="default_alert_message">Avviso automatico: non uso il telefono da un po\' e potrei aver bisogno di aiuto. Provate a contattarmi e, se non mi raggiungete, controllate che stia bene.</string>
         <string name="default_alert_message_alt">Ehi, se non ti contatto nelle prossime 24 ore, sai cosa fare.</string>  
         <string name="add_emergency_contact_title">Aggiungi un contatto di emergenza</string>  
         <string name="edit_emergency_contact_title">Modifica un contatto di emergenza</string>  

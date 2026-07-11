@@ -184,7 +184,7 @@
     <string name="contact_phone_title">Telefonnummer anrufen (optional)</string>
     <string name="add_sms_contact_button_text">SMS-Notfallkontakt hinzufügen</string>
     <string name="contact_phone_description">Wenn ein Alarm ausgelöst wird, wird diese Telefonnummer mit aktivierter Freisprecheinrichtung angerufen.\n\nBitte beachten Sie, dass hierfür zusätzliche Berechtigungen erforderlich sind, damit Telefonanrufe im Hintergrund getätigt werden können.</string>
-    <string name="default_alert_message">Hallo! Ich habe mein Telefon seit einiger Zeit nicht mehr benutzt und benötige vielleicht Unterstützung.  Bitte Hilfe schicken!</string>
+    <string name="default_alert_message">Automatischer Alarm: Ich habe mein Handy länger nicht benutzt und brauche eventuell Hilfe. Bitte versuche, mich zu erreichen, und sieh sonst nach mir.</string>
     <string name="default_alert_message_alt">Hey, wenn ich dich in den nächsten 24 Stunden nicht melde, weißt du, was zu tun ist.</string>
     <string name="add_emergency_contact_title">Notfallkontakt hinzufügen</string>
     <string name="edit_emergency_contact_title">Notfallkontakt bearbeiten</string>
