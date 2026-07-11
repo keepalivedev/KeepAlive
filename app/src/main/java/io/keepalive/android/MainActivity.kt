@@ -176,9 +176,16 @@ class MainActivity : AppCompatActivity() {
             "requestCode: $requestCode, permissions: ${permissions.contentToString()}, grantResults: ${grantResults.contentToString()}"
         )
 
+        val permissionManager = PermissionManager(this, this)
+
+        // if a permission was permanently denied the system dialog won't appear
+        //  anymore, so route the user to the app's settings page instead of
+        //  silently no-op'ing the request
+        permissionManager.handlePermissionResult(permissions, grantResults)
+
         // don't really need to check whether the permissions were granted or not?
         //  just check all of the permissions and hide the button appropriately
-        adjustPermissionsComponents(PermissionManager(this, this).checkNeedAnyPermissions())
+        adjustPermissionsComponents(permissionManager.checkNeedAnyPermissions())
     }
 
     private fun updateMainContent(needPermissions: Boolean) {

@@ -13,6 +13,7 @@
     <string name="confirm">Bestätigen</string>
     <string name="back">Zurück</string>
     <string name="go_to_settings">Einstellungen</string>
+    <string name="permission_denied_go_to_settings_message">Diese Berechtigung ist derzeit auf „Nicht zulässig" gesetzt und kann daher hier nicht angefragt werden. Bitte öffnen Sie die Einstellungen und erlauben Sie sie, damit Alarme gesendet werden können.</string>
     <string name="enabled">Aktiv</string>
 
     <!-- webhook layout strings -->

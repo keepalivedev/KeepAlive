@@ -13,6 +13,7 @@
     <string name="confirm">Confirmar</string>
     <string name="back">Atrás</string>
     <string name="go_to_settings">Ir a Configuración</string>
+    <string name="permission_denied_go_to_settings_message">Este permiso está configurado actualmente como «No permitido», por lo que no se puede solicitar aquí. Abra Ajustes y concédalo para que se puedan enviar las alertas.</string>
     <string name="enabled">Activado</string>
 
     <!-- webhook layout strings -->
