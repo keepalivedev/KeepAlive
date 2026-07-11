@@ -13,6 +13,7 @@
     <string name="confirm">Potwierdź</string>
     <string name="back">Z powrotem</string>
     <string name="go_to_settings">Przejdź do Ustawień</string>
+    <string name="permission_denied_go_to_settings_message">To uprawnienie jest obecnie ustawione na „Nie zezwalaj", więc nie można go tu poprosić. Otwórz Ustawienia i zezwól na nie, aby alarmy mogły być wysyłane.</string>
     <string name="enabled">Aktywny</string>
 
     <!-- webhook layout strings -->

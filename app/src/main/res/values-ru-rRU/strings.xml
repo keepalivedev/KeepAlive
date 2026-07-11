@@ -13,6 +13,7 @@
     <string name="confirm">Подтвердить</string>
     <string name="back">Назад</string>
     <string name="go_to_settings">В настройки</string>
+    <string name="permission_denied_go_to_settings_message">Это разрешение сейчас установлено на «Запрещено», поэтому его нельзя запросить здесь. Откройте настройки и предоставьте его, чтобы можно было отправлять оповещения.</string>
     <string name="enabled">Включено</string>
 
     <!-- webhook layout strings -->

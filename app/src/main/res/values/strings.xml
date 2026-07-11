@@ -14,6 +14,7 @@
     <string name="confirm">Confirm</string>
     <string name="back">Back</string>
     <string name="go_to_settings">Go to Settings</string>
+    <string name="permission_denied_go_to_settings_message">This permission is currently set to \"Not allowed\", so it can\'t be requested here. Please open Settings and allow it so that alerts can be sent.</string>
     <string name="enabled">Enabled</string>
     <string name="placeholder" translatable="false">PLACEHOLDER TEXT</string>
 

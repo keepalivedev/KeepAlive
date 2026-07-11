@@ -13,6 +13,7 @@
     <string name="confirm">确认</string>
     <string name="back">后退</string>
     <string name="go_to_settings">去设置</string>
+    <string name="permission_denied_go_to_settings_message">此权限当前被设置为“不允许”，因此无法在此请求。请打开设置并授予该权限，以便能够发送警报。</string>
     <string name="enabled">启用</string>
 
     <!-- webhook layout strings -->

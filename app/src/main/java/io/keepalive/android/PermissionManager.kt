@@ -7,6 +7,7 @@ import android.app.AppOpsManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
@@ -260,6 +261,49 @@ class PermissionManager(private val context: Context, private val activity: AppC
             .show()
     }
 
+    // Handle the result of a runtime permission request (call from the hosting
+    //  Activity's onRequestPermissionsResult). Once a permission is permanently
+    //  denied - "Don't allow" twice, or set to "Not allowed" in system settings -
+    //  requestPermissions() no longer shows the system dialog and silently
+    //  returns denied (the framework logs "No requestable permission in the
+    //  request."), so the explain-then-request path dead-ends. In that case send
+    //  the user to the app's settings page where they can re-enable it.
+    fun handlePermissionResult(permissions: Array<out String>, grantResults: IntArray) {
+        val act = activity ?: return
+        val permanentlyDenied = firstPermanentlyDeniedPermission(
+            permissions,
+            grantResults,
+            shouldShowRationale = { ActivityCompat.shouldShowRequestPermissionRationale(act, it) },
+            isKnown = { permissionExplanations.containsKey(it) }
+        ) ?: return
+
+        explainPermanentlyDeniedPermission(permanentlyDenied)
+    }
+
+    private fun explainPermanentlyDeniedPermission(permission: String) {
+        val title = permissionExplanations[permission]?.get(0) ?: return
+        Log.d(tag, "Permission $permission is permanently denied, routing to app settings")
+
+        AlertDialog.Builder(context, R.style.AlertDialogTheme)
+            .setTitle(title)
+            .setMessage(context.getString(R.string.permission_denied_go_to_settings_message))
+            .setPositiveButton(context.getString(R.string.go_to_settings)) { _, _ ->
+
+                // the system request dialog won't appear anymore, so open the
+                //  app's details page where the permission can be re-enabled
+                val intent = Intent(
+                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.fromParts("package", context.packageName, null)
+                )
+                activity?.startActivity(intent) ?: run {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(intent)
+                }
+            }
+            .setNegativeButton(context.getString(R.string.cancel), null)
+            .show()
+    }
+
     private fun checkBackgroundLocationPermissions(requestPermissions: Boolean): Boolean {
 
         Log.d(tag, "Checking background location permissions")
@@ -418,4 +462,33 @@ class PermissionManager(private val context: Context, private val activity: AppC
             return true
         }
     }
+}
+
+/**
+ * The first requested permission that came back denied and can no longer be
+ * requested through the system dialog — i.e. permanently denied. In the result
+ * callback, "denied AND no rationale" is the permanent-denial signature: a
+ * first-time or soft-denied permission would have shown the system dialog
+ * (granting, or making [shouldShowRationale] true), so reaching the callback
+ * denied without rationale means requestPermissions() no-op'd and the user must
+ * go to settings. Returns null when nothing needs that handling (e.g. all
+ * granted, or an empty/cancelled result). [isKnown] limits handling to
+ * permissions we actually explain.
+ */
+internal fun firstPermanentlyDeniedPermission(
+    permissions: Array<out String>,
+    grantResults: IntArray,
+    shouldShowRationale: (String) -> Boolean,
+    isKnown: (String) -> Boolean
+): String? {
+    for (i in permissions.indices) {
+        if (i < grantResults.size &&
+            grantResults[i] == PackageManager.PERMISSION_DENIED &&
+            !shouldShowRationale(permissions[i]) &&
+            isKnown(permissions[i])
+        ) {
+            return permissions[i]
+        }
+    }
+    return null
 }

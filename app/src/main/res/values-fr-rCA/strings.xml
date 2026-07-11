@@ -13,6 +13,7 @@
     <string name="confirm">Confirmer</string>
     <string name="back">Dos</string>
     <string name="go_to_settings">Paramètre</string>
+    <string name="permission_denied_go_to_settings_message">Cette autorisation est actuellement réglée sur « Non autorisé », elle ne peut donc pas être demandée ici. Veuillez ouvrir les Paramètres et l\'autoriser afin que les alertes puissent être envoyées.</string>
     <string name="enabled">Activé</string>
 
     <!-- webhook layout strings -->
