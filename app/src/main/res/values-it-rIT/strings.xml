@@ -132,6 +132,8 @@
         <string name="sms_alert_failure_notification_text_with_error">Si è verificato un errore durante il tentativo di invio di un SMS di avviso: %1$s</string>  
         <string name="sms_service_failure_notification_title">Impossibile trasmettere l\'avviso SMS</string>  
         <string name="sms_service_failure_notification_text">Si è verificato un errore durante il tentativo di invio di un SMS di avviso, si prega di verificare di avere una SIM attiva</string>  
+        <string name="sms_permission_revoked_notification_title">L\'autorizzazione SMS è stata revocata!</string>
+        <string name="sms_permission_revoked_notification_text">Keep Alive non può più inviare avvisi SMS. Tocca qui per aprire l\'app e concedere di nuovo l\'autorizzazione SMS.</string>
         <string name="alert_service_notification_title">Invio dell\'avviso in corso…</string>
         <string name="alert_service_notification_message">L\'avviso (o gli avvisi) è in corso di invio ai tuoi contatti configurati, si prega di attendere.</string>  
       
@@ -333,6 +335,7 @@
   
 <!-- AlarmReceiver.kt -->  
 <string name="debug_log_alarm_just_fired">L\'allarme è appena scattato!</string>  
+<string name="debug_log_sms_permission_revoked">L\'autorizzazione SEND_SMS non è più concessa!</string>
 <string name="debug_log_app_not_enabled_alarm_went_off">L\'applicazione non è abilitata, perché l\'allarme è scattato?!</string>  
 <string name="debug_log_alarm_time_comparison">L\'ora è %1$s UTC, l\'allarme doveva scattare a %2$s UTC, ovvero %3$d secondi fa</string>  
 <string name="debug_log_failed_processing_alarm">Impossibile elaborare l\'allarme:</string>  
