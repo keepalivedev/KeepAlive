@@ -184,7 +184,7 @@
     <string name="contact_phone_title">Numer Połączenia Alarmowego (Opcjonalnie)</string>
     <string name="add_sms_contact_button_text">Dodaj Numer Alerów SMS</string>
     <string name="contact_phone_description">Kiedy Alert zostanie wywołany, telefon zadzwoni na ten numer telefonu z włączonym trybem głośnomówiącym.\n\nWymaga to dodatkowych uprawnień, żeby telefon mógł dzwonić w tle.</string>
-    <string name="default_alert_message">Hej! Nie używałem telefonu już od dłuższego czasu i mogę potrzebować wsparcia. Pomóż proszę!</string>
+    <string name="default_alert_message">Automatyczny alarm: długo nie używam telefonu i mogę potrzebować pomocy. Spróbuj się ze mną skontaktować, a jeśli się nie uda, sprawdź, czy nic mi nie jest.</string>
     <string name="default_alert_message_alt">Hej, jeśli nie skontaktuję się z Tobą przez 24 godziny to wiesz co robić.</string>
     <string name="add_emergency_contact_title">Dodaj Kontakt Alarmowy</string>
     <string name="edit_emergency_contact_title">Zmień Kontakt Alarmowy</string>
