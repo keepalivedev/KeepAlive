@@ -254,9 +254,13 @@
     <!-- REQUEST_SCHEDULE_EXACT_ALARM Permission (For S and above) -->
     <string name="permission_schedule_alarms_title">Требуется разрешение: Отложенные уведомления</string>
     <string name="permission_schedule_alarms_description">Планирование оповещений необходимо, чтобы оповещение могло срабатывать, даже когда ваше устройство находится в спящем режиме или в режиме \'Не беспокоить\'.\n\nВключите это разрешение для приложения KeepAlive в настройках вашего устройства.</string>
+    <string name="permission_full_screen_intent_title">Требуется разрешение: Полноэкранные уведомления</string>
+    <string name="permission_full_screen_intent_description">Полноэкранные уведомления необходимы, чтобы показывать проверку \'Вы ещё здесь?\' на экране блокировки, чтобы её нельзя было пропустить, пока телефон заблокирован.\n\nНа следующем экране включите \'Полноэкранные уведомления\' для приложения Keep Alive.</string>
 
     <!-- AlertFunctions.kt -->
     <string name="debug_log_doing_alert_check">Выполнение периодической проверки, этап оповещения %1$s</string>
+    <string name="debug_log_full_screen_prompt_shown">Полноэкранный запрос \'Вы ещё здесь?\' показан поверх экрана блокировки</string>
+    <string name="debug_log_full_screen_prompt_acknowledged">Полноэкранный запрос \'Вы ещё здесь?\' подтверждён</string>
     <string name="debug_log_sending_alert_sms">Отправка SMS-оповещения!</string>
     <string name="debug_log_getting_sms_manager_with_sub_id">Получение менеджера SMS с помощью context.getSystemService и идентификатора подписки %1$d</string>
     <string name="debug_log_getting_sms_manager_with_context">Получение менеджера SMS с помощью context.getSystemService</string>

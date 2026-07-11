@@ -26,6 +26,14 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
+    <!-- lets the "Are you there?" notification launch a full-screen activity over
+         the lock screen (the same mechanism alarm clocks use). granted at install
+         on sideloaded/F-Droid builds; on Android 14+ the Play Store revokes the
+         default grant unless the app has an approved calling/alarm core function,
+         in which case the user is sent to the Full Screen special access page
+         (see PermissionManager) -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="PackageVisibilityPolicy,QueryAllPackagesPermission" />
 
@@ -78,6 +86,23 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="io.keepalive.android.MainActivity" />
         </activity>
+
+        <!-- launched by the system via the "Are you there?" notification's
+             full-screen intent when the device is locked or the screen is off.
+             showWhenLocked/turnScreenOn attributes are API 27+; the activity
+             sets the equivalent window flags in code for older versions.
+             directBootAware so the prompt can also be shown for checks that
+             fire before the first unlock after a reboot -->
+        <activity
+            android:name="io.keepalive.android.AreYouThereActivity"
+            android:directBootAware="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:theme="@style/Theme.KeepAlive.NoActionBar"
+            tools:targetApi="o_mr1" />
 
         <service
             android:name="io.keepalive.android.AlertService"

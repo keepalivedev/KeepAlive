@@ -254,9 +254,13 @@
         <!-- REQUEST_SCHEDULE_EXACT_ALARM Permission (For S and above) -->  
         <string name="permission_schedule_alarms_title">Autorizzazione richiesta: Pianificare allarmi</string>  
         <string name="permission_schedule_alarms_description">La pianificazione degli allarmi è richiesta affinché l\'avviso possa attivarsi anche quando il tuo dispositivo è inattivo o in modalità Non disturbare.\n\nSi prega di attivare questa autorizzazione per l\'applicazione KeepAlive nelle impostazioni del tuo dispositivo.</string>  
+        <string name="permission_full_screen_intent_title">Autorizzazione richiesta: Notifiche a schermo intero</string>
+        <string name="permission_full_screen_intent_description">Le notifiche a schermo intero sono necessarie per mostrare il controllo \'Ci sei ancora?\' sulla schermata di blocco, in modo che non passi inosservato mentre il telefono è bloccato.\n\nAttiva \'Notifiche a schermo intero\' per l\'app Keep Alive nella schermata successiva.</string>
       
         <!-- AlertFunctions.kt -->  
         <string name="debug_log_doing_alert_check">Esecuzione di una verifica periodica, il passaggio di avviso è %1$s</string>  
+        <string name="debug_log_full_screen_prompt_shown">Avviso a schermo intero \'Ci sei ancora?\' mostrato sopra la schermata di blocco</string>
+        <string name="debug_log_full_screen_prompt_acknowledged">Avviso a schermo intero \'Ci sei ancora?\' confermato</string>
         <string name="debug_log_sending_alert_sms">Invio di un SMS di avviso!</string>  
         <string name="debug_log_getting_sms_manager_with_sub_id">Ottenimento del gestore SMS con context.getSystemService e l\'ID di abbonamento %1$d</string>  
         <string name="debug_log_getting_sms_manager_with_context">Ottenimento del gestore SMS con context.getSystemService</string>  

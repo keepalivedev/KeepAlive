@@ -254,9 +254,13 @@
     <!-- REQUEST_SCHEDULE_EXACT_ALARM Permission (For S and above) -->
     <string name="permission_schedule_alarms_title">Permiso necesario: Programar alarmas</string>
     <string name="permission_schedule_alarms_description">Programar alarmas es necesario para que la alerta pueda activarse incluso cuando tu dispositivo está suspendido o en modo No molestar.\n\nPor favor, activa este permiso para la app KeepAlive en la configuración de tu dispositivo.</string>
+    <string name="permission_full_screen_intent_title">Permiso necesario: Notificaciones a pantalla completa</string>
+    <string name="permission_full_screen_intent_description">Las notificaciones a pantalla completa son necesarias para mostrar la comprobación \'¿Sigues ahí?\' en la pantalla de bloqueo, de modo que no pase desapercibida mientras el teléfono está bloqueado.\n\nActive \'Notificaciones de pantalla completa\' para la aplicación Keep Alive en la siguiente pantalla.</string>
 
     <!-- AlertFunctions.kt -->
     <string name="debug_log_doing_alert_check">Realizando verificación periódica, la etapa de alarma es %1$s</string>
+    <string name="debug_log_full_screen_prompt_shown">Aviso a pantalla completa \'¿Sigues ahí?\' mostrado sobre la pantalla de bloqueo</string>
+    <string name="debug_log_full_screen_prompt_acknowledged">Aviso a pantalla completa \'¿Sigues ahí?\' confirmado</string>
     <string name="debug_log_sending_alert_sms">¡Enviando alerta SMS!</string>
     <string name="debug_log_getting_sms_manager_with_sub_id">Obteniendo el gestor de SMS con context.getSystemService y el id de suscripción %1$d</string>
     <string name="debug_log_getting_sms_manager_with_context">Obteniendo el gestor de SMS con context.getSystemService</string>

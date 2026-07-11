@@ -254,9 +254,13 @@
     <!-- REQUEST_SCHEDULE_EXACT_ALARM Permission (For S and above) -->
     <string name="permission_schedule_alarms_title">需要授予权限: 闹钟和提醒</string>
     <string name="permission_schedule_alarms_description">需要授予闹钟和提醒权限，这样即使设备处于睡眠或勿扰模式，提醒也能触发。\n\n请在设置中为 KeepAlive 启用此权限。</string>
+    <string name="permission_full_screen_intent_title">需要权限：全屏通知</string>
+    <string name="permission_full_screen_intent_description">需要全屏通知才能在锁定屏幕上显示“您还在吗？”检查，确保手机锁定时不会被错过。\n\n请在下一个屏幕中为 Keep Alive 应用启用“全屏通知”。</string>
 
     <!-- AlertFunctions.kt -->
     <string name="debug_log_doing_alert_check">Doing periodic check, alarm stage is %1$s</string>
+    <string name="debug_log_full_screen_prompt_shown">全屏“您还在吗？”提示已显示在锁定屏幕上</string>
+    <string name="debug_log_full_screen_prompt_acknowledged">全屏“您还在吗？”提示已确认</string>
     <string name="debug_log_sending_alert_sms">Sending alert SMS!</string>
     <string name="debug_log_getting_sms_manager_with_sub_id">Getting SMS manager with context.getSystemService and sub id %1$d</string>
     <string name="debug_log_getting_sms_manager_with_context">Getting SMS manager with context.getSystemService</string>

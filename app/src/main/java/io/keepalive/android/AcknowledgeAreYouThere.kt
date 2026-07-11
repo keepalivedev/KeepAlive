@@ -19,6 +19,10 @@ object AcknowledgeAreYouThere {
         // If we showed the over-other-apps overlay, remove it.
         AreYouThereOverlay.dismiss(context)
 
+        // If the full-screen prompt activity is showing (launched over the lock
+        //  screen via the notification's full-screen intent), close it too.
+        AreYouThereActivity.finishActive()
+
         // Clear the Direct Boot notification flag in case it's still set, and
         // record the acknowledgement as activity in device-protected storage.
         // The timestamp lets the Direct Boot final-alarm branch of

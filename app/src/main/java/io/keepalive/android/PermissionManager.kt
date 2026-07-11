@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.AlarmManager
 import androidx.appcompat.app.AlertDialog
 import android.app.AppOpsManager
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -125,6 +126,17 @@ class PermissionManager(private val context: Context, private val activity: AppC
                 context.getString(R.string.permission_schedule_alarms_description)
             )
         }
+
+        // full-screen intent special access added in API 34. the Play Store
+        //  revokes the default grant at install for apps without an approved
+        //  calling/alarm core function, so the user may need to enable it
+        //  manually; sideloaded/F-Droid installs keep the default grant
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            permissionExplanations[Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT] = arrayOf(
+                context.getString(R.string.permission_full_screen_intent_title),
+                context.getString(R.string.permission_full_screen_intent_description)
+            )
+        }
     }
 
     // check whether we need any permissions without actually requesting them
@@ -149,7 +161,8 @@ class PermissionManager(private val context: Context, private val activity: AppC
         if (!checkUsageStatsPermissions(false) ||
             !checkScheduleExactAlarmPermissions(false) ||
             !checkBackgroundLocationPermissions(false) ||
-            !checkOverlayPermissions(false)
+            !checkOverlayPermissions(false) ||
+            !checkFullScreenIntentPermissions(false)
         ) {
             DebugLogger.d(tag, context.getString(R.string.debug_log_still_need_some_permissions))
             return true
@@ -184,7 +197,8 @@ class PermissionManager(private val context: Context, private val activity: AppC
         return if (!checkUsageStatsPermissions(true) ||
             !checkScheduleExactAlarmPermissions(true) ||
             !checkBackgroundLocationPermissions(true) ||
-            !checkOverlayPermissions(true)
+            !checkOverlayPermissions(true) ||
+            !checkFullScreenIntentPermissions(true)
         ) {
             DebugLogger.d(tag, context.getString(R.string.debug_log_finished_requesting_permissions))
             false
@@ -252,6 +266,13 @@ class PermissionManager(private val context: Context, private val activity: AppC
                 // request the permission by taking the user to the settings page
                 Log.d(tag, "Requesting setting permission: $permission")
                 val myIntent = Intent(permission)
+
+                // the full-screen intent settings action expects a package URI
+                //  so it opens directly on this app's toggle
+                if (permission == Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT) {
+                    myIntent.data = Uri.fromParts("package", context.packageName, null)
+                }
+
                 activity?.startActivity(myIntent) ?: run {
                     myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     context.startActivity(myIntent)
@@ -361,6 +382,39 @@ class PermissionManager(private val context: Context, private val activity: AppC
         } else {
             Log.d(tag, "Don't have fine location permissions?!")
             return false
+        }
+    }
+
+    private fun checkFullScreenIntentPermissions(requestPermissions: Boolean): Boolean {
+
+        // only needed when the user has the full-screen prompt enabled; the
+        //  special access exists from API 34 and is granted at install below that
+        if (!overlayPromptEnabled || Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            return true
+        }
+
+        Log.d(tag, "Checking full-screen intent permissions")
+
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
+
+        if (notificationManager != null && !notificationManager.canUseFullScreenIntent()) {
+
+            if (!requestPermissions) {
+                return false
+            }
+
+            explainSettingsPermission(
+                Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT,
+                permissionExplanations[Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT]!![0],
+                permissionExplanations[Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT]!![1]
+            )
+
+            // return false because we haven't actually granted the permission at this point
+            return false
+        } else {
+            Log.d(tag, "Full-screen intent permission already granted!")
+            return true
         }
     }
 

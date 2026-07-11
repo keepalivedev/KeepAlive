@@ -135,6 +135,16 @@ class AlertNotificationHelper(private val context: Context) {
         return false
     }
 
+    // the USE_FULL_SCREEN_INTENT special access only exists from API 34; below
+    //  that the manifest permission is granted at install
+    private fun canUseFullScreenIntent(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            notificationManager.canUseFullScreenIntent()
+        } else {
+            true
+        }
+    }
+
     fun cancelNotification(notificationId: Int) {
         notificationManager.cancel(notificationId)
     }
@@ -243,6 +253,41 @@ class AlertNotificationHelper(private val context: Context) {
                 // Don't auto dismiss just because they tapped the notification.
                 // We cancel it explicitly on acknowledgement.
                 builder.setAutoCancel(false)
+
+                // Full-screen intent: when the device is locked or the screen is
+                //  off, the system launches AreYouThereActivity over the keyguard
+                //  instead of only posting the notification. While the device is
+                //  actively in use this degrades to a heads-up notification and
+                //  the window overlay covers the full-screen role instead.
+                //  Gated on the same setting as the overlay and, on API 34+, on
+                //  the Full Screen special access — the Play Store revokes the
+                //  default grant at install for apps without an approved
+                //  calling/alarm core function (issue #182).
+                try {
+                    val fullScreenEnabled = getAppSharedPreferences(context)
+                        .getBoolean(PrefKeys.ARE_YOU_THERE_OVERLAY_ENABLED, true)
+
+                    if (fullScreenEnabled && canUseFullScreenIntent()) {
+                        val fullScreenIntent = Intent(context, AreYouThereActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            putExtra(AreYouThereActivity.EXTRA_MESSAGE, content)
+                        }
+                        val fullScreenPendingIntent = PendingIntent.getActivity(
+                            context,
+                            1,
+                            fullScreenIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                        )
+                        builder.setFullScreenIntent(fullScreenPendingIntent, true)
+                        Log.d("sendNotification", "Full-screen intent attached")
+                    } else {
+                        Log.d("sendNotification", "Full-screen intent not attached " +
+                                "(enabled=$fullScreenEnabled, canUse=${canUseFullScreenIntent()})")
+                    }
+                } catch (e: Exception) {
+                    // the notification itself must still go out
+                    Log.w("sendNotification", "Failed to attach full-screen intent", e)
+                }
 
             } else {
                 // auto close the notification when it is touched

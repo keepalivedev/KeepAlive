@@ -317,7 +317,13 @@ class AlertService : Service() {
                     AppController.ARE_YOU_THERE_NOTIFICATION_ID
                 )
             }
-            override fun dismissAreYouThereOverlay() = AreYouThereOverlay.dismiss(context)
+            override fun dismissAreYouThereOverlay() {
+                AreYouThereOverlay.dismiss(context)
+
+                // also close the full-screen prompt activity if it is showing —
+                //  the alert is firing so the prompt is no longer actionable
+                AreYouThereActivity.finishActive()
+            }
             override fun sendSmsAlert() = alertSender.sendAlertMessage()
             override fun makeCall() = makeAlertCall(context)
             override fun writeLastAlertAt(timestamp: Long) {
