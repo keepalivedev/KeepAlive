@@ -87,6 +87,8 @@
     <string name="monitoring_no_activity_detected_title">无法进行监测</string>
     <string name="monitoring_permissions_required_title">需要授予权限</string>
     <string name="monitoring_no_activity_detected_message">监测器已启用，但在过去 %1$s 小时内未检测到任何活动。 请确保屏幕锁定已启用并授予了使用情况访问权限。</string>
+    <string name="monitoring_no_recipient_title">没有警报接收人</string>
+    <string name="monitoring_no_recipient_message">监控正在运行，但没有已启用的紧急联系人，因此无法发送警报。请在设置中添加或启用紧急联系人。</string>
     <string name="monitoring_permissions_required_message">监测器已启用，但尚未授予必要权限。 请点击下面的“授予权限”按钮。</string>
     <string name="alarm_message_too_long_message">短信不得超过 160 个字符。</string>
     <string name="phone_number_invalid_message">请输入一个有效的电话号码。</string>
@@ -321,6 +323,7 @@
     <!-- MainActivity.kt -->
     <string name="debug_log_no_alarm_or_monitoring_disabled">No alarm found or monitoring is disabled</string>
     <string name="debug_log_no_events_found_lock_screen">No events found, may not have lock screen?</string>
+    <string name="debug_log_no_alert_channel">监控已启用，但未配置警报接收人！</string>
     <string name="debug_log_no_active_alarm_showing_restart_button">No active alarm found, showing button to restart</string>
     <string name="debug_log_failed_getting_sms_manager_disable_button">Failed to get SMS manager? Disabling SMS test button</string>
     <string name="debug_log_current_alarm_time">Current alarm set for %1$s local time</string>

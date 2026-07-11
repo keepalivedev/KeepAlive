@@ -505,6 +505,21 @@ class MainActivity : AppCompatActivity() {
                         monitoringMessageTextView.text =
                             getString(R.string.monitoring_permissions_required_message)
 
+                    } else if (!hasActiveAlertChannel(sharedPrefs)) {
+
+                        // monitoring is running but there is no enabled contact (or
+                        //  webhook) so no alert could actually be delivered - don't
+                        //  show a reassuring green state (issue #187)
+                        DebugLogger.d(tag, getString(R.string.debug_log_no_alert_channel))
+
+                        monitoringStatusTextView.text =
+                            getString(R.string.monitoring_no_recipient_title)
+                        monitoringStatusTextView.setTextColor(
+                            getColorCompat(this, R.color.monitoringImpaired)
+                        )
+                        monitoringMessageTextView.text =
+                            getString(R.string.monitoring_no_recipient_message)
+
                     } else {
                         Log.d(tag, "Don't need any permissions, we are all set?!")
 

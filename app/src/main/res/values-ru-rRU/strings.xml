@@ -87,6 +87,8 @@
     <string name="monitoring_no_activity_detected_title">Мониторинг невозможен</string>
     <string name="monitoring_permissions_required_title">Предоставьте разрешения</string>
     <string name="monitoring_no_activity_detected_message">Мониторинг включен, но за последние %1$s часов активности не обнаружено. Убедитесь, что у вас включен экран блокировки и предоставлены разрешения на использование.</string>
+    <string name="monitoring_no_recipient_title">Нет получателя оповещения</string>
+    <string name="monitoring_no_recipient_message">Мониторинг работает, но ни один экстренный контакт не активен, поэтому оповещение не может быть отправлено. Добавьте или включите экстренный контакт в настройках.</string>
     <string name="monitoring_permissions_required_message">Мониторинг включен, но предоставлены не все разрешения. Нажмите кнопку \'Предоставить разрешения\' ниже.</string>
     <string name="alarm_message_too_long_message">Сообщение не может содержать более 160 символов.</string>
     <string name="phone_number_invalid_message">Введите корректный телефонный номер</string>
@@ -321,6 +323,7 @@
     <!-- MainActivity.kt -->
     <string name="debug_log_no_alarm_or_monitoring_disabled">Будильник не найден или мониторинг отключен</string>
     <string name="debug_log_no_events_found_lock_screen">События не найдены, возможно, нет экрана блокировки?</string>
+    <string name="debug_log_no_alert_channel">Мониторинг включён, но получатель оповещения не настроен!</string>
     <string name="debug_log_no_active_alarm_showing_restart_button">Активный будильник не найден, отображение кнопки перезапуска</string>
     <string name="debug_log_failed_getting_sms_manager_disable_button">Не удалось получить менеджер SMS? Отключение кнопки тестирования SMS</string>
     <string name="debug_log_current_alarm_time">Текущий будильник установлен на %1$s местного времени</string>

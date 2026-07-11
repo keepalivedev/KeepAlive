@@ -87,6 +87,8 @@
     <string name="monitoring_no_activity_detected_title">Surveillance impossible</string>
     <string name="monitoring_permissions_required_title">Autorisations requises</string>
     <string name="monitoring_no_activity_detected_message">La surveillance est activée, mais aucune activité n\'a été détectée au cours des %1$s dernières heures. Veuillez vous assurer que votre écran de verrouillage est activé et que vous avez accordé les autorisations d\'accès à l\'utilisation.</string>
+    <string name="monitoring_no_recipient_title">Aucun destinataire d\'alerte</string>
+    <string name="monitoring_no_recipient_message">La surveillance est en cours, mais aucun contact d\'urgence n\'est actif, donc aucune alerte ne peut être envoyée. Veuillez ajouter ou activer un contact d\'urgence dans les paramètres.</string>
     <string name="monitoring_permissions_required_message">La surveillance est activée, mais toutes les autorisations n\'ont pas été accordées. Veuillez cliquer sur le bouton « Accorder des autorisations » ci-dessous.</string>
     <string name="alarm_message_too_long_message">Le message ne peut pas contenir plus de 160 caractères.</string>
     <string name="phone_number_invalid_message">Veuillez saisir un numéro de téléphone valide.</string>
@@ -321,6 +323,7 @@
     <!-- MainActivity.kt -->
     <string name="debug_log_no_alarm_or_monitoring_disabled">Aucune alarme trouvée ou surveillance désactivée</string>
     <string name="debug_log_no_events_found_lock_screen">Aucun événement trouvé, peut-être pas d\'écran de verrouillage?</string>
+    <string name="debug_log_no_alert_channel">La surveillance est activée, mais aucun destinataire d\'alerte n\'est configuré!</string>
     <string name="debug_log_no_active_alarm_showing_restart_button">Aucune alarme active trouvée, affichage du bouton de redémarrage</string>
     <string name="debug_log_failed_getting_sms_manager_disable_button">Échec de l\'obtention du gestionnaire de SMS? Désactivation du bouton de test SMS</string>
     <string name="debug_log_current_alarm_time">Alarme actuelle définie pour %1$s heure locale</string>

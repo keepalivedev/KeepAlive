@@ -87,6 +87,8 @@
     <string name="monitoring_no_activity_detected_title">Überwachung nicht möglich</string>
     <string name="monitoring_permissions_required_title">Berechtigungen erforderlich</string>
     <string name="monitoring_no_activity_detected_message">Die Überwachung ist aktiviert, aber in den letzten %1$s Stunden wurde keine Aktivität festgestellt.  Bitte stellen Sie sicher, dass Sie eine Bildschirmsperre aktiviert haben und die Zugriffsrechte für die Nutzung erteilt haben.</string>
+    <string name="monitoring_no_recipient_title">Kein Alarm-Empfänger</string>
+    <string name="monitoring_no_recipient_message">Die Überwachung läuft, aber kein Notfallkontakt ist aktiv, daher kann kein Alarm gesendet werden. Bitte fügen Sie in den Einstellungen einen Notfallkontakt hinzu oder aktivieren Sie einen.</string>
     <string name="monitoring_permissions_required_message">Die Überwachung ist aktiviert, aber es wurden nicht alle Berechtigungen erteilt.  Bitte klicken Sie unten auf die Schaltfläche "Berechtigungen erteilen".</string>
     <string name="alarm_message_too_long_message">Die Nachricht darf nicht länger als 160 Zeichen sein.</string>
     <string name="phone_number_invalid_message">Bitte geben Sie eine gültige Telefonnummer ein.</string>
@@ -321,6 +323,7 @@
     <!-- MainActivity.kt -->
     <string name="debug_log_no_alarm_or_monitoring_disabled">Kein Alarm gefunden oder Überwachung deaktiviert</string>
     <string name="debug_log_no_events_found_lock_screen">Keine Ereignisse gefunden, möglicherweise kein Sperrbildschirm?</string>
+    <string name="debug_log_no_alert_channel">Die Überwachung ist aktiviert, aber es ist kein Alarm-Empfänger konfiguriert!</string>
     <string name="debug_log_no_active_alarm_showing_restart_button">Kein aktiver Alarm gefunden, Schaltfläche zum Neustart wird angezeigt</string>
     <string name="debug_log_failed_getting_sms_manager_disable_button">Fehler beim Abrufen des SMS-Managers? SMS-Testschaltfläche deaktivieren</string>
     <string name="debug_log_current_alarm_time">Aktueller Alarm für %1$s Ortszeit eingestellt</string>

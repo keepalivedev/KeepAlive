@@ -46,6 +46,32 @@ data class MonitoredAppDetails(
     val className: String
 )
 
+// whether any alert delivery channel is currently usable: an enabled SMS
+//  contact with a phone number, a call contact, or (in webhook builds) an
+//  enabled and configured webhook. used by the main screen so monitoring is
+//  not presented as healthy when no alert could actually be delivered (issue #187)
+fun hasActiveAlertChannel(sharedPrefs: SharedPreferences): Boolean {
+    val smsContacts: MutableList<SMSEmergencyContactSetting> =
+        loadJSONSharedPreference(sharedPrefs, PrefKeys.PHONE_NUMBER_SETTINGS)
+
+    if (smsContacts.any { it.isEnabled && it.phoneNumber.isNotEmpty() }) {
+        return true
+    }
+
+    if (!sharedPrefs.getString(PrefKeys.CONTACT_PHONE, "").isNullOrEmpty()) {
+        return true
+    }
+
+    if (BuildConfig.INCLUDE_WEBHOOK &&
+        sharedPrefs.getBoolean(PrefKeys.WEBHOOK_ENABLED, false) &&
+        !sharedPrefs.getString(PrefKeys.WEBHOOK_URL, "").isNullOrEmpty()
+    ) {
+        return true
+    }
+
+    return false
+}
+
 // load a JSON string from shared preferences and convert it to a list of objects
 // used with the SMSEmergencyContactSetting and RestPeriods
 inline fun <reified T> loadJSONSharedPreference(
