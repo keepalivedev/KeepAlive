@@ -91,6 +91,9 @@
     <string name="alarm_message_too_long_message">Wiadomość nie może mieć więcej niż 160 znaków.</string>
     <string name="phone_number_invalid_message">Wpisz poprawny numer telefonu.</string>
     <string name="time_period_too_short_message">Na potwierdzenie musi być przynajmniej 10 minut.</string>
+    <string name="time_period_too_long_message">Interwał nie może być dłuższy niż 7 dni.</string>
+    <string name="followup_period_whole_minutes_message">Minuty muszą być liczbą całkowitą.</string>
+    <string name="time_period_too_many_decimals_message">Godziny mogą mieć najwyżej 2 miejsca po przecinku.</string>
     <string name="test_phone_call_message">Połączenie telefoniczne zostanie nawiązane z:\n%1$s</string>
     <string name="test_sms_message">Wiadomości SMS zostaną wysłane do:\n%1$s</string>
     <string name="unable_to_send_sms_message">Nie można wysłać SMS\nUpewnij się, że masz aktywną kartę SIM</string>
@@ -360,6 +363,7 @@
     <string name="debug_log_locked_boot_completed_skipping">Otrzymano LOCKED_BOOT_COMPLETED, pomijanie sprawdzania powiadomienia Direct Boot. %1$s</string>
     <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: Użytkownik jest już odblokowany, przekazywanie do BOOT_COMPLETED</string>
     <string name="debug_log_restored_alarm_stage">Przywrócono etap alarmu z chronionego magazynu urządzenia: %1$s, wywołanie doAlertCheck()</string>
+    <string name="debug_log_boot_alert_already_sent">Alarm został już wysłany, a automatyczne ponowne uruchamianie monitorowania jest wyłączone, pozostaje rozbrojony po ponownym uruchomieniu</string>
 
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Konfiguracja webhooka zapisana</string>

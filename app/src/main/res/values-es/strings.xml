@@ -91,6 +91,9 @@
     <string name="alarm_message_too_long_message">El mensaje no puede tener más de 160 caracteres.</string>
     <string name="phone_number_invalid_message">Por favor, ingresa un número de teléfono válido.</string>
     <string name="time_period_too_short_message">El intervalo debe ser de al menos 10 minutos.</string>
+    <string name="time_period_too_long_message">El intervalo no puede ser de más de 7 días.</string>
+    <string name="followup_period_whole_minutes_message">Los minutos deben ser un número entero.</string>
+    <string name="time_period_too_many_decimals_message">Las horas pueden tener como máximo 2 decimales.</string>
     <string name="test_phone_call_message">Se realizará una llamada telefónica a:\n%1$s</string>
     <string name="test_sms_message">Se enviará(n) mensaje(s) SMS a:\n%1$s</string>
     <string name="unable_to_send_sms_message">No se puede enviar el SMS\nVerifica que tengas una SIM activa</string>
@@ -360,6 +363,7 @@
     <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED recibido, omitiendo la verificación de notificación de Direct Boot. %1$s</string>
     <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: El usuario ya está desbloqueado, difiriendo a BOOT_COMPLETED</string>
     <string name="debug_log_restored_alarm_stage">Etapa de alarma restaurada desde el almacenamiento protegido del dispositivo: %1$s, llamando a doAlertCheck()</string>
+    <string name="debug_log_boot_alert_already_sent">La alerta ya se envió y el reinicio automático del monitoreo está desactivado, permaneciendo desarmado tras el reinicio</string>
 
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Configuración del webhook guardada</string>

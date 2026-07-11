@@ -35,6 +35,11 @@ class AppController : Application() {
         // according to the docs we shouldn't set alarms for less than 10 minutes?
         const val ALARM_MINIMUM_TIME_PERIOD_MINUTES = 10
 
+        // upper bound for the check period / follow-up period inputs (7 days).
+        // without a bound, huge values saturate the Int minute math used for
+        // alarm scheduling and the alarm silently never fires
+        const val ALARM_MAXIMUM_TIME_PERIOD_MINUTES = 10080
+
         // max SMS length as defined by the OS?
         const val SMS_MESSAGE_MAX_LENGTH = 160
 

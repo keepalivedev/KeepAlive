@@ -135,4 +135,38 @@ class BootBroadcastReceiverTest {
 
         verify(exactly = 1) { doAlertCheck(any<Context>(), "periodic") }
     }
+
+    // "alert_sent" is written by dispatchFinalAlert when Auto-Restart Monitoring
+    // is off. Restoring a periodic cycle from it would silently re-arm
+    // monitoring after a reboot and cause false alerts (issue #181).
+
+    @Test fun `BOOT_COMPLETED with alert_sent stage stays disarmed`() {
+        // The Direct Boot pending flag was already cleared when the alert
+        // fired, so this BOOT_COMPLETED (delivered at first unlock) falls
+        // through to the stage restore — which must not re-arm.
+        getDeviceProtectedPreferences(appCtx).edit()
+            .putBoolean("direct_boot_notification_pending", false)
+            .putString("last_alarm_stage", "alert_sent")
+            .commit()
+
+        BootBroadcastReceiver().onReceive(appCtx, Intent(Intent.ACTION_BOOT_COMPLETED))
+
+        verify(exactly = 0) { doAlertCheck(any<Context>(), any()) }
+        verify(exactly = 0) { AcknowledgeAreYouThere.acknowledge(any()) }
+    }
+
+    @Test fun `LOCKED_BOOT_COMPLETED with alert_sent stage stays disarmed`() {
+        // A later reboot with no interaction in between: the single
+        // LOCKED_BOOT_COMPLETED must not start a fresh cycle either.
+        every { isUserUnlocked(any()) } returns false
+        getDeviceProtectedPreferences(appCtx).edit()
+            .putString("last_alarm_stage", "alert_sent")
+            .commit()
+
+        BootBroadcastReceiver().onReceive(
+            appCtx, Intent("android.intent.action.LOCKED_BOOT_COMPLETED"))
+
+        verify(exactly = 0) { doAlertCheck(any<Context>(), any()) }
+        verify(exactly = 0) { AcknowledgeAreYouThere.acknowledge(any()) }
+    }
 }

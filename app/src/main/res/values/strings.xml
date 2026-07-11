@@ -103,6 +103,9 @@
     <string name="alarm_message_too_long_message">The message cannot be more than 160 characters.</string>
     <string name="phone_number_invalid_message">Please enter a valid phone number.</string>
     <string name="time_period_too_short_message">Interval must be at least 10 minutes.</string>
+    <string name="time_period_too_long_message">Interval cannot be more than 7 days.</string>
+    <string name="followup_period_whole_minutes_message">Minutes must be a whole number.</string>
+    <string name="time_period_too_many_decimals_message">Hours can have at most 2 decimal places.</string>
     <string name="test_phone_call_message">A phone call will be made to:\n%1$s</string>
     <string name="test_sms_message">SMS message(s) will be sent to:\n%1$s</string>
     <string name="unable_to_send_sms_message">Unable to send SMS\nPlease verify you have an active SIM</string>
@@ -372,6 +375,7 @@
     <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED received, skipping Direct Boot notification check. %1$s</string>
     <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: User is already unlocked, deferring to BOOT_COMPLETED</string>
     <string name="debug_log_restored_alarm_stage">Restored alarm stage from device-protected storage: %1$s, calling doAlertCheck()</string>
+    <string name="debug_log_boot_alert_already_sent">Alert was already sent and Auto-Restart Monitoring is off, staying disarmed after reboot</string>
 
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Webhook configuration saved</string>

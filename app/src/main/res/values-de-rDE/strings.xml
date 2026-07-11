@@ -91,6 +91,9 @@
     <string name="alarm_message_too_long_message">Die Nachricht darf nicht länger als 160 Zeichen sein.</string>
     <string name="phone_number_invalid_message">Bitte geben Sie eine gültige Telefonnummer ein.</string>
     <string name="time_period_too_short_message">Das Intervall muss mindestens 10 Minuten betragen.</string>
+    <string name="time_period_too_long_message">Das Intervall darf höchstens 7 Tage betragen.</string>
+    <string name="followup_period_whole_minutes_message">Die Minuten müssen eine ganze Zahl sein.</string>
+    <string name="time_period_too_many_decimals_message">Die Stunden dürfen höchstens 2 Nachkommastellen haben.</string>
     <string name="test_phone_call_message">Es wird ein Anruf getätigt an:\n%1$s</string>
     <string name="test_sms_message">SMS-Nachricht(en) werden gesendet an:\n%1$s</string>
     <string name="unable_to_send_sms_message">SMS-Versand nicht möglich Bitte überprüfen Sie,\n ob Sie eine aktive SIM-Karte haben</string>
@@ -360,6 +363,7 @@
     <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED empfangen, Direct-Boot-Benachrichtigungsprüfung wird übersprungen. %1$s</string>
     <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: Benutzer ist bereits entsperrt, Verarbeitung wird an BOOT_COMPLETED übergeben</string>
     <string name="debug_log_restored_alarm_stage">Alarmstufe aus gerätegeschütztem Speicher wiederhergestellt: %1$s, doAlertCheck() wird aufgerufen</string>
+    <string name="debug_log_boot_alert_already_sent">Alarm wurde bereits gesendet und der automatische Neustart der Überwachung ist deaktiviert, bleibt nach dem Neustart deaktiviert</string>
 
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Webhook-Konfiguration gespeichert</string>
