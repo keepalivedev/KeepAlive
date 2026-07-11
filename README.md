@@ -34,6 +34,8 @@ c45567b712d6fd7979df14f66f8a5c25859ee223e1f07e915a7eee201c14baef
 
 Note that builds installed from an app store may be signed differently (for example by Google's Play App Signing); the digest above applies to the APKs from the GitHub Releases page.
 
+The same fingerprint is also published at [keep-alive.io](https://keep-alive.io/#verify).
+
 Available Translations: Chinese (CN), French (CA), German (DE), Italian (IT), Polish (PL), Russian (RU), Spanish (ES) <br/>
 Supports Android 5.1 (API 22) and up
 
