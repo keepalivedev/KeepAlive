@@ -267,6 +267,14 @@
     <string name="permission_schedule_alarms_title">Permission Required: Schedule Alarms</string>
     <string name="permission_schedule_alarms_description">Scheduling alarms is required so that the Alert can trigger even when your device is sleeping or in Do Not Disturb mode.\n\nPlease enable this permission for the KeepAlive app in your device settings.</string>
 
+    <!-- USE_FULL_SCREEN_INTENT special access (API 34 and above) -->
+    <string name="permission_full_screen_intent_title">Permission Required: Full Screen Notifications</string>
+    <string name="permission_full_screen_intent_description">Full screen notifications are needed to show the \'Are you there?\' check on the lock screen, so it cannot be missed while your phone is locked.\n\nPlease enable \'Full screen notifications\' for the Keep Alive app on the next screen.</string>
+
+    <!-- AreYouThereActivity.kt -->
+    <string name="debug_log_full_screen_prompt_shown">Full-screen Are you there? prompt shown over lock screen</string>
+    <string name="debug_log_full_screen_prompt_acknowledged">Full-screen Are you there? prompt acknowledged</string>
+
     <!-- AlertFunctions.kt -->
     <string name="debug_log_doing_alert_check">Doing periodic check, alarm stage is %1$s</string>
     <string name="debug_log_sending_alert_sms">Sending alert SMS!</string>

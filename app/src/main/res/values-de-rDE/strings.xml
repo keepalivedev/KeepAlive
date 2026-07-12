@@ -254,9 +254,13 @@
     <!-- REQUEST_SCHEDULE_EXACT_ALARM Permission (For S and above) -->
     <string name="permission_schedule_alarms_title">Erlaubnis erforderlich: Wecker und Erinnerungen</string>
     <string name="permission_schedule_alarms_description">Erinnerungen sind erforderlich, damit der Alarm auch dann ausgelöst werden kann, wenn Ihr Gerät schläft oder sich im Modus \"Nicht stören\" befindet.\n\nBitte aktivieren Sie diese Berechtigung für die KeepAlive-App in Ihren Geräteeinstellungen.</string>
+    <string name="permission_full_screen_intent_title">Berechtigung erforderlich: Vollbildbenachrichtigungen</string>
+    <string name="permission_full_screen_intent_description">Vollbildbenachrichtigungen werden benötigt, um die \'Sind Sie noch da?\'-Abfrage auf dem Sperrbildschirm anzuzeigen, damit sie bei gesperrtem Telefon nicht übersehen werden kann.\n\nBitte aktivieren Sie auf dem nächsten Bildschirm \'Vollbildbenachrichtigungen\' für die Keep Alive App.</string>
 
     <!-- AlertFunctions.kt -->
     <string name="debug_log_doing_alert_check">Führe regelmäßige Überprüfung durch, Alarmphase ist %1$s</string>
+    <string name="debug_log_full_screen_prompt_shown">Vollbild-\'Sind Sie noch da?\'-Abfrage über dem Sperrbildschirm angezeigt</string>
+    <string name="debug_log_full_screen_prompt_acknowledged">Vollbild-\'Sind Sie noch da?\'-Abfrage bestätigt</string>
     <string name="debug_log_sending_alert_sms">Sende Alarm-SMS!</string>
     <string name="debug_log_getting_sms_manager_with_sub_id">Erhalte SMS-Manager mit context.getSystemService und Sub-ID %1$d</string>
     <string name="debug_log_getting_sms_manager_with_context">Erhalte SMS-Manager mit context.getSystemService</string>

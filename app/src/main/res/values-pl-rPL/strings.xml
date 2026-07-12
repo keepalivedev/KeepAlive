@@ -254,9 +254,13 @@
     <!-- REQUEST_SCHEDULE_EXACT_ALARM Permission (For S and above) -->
     <string name="permission_schedule_alarms_title">Wymagane Uprawnienie: Harmonogram Alarmów</string>
     <string name="permission_schedule_alarms_description">Planowanie alarmów jest wymagane, aby Alert mógł być wywołany nawet gdy urządzenie jest uśpione albo w trybie Nie Przeszkadzać.\n\nProszę przyznać to uprawnienie aplikacji KeepAlive w ustawieniach urządzenia.</string>
+    <string name="permission_full_screen_intent_title">Wymagane uprawnienie: Powiadomienia pełnoekranowe</string>
+    <string name="permission_full_screen_intent_description">Powiadomienia pełnoekranowe są potrzebne, aby wyświetlić kontrolę \'Czy nadal tam jesteś?\' na ekranie blokady, tak aby nie została przeoczona, gdy telefon jest zablokowany.\n\nNa następnym ekranie włącz \'Powiadomienia pełnoekranowe\' dla aplikacji Keep Alive.</string>
 
     <!-- AlertFunctions.kt -->
     <string name="debug_log_doing_alert_check">Wykonywanie okresowego sprawdzania, etap alarmu to %1$s</string>
+    <string name="debug_log_full_screen_prompt_shown">Pełnoekranowy monit \'Czy nadal tam jesteś?\' wyświetlony na ekranie blokady</string>
+    <string name="debug_log_full_screen_prompt_acknowledged">Pełnoekranowy monit \'Czy nadal tam jesteś?\' potwierdzony</string>
     <string name="debug_log_sending_alert_sms">Wysyłanie alertu SMS!</string>
     <string name="debug_log_getting_sms_manager_with_sub_id">Pobieranie menedżera SMS za pomocą context.getSystemService i identyfikatora sub %1$d</string>
     <string name="debug_log_getting_sms_manager_with_context">Pobieranie menedżera SMS za pomocą context.getSystemService</string>

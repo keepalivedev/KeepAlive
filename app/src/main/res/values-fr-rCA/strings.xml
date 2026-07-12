@@ -254,9 +254,13 @@
     <!-- REQUEST_SCHEDULE_EXACT_ALARM Permission (For S and above) -->
     <string name="permission_schedule_alarms_title">Autorisation requise: Planifier des alarmes</string>
     <string name="permission_schedule_alarms_description">La planification des alarmes est requise pour que l\'alerte puisse se déclencher même lorsque votre appareil est en veille ou en mode Ne pas déranger.\n\nVeuillez activer cette autorisation pour l\'application KeepAlive dans les paramètres de votre appareil.</string>
+    <string name="permission_full_screen_intent_title">Autorisation requise : Notifications plein écran</string>
+    <string name="permission_full_screen_intent_description">Les notifications plein écran sont nécessaires pour afficher la vérification \'Êtes-vous là?\' sur l\'écran de verrouillage, afin qu\'elle ne passe pas inaperçue lorsque votre téléphone est verrouillé.\n\nVeuillez activer \'Notifications plein écran\' pour l\'application Keep Alive sur l\'écran suivant.</string>
 
     <!-- AlertFunctions.kt -->
     <string name="debug_log_doing_alert_check">Effectuer une vérification périodique, l\'étape d\'alerte est %1$s</string>
+    <string name="debug_log_full_screen_prompt_shown">Invite plein écran \'Êtes-vous là?\' affichée sur l\'écran de verrouillage</string>
+    <string name="debug_log_full_screen_prompt_acknowledged">Invite plein écran \'Êtes-vous là?\' confirmée</string>
     <string name="debug_log_sending_alert_sms">Envoi d\'un SMS d\'alerte!</string>
     <string name="debug_log_getting_sms_manager_with_sub_id">Obtention du gestionnaire de SMS avec context.getSystemService et l\'identifiant d\'abonnement %1$d</string>
     <string name="debug_log_getting_sms_manager_with_context">Obtention du gestionnaire de SMS avec context.getSystemService</string>
