@@ -59,7 +59,7 @@ class MonitoringWatchdogWorkerTest {
         every { setAlarm(any(), any(), any(), any(), any()) } returns Unit
         mockkObject(AreYouThereOverlay)
         mockkConstructor(AlertNotificationHelper::class)
-        every { AreYouThereOverlay.show(any(), any()) } returns Unit
+        every { AreYouThereOverlay.show(any(), any(), any()) } returns Unit
         every { anyConstructed<AlertNotificationHelper>().sendNotification(any(), any(), any(), any()) } returns Unit
         getAppSharedPreferences(appCtx).edit()
             .putBoolean("enabled", true)

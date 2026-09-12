@@ -23,6 +23,7 @@ import io.mockk.unmockkStatic
 import io.mockk.verify
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -52,7 +53,7 @@ class BootBroadcastReceiverTest {
         mockkConstructor(AlertNotificationHelper::class)
         every { doAlertCheck(any<Context>(), any()) } returns Unit
         every { AcknowledgeAreYouThere.acknowledge(any()) } returns Unit
-        every { AreYouThereOverlay.show(any(), any()) } returns Unit
+        every { AreYouThereOverlay.show(any(), any(), any()) } returns Unit
         every { anyConstructed<AlertNotificationHelper>().sendNotification(any(), any(), any(), any()) } returns Unit
         // Default: app enabled, user unlocked
         every { isUserUnlocked(any()) } returns true
@@ -66,7 +67,52 @@ class BootBroadcastReceiverTest {
             // default to an alarm that was already due, so recovery runs the
             // check the older tests assert on rather than rescheduling
             .putLong("NextAlarmTimestamp", System.currentTimeMillis() - 2 * 60 * 60_000L)
+            // the migration gate is not what these tests are about
+            .putBoolean("alert_sent_marker_migrated", true)
             .commit()
+    }
+
+    // Recovery must not act on state a build without the alert_sent marker left
+    // behind: a locked-boot recovery would re-arm and overwrite the timestamp the
+    // migration keys on, and a deliberately disarmed user would be re-armed.
+
+    @Test fun `recovery waits for the alert_sent migration while locked`() {
+        every { isUserUnlocked(any()) } returns false
+        val legacyFinal = System.currentTimeMillis() - 3 * 60 * 60_000L
+        getDeviceProtectedPreferences(appCtx).edit()
+            .remove("alert_sent_marker_migrated")
+            .putString("last_alarm_stage", "periodic")
+            .putLong("NextAlarmTimestamp", legacyFinal)
+            .commit()
+
+        BootBroadcastReceiver().onReceive(
+            appCtx, Intent("android.intent.action.LOCKED_BOOT_COMPLETED"))
+
+        verify(exactly = 0) { setAlarm(any(), any(), any(), any(), any()) }
+        verify(exactly = 0) { doAlertCheck(any<Context>(), any()) }
+        assertFalse(getDeviceProtectedPreferences(appCtx).getBoolean("alert_sent_marker_migrated", false))
+        assertEquals(legacyFinal, getDeviceProtectedPreferences(appCtx).getLong("NextAlarmTimestamp", 0L))
+    }
+
+    @Test fun `recovery runs the alert_sent migration itself once unlocked`() {
+        // AppController.onCreate only runs once per process; if that was a locked
+        // start, the BOOT_COMPLETED that follows unlock is the first chance.
+        val legacyFinal = System.currentTimeMillis() - 3 * 60 * 60_000L
+        getDeviceProtectedPreferences(appCtx).edit()
+            .remove("alert_sent_marker_migrated")
+            .putString("last_alarm_stage", "periodic")
+            .putLong("NextAlarmTimestamp", legacyFinal)
+            .commit()
+        getAppSharedPreferences(appCtx).edit()
+            .putBoolean("auto_restart_monitoring", false)
+            .putLong("LastAlertAt", legacyFinal + 5_000L)
+            .commit()
+
+        BootBroadcastReceiver().onReceive(appCtx, Intent(Intent.ACTION_BOOT_COMPLETED))
+
+        assertEquals("alert_sent", getDeviceProtectedPreferences(appCtx).getString("last_alarm_stage", null))
+        verify(exactly = 0) { setAlarm(any(), any(), any(), any(), any()) }
+        verify(exactly = 0) { doAlertCheck(any<Context>(), any()) }
     }
 
     @After fun tearDown() {
@@ -165,7 +211,7 @@ class BootBroadcastReceiverTest {
 
         verify(exactly = 1) { setAlarm(any(), dueAt, 0, "final", null) }
         verify(exactly = 1) { anyConstructed<AlertNotificationHelper>().sendNotification(any(), any(), any(), any()) }
-        verify(exactly = 1) { AreYouThereOverlay.show(any(), any()) }
+        verify(exactly = 1) { AreYouThereOverlay.show(any(), any(), dueAt) }
         verify(exactly = 0) { doAlertCheck(any<Context>(), any()) }
     }
 
@@ -185,7 +231,7 @@ class BootBroadcastReceiverTest {
             appCtx, Intent("android.intent.action.LOCKED_BOOT_COMPLETED"))
 
         verify(exactly = 1) { setAlarm(any(), dueAt, 0, "final", null) }
-        verify(exactly = 0) { AreYouThereOverlay.show(any(), any()) }
+        verify(exactly = 0) { AreYouThereOverlay.show(any(), any(), any()) }
         assertTrue(getDeviceProtectedPreferences(appCtx)
             .getBoolean("direct_boot_notification_pending", false))
     }

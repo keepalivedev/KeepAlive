@@ -54,7 +54,18 @@ object AlarmRecovery {
                 return
             }
 
+            // State left by a build without the alert_sent marker has to be repaired
+            //  before it is acted on: a locked-boot recovery would otherwise re-arm
+            //  and overwrite the very timestamp the repair keys on, and the disarm
+            //  would be lost for good. The migration is a no-op once done and waits
+            //  for an unlocked start; until it has run, so does recovery.
+            migrateAlertSentMarker(context)
             val devicePrefs = getDeviceProtectedPreferences(context)
+            if (!devicePrefs.getBoolean(PrefKeys.ALERT_SENT_MARKER_MIGRATED, false)) {
+                Log.d(TAG, "Deferring recovery until the alert_sent migration can run")
+                return
+            }
+
             val savedStage = devicePrefs.getString(PrefKeys.LAST_ALARM_STAGE, "periodic") ?: "periodic"
             val savedTimestamp = devicePrefs.getLong(PrefKeys.NEXT_ALARM_TIMESTAMP, 0L)
 
@@ -126,7 +137,7 @@ object AlarmRecovery {
                 if (stage == "final") {
                     // a force stop cancels the prompt along with the alarm; give the
                     //  user one to answer. both helpers are no-ops if it survived.
-                    repostAreYouThere(context, prefs, devicePrefs, REARM_DELAY_MINUTES)
+                    repostAreYouThere(context, prefs, devicePrefs, now + REARM_DELAY_MINUTES * 60_000L)
                 }
                 setAlarm(context, now, REARM_DELAY_MINUTES, stage, null)
                 return
@@ -145,8 +156,7 @@ object AlarmRecovery {
                     DebugLogger.d(TAG, context.getString(
                         R.string.debug_log_prompt_lost_reposting,
                         getDateTimeStrFromTimestamp(savedTimestamp)))
-                    repostAreYouThere(context, prefs, devicePrefs,
-                        ((msUntilSaved + 59_999L) / 60_000L).toInt())
+                    repostAreYouThere(context, prefs, devicePrefs, savedTimestamp)
                 } else {
                     DebugLogger.d(TAG, context.getString(
                         R.string.debug_log_alarm_not_due_rescheduling,
@@ -254,8 +264,10 @@ object AlarmRecovery {
     // same prompt doAlertCheck posts, minus the alarm it would set; the caller
     //  is about to put the original final alarm back
     private fun repostAreYouThere(
-        context: Context, prefs: SharedPreferences, devicePrefs: SharedPreferences, minutesRemaining: Int
+        context: Context, prefs: SharedPreferences, devicePrefs: SharedPreferences, deadlineMillis: Long
     ) {
+        val minutesRemaining = ((deadlineMillis - System.currentTimeMillis() + 59_999L) / 60_000L)
+            .coerceAtLeast(1L)
         val text = String.format(
             context.getString(R.string.initial_check_notification_text), minutesRemaining.toString()
         )
@@ -267,7 +279,7 @@ object AlarmRecovery {
 
         if (isUserUnlocked(context)) {
             if (prefs.getBoolean(PrefKeys.ARE_YOU_THERE_OVERLAY_ENABLED, true)) {
-                AreYouThereOverlay.show(context, text)
+                AreYouThereOverlay.show(context, text, deadlineMillis)
             }
         } else {
             // same flag the Direct Boot path sets, so the unlock that follows is

@@ -114,12 +114,14 @@ class ProductionAlertCheckDeps(private val context: Context) : AlertCheckDeps {
     }
 
     override fun showAreYouThereOverlay(followupPeriodMinutes: Int) {
+        // the final alarm doAlertCheck sets right after this is now + follow-up
         AreYouThereOverlay.show(
             context,
             String.format(
                 context.getString(R.string.initial_check_notification_text),
                 followupPeriodMinutes.toString()
-            )
+            ),
+            System.currentTimeMillis() + followupPeriodMinutes * 60_000L
         )
     }
 
