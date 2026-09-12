@@ -9,6 +9,7 @@ import androidx.test.core.app.ApplicationProvider
 import io.keepalive.android.AppController
 import io.keepalive.android.doAlertCheck
 import io.keepalive.android.getAppSharedPreferences
+import io.keepalive.android.getDeviceProtectedPreferences
 import io.mockk.every
 import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
@@ -38,10 +39,44 @@ class AlarmReceiverTest {
     @Before fun setUp() {
         mockkStatic(ALERT_FUNCTIONS_KT)
         every { doAlertCheck(any<Context>(), any()) } returns Unit
-        // Default: app enabled
+        // Default: app enabled, and the saved stage expects a final so tests that
+        // deliver one are not treated as stale
         getAppSharedPreferences(appCtx).edit()
             .putBoolean("enabled", true)
             .commit()
+        getDeviceProtectedPreferences(appCtx).edit()
+            .putString("last_alarm_stage", "final")
+            .commit()
+    }
+
+    // A delivery is only valid if the saved state still expects it. Otherwise a
+    // final the watchdog re-armed can fire after the original already dispatched
+    // and wrote alert_sent - a second alert - or after an acknowledgement.
+
+    @Test fun `a final is ignored once the saved stage is no longer final`() {
+        getDeviceProtectedPreferences(appCtx).edit().putString("last_alarm_stage", "periodic").commit()
+
+        AlarmReceiver().onReceive(appCtx, Intent().putExtra("AlarmStage", "final"))
+
+        verify(exactly = 0) { doAlertCheck(any<Context>(), any()) }
+    }
+
+    @Test fun `any delivery is ignored after alert_sent`() {
+        getDeviceProtectedPreferences(appCtx).edit().putString("last_alarm_stage", "alert_sent").commit()
+
+        AlarmReceiver().onReceive(appCtx, Intent().putExtra("AlarmStage", "periodic"))
+
+        verify(exactly = 0) { doAlertCheck(any<Context>(), any()) }
+    }
+
+    @Test fun `a periodic delivery is not gated on the saved stage`() {
+        // setAlarm(final) replaces the same PendingIntent, so a periodic intent can
+        // only arrive while a periodic (or nothing) is saved; no reason to block it.
+        getDeviceProtectedPreferences(appCtx).edit().putString("last_alarm_stage", "periodic").commit()
+
+        AlarmReceiver().onReceive(appCtx, Intent().putExtra("AlarmStage", "periodic"))
+
+        verify(exactly = 1) { doAlertCheck(any<Context>(), "periodic") }
     }
 
     @After fun tearDown() {

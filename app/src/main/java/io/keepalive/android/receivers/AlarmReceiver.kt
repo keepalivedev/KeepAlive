@@ -60,8 +60,27 @@ class AlarmReceiver : BroadcastReceiver() {
             // get the current alarm stage from the intent extras
             val alarmStage = getAlarmStage(context, intent)
 
-            // take action depending on what alarm stage it is
-            doAlertCheck(context, alarmStage)
+            // under the same lock the recovery paths and setAlarm() use, so nothing
+            //  can read the stage while this check is mid-dispatch and re-arm a
+            //  second final alarm on top of it
+            synchronized(AlarmRecovery.stateLock) {
+
+                // A delivery is only valid if the saved state still expects it. A
+                //  "final" whose saved stage is no longer "final" was superseded -
+                //  acknowledged, auto-restarted, or already dispatched - and running it
+                //  would send the alert a second time. Anything after "alert_sent"
+                //  would silently re-arm a deliberate disarm.
+                val savedStage = getDeviceProtectedPreferences(context)
+                    .getString(PrefKeys.LAST_ALARM_STAGE, "periodic") ?: "periodic"
+                val declaredStage = intent.getStringExtra("AlarmStage") ?: "periodic"
+                if (savedStage == "alert_sent" || (declaredStage == "final" && savedStage != "final")) {
+                    DebugLogger.d(tag, context.getString(
+                        R.string.debug_log_stale_alarm_ignored, declaredStage, savedStage))
+                    return
+                }
+
+                doAlertCheck(context, alarmStage)
+            }
 
             Log.d(tag, "AlarmReceiver.onReceive() finished")
 

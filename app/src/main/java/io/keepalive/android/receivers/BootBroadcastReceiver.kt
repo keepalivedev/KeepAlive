@@ -5,10 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import io.keepalive.android.AcknowledgeAreYouThere
+import io.keepalive.android.AlarmRecovery
 import io.keepalive.android.DebugLogger
 import io.keepalive.android.PrefKeys
 import io.keepalive.android.R
-import io.keepalive.android.doAlertCheck
 import io.keepalive.android.getDeviceProtectedPreferences
 import io.keepalive.android.getAppSharedPreferences
 import io.keepalive.android.isUserUnlocked
@@ -24,7 +24,11 @@ class BootBroadcastReceiver : BroadcastReceiver() {
             // the intents we are looking for
             val bootActions = arrayOf(
                 "android.intent.action.BOOT_COMPLETED",
-                "android.intent.action.LOCKED_BOOT_COMPLETED"
+                "android.intent.action.LOCKED_BOOT_COMPLETED",
+
+                // replacing the package cancels every alarm the app has registered,
+                //  so an update has to re-arm monitoring exactly like a reboot does
+                "android.intent.action.MY_PACKAGE_REPLACED"
             )
             Log.d(tag, "Intent action is ${intent.action}.")
 
@@ -43,7 +47,9 @@ class BootBroadcastReceiver : BroadcastReceiver() {
                 val prefs = getAppSharedPreferences(context)
                 val enabled = prefs.getBoolean(PrefKeys.ENABLED, false)
 
-                if (enabled) {
+                // held across the acknowledge branch too, so a concurrent watchdog
+                //  can't re-arm a final between the pending-flag read and acknowledge()
+                if (enabled) synchronized(AlarmRecovery.stateLock) {
                     Log.d(tag, "boot intent is ${intent.action}")
 
                     // When BOOT_COMPLETED fires after Direct Boot, check if an "Are you there?"
@@ -59,6 +65,10 @@ class BootBroadcastReceiver : BroadcastReceiver() {
                     //  - If the unlock is NOT detected (race condition with UsageStatsManager,
                     //    or API < 28 with no monitored apps): it sees no activity + stage "final"
                     //    and immediately sends the alert before the user can acknowledge.
+                    // MY_PACKAGE_REPLACED deliberately takes neither branch. It must not
+                    // acknowledge: the unlock is what makes BOOT_COMPLETED proof of
+                    // activity, and an unattended Play Store update is proof of nothing.
+                    // It falls straight through to AlarmRecovery.
                     if (intent.action == "android.intent.action.BOOT_COMPLETED") {
                         // NOTE: must use getDeviceProtectedPreferences directly, not
                         // getAppSharedPreferences, because after unlock the latter
@@ -85,7 +95,7 @@ class BootBroadcastReceiver : BroadcastReceiver() {
                         } else {
                             DebugLogger.d(tag, context.getString(R.string.debug_log_boot_completed_no_pending_notification))
                         }
-                    } else {
+                    } else if (intent.action == "android.intent.action.LOCKED_BOOT_COMPLETED") {
                         DebugLogger.d(tag, context.getString(R.string.debug_log_locked_boot_completed_skipping, intent.action))
 
                         // If the user is already unlocked, BOOT_COMPLETED will also fire
@@ -98,26 +108,14 @@ class BootBroadcastReceiver : BroadcastReceiver() {
                         }
                     }
 
-                    // restore the alarm stage that was saved before the reboot so we don't
-                    // lose track of whether a final alarm was pending
-                    val devicePrefs = getDeviceProtectedPreferences(context)
-                    val savedAlarmStage = devicePrefs.getString(PrefKeys.LAST_ALARM_STAGE, "periodic") ?: "periodic"
-
-                    // "alert_sent" means the final alert already went out and monitoring
-                    // was not re-armed (Auto-Restart Monitoring off). Stay disarmed —
-                    // restoring a periodic cycle here would silently re-arm monitoring
-                    // after a reboot and cause false alerts (issue #181). The stage is
-                    // overwritten by setAlarm() whenever monitoring is re-armed.
-                    if (savedAlarmStage == "alert_sent") {
-                        DebugLogger.d(tag, context.getString(R.string.debug_log_boot_alert_already_sent))
-                        return
+                    // the rest lives in AlarmRecovery so the watchdog makes the same
+                    //  decisions
+                    val source = if (intent.action == "android.intent.action.MY_PACKAGE_REPLACED") {
+                        AlarmRecovery.Source.PACKAGE_REPLACED
+                    } else {
+                        AlarmRecovery.Source.BOOT
                     }
-
-                    DebugLogger.d(tag, context.getString(R.string.debug_log_restored_alarm_stage, savedAlarmStage))
-
-                    // since we can't assume that the user initiated the reboot, run the alert
-                    //  check using the saved alarm stage and last detected activity
-                    doAlertCheck(context, savedAlarmStage)
+                    AlarmRecovery.restore(context, source)
 
                 } else {
                     DebugLogger.d(tag, context.getString(R.string.debug_log_app_is_disabled))

@@ -279,13 +279,30 @@ fun getDateTimeStrFromTimestamp(timestamp: Long, timeZoneId: String = "UTC"): St
 }
 
 
-// set an alarm so that we can check up on the user in the future
+// set an alarm so that we can check up on the user in the future.
+// every writer of the saved alarm state goes through AlarmRecovery.stateLock so a
+//  recovery can't read the stage between somebody else's read and write. the
+//  watchdog follows the alarm: an armed alarm always has one, a cancelled alarm
+//  never does.
 fun setAlarm(
     context: Context,
     lastActivityTimestamp: Long,
     desiredAlarmInMinutes: Int,
     alarmStage: String,
     restPeriods: MutableList<RestPeriod>? = null
+) {
+    synchronized(AlarmRecovery.stateLock) {
+        setAlarmLocked(context, lastActivityTimestamp, desiredAlarmInMinutes, alarmStage, restPeriods)
+        MonitoringWatchdogWorker.enqueue(context)
+    }
+}
+
+private fun setAlarmLocked(
+    context: Context,
+    lastActivityTimestamp: Long,
+    desiredAlarmInMinutes: Int,
+    alarmStage: String,
+    restPeriods: MutableList<RestPeriod>?
 ) {
 
     // calendar object set to the last activity time
@@ -471,21 +488,28 @@ fun setAlarm(
     // use commit=true because this often runs inside a BroadcastReceiver where the
     // process can be killed after onReceive() returns — apply() is async and may not
     // flush to disk in time.
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        try {
-            val devicePrefs = getDeviceProtectedPreferences(context)
-            devicePrefs.edit(commit = true) {
-                putString(PrefKeys.LAST_ALARM_STAGE, alarmStage)
-                putLong(PrefKeys.NEXT_ALARM_TIMESTAMP, alarmTimestamp)
-            }
-        } catch (e: Exception) {
-            Log.e("setAlarm", "Error saving alarm stage to device-protected storage", e)
+    // NOT gated on API N: getDeviceProtectedPreferences() falls back to the default
+    // prefs below N, and AlarmRecovery needs last_alarm_stage on every API level.
+    try {
+        val devicePrefs = getDeviceProtectedPreferences(context)
+        devicePrefs.edit(commit = true) {
+            putString(PrefKeys.LAST_ALARM_STAGE, alarmStage)
+            putLong(PrefKeys.NEXT_ALARM_TIMESTAMP, alarmTimestamp)
         }
+    } catch (e: Exception) {
+        Log.e("setAlarm", "Error saving alarm stage to device-protected storage", e)
     }
 }
 
 // cancelling alarm usually not necessary as setting a new one will overwrite any existing ones
 fun cancelAlarm(context: Context) {
+    synchronized(AlarmRecovery.stateLock) {
+        cancelAlarmLocked(context)
+        MonitoringWatchdogWorker.cancel(context)
+    }
+}
+
+private fun cancelAlarmLocked(context: Context) {
 
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     val intent = Intent(context, AlarmReceiver::class.java)
@@ -494,6 +518,21 @@ fun cancelAlarm(context: Context) {
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
     alarmManager.cancel(pendingIntent)
+
+    // the alarm is gone but NextAlarmTimestamp still holds its scheduled time, which
+    //  the main screen reads to decide whether monitoring is active. clear it so a
+    //  cancelled cycle can't keep showing a countdown for an alarm that won't fire.
+    //  both copies, mirroring setAlarm(); see there for why this isn't gated on N.
+    getAppSharedPreferences(context).edit {
+        remove(PrefKeys.NEXT_ALARM_TIMESTAMP)
+    }
+    try {
+        getDeviceProtectedPreferences(context).edit(commit = true) {
+            remove(PrefKeys.NEXT_ALARM_TIMESTAMP)
+        }
+    } catch (e: Exception) {
+        Log.e("cancelAlarm", "Error clearing alarm timestamp from device-protected storage", e)
+    }
 }
 
 // adjust a timestamp to the end of a rest period if it is within the rest period

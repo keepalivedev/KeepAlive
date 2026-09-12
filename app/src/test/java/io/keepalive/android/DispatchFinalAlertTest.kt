@@ -31,7 +31,7 @@ import org.robolectric.annotation.Config
  * dispatchFinalAlert and assert on the side effects that come AFTER it.
  */
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [33, 34, 35, 36])  // device-protected prefs gate is N+; matrix matches other tests
+@Config(sdk = [33, 34, 35, 36])  // matrix matches other tests; one case overrides to 23
 class DispatchFinalAlertTest {
 
     private val realCtx: Context = ApplicationProvider.getApplicationContext()
@@ -121,6 +121,27 @@ class DispatchFinalAlertTest {
         assertEquals("last_alarm_stage must become 'alert_sent' even when " +
                 "startForegroundService throws",
             "alert_sent", devPrefs.getString("last_alarm_stage", null))
+    }
+
+    @Test
+    @Config(sdk = [23])
+    fun `last_alarm_stage becomes alert_sent below API N`() {
+        // The write used to be gated on API N, so below N the marker was never
+        // recorded and every reader fell back to the "periodic" default. That let
+        // MonitoringWatchdogWorker re-arm monitoring after an alert had already
+        // been sent with Auto-Restart off - the false alerts from issue #181.
+        val devPrefs = getDeviceProtectedPreferences(realCtx)
+        devPrefs.edit().putString("last_alarm_stage", "final").commit()
+
+        val ctx = ServiceStartFailing(realCtx as Application)
+        newDeps(ctx).dispatchFinalAlert(
+            prefs = getAppSharedPreferences(realCtx),
+            nowTimestamp = System.currentTimeMillis(),
+            checkPeriodHours = 12f,
+            restPeriods = mutableListOf()
+        )
+
+        assertEquals("alert_sent", devPrefs.getString("last_alarm_stage", null))
     }
 
     @Test fun `auto_restart_monitoring still re-schedules when service-start throws`() {

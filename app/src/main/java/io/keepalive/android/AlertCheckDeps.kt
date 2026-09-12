@@ -172,14 +172,15 @@ class ProductionAlertCheckDeps(private val context: Context) : AlertCheckDeps {
         //    re-arm monitoring and cause false alerts (issue #181)
         // Every path that re-arms monitoring goes through setAlarm(), which overwrites
         // this with the new stage — including the auto-restart scheduleAlarm() below.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            try {
-                getDeviceProtectedPreferences(context).edit(commit = true) {
-                    putString(PrefKeys.LAST_ALARM_STAGE, "alert_sent")
-                }
-            } catch (e: Exception) {
-                Log.e("doAlertCheck", "Error resetting alarm stage after sending alert", e)
+        // NOT gated on API N — getDeviceProtectedPreferences() falls back to the
+        // default prefs below N, and without this marker the watchdog and the boot
+        // receiver would read the default "periodic" and re-arm after an alert.
+        try {
+            getDeviceProtectedPreferences(context).edit(commit = true) {
+                putString(PrefKeys.LAST_ALARM_STAGE, "alert_sent")
             }
+        } catch (e: Exception) {
+            Log.e("doAlertCheck", "Error resetting alarm stage after sending alert", e)
         }
 
         if (prefs.getBoolean(PrefKeys.AUTO_RESTART_MONITORING, false)) {

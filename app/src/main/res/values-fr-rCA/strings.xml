@@ -379,6 +379,12 @@
     <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED : L\'utilisateur est déjà déverrouillé, report vers BOOT_COMPLETED</string>
     <string name="debug_log_restored_alarm_stage">Étape d\'alarme restaurée depuis le stockage protégé de l\'appareil : %1$s, appel de doAlertCheck()</string>
     <string name="debug_log_boot_alert_already_sent">L\'alerte a déjà été envoyée et le redémarrage automatique de la surveillance est désactivé, reste désarmé après le redémarrage</string>
+    <string name="debug_log_watchdog_rearming">Chien de garde : alarme prévue pour %1$s mais jamais déclenchée, réactivation de la surveillance</string>
+    <string name="debug_log_alarm_not_due_rescheduling">Alarme pas encore due (prévue pour %1$s UTC), reprogrammation au lieu de la vérification</string>
+    <string name="debug_log_saved_alarm_implausible">L\'heure d\'alarme enregistrée %1$s UTC est beaucoup trop loin dans le futur, nouvelle période de vérification lancée</string>
+    <string name="debug_log_alert_sent_migrated">La version précédente a laissé une alerte envoyée enregistrée comme alarme finale en attente, elle est marquée comme déjà envoyée pour que cette mise à jour ne la répète pas</string>
+    <string name="debug_log_stale_alarm_ignored">Livraison d\'une alarme %1$s ignorée, car l\'état enregistré est %2$s</string>
+    <string name="debug_log_prompt_lost_reposting">La question « Es-tu là? » n\'a pas été conservée, elle est affichée de nouveau pour l\'alarme finale de %1$s UTC</string>
 
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Configuration du webhook enregistrée</string>
