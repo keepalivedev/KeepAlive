@@ -10,7 +10,17 @@ import androidx.core.content.edit
  */
 object AcknowledgeAreYouThere {
 
+    // Under the same lock recovery and setAlarm() use. Otherwise the watchdog
+    //  could read a "final" it is about to re-post in the gap between the
+    //  dismissals below and the periodic re-arm at the end, and the prompt would
+    //  come back on screen after the user had already answered it.
     fun acknowledge(context: Context) {
+        synchronized(AlarmRecovery.stateLock) {
+            acknowledgeLocked(context)
+        }
+    }
+
+    private fun acknowledgeLocked(context: Context) {
         val sharedPrefs = getAppSharedPreferences(context)
 
         // Cancel the on-screen notification.

@@ -3,7 +3,9 @@ package io.keepalive.android
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import io.mockk.every
+import io.mockk.mockkConstructor
 import io.mockk.mockkStatic
+import io.mockk.unmockkConstructor
 import io.mockk.slot
 import io.mockk.unmockkStatic
 import io.mockk.verify
@@ -16,6 +18,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 /**
  * Tests [AcknowledgeAreYouThere.acknowledge] — the single handler called when
@@ -51,6 +55,31 @@ class AcknowledgeAreYouThereTest {
 
     @After fun tearDown() {
         unmockkStatic(UTILITY_FUNCTIONS_KT)
+    }
+
+    @Test fun `acknowledge waits for the alarm state lock before dismissing the prompt`() {
+        // The watchdog may be mid-recovery, about to re-post a "final" it just
+        // read. If the prompt were cancelled outside that lock, the re-post would
+        // land after the dismissal and the prompt would outlive its answer.
+        mockkConstructor(AlertNotificationHelper::class)
+        every { anyConstructed<AlertNotificationHelper>().cancelNotification(any()) } returns Unit
+        try {
+            val started = CountDownLatch(1)
+            val acknowledger = Thread {
+                started.countDown()
+                AcknowledgeAreYouThere.acknowledge(appCtx)
+            }
+            synchronized(AlarmRecovery.stateLock) {
+                acknowledger.start()
+                started.await(2, TimeUnit.SECONDS)
+                Thread.sleep(200)
+                verify(exactly = 0) { anyConstructed<AlertNotificationHelper>().cancelNotification(any()) }
+            }
+            acknowledger.join(5_000)
+            verify(exactly = 1) { anyConstructed<AlertNotificationHelper>().cancelNotification(any()) }
+        } finally {
+            unmockkConstructor(AlertNotificationHelper::class)
+        }
     }
 
     @Test

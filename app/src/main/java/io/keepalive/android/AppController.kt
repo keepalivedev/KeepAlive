@@ -75,6 +75,10 @@ class AppController : Application() {
 
         migrateAreYouThereOverlayDefault(this)
 
+        // must precede any recovery path: it repairs state left by builds that had
+        //  no "alert_sent" marker, which recovery would otherwise act on
+        AlarmRecovery.migrateAlertSentMarker(this)
+
         // alternative is to check BuildConfig.DEBUG?
         if ((this.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0) {
             Log.d(TAG, "We're in debug mode?")

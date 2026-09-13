@@ -70,10 +70,15 @@ object AreYouThereOverlay {
         }
     }
 
-    /** Show the overlay. Safe to call from any thread, including a background receiver. */
-    fun show(context: Context, message: String?) {
+    /**
+     * Show the overlay. Safe to call from any thread, including a background receiver.
+     * [deadlineMillis] is the wall-clock time the final alarm will fire; the countdown
+     * runs to it rather than to a configured duration, so a prompt restored part-way
+     * through its window shows the time actually left.
+     */
+    fun show(context: Context, message: String?, deadlineMillis: Long) {
         val appContext = context.applicationContext
-        mainHandler.post { showOnMain(appContext, message) }
+        mainHandler.post { showOnMain(appContext, message, deadlineMillis) }
     }
 
     /** Dismiss the overlay (if it's showing). Safe to call from any thread. */
@@ -84,7 +89,7 @@ object AreYouThereOverlay {
     // InflateParams: an overlay window has no parent view to attach to, so passing
     //  null as the inflate root is correct here.
     @Suppress("InflateParams")
-    private fun showOnMain(appContext: Context, message: String?) {
+    private fun showOnMain(appContext: Context, message: String?, deadlineMillis: Long) {
         if (overlayView != null) return
 
         if (!canDrawOverlays(appContext)) {
@@ -151,10 +156,7 @@ object AreYouThereOverlay {
             }
 
             // Start a visible countdown until the final alert triggers.
-            val followupMins = getAppSharedPreferences(appContext)
-                .getString(PrefKeys.FOLLOWUP_TIME_PERIOD_MINUTES, "60")
-                ?.toIntOrNull() ?: 60
-            startCountdown(appContext, view, followupMins)
+            startCountdown(appContext, view, deadlineMillis)
 
             // Wake the screen first so the prompt is actually seen if the device
             //  was asleep/dozing, then attach the window.
@@ -225,13 +227,15 @@ object AreYouThereOverlay {
         wakeLock = null
     }
 
-    private fun startCountdown(appContext: Context, rootView: View, followupMinutes: Int) {
+    private fun startCountdown(appContext: Context, rootView: View, deadlineMillis: Long) {
         stopCountdown()
 
         val countdownText = rootView.findViewById<TextView>(R.id.textAreYouThereCountdown)
 
-        // Use elapsed realtime so it's unaffected by wall-clock changes.
-        countdownEndRealtimeMs = SystemClock.elapsedRealtime() + (followupMinutes * 60_000L)
+        // Convert the wall-clock deadline to elapsed realtime once, so the ticking
+        //  is unaffected by wall-clock changes after this point.
+        countdownEndRealtimeMs = SystemClock.elapsedRealtime() +
+            maxOf(0L, deadlineMillis - System.currentTimeMillis())
 
         fun update() {
             val end = countdownEndRealtimeMs ?: return

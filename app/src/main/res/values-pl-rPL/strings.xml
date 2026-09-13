@@ -378,7 +378,13 @@
     <string name="debug_log_locked_boot_completed_skipping">Otrzymano LOCKED_BOOT_COMPLETED, pomijanie sprawdzania powiadomienia Direct Boot. %1$s</string>
     <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: Użytkownik jest już odblokowany, przekazywanie do BOOT_COMPLETED</string>
     <string name="debug_log_restored_alarm_stage">Przywrócono etap alarmu z chronionego magazynu urządzenia: %1$s, wywołanie doAlertCheck()</string>
-    <string name="debug_log_boot_alert_already_sent">Alarm został już wysłany, a automatyczne ponowne uruchamianie monitorowania jest wyłączone, pozostaje rozbrojony po ponownym uruchomieniu</string>
+    <string name="debug_log_boot_alert_already_sent">Alarm został już wysłany, a automatyczne ponowne uruchamianie monitorowania jest wyłączone, pozostaje rozbrojony</string>
+    <string name="debug_log_watchdog_rearming">Watchdog: alarm miał zadziałać %1$s, ale nigdy się nie uruchomił – ponowne uzbrajanie monitorowania</string>
+    <string name="debug_log_alarm_not_due_rescheduling">Alarm jeszcze nie nadszedł (ustawiony na %1$s UTC) – przeplanowanie zamiast sprawdzania</string>
+    <string name="debug_log_saved_alarm_implausible">Zapisany czas alarmu %1$s UTC jest nieprawdopodobnie odległy – rozpoczynany jest nowy okres sprawdzania</string>
+    <string name="debug_log_alert_sent_migrated">Poprzednia wersja zostawiła wysłany alert zapisany jako oczekujący alarm końcowy – oznaczany jako już wysłany, aby ta aktualizacja go nie powtórzyła</string>
+    <string name="debug_log_stale_alarm_ignored">Zignorowano dostarczenie alarmu %1$s, ponieważ zapisany etap to %2$s</string>
+    <string name="debug_log_prompt_lost_reposting">Pytanie „Jesteś tam?” nie przetrwało – wyświetlane ponownie dla alarmu końcowego o %1$s UTC</string>
 
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Konfiguracja webhooka zapisana</string>

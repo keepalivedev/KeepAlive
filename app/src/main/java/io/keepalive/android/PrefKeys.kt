@@ -52,6 +52,10 @@ object PrefKeys {
     const val LAST_CHECK_TIMESTAMP = "last_check_timestamp"
     const val DIRECT_BOOT_NOTIFICATION_PENDING = "direct_boot_notification_pending"
 
+    // one-time repair of last_alarm_stage for installs upgrading from builds
+    //  that never wrote "alert_sent" (see AlarmRecovery.migrateAlertSentMarker)
+    const val ALERT_SENT_MARKER_MIGRATED = "alert_sent_marker_migrated"
+
     // UI preferences
     const val LOG_DISPLAY_TEXT_SIZE = "log_display_text_size"
 }

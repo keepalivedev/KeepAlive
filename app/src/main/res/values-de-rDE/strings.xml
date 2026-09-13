@@ -378,7 +378,13 @@
     <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED empfangen, Direct-Boot-Benachrichtigungsprüfung wird übersprungen. %1$s</string>
     <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: Benutzer ist bereits entsperrt, Verarbeitung wird an BOOT_COMPLETED übergeben</string>
     <string name="debug_log_restored_alarm_stage">Alarmstufe aus gerätegeschütztem Speicher wiederhergestellt: %1$s, doAlertCheck() wird aufgerufen</string>
-    <string name="debug_log_boot_alert_already_sent">Alarm wurde bereits gesendet und der automatische Neustart der Überwachung ist deaktiviert, bleibt nach dem Neustart deaktiviert</string>
+    <string name="debug_log_boot_alert_already_sent">Alarm wurde bereits gesendet und der automatische Neustart der Überwachung ist deaktiviert, bleibt deaktiviert</string>
+    <string name="debug_log_watchdog_rearming">Watchdog: Alarm war für %1$s fällig, wurde aber nie ausgelöst – Überwachung wird neu gestartet</string>
+    <string name="debug_log_alarm_not_due_rescheduling">Alarm war noch nicht fällig (war für %1$s UTC gesetzt), wird neu geplant statt geprüft</string>
+    <string name="debug_log_saved_alarm_implausible">Gespeicherte Alarmzeit %1$s UTC liegt unglaubwürdig weit in der Zukunft, ein neuer Prüfzeitraum wird gestartet</string>
+    <string name="debug_log_alert_sent_migrated">Die vorherige Version hat einen gesendeten Alarm als ausstehenden Endalarm hinterlassen; er wird als bereits gesendet markiert, damit dieses Update ihn nicht wiederholt</string>
+    <string name="debug_log_stale_alarm_ignored">Zustellung eines %1$s-Alarms wird ignoriert, da der gespeicherte Status %2$s ist</string>
+    <string name="debug_log_prompt_lost_reposting">Die Frage „Bist du da?“ wurde nicht beibehalten, sie wird für den Endalarm um %1$s UTC erneut angezeigt</string>
 
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Webhook-Konfiguration gespeichert</string>
