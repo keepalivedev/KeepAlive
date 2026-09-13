@@ -55,6 +55,26 @@ class AlertServiceInstrumentedTest {
             .putInt("AlertStepsCompleted", 0)
             .putLong("LastAlertAt", 0L)
             .commit()
+
+        // API 28 (Android 9) only: drop the real call target so the alert
+        // never dispatches a real Intent.ACTION_CALL. This class places/tears
+        // down real calls back-to-back across its tests; on the API 28 image
+        // that churn hits an unguarded null-deref in the platform Telecom
+        // service (ConnectionServiceWrapper.onSuccess → mServiceInterface
+        // .createConnection, ConnectionServiceWrapper.java:1101) when a new
+        // connection binds while a prior one is unbinding. The NPE is uncaught
+        // on system_server's main thread, so system_server dies and the next
+        // instrumentation call throws DeadSystemException — aborting the whole
+        // run non-deterministically. It's a platform bug, not ours (other API
+        // levels guard the call). The CALL step is marked complete after the
+        // dispatch attempt regardless of whether a number is set, so every
+        // assertion here still holds without a real call. Real-call coverage
+        // is retained on all other API levels.
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.P) {
+            getAppSharedPreferences(targetContext).edit()
+                .putString("contact_phone", "")
+                .commit()
+        }
     }
 
     @After fun tearDown() {
