@@ -14,6 +14,7 @@ import android.os.PowerManager
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.core.location.LocationManagerCompat
 import java.util.Locale
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -63,9 +64,8 @@ open class LocationHelperBase(
             // check whether the GPS, network and location services are enabled
             locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                locationEnabled = locationManager.isLocationEnabled
-            }
+            // LocationManagerCompat falls back to the Settings.Secure lookup below API 28
+            locationEnabled = LocationManagerCompat.isLocationEnabled(locationManager)
 
             availableProviders = locationManager.getProviders(true)
 
@@ -205,6 +205,20 @@ open class LocationHelperBase(
                     "getLocationAndExecute",
                     context.getString(R.string.debug_log_power_and_idle_status, isPowerSaveMode, isDeviceIdleMode)
                 )
+
+                // no app can obtain a location while location services are off, so send
+                //  the fallback now instead of after the provider timeout (issue #213)
+                if (!locationEnabled) {
+                    DebugLogger.d(
+                        "getLocationAndExecute",
+                        context.getString(R.string.debug_log_location_services_disabled)
+                    )
+
+                    locationResult.formattedLocationString = context.getString(R.string.location_invalid_message)
+                    stopGlobalTimeoutHandler()
+                    myCallback(context, locationResult)
+                    return
+                }
 
                 // todo this might not be the case since the switch to AlertService...
                 // if the device is in power save mode then we can't get the current location or it

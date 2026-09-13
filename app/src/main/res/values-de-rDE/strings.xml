@@ -92,6 +92,8 @@
     <string name="monitoring_no_activity_detected_message">Die Überwachung ist aktiviert, aber in den letzten %1$s Stunden wurde keine Aktivität festgestellt.  Bitte stellen Sie sicher, dass Sie eine Bildschirmsperre aktiviert haben und die Zugriffsrechte für die Nutzung erteilt haben.</string>
     <string name="monitoring_no_recipient_title">Kein Alarm-Empfänger</string>
     <string name="monitoring_no_recipient_message">Die Überwachung läuft, aber kein Notfallkontakt ist aktiv, daher kann kein Alarm gesendet werden. Bitte fügen Sie in den Einstellungen einen Notfallkontakt hinzu oder aktivieren Sie einen.</string>
+    <string name="monitoring_location_disabled_title">Standortdienste ausgeschaltet</string>
+    <string name="monitoring_location_disabled_message">Die Überwachung läuft, aber die Standortdienste sind ausgeschaltet, daher können Alarme Ihren Standort nicht enthalten. Bitte schalten Sie den Standort in den Geräteeinstellungen ein oder deaktivieren Sie \"Standortinformation mitsenden\" für Ihre Notfallkontakte.</string>
     <string name="monitoring_permissions_required_message">Die Überwachung ist aktiviert, aber es wurden nicht alle Berechtigungen erteilt.  Bitte klicken Sie unten auf die Schaltfläche "Berechtigungen erteilen".</string>
     <string name="alarm_message_too_long_message">Die Nachricht darf nicht länger als 160 Zeichen sein.</string>
     <string name="phone_number_invalid_message">Bitte geben Sie eine gültige Telefonnummer ein.</string>
@@ -315,6 +317,7 @@
     <string name="debug_log_attempting_to_get_location">Versuche, den Standort abzurufen…</string>
     <string name="debug_log_device_idle_not_getting_current_location">Gerät ist im Ruhezustand, aktueller Standort wird nicht abgerufen</string>
     <string name="debug_log_no_location_permission_executing_callback">Keine Standortberechtigung, führe Rückruf aus</string>
+    <string name="debug_log_location_services_disabled">Standortdienste sind ausgeschaltet, Standort kann nicht ermittelt werden</string>
     <string name="debug_log_failed_getting_current_location">Fehler beim Abrufen des aktuellen Standorts?!</string>
     <string name="debug_log_geocoding_timeout_reached">Timeout erreicht, locationString ist %1$s</string>
     <string name="debug_log_failed_geocoding_gps_coordinates">Fehler beim Geocodieren der GPS-Koordinaten?!</string>

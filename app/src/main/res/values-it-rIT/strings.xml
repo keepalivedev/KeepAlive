@@ -92,6 +92,8 @@
         <string name="monitoring_no_activity_detected_message">Il monitoraggio è attivato, ma non è stata rilevata alcuna attività nelle ultime %1$s ore. Assicurati che il tuo blocco schermo sia attivo e di aver concesso le autorizzazioni di accesso all\'utilizzo.</string>  
         <string name="monitoring_no_recipient_title">Nessun destinatario di avviso</string>
         <string name="monitoring_no_recipient_message">Il monitoraggio è in corso, ma nessun contatto di emergenza è attivo, quindi non è possibile inviare alcun avviso. Aggiungi o attiva un contatto di emergenza nelle impostazioni.</string>
+    <string name="monitoring_location_disabled_title">Servizi di localizzazione disattivati</string>
+    <string name="monitoring_location_disabled_message">Il monitoraggio è in corso, ma i servizi di localizzazione sono disattivati, quindi gli avvisi non possono includere la tua posizione. Attiva la localizzazione nelle impostazioni del dispositivo o disattiva \"Includi le informazioni sulla posizione\" per i tuoi contatti di emergenza.</string>
         <string name="monitoring_permissions_required_message">Il monitoraggio è attivato, ma non tutte le autorizzazioni sono state concesse. Fare clic sul pulsante "Concedi autorizzazioni" sottostante.</string>  
         <string name="alarm_message_too_long_message">Il messaggio non può contenere più di 160 caratteri.</string>  
         <string name="phone_number_invalid_message">Si prega di inserire un numero di telefono valido.</string>  
@@ -315,6 +317,7 @@
 <string name="debug_log_attempting_to_get_location">Tentativo di ottenimento della posizione…</string>  
 <string name="debug_log_device_idle_not_getting_current_location">Dispositivo in modalità inattiva, non si ottiene la posizione corrente</string>  
 <string name="debug_log_no_location_permission_executing_callback">Nessun permesso di localizzazione, esecuzione del callback</string>  
+    <string name="debug_log_location_services_disabled">I servizi di localizzazione sono disattivati, impossibile determinare la posizione</string>
 <string name="debug_log_failed_getting_current_location">Impossibile ottenere la posizione corrente?!</string>  
 <string name="debug_log_geocoding_timeout_reached">Timeout di geocodifica raggiunto, locationString è %1$s</string>  
 <string name="debug_log_failed_geocoding_gps_coordinates">Impossibile geocodificare le coordinate GPS?!</string>  

@@ -92,6 +92,8 @@
     <string name="monitoring_no_activity_detected_message">Monitorowanie jest włączone ale nie wykryto żadnej aktywności przez ostatnie %1$s godzin. Sprawdź czy masz skonfigurowany ekran blokady i czy aplikacja ma Dostęp do Informacji o Korzystaniu z Aplikacji.</string>
     <string name="monitoring_no_recipient_title">Brak odbiorcy alarmu</string>
     <string name="monitoring_no_recipient_message">Monitorowanie działa, ale żaden kontakt alarmowy nie jest aktywny, więc nie można wysłać alarmu. Dodaj lub włącz kontakt alarmowy w ustawieniach.</string>
+    <string name="monitoring_location_disabled_title">Usługi lokalizacyjne wyłączone</string>
+    <string name="monitoring_location_disabled_message">Monitorowanie działa, ale usługi lokalizacyjne są wyłączone, więc alarmy nie mogą zawierać Twojej lokalizacji. Włącz lokalizację w ustawieniach urządzenia lub wyłącz \"Dodaj Informacje o Lokalizacji\" dla kontaktów alarmowych.</string>
     <string name="monitoring_permissions_required_message">Monitorowanie jest włączone lecz nie wszystkie uprawnienia zostały przyznane. Kliknij przycisk "Udziel Uprawnień" poniżej.</string>
     <string name="alarm_message_too_long_message">Wiadomość nie może mieć więcej niż 160 znaków.</string>
     <string name="phone_number_invalid_message">Wpisz poprawny numer telefonu.</string>
@@ -315,6 +317,7 @@
     <string name="debug_log_attempting_to_get_location">Próba pobrania lokalizacji…</string>
     <string name="debug_log_device_idle_not_getting_current_location">Urządzenie jest w trybie bezczynności, nie pobiera bieżącej lokalizacji</string>
     <string name="debug_log_no_location_permission_executing_callback">Brak uprawnień lokalizacji, wykonywanie wywołania zwrotnego</string>
+    <string name="debug_log_location_services_disabled">Usługi lokalizacyjne są wyłączone, nie można ustalić lokalizacji</string>
     <string name="debug_log_failed_getting_current_location">Nie udało się pobrać bieżącej lokalizacji?!</string>
     <string name="debug_log_geocoding_timeout_reached">Osiągnięto limit czasu, locationString to %1$s</string>
     <string name="debug_log_failed_geocoding_gps_coordinates">Nie udało się geokodować współrzędnych GPS?!</string>

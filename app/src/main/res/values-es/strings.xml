@@ -92,6 +92,8 @@
     <string name="monitoring_no_activity_detected_message">El monitoreo está activado pero no se ha detectado actividad en las últimas %1$s horas. Asegúrate de tener una pantalla de bloqueo activada y de haber concedido el permiso de Acceso de uso.</string>
     <string name="monitoring_no_recipient_title">Sin destinatario de alerta</string>
     <string name="monitoring_no_recipient_message">La supervisión está en marcha, pero ningún contacto de emergencia está activo, por lo que no se puede enviar ninguna alerta. Añada o active un contacto de emergencia en los ajustes.</string>
+    <string name="monitoring_location_disabled_title">Servicios de ubicación desactivados</string>
+    <string name="monitoring_location_disabled_message">La supervisión está en marcha, pero los servicios de ubicación están desactivados, por lo que las alertas no pueden incluir su ubicación. Active la ubicación en los ajustes del dispositivo o desactive \"Incluir información de ubicación\" para sus contactos de emergencia.</string>
     <string name="monitoring_permissions_required_message">El monitoreo está activado pero no se han concedido todos los permisos. Toca el botón "Conceder permisos" de abajo.</string>
     <string name="alarm_message_too_long_message">El mensaje no puede tener más de 160 caracteres.</string>
     <string name="phone_number_invalid_message">Por favor, ingresa un número de teléfono válido.</string>
@@ -315,6 +317,7 @@
     <string name="debug_log_attempting_to_get_location">Intentando obtener la ubicación…</string>
     <string name="debug_log_device_idle_not_getting_current_location">El dispositivo está en modo inactivo, no se obtiene la ubicación actual</string>
     <string name="debug_log_no_location_permission_executing_callback">No tenemos permiso de ubicación, ejecutando la devolución de llamada</string>
+    <string name="debug_log_location_services_disabled">Los servicios de ubicación están desactivados, no se puede determinar la ubicación</string>
     <string name="debug_log_failed_getting_current_location">¿Error al obtener la ubicación actual?</string>
     <string name="debug_log_geocoding_timeout_reached">Se alcanzó el tiempo de espera, locationString es %1$s</string>
     <string name="debug_log_failed_geocoding_gps_coordinates">¿Error al geocodificar las coordenadas GPS?</string>
