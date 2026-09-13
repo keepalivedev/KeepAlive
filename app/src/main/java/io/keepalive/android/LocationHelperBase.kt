@@ -381,15 +381,25 @@ open class LocationHelperBase(
 
     // build the location string that will be sent to the callback
     private fun buildGeocodedLocationStr(addressStr: String, loc: Location): String {
+
+        // 5 decimal places is about 1 m, which already matches the best accuracy the
+        //  location APIs deliver; the raw Double/Float toString() output implied
+        //  nanometre precision and ate SMS characters (issue #214)
+        // Locale.ROOT keeps a decimal point so the "lat, lon" pair stays unambiguous
+        //  in comma-decimal locales
+        val latStr = String.format(Locale.ROOT, "%.5f", loc.latitude)
+        val lonStr = String.format(Locale.ROOT, "%.5f", loc.longitude)
+        val accuracyStr = String.format(Locale.ROOT, "%.0f", loc.accuracy)
+
         return if (addressStr == "") {
             String.format(
                 context.getString(R.string.geocode_invalid_message),
-                loc.latitude.toString(), loc.longitude.toString(), loc.accuracy.toString()
+                latStr, lonStr, accuracyStr
             )
         } else {
             String.format(
                 context.getString(R.string.geocode_valid_message),
-                loc.latitude.toString(), loc.longitude.toString(), loc.accuracy.toString(), addressStr
+                latStr, lonStr, accuracyStr, addressStr
             )
         }
     }
