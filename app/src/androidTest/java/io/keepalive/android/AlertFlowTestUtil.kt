@@ -200,6 +200,15 @@ object AlertFlowTestUtil {
     fun savedAlertTriggerTimestamp(): Long =
         getAppSharedPreferences(targetContext).getLong("AlertTriggerTimestamp", 0L)
 
+    // AlarmReceiver ignores a "final" whose saved stage is no longer "final"
+    // (superseded by an acknowledgement, auto-restart, or dispatch). A real
+    // final delivery always follows a setAlarm() that saved "final", so a test
+    // firing one directly has to seed that precondition first.
+    fun seedSavedAlarmStage(stage: String) {
+        getDeviceProtectedPreferences(targetContext).edit()
+            .putString("last_alarm_stage", stage).commit()
+    }
+
     fun savedAlarmStage(): String? =
         try {
             getDeviceProtectedPreferences(targetContext).getString("last_alarm_stage", null)

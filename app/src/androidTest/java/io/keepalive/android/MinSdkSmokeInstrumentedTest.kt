@@ -129,6 +129,7 @@ class MinSdkSmokeInstrumentedTest {
         val before = System.currentTimeMillis()
         val longAgo = before - 24L * 60 * 60 * 1000
 
+        AlertFlowTestUtil.seedSavedAlarmStage("final")
         AlertFlowTestUtil.fireAlarm("final", alarmTimestamp = longAgo)
 
         val saved = prefs.getLong("NextAlarmTimestamp", 0)
@@ -210,6 +211,7 @@ class MinSdkSmokeInstrumentedTest {
         prefs.edit().remove("LastAlertAt").commit()
         val before = System.currentTimeMillis()
 
+        AlertFlowTestUtil.seedSavedAlarmStage("final")
         AlertFlowTestUtil.fireAlarm("final")
 
         // The AlertService runs on a background thread; poll briefly.
