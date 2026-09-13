@@ -176,6 +176,7 @@
     <!-- Main Settings -->
     <string name="enabled_title">Überwachung aktiv</string>
     <string name="auto_restart_title">Automatischer Neustart der Überwachung nach Alarmierung</string>
+    <string name="debug_logging_title">Debug-Protokollierung</string>
     <string name="time_period_title">Stunden Inaktivität bis zur Aufforderung</string>
     <string name="time_period_description">Anzahl der Stunden der Inaktivität, bevor eine \"Bist du noch da?\"-Benachrichtigung erscheint.</string>
     <string name="followup_time_period_title">Minuten bis zur Bestätigung warten</string>

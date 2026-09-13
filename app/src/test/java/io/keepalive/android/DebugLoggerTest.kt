@@ -127,6 +127,22 @@ class DebugLoggerTest {
         assertTrue(logs[1].contains("first message"))
     }
 
+    @Test fun `d writes nothing to file or memory when debug logging is disabled`() {
+        // the Settings switch (issue #166) turns the persisted debug log off;
+        //  logcat output is unaffected but nothing new must reach getLogs()
+        DebugLogger.initialize(appCtx)
+        val prefs = getAppSharedPreferences(appCtx)
+        prefs.edit().putBoolean("debug_logging_enabled", false).commit()
+        try {
+            DebugLogger.d("MyTag", "should be dropped")
+
+            assertEquals("no entry expected while logging is disabled",
+                0, DebugLogger.getLogs().size)
+        } finally {
+            prefs.edit().remove("debug_logging_enabled").commit()
+        }
+    }
+
     @Test fun `getLogs is empty when no entries exist`() {
         DebugLogger.initialize(appCtx)
 
