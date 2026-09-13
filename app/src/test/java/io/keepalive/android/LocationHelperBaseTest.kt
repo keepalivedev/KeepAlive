@@ -438,6 +438,54 @@ class LocationHelperBaseTest {
             result?.formattedLocationString?.contains("7.0") == true)
     }
 
+    // ---- Coordinate formatting (issue #214) --------------------------------
+
+    @Test
+    @Config(sdk = [33, 34, 35, 36])  // Geocoder is stubbed via mockkConstructor, TIRAMISU+ only
+    fun `location SMS rounds coordinates to 5 decimals and accuracy to whole metres`() {
+        val cb = CallbackRecorder()
+        val helper = RecordingHelper(appCtx, cb.asLambda)
+        stubGeocoderReturns(emptyList())
+
+        val loc = Location("test").apply {
+            latitude = 46.123456789012345
+            longitude = 7.987654321098765
+            accuracy = 12.744998f
+        }
+        helper.GeocodingHelper().geocodeLocationAndExecute(loc)
+
+        val formatted = cb.await()?.formattedLocationString ?: ""
+        assertTrue("coords should be rounded to 5 decimals: $formatted",
+            formatted.contains("(46.12346, 7.98765)"))
+        assertTrue("accuracy should be whole metres: $formatted",
+            formatted.contains("Accuracy (m): 13."))
+    }
+
+    @Test
+    @Config(sdk = [33, 34, 35, 36])  // Geocoder is stubbed via mockkConstructor, TIRAMISU+ only
+    fun `location SMS keeps a decimal point in comma-decimal locales`() {
+        // the pair separator is a comma, so a locale-formatted "46,50000, 7,25000"
+        //  would be ambiguous to both readers and map apps
+        val original = java.util.Locale.getDefault()
+        java.util.Locale.setDefault(java.util.Locale.GERMANY)
+        try {
+            val cb = CallbackRecorder()
+            val helper = RecordingHelper(appCtx, cb.asLambda)
+            stubGeocoderReturns(emptyList())
+
+            val loc = Location("test").apply {
+                latitude = 46.5; longitude = 7.25; accuracy = 12.7f
+            }
+            helper.GeocodingHelper().geocodeLocationAndExecute(loc)
+
+            val formatted = cb.await()?.formattedLocationString ?: ""
+            assertTrue("lat/lon pair must keep decimal points: $formatted",
+                formatted.contains("(46.50000, 7.25000)"))
+        } finally {
+            java.util.Locale.setDefault(original)
+        }
+    }
+
     @Test fun `no-location fast-path does not call getCurrentLocation a second time via timeout`() {
         // The global timeout handler fires an invalid-location callback after
         // ~61s if nothing resolved. On the no-permission fast-path we fire
