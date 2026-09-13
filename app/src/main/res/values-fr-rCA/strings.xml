@@ -92,6 +92,8 @@
     <string name="monitoring_no_activity_detected_message">La surveillance est activée, mais aucune activité n\'a été détectée au cours des %1$s dernières heures. Veuillez vous assurer que votre écran de verrouillage est activé et que vous avez accordé les autorisations d\'accès à l\'utilisation.</string>
     <string name="monitoring_no_recipient_title">Aucun destinataire d\'alerte</string>
     <string name="monitoring_no_recipient_message">La surveillance est en cours, mais aucun contact d\'urgence n\'est actif, donc aucune alerte ne peut être envoyée. Veuillez ajouter ou activer un contact d\'urgence dans les paramètres.</string>
+    <string name="monitoring_location_disabled_title">Services de localisation désactivés</string>
+    <string name="monitoring_location_disabled_message">La surveillance est en cours, mais les services de localisation sont désactivés, donc les alertes ne peuvent pas inclure votre position. Veuillez activer la localisation dans les paramètres de l\'appareil ou désactiver \"Inclure les informations de localisation\" pour vos contacts d\'urgence.</string>
     <string name="monitoring_permissions_required_message">La surveillance est activée, mais toutes les autorisations n\'ont pas été accordées. Veuillez cliquer sur le bouton « Accorder des autorisations » ci-dessous.</string>
     <string name="alarm_message_too_long_message">Le message ne peut pas contenir plus de 160 caractères.</string>
     <string name="phone_number_invalid_message">Veuillez saisir un numéro de téléphone valide.</string>
@@ -315,6 +317,7 @@
     <string name="debug_log_attempting_to_get_location">Tentative d\'obtention de l\'emplacement…</string>
     <string name="debug_log_device_idle_not_getting_current_location">L\'appareil est en mode inactif, n\'obtient pas l\'emplacement actuel</string>
     <string name="debug_log_no_location_permission_executing_callback">Pas d\'autorisation de localisation, exécution du rappel</string>
+    <string name="debug_log_location_services_disabled">Les services de localisation sont désactivés, impossible de déterminer la position</string>
     <string name="debug_log_failed_getting_current_location">Échec de l\'obtention de l\'emplacement actuel?!</string>
     <string name="debug_log_geocoding_timeout_reached">Délai d\'attente atteint, locationString est %1$s</string>
     <string name="debug_log_failed_geocoding_gps_coordinates">Échec du géocodage des coordonnées GPS?!</string>

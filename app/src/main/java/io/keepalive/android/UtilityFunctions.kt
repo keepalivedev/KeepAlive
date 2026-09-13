@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.location.LocationManager
 import android.os.Build
 import android.os.SystemClock
 import android.os.UserManager
@@ -21,6 +22,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 import androidx.core.content.edit
+import androidx.core.location.LocationManagerCompat
 
 
 // data class used to represent an SMS emergency contact setting
@@ -71,6 +73,24 @@ fun hasActiveAlertChannel(sharedPrefs: SharedPreferences): Boolean {
     }
 
     return false
+}
+
+// location was requested for an SMS contact or the webhook but the device's location
+//  services are switched off, so no app could obtain one. surfaced on the main screen
+//  so the user finds out before an alert does (issue #213)
+fun locationNeededButDisabled(context: Context, sharedPrefs: SharedPreferences): Boolean {
+    val locationNeeded = sharedPrefs.getBoolean(PrefKeys.LOCATION_ENABLED, false) ||
+            sharedPrefs.getBoolean(PrefKeys.WEBHOOK_LOCATION_ENABLED, false)
+
+    if (!locationNeeded) {
+        return false
+    }
+
+    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
+        ?: return false
+
+    // LocationManagerCompat falls back to the Settings.Secure lookup below API 28
+    return !LocationManagerCompat.isLocationEnabled(locationManager)
 }
 
 // format the last-activity timestamp for the main screen: time only (no

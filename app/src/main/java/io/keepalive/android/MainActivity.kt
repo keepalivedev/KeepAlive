@@ -527,6 +527,22 @@ class MainActivity : AppCompatActivity() {
                         monitoringMessageTextView.text =
                             getString(R.string.monitoring_no_recipient_message)
 
+                    } else if (locationNeededButDisabled(this, sharedPrefs)) {
+
+                        // a contact or the webhook includes location but the device's
+                        //  location services are off, so the alert would only carry the
+                        //  "unable to determine location" fallback - warn here rather
+                        //  than let the recipient find out (issue #213)
+                        DebugLogger.d(tag, getString(R.string.debug_log_location_services_disabled))
+
+                        monitoringStatusTextView.text =
+                            getString(R.string.monitoring_location_disabled_title)
+                        monitoringStatusTextView.setTextColor(
+                            getColorCompat(this, R.color.monitoringImpaired)
+                        )
+                        monitoringMessageTextView.text =
+                            getString(R.string.monitoring_location_disabled_message)
+
                     } else {
                         Log.d(tag, "Don't need any permissions, we are all set?!")
 

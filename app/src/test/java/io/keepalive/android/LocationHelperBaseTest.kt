@@ -171,6 +171,31 @@ class LocationHelperBaseTest {
         assertEquals(0, helper.getLastLocationCount)
     }
 
+    // ---- Location services off (issue #213) --------------------------------
+
+    @Test fun `location services off sends the fallback at once without a provider request`() {
+        // no app can get a fix while location services are off; waiting through the
+        //  30 s provider timeout only delays the SMS for an outcome already known
+        shadowApp.grantPermissions(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        )
+        val lm = appCtx.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        shadowOf(lm).setLocationEnabled(false)
+        val cb = CallbackRecorder()
+        val helper = RecordingHelper(appCtx, cb.asLambda)
+
+        helper.getLocationAndExecute()
+
+        val result = cb.await()
+        assertEquals("no current-location request while services are off",
+            0, helper.getCurrentLocationCount)
+        assertEquals("no last-location request while services are off",
+            0, helper.getLastLocationCount)
+        assertEquals(appCtx.getString(R.string.location_invalid_message),
+            result?.formattedLocationString)
+    }
+
     @Test fun `executeCallback runs the callback with the provided result`() {
         val cb = CallbackRecorder()
         val helper = RecordingHelper(appCtx, cb.asLambda)

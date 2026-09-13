@@ -92,6 +92,8 @@
     <string name="monitoring_no_activity_detected_message">监测器已启用，但在过去 %1$s 小时内未检测到任何活动。 请确保屏幕锁定已启用并授予了使用情况访问权限。</string>
     <string name="monitoring_no_recipient_title">没有警报接收人</string>
     <string name="monitoring_no_recipient_message">监控正在运行，但没有已启用的紧急联系人，因此无法发送警报。请在设置中添加或启用紧急联系人。</string>
+    <string name="monitoring_location_disabled_title">定位服务已关闭</string>
+    <string name="monitoring_location_disabled_message">监控正在运行，但定位服务已关闭，因此警报无法包含您的位置。请在设备设置中开启定位，或为紧急联系人关闭“附带位置信息”。</string>
     <string name="monitoring_permissions_required_message">监测器已启用，但尚未授予必要权限。 请点击下面的“授予权限”按钮。</string>
     <string name="alarm_message_too_long_message">短信不得超过 160 个字符。</string>
     <string name="phone_number_invalid_message">请输入一个有效的电话号码。</string>
@@ -315,6 +317,7 @@
     <string name="debug_log_attempting_to_get_location">Attempting to get location…</string>
     <string name="debug_log_device_idle_not_getting_current_location">Device is in idle mode, not getting current location</string>
     <string name="debug_log_no_location_permission_executing_callback">Don\'t have location permission, executing callback</string>
+    <string name="debug_log_location_services_disabled">定位服务已关闭，无法确定位置</string>
     <string name="debug_log_failed_getting_current_location">Failed getting current location?!</string>
     <string name="debug_log_geocoding_timeout_reached">Timeout reached, locationString is %1$s</string>
     <string name="debug_log_failed_geocoding_gps_coordinates">Failed geocoding GPS coordinates?!</string>

@@ -104,6 +104,8 @@
     <string name="monitoring_no_activity_detected_message">Monitoring is enabled but no activity has been detected in the last %1$s hours. Please ensure you have a lock screen enabled and have granted Usage access permissions.</string>
     <string name="monitoring_no_recipient_title">No Alert Recipient</string>
     <string name="monitoring_no_recipient_message">Monitoring is running but no emergency contact is active, so no Alert can be sent. Please add or enable an emergency contact in the Settings.</string>
+    <string name="monitoring_location_disabled_title">Location Services Off</string>
+    <string name="monitoring_location_disabled_message">Monitoring is running but location services are turned off, so Alerts cannot include your location. Please turn on location in the device Settings or disable \"Include Location Information\" for your emergency contacts.</string>
     <string name="monitoring_permissions_required_message">Monitoring is enabled but not all permissions have been granted. Please click the "Grant Permissions" button below.</string>
     <string name="alarm_message_too_long_message">The message cannot be more than 160 characters.</string>
     <string name="phone_number_invalid_message">Please enter a valid phone number.</string>
@@ -331,6 +333,7 @@
     <string name="debug_log_attempting_to_get_location">Attempting to get location…</string>
     <string name="debug_log_device_idle_not_getting_current_location">Device is in idle mode, not getting current location</string>
     <string name="debug_log_no_location_permission_executing_callback">Don\'t have location permission, executing callback</string>
+    <string name="debug_log_location_services_disabled">Location services are turned off, unable to determine location</string>
     <string name="debug_log_failed_getting_current_location">Failed getting current location?!</string>
     <string name="debug_log_geocoding_timeout_reached">Timeout reached, locationString is %1$s</string>
     <string name="debug_log_failed_geocoding_gps_coordinates">Failed geocoding GPS coordinates?!</string>
