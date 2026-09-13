@@ -1,6 +1,7 @@
 package io.keepalive.android
 
 import android.app.AlarmManager
+import android.app.ActivityManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -91,6 +92,20 @@ fun locationNeededButDisabled(context: Context, sharedPrefs: SharedPreferences):
 
     // LocationManagerCompat falls back to the Settings.Secure lookup below API 28
     return !LocationManagerCompat.isLocationEnabled(locationManager)
+}
+
+// Android's per-app "Restricted" battery setting (API 28+) stops the app from running in
+//  the background, which delays or drops the periodic checks. below API 28 the setting
+//  does not exist so there is nothing to report (issue #194)
+fun isBackgroundRestricted(context: Context): Boolean {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+        return false
+    }
+
+    val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
+        ?: return false
+
+    return activityManager.isBackgroundRestricted
 }
 
 // format the last-activity timestamp for the main screen: time only (no

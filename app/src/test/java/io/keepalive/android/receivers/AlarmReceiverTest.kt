@@ -1,6 +1,7 @@
 package io.keepalive.android.receivers
 
 import android.Manifest
+import android.app.ActivityManager
 import android.app.Application
 import android.app.NotificationManager
 import android.content.Context
@@ -227,5 +228,65 @@ class AlarmReceiverTest {
         assertTrue("no notification when permission is granted", !hasPermissionNotification())
         assertEquals("marker cleared once permission is granted again",
             0L, getAppSharedPreferences(appCtx).getLong("sms_permission_notified_at", 0L))
+    }
+
+    // --- background restriction check (issue #194) ----------------------------
+
+    private fun setBackgroundRestricted(restricted: Boolean) {
+        val am = appCtx.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        shadowOf(am).setBackgroundRestricted(restricted)
+    }
+
+    private fun hasBackgroundRestrictedNotification(): Boolean {
+        val nm = appCtx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        return shadowOf(nm).getNotification(null, AppController.BACKGROUND_RESTRICTED_NOTIFICATION_ID) != null
+    }
+
+    @Test fun `background restriction posts a notification and still runs the check`() {
+        grantPermissions(Manifest.permission.POST_NOTIFICATIONS, Manifest.permission.SEND_SMS)
+        setBackgroundRestricted(true)
+
+        AlarmReceiver().onReceive(appCtx, Intent().putExtra("AlarmStage", "periodic"))
+
+        assertTrue("background-restricted notification should be posted",
+            hasBackgroundRestrictedNotification())
+        assertNotEquals("notified-at marker should be written",
+            0L, getAppSharedPreferences(appCtx).getLong("background_restricted_notified_at", 0L))
+        // the alert check must still run - the warning never blocks it
+        verify(exactly = 1) { doAlertCheck(any<Context>(), "periodic") }
+    }
+
+    @Test fun `background restriction notifies at most once per day`() {
+        grantPermissions(Manifest.permission.POST_NOTIFICATIONS, Manifest.permission.SEND_SMS)
+        setBackgroundRestricted(true)
+
+        AlarmReceiver().onReceive(appCtx, Intent().putExtra("AlarmStage", "periodic"))
+        val firstNotifiedAt = getAppSharedPreferences(appCtx).getLong("background_restricted_notified_at", 0L)
+
+        // clear the posted notification, then fire again - the rate limit
+        // (not the still-posted guard) must prevent a second post
+        val nm = appCtx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        nm.cancelAll()
+
+        AlarmReceiver().onReceive(appCtx, Intent().putExtra("AlarmStage", "periodic"))
+
+        assertTrue("no second notification within 24h", !hasBackgroundRestrictedNotification())
+        assertEquals("notified-at marker unchanged on rate-limited run",
+            firstNotifiedAt,
+            getAppSharedPreferences(appCtx).getLong("background_restricted_notified_at", 0L))
+    }
+
+    @Test fun `unrestricted background clears the notified marker`() {
+        grantPermissions(Manifest.permission.POST_NOTIFICATIONS, Manifest.permission.SEND_SMS)
+        setBackgroundRestricted(false)
+        getAppSharedPreferences(appCtx).edit()
+            .putLong("background_restricted_notified_at", 12345L)
+            .commit()
+
+        AlarmReceiver().onReceive(appCtx, Intent().putExtra("AlarmStage", "periodic"))
+
+        assertTrue("no notification when not restricted", !hasBackgroundRestrictedNotification())
+        assertEquals("marker cleared once the restriction is lifted",
+            0L, getAppSharedPreferences(appCtx).getLong("background_restricted_notified_at", 0L))
     }
 }

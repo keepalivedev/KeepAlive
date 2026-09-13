@@ -94,6 +94,7 @@
     <string name="monitoring_no_recipient_message">Monitorowanie działa, ale żaden kontakt alarmowy nie jest aktywny, więc nie można wysłać alarmu. Dodaj lub włącz kontakt alarmowy w ustawieniach.</string>
     <string name="monitoring_location_disabled_title">Usługi lokalizacyjne wyłączone</string>
     <string name="monitoring_location_disabled_message">Monitorowanie działa, ale usługi lokalizacyjne są wyłączone, więc alarmy nie mogą zawierać Twojej lokalizacji. Włącz lokalizację w ustawieniach urządzenia lub wyłącz \"Dodaj Informacje o Lokalizacji\" dla kontaktów alarmowych.</string>
+    <string name="monitoring_background_restricted_message">Aktywność w tle aplikacji Keep Alive jest ograniczona, więc sprawdzanie aktywności może być opóźnione lub nigdy się nie uruchomić, a alarmy mogą nie zostać wysłane. Naciśnij przycisk poniżej i ustaw zużycie baterii na \"Bez ograniczeń\" lub \"Zoptymalizowane\".</string>
     <string name="monitoring_permissions_required_message">Monitorowanie jest włączone lecz nie wszystkie uprawnienia zostały przyznane. Kliknij przycisk "Udziel Uprawnień" poniżej.</string>
     <string name="alarm_message_too_long_message">Wiadomość nie może mieć więcej niż 160 znaków.</string>
     <string name="phone_number_invalid_message">Wpisz poprawny numer telefonu.</string>
@@ -141,6 +142,8 @@
     <string name="sms_service_failure_notification_text">Wystąpił błąd podczas wysyłania Alertu SMS, upewnij się, że masz aktywną kartę SIM</string>
     <string name="sms_permission_revoked_notification_title">Uprawnienie SMS zostało cofnięte!</string>
     <string name="sms_permission_revoked_notification_text">Keep Alive nie może już wysyłać alarmów SMS. Dotknij tutaj, aby otworzyć aplikację i ponownie przyznać uprawnienie SMS.</string>
+    <string name="background_restricted_notification_title">Aktywność w tle jest ograniczona!</string>
+    <string name="background_restricted_notification_text">Keep Alive może nie być w stanie sprawdzać aktywności ani wysyłać alarmów. Naciśnij tutaj, aby otworzyć aplikację i zezwolić na aktywność w tle.</string>
     <string name="alert_service_notification_title">Wysyłanie alertu…</string>
     <string name="alert_service_notification_message">Alert(y) są wysyłane do skonfigurowanych kontaktów, proszę czekać.</string>
 
@@ -352,6 +355,7 @@
     <!-- AlarmReceiver.kt -->
     <string name="debug_log_alarm_just_fired">Alarm właśnie się uruchomił!</string>
     <string name="debug_log_sms_permission_revoked">Uprawnienie SEND_SMS nie jest już przyznane!</string>
+    <string name="debug_log_background_restricted">Aktywność w tle jest ograniczona przez ustawienia baterii</string>
     <string name="debug_log_app_not_enabled_alarm_went_off">Aplikacja nie jest włączona, dlaczego alarm się uruchomił?!</string>
     <string name="debug_log_alarm_time_comparison">Czas to %1$s UTC, alarm miał się uruchomić o %2$s UTC, co było %3$d sekund temu</string>
     <string name="debug_log_failed_processing_alarm">Nie udało się przetworzyć alarmu:</string>

@@ -106,6 +106,7 @@
     <string name="monitoring_no_recipient_message">Monitoring is running but no emergency contact is active, so no Alert can be sent. Please add or enable an emergency contact in the Settings.</string>
     <string name="monitoring_location_disabled_title">Location Services Off</string>
     <string name="monitoring_location_disabled_message">Monitoring is running but location services are turned off, so Alerts cannot include your location. Please turn on location in the device Settings or disable \"Include Location Information\" for your emergency contacts.</string>
+    <string name="monitoring_background_restricted_message">Background activity for Keep Alive is restricted, so the activity checks may be delayed or never run and Alerts may not be sent. Please tap the button below and set Battery usage to \"Unrestricted\" or \"Optimized\".</string>
     <string name="monitoring_permissions_required_message">Monitoring is enabled but not all permissions have been granted. Please click the "Grant Permissions" button below.</string>
     <string name="alarm_message_too_long_message">The message cannot be more than 160 characters.</string>
     <string name="phone_number_invalid_message">Please enter a valid phone number.</string>
@@ -153,6 +154,8 @@
     <string name="sms_service_failure_notification_text">Error occurred while attempting to send Alert SMS, please verify you have an active SIM</string>
     <string name="sms_permission_revoked_notification_title">SMS permission has been revoked!</string>
     <string name="sms_permission_revoked_notification_text">Keep Alive can no longer send SMS Alerts. Tap here to open the app and grant the SMS permission again.</string>
+    <string name="background_restricted_notification_title">Background activity is restricted!</string>
+    <string name="background_restricted_notification_text">Keep Alive may not be able to run its activity checks or send Alerts. Tap here to open the app and allow background activity.</string>
     <string name="alert_service_notification_title">Sending Alert…</string>
     <string name="alert_service_notification_message">Alert(s) are being sent to your configured contacts, please wait.</string>
 
@@ -368,6 +371,7 @@
     <!-- AlarmReceiver.kt -->
     <string name="debug_log_alarm_just_fired">Alarm just fired!</string>
     <string name="debug_log_sms_permission_revoked">SEND_SMS permission is no longer granted!</string>
+    <string name="debug_log_background_restricted">Background activity is restricted by the battery settings</string>
     <string name="debug_log_app_not_enabled_alarm_went_off">App is not enabled, why did the alarm go off?!</string>
     <string name="debug_log_alarm_time_comparison">Time is %1$s UTC, alarm was supposed to go off at %2$s UTC, which was %3$d seconds ago</string>
     <string name="debug_log_failed_processing_alarm">Failed while processing alarm:</string>

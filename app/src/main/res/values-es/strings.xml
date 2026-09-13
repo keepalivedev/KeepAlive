@@ -94,6 +94,7 @@
     <string name="monitoring_no_recipient_message">La supervisión está en marcha, pero ningún contacto de emergencia está activo, por lo que no se puede enviar ninguna alerta. Añada o active un contacto de emergencia en los ajustes.</string>
     <string name="monitoring_location_disabled_title">Servicios de ubicación desactivados</string>
     <string name="monitoring_location_disabled_message">La supervisión está en marcha, pero los servicios de ubicación están desactivados, por lo que las alertas no pueden incluir su ubicación. Active la ubicación en los ajustes del dispositivo o desactive \"Incluir información de ubicación\" para sus contactos de emergencia.</string>
+    <string name="monitoring_background_restricted_message">La actividad en segundo plano de Keep Alive está restringida, por lo que las comprobaciones de actividad pueden retrasarse o no ejecutarse nunca y es posible que no se envíen alertas. Pulse el botón de abajo y establezca el uso de batería en \"Sin restricciones\" u \"Optimizado\".</string>
     <string name="monitoring_permissions_required_message">El monitoreo está activado pero no se han concedido todos los permisos. Toca el botón "Conceder permisos" de abajo.</string>
     <string name="alarm_message_too_long_message">El mensaje no puede tener más de 160 caracteres.</string>
     <string name="phone_number_invalid_message">Por favor, ingresa un número de teléfono válido.</string>
@@ -141,6 +142,8 @@
     <string name="sms_service_failure_notification_text">Ocurrió un error al intentar enviar la alerta SMS, verifica que tengas una SIM activa</string>
     <string name="sms_permission_revoked_notification_title">¡El permiso de SMS ha sido revocado!</string>
     <string name="sms_permission_revoked_notification_text">Keep Alive ya no puede enviar alertas por SMS. Toque aquí para abrir la aplicación y volver a conceder el permiso de SMS.</string>
+    <string name="background_restricted_notification_title">¡La actividad en segundo plano está restringida!</string>
+    <string name="background_restricted_notification_text">Es posible que Keep Alive no pueda realizar sus comprobaciones de actividad ni enviar alertas. Toque aquí para abrir la aplicación y permitir la actividad en segundo plano.</string>
     <string name="alert_service_notification_title">Enviando alerta…</string>
     <string name="alert_service_notification_message">Se están enviando alertas a tus contactos configurados, por favor espera.</string>
 
@@ -352,6 +355,7 @@
     <!-- AlarmReceiver.kt -->
     <string name="debug_log_alarm_just_fired">¡La alarma acaba de activarse!</string>
     <string name="debug_log_sms_permission_revoked">¡El permiso SEND_SMS ya no está concedido!</string>
+    <string name="debug_log_background_restricted">La actividad en segundo plano está restringida por los ajustes de batería</string>
     <string name="debug_log_app_not_enabled_alarm_went_off">La app no está activada, ¿por qué se activó la alarma?</string>
     <string name="debug_log_alarm_time_comparison">La hora es %1$s UTC, la alarma debía activarse a las %2$s UTC, que fue hace %3$d segundos</string>
     <string name="debug_log_failed_processing_alarm">Error al procesar la alarma:</string>

@@ -94,6 +94,7 @@
     <string name="monitoring_no_recipient_message">监控正在运行，但没有已启用的紧急联系人，因此无法发送警报。请在设置中添加或启用紧急联系人。</string>
     <string name="monitoring_location_disabled_title">定位服务已关闭</string>
     <string name="monitoring_location_disabled_message">监控正在运行，但定位服务已关闭，因此警报无法包含您的位置。请在设备设置中开启定位，或为紧急联系人关闭“附带位置信息”。</string>
+    <string name="monitoring_background_restricted_message">Keep Alive 的后台活动受到限制，因此活动检查可能被延迟或根本不会运行，警报也可能无法发送。请点击下方按钮，将电池用量设置为“不受限制”或“优化”。</string>
     <string name="monitoring_permissions_required_message">监测器已启用，但尚未授予必要权限。 请点击下面的“授予权限”按钮。</string>
     <string name="alarm_message_too_long_message">短信不得超过 160 个字符。</string>
     <string name="phone_number_invalid_message">请输入一个有效的电话号码。</string>
@@ -141,6 +142,8 @@
     <string name="sms_service_failure_notification_text">发送提醒短信时发生错误，请插入有效的SIM卡。</string>
     <string name="sms_permission_revoked_notification_title">短信权限已被撤销！</string>
     <string name="sms_permission_revoked_notification_text">Keep Alive 无法再发送短信警报。点击此处打开应用并重新授予短信权限。</string>
+    <string name="background_restricted_notification_title">后台活动受到限制！</string>
+    <string name="background_restricted_notification_text">Keep Alive 可能无法执行活动检查或发送警报。点击此处打开应用并允许后台活动。</string>
     <string name="alert_service_notification_title">正在发送提醒…</string>
     <string name="alert_service_notification_message">提醒消息正在发送给您的联系人，请稍候。</string>
 
@@ -352,6 +355,7 @@
     <!-- AlarmReceiver.kt -->
     <string name="debug_log_alarm_just_fired">Alarm just fired!</string>
     <string name="debug_log_sms_permission_revoked">SEND_SMS 权限已不再授予！</string>
+    <string name="debug_log_background_restricted">后台活动受到电池设置的限制</string>
     <string name="debug_log_app_not_enabled_alarm_went_off">App is not enabled, why did the alarm go off?!</string>
     <string name="debug_log_alarm_time_comparison">Time is %1$s UTC, alarm was supposed to go off at %2$s UTC, which was %3$d seconds ago</string>
     <string name="debug_log_failed_processing_alarm">Failed while processing alarm:</string>
