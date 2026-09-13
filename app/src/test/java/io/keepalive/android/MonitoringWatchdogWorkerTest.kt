@@ -12,6 +12,7 @@ import io.mockk.unmockkConstructor
 import io.mockk.unmockkObject
 import io.mockk.unmockkStatic
 import io.mockk.verify
+import io.mockk.verifyOrder
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -136,6 +137,12 @@ class MonitoringWatchdogWorkerTest {
         runWorker()
 
         verify(exactly = 1) { anyConstructed<AlertNotificationHelper>().sendNotification(any(), any(), any(), any()) }
+        // the full-screen prompt reads the saved deadline when it opens, so the
+        // replacement alarm has to be persisted before the notification goes out
+        verifyOrder {
+            setAlarm(any(), any(), any(), "final", any())
+            anyConstructed<AlertNotificationHelper>().sendNotification(any(), any(), any(), any())
+        }
     }
 
     @Test fun `downgrades a stale final to periodic so the user is re-prompted`() {

@@ -134,12 +134,14 @@ object AlarmRecovery {
                 //  "alert_sent". Putting the alarm back means the check runs from
                 //  AlarmReceiver, which does hold the exemption, and setAlarm() uses
                 //  setAlarmClock() for a final stage, which Doze cannot defer.
+                setAlarm(context, now, REARM_DELAY_MINUTES, stage, null)
                 if (stage == "final") {
                     // a force stop cancels the prompt along with the alarm; give the
                     //  user one to answer. both helpers are no-ops if it survived.
+                    //  after setAlarm(): the full-screen prompt reads the saved deadline
+                    //  and would close itself on sight of the overdue one.
                     repostAreYouThere(context, prefs, devicePrefs, now + REARM_DELAY_MINUTES * 60_000L)
                 }
-                setAlarm(context, now, REARM_DELAY_MINUTES, stage, null)
                 return
             }
 
