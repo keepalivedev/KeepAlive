@@ -378,7 +378,7 @@
 <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED ricevuto, salto del controllo notifica Direct Boot. %1$s</string>
 <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: L\'utente è già sbloccato, rinvio a BOOT_COMPLETED</string>
 <string name="debug_log_restored_alarm_stage">Fase dell\'allarme ripristinata dall\'archivio protetto del dispositivo: %1$s, chiamata a doAlertCheck()</string>
-<string name="debug_log_boot_alert_already_sent">L\'allarme è già stato inviato e il riavvio automatico del monitoraggio è disattivato, rimane disarmato dopo il riavvio</string>
+<string name="debug_log_boot_alert_already_sent">L\'allarme è già stato inviato e il riavvio automatico del monitoraggio è disattivato, rimane disarmato</string>
 <string name="debug_log_watchdog_rearming">Watchdog: la sveglia era prevista per %1$s ma non è mai scattata, riattivazione del monitoraggio</string>
 <string name="debug_log_alarm_not_due_rescheduling">La sveglia non era ancora scaduta (era impostata per %1$s UTC), riprogrammazione invece del controllo</string>
 <string name="debug_log_saved_alarm_implausible">L\'orario sveglia salvato %1$s UTC è troppo lontano nel futuro, viene avviato un nuovo periodo di controllo</string>

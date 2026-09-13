@@ -378,7 +378,7 @@
     <string name="debug_log_locked_boot_completed_skipping">收到 LOCKED_BOOT_COMPLETED，跳过 Direct Boot 通知检查。%1$s</string>
     <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED：用户已解锁，延迟到 BOOT_COMPLETED 处理</string>
     <string name="debug_log_restored_alarm_stage">从设备保护存储中恢复了闹钟阶段：%1$s，调用 doAlertCheck()</string>
-    <string name="debug_log_boot_alert_already_sent">警报已发送且自动重启监控已停用，重启后保持停用状态</string>
+    <string name="debug_log_boot_alert_already_sent">警报已发送且自动重启监控已停用，保持停用状态</string>
     <string name="debug_log_watchdog_rearming">看门狗：闹钟原定于 %1$s 触发但从未触发，正在重新启动监控</string>
     <string name="debug_log_alarm_not_due_rescheduling">闹钟尚未到期（原定于 %1$s UTC），改为重新调度而非检查</string>
     <string name="debug_log_saved_alarm_implausible">保存的闹钟时间 %1$s UTC 远得不合理，开始新的检查周期</string>

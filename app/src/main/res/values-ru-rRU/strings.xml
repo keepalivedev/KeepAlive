@@ -378,7 +378,7 @@
     <string name="debug_log_locked_boot_completed_skipping">Получен LOCKED_BOOT_COMPLETED, пропускаем проверку уведомления Direct Boot. %1$s</string>
     <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: Пользователь уже разблокирован, передаём обработку BOOT_COMPLETED</string>
     <string name="debug_log_restored_alarm_stage">Восстановлен этап будильника из защищённого хранилища устройства: %1$s, вызываем doAlertCheck()</string>
-    <string name="debug_log_boot_alert_already_sent">Оповещение уже было отправлено, а автоматический перезапуск мониторинга отключён, после перезагрузки остаётся отключённым</string>
+    <string name="debug_log_boot_alert_already_sent">Оповещение уже было отправлено, а автоматический перезапуск мониторинга отключён, остаётся отключённым</string>
     <string name="debug_log_watchdog_rearming">Watchdog: сигнал должен был сработать %1$s, но не сработал — мониторинг перезапускается</string>
     <string name="debug_log_alarm_not_due_rescheduling">Сигнал ещё не наступил (был назначен на %1$s UTC), перепланирование вместо проверки</string>
     <string name="debug_log_saved_alarm_implausible">Сохранённое время сигнала %1$s UTC неправдоподобно далеко в будущем, начинается новый период проверки</string>

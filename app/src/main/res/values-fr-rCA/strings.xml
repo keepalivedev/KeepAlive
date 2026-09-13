@@ -378,7 +378,7 @@
     <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED reçu, vérification de la notification Direct Boot ignorée. %1$s</string>
     <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED : L\'utilisateur est déjà déverrouillé, report vers BOOT_COMPLETED</string>
     <string name="debug_log_restored_alarm_stage">Étape d\'alarme restaurée depuis le stockage protégé de l\'appareil : %1$s, appel de doAlertCheck()</string>
-    <string name="debug_log_boot_alert_already_sent">L\'alerte a déjà été envoyée et le redémarrage automatique de la surveillance est désactivé, reste désarmé après le redémarrage</string>
+    <string name="debug_log_boot_alert_already_sent">L\'alerte a déjà été envoyée et le redémarrage automatique de la surveillance est désactivé, reste désarmé</string>
     <string name="debug_log_watchdog_rearming">Chien de garde : alarme prévue pour %1$s mais jamais déclenchée, réactivation de la surveillance</string>
     <string name="debug_log_alarm_not_due_rescheduling">Alarme pas encore due (prévue pour %1$s UTC), reprogrammation au lieu de la vérification</string>
     <string name="debug_log_saved_alarm_implausible">L\'heure d\'alarme enregistrée %1$s UTC est beaucoup trop loin dans le futur, nouvelle période de vérification lancée</string>

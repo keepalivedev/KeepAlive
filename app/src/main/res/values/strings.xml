@@ -394,7 +394,7 @@
     <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED received, skipping Direct Boot notification check. %1$s</string>
     <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: User is already unlocked, deferring to BOOT_COMPLETED</string>
     <string name="debug_log_restored_alarm_stage">Restored alarm stage from device-protected storage: %1$s, calling doAlertCheck()</string>
-    <string name="debug_log_boot_alert_already_sent">Alert was already sent and Auto-Restart Monitoring is off, staying disarmed after reboot</string>
+    <string name="debug_log_boot_alert_already_sent">Alert was already sent and Auto-Restart Monitoring is off, staying disarmed</string>
     <string name="debug_log_watchdog_rearming">Watchdog: alarm was due %1$s but never fired, re-arming monitoring</string>
     <string name="debug_log_alarm_not_due_rescheduling">Alarm was not due yet (was set for %1$s UTC), rescheduling instead of checking</string>
     <string name="debug_log_saved_alarm_implausible">Saved alarm time %1$s UTC is implausibly far in the future, starting a fresh check period</string>

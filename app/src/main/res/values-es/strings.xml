@@ -378,7 +378,7 @@
     <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED recibido, omitiendo la verificación de notificación de Direct Boot. %1$s</string>
     <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: El usuario ya está desbloqueado, difiriendo a BOOT_COMPLETED</string>
     <string name="debug_log_restored_alarm_stage">Etapa de alarma restaurada desde el almacenamiento protegido del dispositivo: %1$s, llamando a doAlertCheck()</string>
-    <string name="debug_log_boot_alert_already_sent">La alerta ya se envió y el reinicio automático del monitoreo está desactivado, permaneciendo desarmado tras el reinicio</string>
+    <string name="debug_log_boot_alert_already_sent">La alerta ya se envió y el reinicio automático del monitoreo está desactivado, permaneciendo desarmado</string>
     <string name="debug_log_watchdog_rearming">Vigilante: la alarma debía activarse el %1$s pero nunca se activó; reactivando la supervisión</string>
     <string name="debug_log_alarm_not_due_rescheduling">La alarma aún no vencía (estaba fijada para %1$s UTC); reprogramando en lugar de comprobar</string>
     <string name="debug_log_saved_alarm_implausible">La hora de alarma guardada %1$s UTC está inverosímilmente lejos en el futuro; se inicia un nuevo periodo de comprobación</string>
