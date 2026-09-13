@@ -174,6 +174,7 @@
     <!-- Main Settings -->
     <string name="enabled_title">Surveillance activée</string>
     <string name="auto_restart_title">Surveillance de redémarrage automatique après alerte</string>
+    <string name="debug_logging_title">Journalisation de débogage</string>
     <string name="time_period_title">Heures d\'inactivité avant la notification</string>
     <string name="time_period_description">Le nombre d\'heures d\'inactivité avant qu\'une notification «Êtes-vous là?» ne soit affichée.</string>
     <string name="followup_time_period_title">Minutes à attendre pour la confirmation</string>

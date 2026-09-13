@@ -174,6 +174,7 @@
     <!-- Main Settings -->
     <string name="enabled_title">启用监测器</string>
     <string name="auto_restart_title">发出提醒后自动重启监测器</string>
+    <string name="debug_logging_title">调试日志</string>
     <string name="time_period_title">闲置多久后弹出通知</string>
     <string name="time_period_description">设备超过 # 小时不活动，系统将弹出 \'Are you there?\' 的通知。</string>
     <string name="followup_time_period_title">等待多久后发出提醒</string>

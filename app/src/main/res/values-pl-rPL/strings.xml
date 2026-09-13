@@ -174,6 +174,7 @@
     <!-- Main Settings -->
     <string name="enabled_title">Monitorowanie Aktywne</string>
     <string name="auto_restart_title">Auto-Restart Monitorowania Po Alercie</string>
+    <string name="debug_logging_title">Rejestrowanie debugowania</string>
     <string name="time_period_title">Godziny Nieaktywności przed Zapytaniem</string>
     <string name="time_period_description">Liczba godzin bezczynności przed wyświetleniem powiadomienia \'Jesteś tam?\'</string>
     <string name="followup_time_period_title">Minuty oczekiwania na potwierdzenie</string>

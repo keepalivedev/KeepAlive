@@ -58,4 +58,7 @@ object PrefKeys {
 
     // UI preferences
     const val LOG_DISPLAY_TEXT_SIZE = "log_display_text_size"
+
+    // whether DebugLogger persists entries at all (issue #166); defaults to on
+    const val DEBUG_LOGGING_ENABLED = "debug_logging_enabled"
 }

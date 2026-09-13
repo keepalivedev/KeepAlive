@@ -174,6 +174,7 @@
     <!-- Main Settings -->
     <string name="enabled_title">Monitoreo activado</string>
     <string name="auto_restart_title">Reiniciar el monitoreo automáticamente después de una alerta</string>
+    <string name="debug_logging_title">Registro de depuración</string>
     <string name="time_period_title">Horas de inactividad antes del aviso</string>
     <string name="time_period_description">El número de horas de inactividad antes de que se te muestre una notificación \'¿Sigues ahí?\'.</string>
     <string name="followup_time_period_title">Minutos de espera para la confirmación</string>

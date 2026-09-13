@@ -143,6 +143,14 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
+        // listener for the debug logging switch
+        val debugLoggingSwitch: SwitchCompat = findViewById(R.id.debugLoggingSwitch)
+        debugLoggingSwitch.setOnCheckedChangeListener { _, isChecked ->
+            sharedPrefs!!.edit {
+                putBoolean(PrefKeys.DEBUG_LOGGING_ENABLED, isChecked)
+            }
+        }
+
         // set up listeners for each setting row so that the user can click
         //  anywhere on the row itself to bring up the edit dialog
 
@@ -250,6 +258,9 @@ class SettingsActivity : AppCompatActivity() {
 
         val areYouThereOverlaySwitch: SwitchCompat = findViewById(R.id.areYouThereOverlaySwitch)
         areYouThereOverlaySwitch.isChecked = sharedPrefs!!.getBoolean(PrefKeys.ARE_YOU_THERE_OVERLAY_ENABLED, true)
+
+        val debugLoggingSwitch: SwitchCompat = findViewById(R.id.debugLoggingSwitch)
+        debugLoggingSwitch.isChecked = sharedPrefs!!.getBoolean(PrefKeys.DEBUG_LOGGING_ENABLED, true)
 
         val timePeriodValueTextView: TextView = findViewById(R.id.edit_time_period_hours)
         timePeriodValueTextView.text = sharedPrefs!!.getString(PrefKeys.TIME_PERIOD_HOURS, "12")
