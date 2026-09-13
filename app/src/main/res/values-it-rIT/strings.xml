@@ -94,6 +94,7 @@
         <string name="monitoring_no_recipient_message">Il monitoraggio è in corso, ma nessun contatto di emergenza è attivo, quindi non è possibile inviare alcun avviso. Aggiungi o attiva un contatto di emergenza nelle impostazioni.</string>
     <string name="monitoring_location_disabled_title">Servizi di localizzazione disattivati</string>
     <string name="monitoring_location_disabled_message">Il monitoraggio è in corso, ma i servizi di localizzazione sono disattivati, quindi gli avvisi non possono includere la tua posizione. Attiva la localizzazione nelle impostazioni del dispositivo o disattiva \"Includi le informazioni sulla posizione\" per i tuoi contatti di emergenza.</string>
+    <string name="monitoring_background_restricted_message">L\'attività in background di Keep Alive è limitata, quindi i controlli di attività potrebbero essere ritardati o non essere mai eseguiti e gli avvisi potrebbero non essere inviati. Tocca il pulsante qui sotto e imposta l\'utilizzo della batteria su \"Senza limitazioni\" o \"Ottimizzato\".</string>
         <string name="monitoring_permissions_required_message">Il monitoraggio è attivato, ma non tutte le autorizzazioni sono state concesse. Fare clic sul pulsante "Concedi autorizzazioni" sottostante.</string>  
         <string name="alarm_message_too_long_message">Il messaggio non può contenere più di 160 caratteri.</string>  
         <string name="phone_number_invalid_message">Si prega di inserire un numero di telefono valido.</string>  
@@ -141,6 +142,8 @@
         <string name="sms_service_failure_notification_text">Si è verificato un errore durante il tentativo di invio di un SMS di avviso, si prega di verificare di avere una SIM attiva</string>  
         <string name="sms_permission_revoked_notification_title">L\'autorizzazione SMS è stata revocata!</string>
         <string name="sms_permission_revoked_notification_text">Keep Alive non può più inviare avvisi SMS. Tocca qui per aprire l\'app e concedere di nuovo l\'autorizzazione SMS.</string>
+    <string name="background_restricted_notification_title">L\'attività in background è limitata!</string>
+    <string name="background_restricted_notification_text">Keep Alive potrebbe non riuscire a eseguire i controlli di attività o a inviare avvisi. Tocca qui per aprire l\'app e consentire l\'attività in background.</string>
         <string name="alert_service_notification_title">Invio dell\'avviso in corso…</string>
         <string name="alert_service_notification_message">L\'avviso (o gli avvisi) è in corso di invio ai tuoi contatti configurati, si prega di attendere.</string>  
       
@@ -352,6 +355,7 @@
 <!-- AlarmReceiver.kt -->  
 <string name="debug_log_alarm_just_fired">L\'allarme è appena scattato!</string>  
 <string name="debug_log_sms_permission_revoked">L\'autorizzazione SEND_SMS non è più concessa!</string>
+    <string name="debug_log_background_restricted">L\'attività in background è limitata dalle impostazioni della batteria</string>
 <string name="debug_log_app_not_enabled_alarm_went_off">L\'applicazione non è abilitata, perché l\'allarme è scattato?!</string>  
 <string name="debug_log_alarm_time_comparison">L\'ora è %1$s UTC, l\'allarme doveva scattare a %2$s UTC, ovvero %3$d secondi fa</string>  
 <string name="debug_log_failed_processing_alarm">Impossibile elaborare l\'allarme:</string>  

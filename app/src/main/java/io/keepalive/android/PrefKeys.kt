@@ -46,6 +46,9 @@ object PrefKeys {
     // when the user was last notified about a revoked SMS permission
     const val SMS_PERMISSION_NOTIFIED_AT = "sms_permission_notified_at"
 
+    // when the user was last notified that background activity is restricted
+    const val BACKGROUND_RESTRICTED_NOTIFIED_AT = "background_restricted_notified_at"
+
     // runtime state in device-protected storage (Direct Boot)
     const val LAST_ALARM_STAGE = "last_alarm_stage"
     const val LAST_ACTIVITY_TIMESTAMP = "last_activity_timestamp"

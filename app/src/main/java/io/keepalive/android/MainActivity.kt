@@ -225,6 +225,13 @@ class MainActivity : AppCompatActivity() {
         val checkAppRestrictionsButton: Button = findViewById(R.id.buttonCheckAppRestriction)
         checkAppRestrictionsButton.setOnClickListener { _ ->
 
+            // the "Restricted" battery setting lives on the app's own settings page and
+            //  has no hibernation-style dialog to route through (issue #194)
+            if (isBackgroundRestricted(this)) {
+                openAppSettings()
+                return@setOnClickListener
+            }
+
             val future: ListenableFuture<Int> =
                 PackageManagerCompat.getUnusedAppRestrictionsStatus(this)
 
@@ -809,6 +816,27 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
+
+        // the per-app "Restricted" battery setting is a separate mechanism from
+        //  hibernation but has the same effect on monitoring - checks get delayed or
+        //  dropped - so it shares the impaired state and the button (issue #194)
+        if (isBackgroundRestricted(this)) {
+            DebugLogger.d(tag, getString(R.string.debug_log_background_restricted))
+
+            monitoringStatusTextView.text = getString(R.string.monitoring_impaired_title)
+            monitoringStatusTextView.setTextColor(
+                getColorCompat(this, R.color.monitoringImpaired)
+            )
+            binding.root.findViewById<TextView>(R.id.textviewMonitoringMessage).text =
+                getString(R.string.monitoring_background_restricted_message)
+            checkAppRestrictionsButton.visibility = View.VISIBLE
+        }
+    }
+
+    // open the app's own settings page, where the battery usage restriction is changed
+    private fun openAppSettings() {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, "package:$packageName".toUri())
+        startActivity(intent)
     }
 
     // check whether app restrictions/hibernation is enabled and,
