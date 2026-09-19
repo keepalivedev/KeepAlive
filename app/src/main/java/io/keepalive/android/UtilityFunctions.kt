@@ -130,6 +130,25 @@ fun isSecondaryUser(context: Context): Boolean {
     return !userManager.isSystemUser
 }
 
+// the text under the "may be impaired" status. a background restriction replaces the usual
+//  status lines with instructions because the user can act on it (issue #194). the
+//  secondary-user note is a standing limitation, so it goes beneath whichever message is
+//  showing and is never hidden by another warning (issue #215). the main screen builds this
+//  more than once per refresh, so a note that is already there is not added again
+fun impairedStatusMessage(
+    currentMessage: String,
+    backgroundRestrictedMessage: String?,
+    secondaryUserNote: String?
+): String {
+    val message = backgroundRestrictedMessage ?: currentMessage
+
+    return if (secondaryUserNote == null || message.contains(secondaryUserNote)) {
+        message
+    } else {
+        "$message\n\n$secondaryUserNote"
+    }
+}
+
 // format the last-activity timestamp for the main screen: time only (no
 //  seconds) when it is today, date and time otherwise. the platform
 //  formatters handle the locale and the device's 12/24 hour setting (issue #189)
