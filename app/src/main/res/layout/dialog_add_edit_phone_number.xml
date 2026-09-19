@@ -24,12 +24,13 @@
         android:autofillHints="none"
         android:textColorHint="@color/dialogHintTextColor" />
 
+    <!-- sized to its own text: the older headings share height by weight, which would clip
+         this longer one when it wraps on a narrow screen or in a longer translation -->
     <TextView
         android:id="@+id/labelDialogTitle"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_weight="1"
         android:text="@string/contact_label_title"
         android:textColor="@color/primary"
         android:textSize="@dimen/header_text_size" />

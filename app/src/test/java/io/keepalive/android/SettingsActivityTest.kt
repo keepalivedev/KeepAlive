@@ -2,8 +2,11 @@ package io.keepalive.android
 
 import android.content.Context
 import android.os.Looper
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SwitchCompat
 import androidx.test.core.app.ApplicationProvider
@@ -71,6 +74,20 @@ class SettingsActivityTest {
         val saved: MutableList<SMSEmergencyContactSetting> =
             loadJSONSharedPreference(getAppSharedPreferences(appCtx), "PHONE_NUMBER_SETTINGS")
         return saved.single()
+    }
+
+    @Test fun `the label heading is sized to its own text so a wrapped translation is not clipped`() {
+        // the dialog's older headings share height by weight; a heading that wraps while
+        //  the others stay on one line would get an equal share and lose its second line
+        val activity = launch()
+        activity.findViewById<Button>(R.id.addButton).performClick()
+        val dialog = ShadowDialog.getLatestDialog() as AlertDialog
+
+        val params = dialog.findViewById<TextView>(R.id.labelDialogTitle)!!.layoutParams
+                as LinearLayout.LayoutParams
+
+        assertEquals(ViewGroup.LayoutParams.WRAP_CONTENT, params.height)
+        assertEquals(0f, params.weight, 0f)
     }
 
     @Test fun `adding a contact with a label saves the label`() {
