@@ -582,17 +582,17 @@ class MainActivity : AppCompatActivity() {
                             ContextCompat.getMainExecutor(this)
                         )
                     }
+                }
 
-                    // the reboot limitation of a secondary user holds whichever of the states
-                    //  above is showing, so its note goes under all of them, not only the
-                    //  healthy one. the restriction check below leaves an existing note alone
-                    if (isSecondaryUser(this)) {
-                        monitoringMessageTextView.text = impairedStatusMessage(
-                            monitoringMessageTextView.text.toString(),
-                            null,
-                            getString(R.string.monitoring_secondary_user_message)
-                        )
-                    }
+                // the reboot limitation of a secondary user holds whichever of the states above
+                //  is showing while an alarm is scheduled, so its note goes under all of them,
+                //  not only the healthy one. the restriction check leaves an existing note alone
+                if (isSecondaryUser(this)) {
+                    monitoringMessageTextView.text = impairedStatusMessage(
+                        monitoringMessageTextView.text.toString(),
+                        null,
+                        getString(R.string.monitoring_secondary_user_message)
+                    )
                 }
             } else {
                 DebugLogger.d(tag, getString(R.string.debug_log_no_active_alarm_showing_restart_button))
