@@ -54,6 +54,13 @@ interface AlertCheckDeps {
     /** Latest lock/unlock or app-foreground event since [startTimestamp], or null. */
     fun getLastDeviceActivity(startTimestamp: Long, monitoredApps: List<String>): UsageEvents.Event?
 
+    /**
+     * Whether another user of a multi-user device is in the foreground with the keyguard
+     * hidden, i.e. someone is using the device in a profile this user's usage events
+     * cannot show (issue #215).
+     */
+    fun isOtherUserActive(): Boolean
+
     // --- Actions ---
 
     /** Schedule the next [io.keepalive.android.receivers.AlarmReceiver] firing via AlarmManager. */
@@ -97,6 +104,8 @@ class ProductionAlertCheckDeps(private val context: Context) : AlertCheckDeps {
 
     override fun getLastDeviceActivity(startTimestamp: Long, monitoredApps: List<String>): UsageEvents.Event? =
         getLastDeviceActivity(context, startTimestamp, monitoredApps)
+
+    override fun isOtherUserActive(): Boolean = isOtherUserActive(context)
 
     override fun scheduleAlarm(baseTimestamp: Long, periodMinutes: Int, stage: String, restPeriods: MutableList<RestPeriod>?) {
         setAlarm(context, baseTimestamp, periodMinutes, stage, restPeriods)

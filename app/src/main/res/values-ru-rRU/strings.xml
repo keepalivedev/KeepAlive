@@ -358,6 +358,7 @@
     <string name="debug_log_sms_permission_revoked">Разрешение SEND_SMS больше не предоставлено!</string>
     <string name="debug_log_background_restricted">Фоновая активность ограничена настройками батареи</string>
     <string name="debug_log_secondary_user">Работает в дополнительном профиле пользователя, после перезагрузки ничего не может работать, пока этот пользователь не запущен</string>
+    <string name="debug_log_other_user_active">В этом профиле нет активности, но используется другой профиль пользователя, это считается активностью</string>
     <string name="debug_log_app_not_enabled_alarm_went_off">Приложение не включено, почему сработал будильник?!</string>
     <string name="debug_log_alarm_time_comparison">Время %1$s UTC, будильник должен был сработать в %2$s UTC, что было %3$d секунд назад</string>
     <string name="debug_log_failed_processing_alarm">Не удалось обработать будильник:</string>

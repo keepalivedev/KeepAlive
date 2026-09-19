@@ -245,6 +245,19 @@ internal fun doAlertCheck(deps: AlertCheckDeps, alarmStage: String) {
         activitySearchStartTimestamp, appsToMonitor.map { it.packageName }
     )
 
+    // usage events are per user, so on a multi-user device they say nothing about someone
+    //  using the device in another profile. if this user has no events but another user
+    //  is in the foreground with the keyguard hidden, the device is in use right now,
+    //  which counts as activity at the time of this check (issue #215)
+    val otherUserActive = lastInteractiveEvent == null && deps.isOtherUserActive()
+    if (otherUserActive) {
+        DebugLogger.d("doAlertCheck", deps.getString(R.string.debug_log_other_user_active))
+    }
+
+    // when the device was last used, or null if no activity was found
+    val lastActivityTimestamp: Long? =
+        lastInteractiveEvent?.timeStamp ?: if (otherUserActive) nowTimestamp else null
+
     // save the last activity state to device-protected storage so it is available
     //  during Direct Boot if the device reboots before the next alarm fires.
     //  this runs every alarm cycle so the data stays reasonably fresh.
@@ -254,8 +267,8 @@ internal fun doAlertCheck(deps: AlertCheckDeps, alarmStage: String) {
         try {
             devicePrefs.edit(commit = true) {
                 putLong(PrefKeys.LAST_CHECK_TIMESTAMP, nowTimestamp)
-                if (lastInteractiveEvent != null) {
-                    putLong(PrefKeys.LAST_ACTIVITY_TIMESTAMP, lastInteractiveEvent.timeStamp)
+                if (lastActivityTimestamp != null) {
+                    putLong(PrefKeys.LAST_ACTIVITY_TIMESTAMP, lastActivityTimestamp)
                 }
             }
         } catch (e: Exception) {
@@ -267,21 +280,21 @@ internal fun doAlertCheck(deps: AlertCheckDeps, alarmStage: String) {
     // DO NOT CHECK FOR REST PERIOD HERE; final alarms should never be set during
     //  a rest period so we can assume that the 'are you there?' check was done
     //  outside of a rest period and so we should still send the alert
-    if (alarmStage == "final" && lastInteractiveEvent == null) {
+    if (alarmStage == "final" && lastActivityTimestamp == null) {
 
         deps.dispatchFinalAlert(prefs, nowTimestamp, checkPeriodHours, restPeriods)
         return
     }
 
     // todo make this a debuglogger message
-    if (lastInteractiveEvent == null && isInRestPeriod) {
+    if (lastActivityTimestamp == null && isInRestPeriod) {
         Log.d("doAlertCheck", "No events found but we are in a rest period, not sending alert")
     }
 
     // if no events were found then we need to send the followup notification and set a final alarm
     // make sure we aren't in a rest period though because we should never initiate the
     //  'are you there?' check during a rest period
-    if (lastInteractiveEvent == null && !isInRestPeriod) {
+    if (lastActivityTimestamp == null && !isInRestPeriod) {
         DebugLogger.d("doAlertCheck", deps.getString(R.string.debug_log_no_events_sending_notification, checkPeriodHours))
 
         deps.showAreYouThereNotification(followupPeriodMinutes)
@@ -304,7 +317,7 @@ internal fun doAlertCheck(deps: AlertCheckDeps, alarmStage: String) {
         // use the last event timestamp if we found one, otherwise it means we are in a rest period
         //  so assume that the last activity was checkPeriodHours ago so that the new alarm
         //  gets set for the end of the current rest period
-        val lastInteractiveEventTimestamp = lastInteractiveEvent?.timeStamp ?: (nowTimestamp - (checkPeriodHours * 60 * 60 * 1000)).toLong()
+        val lastInteractiveEventTimestamp = lastActivityTimestamp ?: (nowTimestamp - (checkPeriodHours * 60 * 60 * 1000)).toLong()
 
         // this just here for informational purposes
         val lastEventMsAgo = nowTimestamp - lastInteractiveEventTimestamp

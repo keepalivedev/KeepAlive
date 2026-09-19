@@ -1,9 +1,11 @@
 package io.keepalive.android
 
+import android.app.KeyguardManager
 import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.os.Build
+import android.os.UserManager
 import android.util.Log
 import java.util.TimeZone
 
@@ -104,4 +106,30 @@ fun getLastDeviceActivity(context: Context, startTimestamp: Long, monitoredApps:
         DebugLogger.d("getLastDeviceActivity", context.getString(R.string.debug_log_failed_getting_last_phone_activity), e)
     }
     return lastInteractiveEvent
+}
+
+// usage events are per user, so on a multi-user device this user's events say nothing
+//  about someone using the device in another profile. two device-wide signals fill the
+//  gap: whether this user is in the foreground, and whether the keyguard is showing.
+//  another user in front with the keyguard hidden means the device is in use right now.
+//  it is only a snapshot taken at check time, not a history (issue #215)
+fun isOtherUserActive(context: Context): Boolean {
+
+    // isUserForeground only became public in API 31; below that there is no way to tell
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+        return false
+    }
+
+    // like the usage query above, never let this break the alert check
+    return try {
+        val userManager = context.getSystemService(Context.USER_SERVICE) as? UserManager
+            ?: return false
+        val keyguardManager = context.getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager
+            ?: return false
+
+        !userManager.isUserForeground && !keyguardManager.isKeyguardLocked
+    } catch (e: Exception) {
+        Log.e("isOtherUserActive", "Failed checking for another active user", e)
+        false
+    }
 }

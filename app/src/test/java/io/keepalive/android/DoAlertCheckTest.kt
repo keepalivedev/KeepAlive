@@ -175,6 +175,52 @@ class DoAlertCheckTest {
         assertEquals(0, deps.finalAlertCalls.size)
     }
 
+    // ---- another user of a multi-user device is using it (issue #215) -------
+
+    @Test fun `no usage events while another user is using the device counts as activity`() {
+        deps.userUnlockedValue = true
+        deps.nowValue = hours(24)
+        deps.lastActivity = null
+        deps.otherUserActiveValue = true
+
+        doAlertCheck(deps, "periodic")
+
+        assertEquals("no prompt while someone is using the device", 0, deps.notificationShowCount)
+        assertEquals(0, deps.overlayShowCount)
+        assertEquals(1, deps.scheduledAlarms.size)
+        assertEquals("periodic", deps.scheduledAlarms[0].stage)
+        assertEquals("the activity is happening now",
+            hours(24), deps.scheduledAlarms[0].baseTimestamp)
+        assertEquals("recorded for the direct boot path like any other activity",
+            hours(24), deps.devPrefs.getLong("last_activity_timestamp", -1L))
+    }
+
+    @Test fun `final alarm while another user is using the device skips the alert`() {
+        deps.userUnlockedValue = true
+        deps.nowValue = hours(25)
+        deps.lastActivity = null
+        deps.otherUserActiveValue = true
+
+        doAlertCheck(deps, "final")
+
+        assertEquals(0, deps.finalAlertCalls.size)
+        assertEquals(1, deps.scheduledAlarms.size)
+        assertEquals("periodic", deps.scheduledAlarms[0].stage)
+    }
+
+    @Test fun `the other user is only consulted when this user has no usage events`() {
+        deps.userUnlockedValue = true
+        deps.nowValue = hours(24)
+        deps.lastActivity = fakeUsageEvent(timeStamp = hours(23))
+        deps.otherUserActiveValue = true
+
+        doAlertCheck(deps, "periodic")
+
+        assertEquals(0, deps.otherUserActiveQueries)
+        assertEquals("the real event still decides the next check",
+            hours(23), deps.scheduledAlarms[0].baseTimestamp)
+    }
+
     @Test fun `unlocked with recent activity reschedules periodic`() {
         deps.userUnlockedValue = true
         deps.nowValue = hours(24)
