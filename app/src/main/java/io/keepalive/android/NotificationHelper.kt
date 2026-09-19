@@ -267,7 +267,13 @@ class AlertNotificationHelper(private val context: Context) {
                     val fullScreenEnabled = getAppSharedPreferences(context)
                         .getBoolean(PrefKeys.ARE_YOU_THERE_OVERLAY_ENABLED, true)
 
-                    if (fullScreenEnabled && canUseFullScreenIntent()) {
+                    // a full-screen intent wakes the screen even when this user is not the one
+                    //  in front, where the prompt can't be seen. the lit screen would later be
+                    //  read by the check for another user being active as someone using the
+                    //  device, and the alert would be skipped (issue #215)
+                    val inBackgroundUser = isInBackgroundUser(context)
+
+                    if (fullScreenEnabled && canUseFullScreenIntent() && !inBackgroundUser) {
                         val fullScreenIntent = Intent(context, AreYouThereActivity::class.java).apply {
                             flags = Intent.FLAG_ACTIVITY_NEW_TASK
                             putExtra(AreYouThereActivity.EXTRA_MESSAGE, content)
@@ -282,7 +288,8 @@ class AlertNotificationHelper(private val context: Context) {
                         Log.d("sendNotification", "Full-screen intent attached")
                     } else {
                         Log.d("sendNotification", "Full-screen intent not attached " +
-                                "(enabled=$fullScreenEnabled, canUse=${canUseFullScreenIntent()})")
+                                "(enabled=$fullScreenEnabled, canUse=${canUseFullScreenIntent()}, " +
+                                "backgroundUser=$inBackgroundUser)")
                     }
                 } catch (e: Exception) {
                     // the notification itself must still go out
