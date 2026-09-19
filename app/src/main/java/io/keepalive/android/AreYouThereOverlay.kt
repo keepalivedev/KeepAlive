@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
 import android.os.SystemClock
+import android.os.UserManager
 import android.provider.Settings
 import android.view.ContextThemeWrapper
 import android.view.Gravity
@@ -203,6 +204,16 @@ object AreYouThereOverlay {
     private fun acquireScreenWake(appContext: Context) {
         try {
             if (wakeLock?.isHeld == true) return
+
+            // from a background user the prompt can't be seen, so a wake-up would only leave
+            //  the screen lit with nobody there, and the check for another user being active
+            //  would later read that as someone using the device and skip the alert
+            //  (issue #215). isUserForeground is public from API 31
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val userManager = appContext.getSystemService(Context.USER_SERVICE) as? UserManager
+                if (userManager != null && !userManager.isUserForeground) return
+            }
+
             val pm = appContext.getSystemService(Context.POWER_SERVICE) as PowerManager
             val wl = pm.newWakeLock(
                 PowerManager.SCREEN_BRIGHT_WAKE_LOCK or

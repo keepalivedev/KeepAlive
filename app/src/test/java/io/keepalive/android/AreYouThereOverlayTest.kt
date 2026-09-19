@@ -2,6 +2,7 @@ package io.keepalive.android
 
 import android.content.Context
 import android.os.Looper
+import android.os.UserManager
 import android.provider.Settings
 import android.view.View
 import android.widget.Button
@@ -81,6 +82,20 @@ class AreYouThereOverlayTest {
         idleMain()
 
         assertNotNull("show() should acquire a wake lock to wake the screen",
+            ShadowPowerManager.getLatestWakeLock())
+    }
+
+    @Test fun `show does not wake the screen while another user is in the foreground`() {
+        // from a background user the prompt can't be seen, so a wake-up only leaves the
+        //  screen lit with nobody there - and the check for another user being active
+        //  would later read that as someone using the device and skip the alert (issue #215)
+        val userManager = appCtx.getSystemService(Context.USER_SERVICE) as UserManager
+        shadowOf(userManager).setUserForeground(false)
+
+        AreYouThereOverlay.show(appCtx, "test message", anHourOut())
+        idleMain()
+
+        assertNull("no wake lock expected from a background user",
             ShadowPowerManager.getLatestWakeLock())
     }
 
