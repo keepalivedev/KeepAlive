@@ -2,10 +2,12 @@ package io.keepalive.android
 
 import android.content.Context
 import android.os.Looper
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SwitchCompat
@@ -88,6 +90,26 @@ class SettingsActivityTest {
 
         assertEquals(ViewGroup.LayoutParams.WRAP_CONTENT, params.height)
         assertEquals(0f, params.weight, 0f)
+    }
+
+    @Test fun `the contact form can scroll so nothing is cut off on a short screen`() {
+        // AlertDialog does not scroll a custom view by itself, and the label made the form
+        //  taller. the location switch at the bottom has to stay reachable
+        val activity = launch()
+        activity.findViewById<Button>(R.id.addButton).performClick()
+        val dialog = ShadowDialog.getLatestDialog() as AlertDialog
+
+        var ancestor = dialog.findViewById<View>(R.id.dialogLocationSwitch)!!.parent
+        var insideScrollView = false
+        while (ancestor != null) {
+            if (ancestor is ScrollView) {
+                insideScrollView = true
+                break
+            }
+            ancestor = ancestor.parent
+        }
+
+        assertTrue("the form should sit inside a ScrollView", insideScrollView)
     }
 
     @Test fun `adding a contact with a label saves the label`() {
