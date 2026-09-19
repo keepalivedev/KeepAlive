@@ -690,20 +690,11 @@ class MainActivity : AppCompatActivity() {
         val smsContacts: MutableList<SMSEmergencyContactSetting> = loadJSONSharedPreference(sharedPrefs,
             "PHONE_NUMBER_SETTINGS")
 
-        var smsPhoneNumbers = ""
-
-        // loop through the SMS contacts and create a csv string of the enabled contacts
-        for (contact in smsContacts) {
-
-            if (contact.isEnabled && contact.phoneNumber != "") {
-                smsPhoneNumbers += PhoneNumberUtils.formatNumber(
-                    contact.phoneNumber,
-                    Locale.getDefault().country
-                ) + ", "
-            }
+        // csv of the enabled contacts, each shown as its optional label plus the number.
+        //  formatNumber returns null for a number it can't parse, so fall back to the raw one
+        return smsContactsDisplayString(smsContacts) { number ->
+            PhoneNumberUtils.formatNumber(number, Locale.getDefault().country) ?: number
         }
-
-        return smsPhoneNumbers.dropLast(2)
     }
 
     // get the number of SMS messages that will be sent when the test alert is triggered

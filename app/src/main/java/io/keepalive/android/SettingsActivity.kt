@@ -678,6 +678,7 @@ class SettingsActivity : AppCompatActivity() {
         val dialogView =
             LayoutInflater.from(this).inflate(R.layout.dialog_add_edit_phone_number, null)
         val phoneNumberInput: EditText = dialogView.findViewById(R.id.phoneNumberInput)
+        val labelInput: EditText = dialogView.findViewById(R.id.labelInput)
         val alertMessageInput: EditText = dialogView.findViewById(R.id.alertMessageInput)
         val enabledSwitch: SwitchCompat = dialogView.findViewById(R.id.dialogEnabledSwitch)
         val locationSwitch: SwitchCompat = dialogView.findViewById(R.id.dialogLocationSwitch)
@@ -685,6 +686,7 @@ class SettingsActivity : AppCompatActivity() {
         // update the dialog based on whether this is a new setting or an existing one
         setting?.let {
             phoneNumberInput.setText(it.phoneNumber)
+            labelInput.setText(it.label ?: "")
             alertMessageInput.setText(it.alertMessage)
             enabledSwitch.isChecked = it.isEnabled
             locationSwitch.isChecked = it.includeLocation
@@ -718,7 +720,11 @@ class SettingsActivity : AppCompatActivity() {
                     phoneNumber = phoneNumberInput.text.toString(),
                     alertMessage = alertMessageInput.text.toString(),
                     isEnabled = enabledSwitch.isChecked,
-                    includeLocation = locationSwitch.isChecked
+                    includeLocation = locationSwitch.isChecked,
+
+                    // the label is optional and display-only; a blank one is stored as
+                    //  no label so the saved contact looks the same as before labels existed
+                    label = labelInput.text.toString().trim().ifEmpty { null }
                 )
 
                 // if this is a new setting then add it to the list, otherwise edit the existing one

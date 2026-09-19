@@ -25,6 +25,27 @@
         android:textColorHint="@color/dialogHintTextColor" />
 
     <TextView
+        android:id="@+id/labelDialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:text="@string/contact_label_title"
+        android:textColor="@color/primary"
+        android:textSize="@dimen/header_text_size" />
+
+    <EditText
+        android:id="@+id/labelInput"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_view_height"
+        android:autofillHints="none"
+        android:hint="@string/contact_label_hint"
+        android:inputType="textCapWords|textPersonName"
+        android:maxLength="40"
+        android:singleLine="true"
+        android:textColorHint="@color/dialogHintTextColor" />
+
+    <TextView
         android:id="@+id/alertMessageDialogTitle"
         android:layout_width="match_parent"
         android:layout_height="0dp"

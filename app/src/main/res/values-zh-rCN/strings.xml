@@ -163,6 +163,8 @@
     <string name="sample_alert_message">提醒文本示例</string>
     <string name="include_location_information">附带位置信息</string>
     <string name="phone_number_hint">输入短信号码</string>
+    <string name="contact_label_title">姓名或关系（可选）</string>
+    <string name="contact_label_hint">例如：女儿</string>
     <string name="alert_message_hint">输入短信内容</string>
     <string name="delete_phone_number_dialog_title">删除联系人</string>
     <string name="delete_phone_number_dialog_description">您确定要删除此条目吗？</string>
