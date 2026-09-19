@@ -55,9 +55,9 @@ interface AlertCheckDeps {
     fun getLastDeviceActivity(startTimestamp: Long, monitoredApps: List<String>): UsageEvents.Event?
 
     /**
-     * Whether another user of a multi-user device is in the foreground with the keyguard
-     * hidden, i.e. someone is using the device in a profile this user's usage events
-     * cannot show (issue #215).
+     * Whether another user of a multi-user device is in the foreground with the screen on
+     * and the keyguard hidden, i.e. someone is using the device in a profile this user's
+     * usage events cannot show (issue #215).
      */
     fun isOtherUserActive(): Boolean
 

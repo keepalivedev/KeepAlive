@@ -5,6 +5,7 @@ import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.os.Build
+import android.os.PowerManager
 import android.os.UserManager
 import android.util.Log
 import java.util.TimeZone
@@ -109,9 +110,10 @@ fun getLastDeviceActivity(context: Context, startTimestamp: Long, monitoredApps:
 }
 
 // usage events are per user, so on a multi-user device this user's events say nothing
-//  about someone using the device in another profile. two device-wide signals fill the
-//  gap: whether this user is in the foreground, and whether the keyguard is showing.
-//  another user in front with the keyguard hidden means the device is in use right now.
+//  about someone using the device in another profile. three device-wide signals fill the
+//  gap: whether this user is in the foreground, whether the keyguard is showing, and
+//  whether the screen is on. another user in front with the screen on and the keyguard
+//  hidden means the device is in use right now.
 //  it is only a snapshot taken at check time, not a history (issue #215)
 fun isOtherUserActive(context: Context): Boolean {
 
@@ -126,8 +128,15 @@ fun isOtherUserActive(context: Context): Boolean {
             ?: return false
         val keyguardManager = context.getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager
             ?: return false
+        val powerManager = context.getSystemService(Context.POWER_SERVICE) as? PowerManager
+            ?: return false
 
-        !userManager.isUserForeground && !keyguardManager.isKeyguardLocked
+        // a profile with its screen lock set to None never shows the keyguard, so a hidden
+        //  keyguard alone would count an idle, dark device as in use at every check and
+        //  the alert would never be sent. the screen has to be on as well
+        !userManager.isUserForeground &&
+                !keyguardManager.isKeyguardLocked &&
+                powerManager.isInteractive
     } catch (e: Exception) {
         Log.e("isOtherUserActive", "Failed checking for another active user", e)
         false

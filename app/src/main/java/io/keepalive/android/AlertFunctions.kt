@@ -247,8 +247,8 @@ internal fun doAlertCheck(deps: AlertCheckDeps, alarmStage: String) {
 
     // usage events are per user, so on a multi-user device they say nothing about someone
     //  using the device in another profile. if this user has no events but another user
-    //  is in the foreground with the keyguard hidden, the device is in use right now,
-    //  which counts as activity at the time of this check (issue #215)
+    //  is in the foreground with the screen on and the keyguard hidden, the device is in
+    //  use right now, which counts as activity at the time of this check (issue #215)
     val otherUserActive = lastInteractiveEvent == null && deps.isOtherUserActive()
     if (otherUserActive) {
         DebugLogger.d("doAlertCheck", deps.getString(R.string.debug_log_other_user_active))

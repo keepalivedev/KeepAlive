@@ -2,6 +2,7 @@ package io.keepalive.android
 
 import android.app.KeyguardManager
 import android.content.Context
+import android.os.PowerManager
 import android.os.UserManager
 import io.mockk.every
 import io.mockk.mockk
@@ -21,12 +22,18 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 class IsOtherUserActiveTest {
 
-    private fun contextWith(userForeground: Boolean, keyguardLocked: Boolean): Context {
+    private fun contextWith(
+        userForeground: Boolean,
+        keyguardLocked: Boolean,
+        screenOn: Boolean = true
+    ): Context {
         val userManager = mockk<UserManager> { every { isUserForeground } returns userForeground }
         val keyguardManager = mockk<KeyguardManager> { every { isKeyguardLocked } returns keyguardLocked }
+        val powerManager = mockk<PowerManager> { every { isInteractive } returns screenOn }
         return mockk {
             every { getSystemService(Context.USER_SERVICE) } returns userManager
             every { getSystemService(Context.KEYGUARD_SERVICE) } returns keyguardManager
+            every { getSystemService(Context.POWER_SERVICE) } returns powerManager
         }
     }
 
@@ -46,6 +53,15 @@ class IsOtherUserActiveTest {
     @Config(sdk = [33, 35])
     fun `another user in front behind the keyguard is not activity`() {
         assertFalse(isOtherUserActive(contextWith(userForeground = false, keyguardLocked = true)))
+    }
+
+    @Test
+    @Config(sdk = [33, 35])
+    fun `a dark screen is not activity even when the other user has no screen lock`() {
+        // a profile with its screen lock set to None never shows the keyguard, so the
+        //  keyguard stays hidden for hours on an idle device. only a lit screen counts
+        assertFalse(isOtherUserActive(
+            contextWith(userForeground = false, keyguardLocked = false, screenOn = false)))
     }
 
     @Test
