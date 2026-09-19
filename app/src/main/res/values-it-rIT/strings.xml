@@ -95,6 +95,7 @@
     <string name="monitoring_location_disabled_title">Servizi di localizzazione disattivati</string>
     <string name="monitoring_location_disabled_message">Il monitoraggio è in corso, ma i servizi di localizzazione sono disattivati, quindi gli avvisi non possono includere la tua posizione. Attiva la localizzazione nelle impostazioni del dispositivo o disattiva \"Includi le informazioni sulla posizione\" per i tuoi contatti di emergenza.</string>
     <string name="monitoring_background_restricted_message">L\'attività in background di Keep Alive è limitata, quindi i controlli di attività potrebbero essere ritardati o non essere mai eseguiti e gli avvisi potrebbero non essere inviati. Tocca il pulsante qui sotto e imposta l\'utilizzo della batteria su \"Senza limitazioni\" o \"Ottimizzato\".</string>
+    <string name="monitoring_secondary_user_message">Keep Alive è installato in un profilo utente secondario. Dopo un riavvio non può funzionare finché non torni a questo profilo, quindi fino ad allora non può essere inviato alcun avviso.</string>
         <string name="monitoring_permissions_required_message">Il monitoraggio è attivato, ma non tutte le autorizzazioni sono state concesse. Fare clic sul pulsante "Concedi autorizzazioni" sottostante.</string>  
         <string name="alarm_message_too_long_message">Il messaggio non può contenere più di 160 caratteri.</string>  
         <string name="phone_number_invalid_message">Si prega di inserire un numero di telefono valido.</string>  
@@ -356,6 +357,7 @@
 <string name="debug_log_alarm_just_fired">L\'allarme è appena scattato!</string>  
 <string name="debug_log_sms_permission_revoked">L\'autorizzazione SEND_SMS non è più concessa!</string>
     <string name="debug_log_background_restricted">L\'attività in background è limitata dalle impostazioni della batteria</string>
+    <string name="debug_log_secondary_user">In esecuzione in un profilo utente secondario, dopo un riavvio nulla può essere eseguito finché questo utente non viene avviato</string>
 <string name="debug_log_app_not_enabled_alarm_went_off">L\'applicazione non è abilitata, perché l\'allarme è scattato?!</string>  
 <string name="debug_log_alarm_time_comparison">L\'ora è %1$s UTC, l\'allarme doveva scattare a %2$s UTC, ovvero %3$d secondi fa</string>  
 <string name="debug_log_failed_processing_alarm">Impossibile elaborare l\'allarme:</string>  

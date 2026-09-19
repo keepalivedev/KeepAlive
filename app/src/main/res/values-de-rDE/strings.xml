@@ -95,6 +95,7 @@
     <string name="monitoring_location_disabled_title">Standortdienste ausgeschaltet</string>
     <string name="monitoring_location_disabled_message">Die Überwachung läuft, aber die Standortdienste sind ausgeschaltet, daher können Alarme Ihren Standort nicht enthalten. Bitte schalten Sie den Standort in den Geräteeinstellungen ein oder deaktivieren Sie \"Standortinformation mitsenden\" für Ihre Notfallkontakte.</string>
     <string name="monitoring_background_restricted_message">Die Hintergrundaktivität von Keep Alive ist eingeschränkt, daher können die Aktivitätsprüfungen verzögert werden oder ganz ausbleiben und Alarme möglicherweise nicht gesendet werden. Bitte tippen Sie auf die Schaltfläche unten und stellen Sie die Akkunutzung auf \"Uneingeschränkt\" oder \"Optimiert\".</string>
+    <string name="monitoring_secondary_user_message">Keep Alive ist in einem sekundären Benutzerprofil installiert. Nach einem Neustart kann es erst wieder laufen, wenn Sie zu diesem Profil wechseln, daher kann bis dahin kein Alarm gesendet werden.</string>
     <string name="monitoring_permissions_required_message">Die Überwachung ist aktiviert, aber es wurden nicht alle Berechtigungen erteilt.  Bitte klicken Sie unten auf die Schaltfläche "Berechtigungen erteilen".</string>
     <string name="alarm_message_too_long_message">Die Nachricht darf nicht länger als 160 Zeichen sein.</string>
     <string name="phone_number_invalid_message">Bitte geben Sie eine gültige Telefonnummer ein.</string>
@@ -356,6 +357,7 @@
     <string name="debug_log_alarm_just_fired">Alarm gerade ausgelöst!</string>
     <string name="debug_log_sms_permission_revoked">Die Berechtigung SEND_SMS ist nicht mehr erteilt!</string>
     <string name="debug_log_background_restricted">Die Hintergrundaktivität ist durch die Akkueinstellungen eingeschränkt</string>
+    <string name="debug_log_secondary_user">Läuft in einem sekundären Benutzerprofil, nach einem Neustart kann nichts laufen, bis dieser Benutzer gestartet wird</string>
     <string name="debug_log_app_not_enabled_alarm_went_off">App ist nicht aktiviert, warum wurde der Alarm ausgelöst?!</string>
     <string name="debug_log_alarm_time_comparison">Uhrzeit ist %1$s UTC, Alarm sollte um %2$s UTC ausgelöst werden, was %3$d Sekunden her ist</string>
     <string name="debug_log_failed_processing_alarm">Fehler bei der Alarmverarbeitung:</string>

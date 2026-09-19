@@ -95,6 +95,7 @@
     <string name="monitoring_location_disabled_title">Службы геолокации отключены</string>
     <string name="monitoring_location_disabled_message">Мониторинг работает, но службы геолокации отключены, поэтому оповещения не могут содержать ваше местоположение. Включите геолокацию в настройках устройства или отключите \"Включить информацию о местоположении\" для экстренных контактов.</string>
     <string name="monitoring_background_restricted_message">Фоновая активность Keep Alive ограничена, поэтому проверки активности могут задерживаться или не выполняться вовсе, а оповещения могут не отправляться. Нажмите кнопку ниже и установите для использования батареи режим \"Без ограничений\" или \"Оптимизировано\".</string>
+    <string name="monitoring_secondary_user_message">Keep Alive установлен в дополнительном профиле пользователя. После перезагрузки он не может работать, пока вы снова не переключитесь на этот профиль, поэтому до тех пор оповещение отправить невозможно.</string>
     <string name="monitoring_permissions_required_message">Мониторинг включен, но предоставлены не все разрешения. Нажмите кнопку \'Предоставить разрешения\' ниже.</string>
     <string name="alarm_message_too_long_message">Сообщение не может содержать более 160 символов.</string>
     <string name="phone_number_invalid_message">Введите корректный телефонный номер</string>
@@ -356,6 +357,7 @@
     <string name="debug_log_alarm_just_fired">Будильник только что сработал!</string>
     <string name="debug_log_sms_permission_revoked">Разрешение SEND_SMS больше не предоставлено!</string>
     <string name="debug_log_background_restricted">Фоновая активность ограничена настройками батареи</string>
+    <string name="debug_log_secondary_user">Работает в дополнительном профиле пользователя, после перезагрузки ничего не может работать, пока этот пользователь не запущен</string>
     <string name="debug_log_app_not_enabled_alarm_went_off">Приложение не включено, почему сработал будильник?!</string>
     <string name="debug_log_alarm_time_comparison">Время %1$s UTC, будильник должен был сработать в %2$s UTC, что было %3$d секунд назад</string>
     <string name="debug_log_failed_processing_alarm">Не удалось обработать будильник:</string>

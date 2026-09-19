@@ -108,6 +108,28 @@ fun isBackgroundRestricted(context: Context): Boolean {
     return activityManager.isBackgroundRestricted
 }
 
+// on a multi-user device android only starts the owner (system) user at boot, so an
+//  install in any other user can't run at all after a reboot until someone switches to
+//  that user - there is no direct boot phase for it (issue #215)
+fun isSecondaryUser(context: Context): Boolean {
+
+    // isSystemUser was added in API 23
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        return false
+    }
+
+    val userManager = context.getSystemService(Context.USER_SERVICE) as? UserManager
+        ?: return false
+
+    // nobody switches to a work profile, android starts it along with its owner, so
+    //  the warning would be wrong there. it can only be told apart from API 30
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && userManager.isManagedProfile) {
+        return false
+    }
+
+    return !userManager.isSystemUser
+}
+
 // format the last-activity timestamp for the main screen: time only (no
 //  seconds) when it is today, date and time otherwise. the platform
 //  formatters handle the locale and the device's 12/24 hour setting (issue #189)
