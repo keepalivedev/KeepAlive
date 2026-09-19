@@ -39,7 +39,7 @@ class IsSecondaryUserTest {
     }
 
     @Test
-    @Config(sdk = [30, 35])
+    @Config(sdk = [33, 35])
     fun `a work profile is not reported because it starts together with its owner`() {
         shadowOf(userManager).setIsSystemUser(false)
         shadowOf(userManager).setManagedProfile(true)
