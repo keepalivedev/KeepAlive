@@ -126,6 +126,21 @@ fun isOtherUserActive(context: Context): Boolean {
     return try {
         val userManager = context.getSystemService(Context.USER_SERVICE) as? UserManager
             ?: return false
+
+        // a profile (work, clone, private space) is never the foreground user, its parent
+        //  is, so "not in the foreground" is always true for an install inside one. the rest
+        //  would then hold whenever the screen is on with no keyguard, which our own prompt
+        //  causes by waking the screen, and the alert would be skipped with nobody there.
+        //  isProfile covers every profile type but only exists from API 33
+        val inProfile = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            userManager.isProfile
+        } else {
+            userManager.isManagedProfile
+        }
+        if (inProfile) {
+            return false
+        }
+
         val keyguardManager = context.getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager
             ?: return false
         val powerManager = context.getSystemService(Context.POWER_SERVICE) as? PowerManager

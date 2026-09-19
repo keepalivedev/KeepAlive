@@ -25,9 +25,14 @@ class IsOtherUserActiveTest {
     private fun contextWith(
         userForeground: Boolean,
         keyguardLocked: Boolean,
-        screenOn: Boolean = true
+        screenOn: Boolean = true,
+        profile: Boolean = false
     ): Context {
-        val userManager = mockk<UserManager> { every { isUserForeground } returns userForeground }
+        val userManager = mockk<UserManager> {
+            every { isUserForeground } returns userForeground
+            every { isManagedProfile } returns profile
+            every { isProfile } returns profile
+        }
         val keyguardManager = mockk<KeyguardManager> { every { isKeyguardLocked } returns keyguardLocked }
         val powerManager = mockk<PowerManager> { every { isInteractive } returns screenOn }
         return mockk {
@@ -62,6 +67,16 @@ class IsOtherUserActiveTest {
         //  keyguard stays hidden for hours on an idle device. only a lit screen counts
         assertFalse(isOtherUserActive(
             contextWith(userForeground = false, keyguardLocked = false, screenOn = false)))
+    }
+
+    @Test
+    @Config(sdk = [33, 35])
+    fun `an install inside a work profile never uses the fallback`() {
+        // a profile is never the foreground user, its parent is, so "not in the foreground"
+        //  is always true there. the rest would then hold whenever the screen is on with no
+        //  keyguard, which keep alive's own prompt causes by waking the screen
+        assertFalse(isOtherUserActive(
+            contextWith(userForeground = false, keyguardLocked = false, profile = true)))
     }
 
     @Test
