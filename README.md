@@ -74,9 +74,12 @@ Supports Android 5.1 (API 22) and up
   Keep Alive only sees activity in the user profile it is installed in. On a device with more than one user profile 
   this limits where it can be used:
 
-  - **Installed in the owner profile while you work in another profile:** Keep Alive cannot see your activity in the 
-    other profile, so it will treat the device as unused and may send a false alert. The 'Are you there?' prompt is 
-    also not shown while another profile is in the foreground.
+  - **Installed in the owner profile while you work in another profile:** Keep Alive cannot see your activity in the
+    other profile. On Android 12 and later it treats the device as in use when, at the time of a check, another
+    profile is in the foreground, unlocked and has its screen on, which avoids most false alerts. It cannot see activity that happened
+    between checks, so a check that finds the device locked or the screen off can still lead to an alert, and the 'Are you there?'
+    prompt is not shown while another profile is in the foreground. On older Android versions it cannot see the
+    other profile at all and may send a false alert.
   - **Installed in a secondary profile:** Android only starts the owner profile when the device boots. After a reboot, 
     Keep Alive cannot run at all until you switch to that profile again, and no alert can be sent until then. The 
     main screen shows a warning when Keep Alive is running in a secondary profile.

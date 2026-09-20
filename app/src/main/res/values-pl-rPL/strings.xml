@@ -360,6 +360,7 @@
     <string name="debug_log_sms_permission_revoked">Uprawnienie SEND_SMS nie jest już przyznane!</string>
     <string name="debug_log_background_restricted">Aktywność w tle jest ograniczona przez ustawienia baterii</string>
     <string name="debug_log_secondary_user">Działa w dodatkowym profilu użytkownika, po ponownym uruchomieniu nic nie może działać, dopóki ten użytkownik nie zostanie uruchomiony</string>
+    <string name="debug_log_other_user_active">Brak aktywności w tym profilu, ale używany jest inny profil użytkownika, liczone jako aktywność</string>
     <string name="debug_log_app_not_enabled_alarm_went_off">Aplikacja nie jest włączona, dlaczego alarm się uruchomił?!</string>
     <string name="debug_log_alarm_time_comparison">Czas to %1$s UTC, alarm miał się uruchomić o %2$s UTC, co było %3$d sekund temu</string>
     <string name="debug_log_failed_processing_alarm">Nie udało się przetworzyć alarmu:</string>

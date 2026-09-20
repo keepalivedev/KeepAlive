@@ -203,6 +203,13 @@ object AreYouThereOverlay {
     private fun acquireScreenWake(appContext: Context) {
         try {
             if (wakeLock?.isHeld == true) return
+
+            // from a background user the prompt can't be seen, so a wake-up would only leave
+            //  the screen lit with nobody there, and the check for another user being active
+            //  would later read that as someone using the device and skip the alert
+            //  (issue #215). a work profile is visible with its parent and still wakes it
+            if (isInBackgroundUser(appContext)) return
+
             val pm = appContext.getSystemService(Context.POWER_SERVICE) as PowerManager
             val wl = pm.newWakeLock(
                 PowerManager.SCREEN_BRIGHT_WAKE_LOCK or

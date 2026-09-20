@@ -360,6 +360,7 @@
     <string name="debug_log_sms_permission_revoked">Die Berechtigung SEND_SMS ist nicht mehr erteilt!</string>
     <string name="debug_log_background_restricted">Die Hintergrundaktivität ist durch die Akkueinstellungen eingeschränkt</string>
     <string name="debug_log_secondary_user">Läuft in einem sekundären Benutzerprofil, nach einem Neustart kann nichts laufen, bis dieser Benutzer gestartet wird</string>
+    <string name="debug_log_other_user_active">Keine Aktivität in diesem Profil, aber ein anderes Benutzerprofil wird verwendet, dies zählt als Aktivität</string>
     <string name="debug_log_app_not_enabled_alarm_went_off">App ist nicht aktiviert, warum wurde der Alarm ausgelöst?!</string>
     <string name="debug_log_alarm_time_comparison">Uhrzeit ist %1$s UTC, Alarm sollte um %2$s UTC ausgelöst werden, was %3$d Sekunden her ist</string>
     <string name="debug_log_failed_processing_alarm">Fehler bei der Alarmverarbeitung:</string>
