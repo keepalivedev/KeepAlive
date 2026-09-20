@@ -31,8 +31,31 @@ data class SMSEmergencyContactSetting(
     var phoneNumber: String,
     var alertMessage: String,
     var isEnabled: Boolean,
-    var includeLocation: Boolean
+    var includeLocation: Boolean,
+
+    // optional display-only name or relationship (issue #188). nullable because gson
+    //  builds stored contacts without calling this constructor, so contacts saved
+    //  before the field existed come back with null here whatever default is declared
+    var label: String? = null
 )
+
+// how a contact is shown to the user: the optional label together with the number, so
+//  the label helps recognise the person while the number itself can still be checked
+fun smsContactDisplayText(contact: SMSEmergencyContactSetting, formattedNumber: String): String {
+    val label = contact.label?.trim()
+
+    return if (label.isNullOrEmpty()) formattedNumber else "$label: $formattedNumber"
+}
+
+// csv of the enabled contacts, as shown on the main screen and in the test alert dialog
+fun smsContactsDisplayString(
+    contacts: List<SMSEmergencyContactSetting>,
+    formatNumber: (String) -> String
+): String {
+    return contacts
+        .filter { it.isEnabled && it.phoneNumber != "" }
+        .joinToString(", ") { smsContactDisplayText(it, formatNumber(it.phoneNumber)) }
+}
 
 // data class used to represent a rest period
 data class RestPeriod(

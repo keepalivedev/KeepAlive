@@ -175,6 +175,8 @@
     <string name="sample_alert_message">Sample Alert Message</string>
     <string name="include_location_information">Include Location Information</string>
     <string name="phone_number_hint">Enter Phone Number</string>
+    <string name="contact_label_title">Name or Relationship (Optional)</string>
+    <string name="contact_label_hint">For example: Daughter</string>
     <string name="alert_message_hint">Enter Alert Message</string>
     <string name="delete_phone_number_dialog_title">Delete Emergency Contact</string>
     <string name="delete_phone_number_dialog_description">Are you sure you want to delete this entry?</string>

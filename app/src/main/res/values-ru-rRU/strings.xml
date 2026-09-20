@@ -163,6 +163,8 @@
     <string name="sample_alert_message">Пример текста оповещения</string>
     <string name="include_location_information">Включить информацию о местоположении</string>
     <string name="phone_number_hint">Введите номер телефона</string>
+    <string name="contact_label_title">Имя или кем приходится (необязательно)</string>
+    <string name="contact_label_hint">Например: Дочь</string>
     <string name="alert_message_hint">Введите текст оповещения</string>
     <string name="delete_phone_number_dialog_title">Удалить экстренный контакт</string>
     <string name="delete_phone_number_dialog_description">Вы уверены, что хотите удалить этот элемент?</string>

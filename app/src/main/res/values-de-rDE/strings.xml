@@ -163,6 +163,8 @@
     <string name="sample_alert_message">Beispiel Alarm-Meldung</string>
     <string name="include_location_information">Standortinformation mitsenden</string>
     <string name="phone_number_hint">Telefonnummer eingeben</string>
+    <string name="contact_label_title">Name oder Beziehung (optional)</string>
+    <string name="contact_label_hint">Zum Beispiel: Tochter</string>
     <string name="alert_message_hint">Alarm-Meldung eingeben</string>
     <string name="delete_phone_number_dialog_title">Notfallkontakt löschen</string>
     <string name="delete_phone_number_dialog_description">Sind Sie sicher, dass Sie diesen Eintrag löschen wollen?</string>
