@@ -95,6 +95,7 @@
     <string name="monitoring_location_disabled_title">Usługi lokalizacyjne wyłączone</string>
     <string name="monitoring_location_disabled_message">Monitorowanie działa, ale usługi lokalizacyjne są wyłączone, więc alarmy nie mogą zawierać Twojej lokalizacji. Włącz lokalizację w ustawieniach urządzenia lub wyłącz \"Dodaj Informacje o Lokalizacji\" dla kontaktów alarmowych.</string>
     <string name="monitoring_background_restricted_message">Aktywność w tle aplikacji Keep Alive jest ograniczona, więc sprawdzanie aktywności może być opóźnione lub nigdy się nie uruchomić, a alarmy mogą nie zostać wysłane. Naciśnij przycisk poniżej i ustaw zużycie baterii na \"Bez ograniczeń\" lub \"Zoptymalizowane\".</string>
+    <string name="monitoring_secondary_user_message">Keep Alive jest zainstalowany w dodatkowym profilu użytkownika. Po ponownym uruchomieniu nie może działać, dopóki nie przełączysz się ponownie na ten profil, więc do tego czasu nie można wysłać alarmu.</string>
     <string name="monitoring_permissions_required_message">Monitorowanie jest włączone lecz nie wszystkie uprawnienia zostały przyznane. Kliknij przycisk "Udziel Uprawnień" poniżej.</string>
     <string name="alarm_message_too_long_message">Wiadomość nie może mieć więcej niż 160 znaków.</string>
     <string name="phone_number_invalid_message">Wpisz poprawny numer telefonu.</string>
@@ -358,6 +359,7 @@
     <string name="debug_log_alarm_just_fired">Alarm właśnie się uruchomił!</string>
     <string name="debug_log_sms_permission_revoked">Uprawnienie SEND_SMS nie jest już przyznane!</string>
     <string name="debug_log_background_restricted">Aktywność w tle jest ograniczona przez ustawienia baterii</string>
+    <string name="debug_log_secondary_user">Działa w dodatkowym profilu użytkownika, po ponownym uruchomieniu nic nie może działać, dopóki ten użytkownik nie zostanie uruchomiony</string>
     <string name="debug_log_app_not_enabled_alarm_went_off">Aplikacja nie jest włączona, dlaczego alarm się uruchomił?!</string>
     <string name="debug_log_alarm_time_comparison">Czas to %1$s UTC, alarm miał się uruchomić o %2$s UTC, co było %3$d sekund temu</string>
     <string name="debug_log_failed_processing_alarm">Nie udało się przetworzyć alarmu:</string>

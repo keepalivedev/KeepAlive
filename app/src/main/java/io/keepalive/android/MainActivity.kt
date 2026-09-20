@@ -583,6 +583,17 @@ class MainActivity : AppCompatActivity() {
                         )
                     }
                 }
+
+                // the reboot limitation of a secondary user holds whichever of the states above
+                //  is showing while an alarm is scheduled, so its note goes under all of them,
+                //  not only the healthy one. the restriction check leaves an existing note alone
+                if (isSecondaryUser(this)) {
+                    monitoringMessageTextView.text = impairedStatusMessage(
+                        monitoringMessageTextView.text.toString(),
+                        null,
+                        getString(R.string.monitoring_secondary_user_message)
+                    )
+                }
             } else {
                 DebugLogger.d(tag, getString(R.string.debug_log_no_active_alarm_showing_restart_button))
 
@@ -811,16 +822,38 @@ class MainActivity : AppCompatActivity() {
         // the per-app "Restricted" battery setting is a separate mechanism from
         //  hibernation but has the same effect on monitoring - checks get delayed or
         //  dropped - so it shares the impaired state and the button (issue #194)
-        if (isBackgroundRestricted(this)) {
+        val backgroundRestricted = isBackgroundRestricted(this)
+        if (backgroundRestricted) {
             DebugLogger.d(tag, getString(R.string.debug_log_background_restricted))
+            checkAppRestrictionsButton.visibility = View.VISIBLE
+        }
 
+        // an install in a secondary user can't run after a reboot until someone switches
+        //  to that user, and no setting fixes that, so it gets an explanation but no
+        //  button (issue #215)
+        val secondaryUser = isSecondaryUser(this)
+        if (secondaryUser) {
+            DebugLogger.d(tag, getString(R.string.debug_log_secondary_user))
+        }
+
+        if (backgroundRestricted || secondaryUser) {
             monitoringStatusTextView.text = getString(R.string.monitoring_impaired_title)
             monitoringStatusTextView.setTextColor(
                 getColorCompat(this, R.color.monitoringImpaired)
             )
-            binding.root.findViewById<TextView>(R.id.textviewMonitoringMessage).text =
-                getString(R.string.monitoring_background_restricted_message)
-            checkAppRestrictionsButton.visibility = View.VISIBLE
+
+            // both can apply at once, and then both messages have to stay visible
+            val messageTextView =
+                binding.root.findViewById<TextView>(R.id.textviewMonitoringMessage)
+            messageTextView.text = impairedStatusMessage(
+                messageTextView.text.toString(),
+                if (backgroundRestricted) {
+                    getString(R.string.monitoring_background_restricted_message)
+                } else {
+                    null
+                },
+                if (secondaryUser) getString(R.string.monitoring_secondary_user_message) else null
+            )
         }
     }
 

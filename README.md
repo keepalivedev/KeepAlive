@@ -70,6 +70,17 @@ Supports Android 5.1 (API 22) and up
   to unlock your device after a reboot, the alert will **not** be sent.
 
 
+## Multiple Users and Profiles
+  Keep Alive only sees activity in the user profile it is installed in. On a device with more than one user profile 
+  this limits where it can be used:
+
+  - **Installed in the owner profile while you work in another profile:** Keep Alive cannot see your activity in the 
+    other profile, so it will treat the device as unused and may send a false alert. The 'Are you there?' prompt is 
+    also not shown while another profile is in the foreground.
+  - **Installed in a secondary profile:** Android only starts the owner profile when the device boots. After a reboot, 
+    Keep Alive cannot run at all until you switch to that profile again, and no alert can be sent until then. The 
+    main screen shows a warning when Keep Alive is running in a secondary profile.
+
 ## Requirements
   - **Active SIM** - used to send SMS and place phone calls
     - WiFi calling and messaging will be used if the device supports it

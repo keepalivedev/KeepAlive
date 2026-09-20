@@ -131,6 +131,47 @@ fun isBackgroundRestricted(context: Context): Boolean {
     return activityManager.isBackgroundRestricted
 }
 
+// on a multi-user device android only starts the owner (system) user at boot, so an
+//  install in any other user can't run at all after a reboot until someone switches to
+//  that user - there is no direct boot phase for it (issue #215)
+fun isSecondaryUser(context: Context): Boolean {
+
+    // isSystemUser was added in API 23
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        return false
+    }
+
+    val userManager = context.getSystemService(Context.USER_SERVICE) as? UserManager
+        ?: return false
+
+    // nobody switches to a work profile, android starts it along with its owner, so
+    //  the warning would be wrong there. it can only be told apart from API 30
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && userManager.isManagedProfile) {
+        return false
+    }
+
+    return !userManager.isSystemUser
+}
+
+// the text under the "may be impaired" status. a background restriction replaces the usual
+//  status lines with instructions because the user can act on it (issue #194). the
+//  secondary-user note is a standing limitation, so it goes beneath whichever message is
+//  showing and is never hidden by another warning (issue #215). the main screen builds this
+//  more than once per refresh, so a note that is already there is not added again
+fun impairedStatusMessage(
+    currentMessage: String,
+    backgroundRestrictedMessage: String?,
+    secondaryUserNote: String?
+): String {
+    val message = backgroundRestrictedMessage ?: currentMessage
+
+    return if (secondaryUserNote == null || message.contains(secondaryUserNote)) {
+        message
+    } else {
+        "$message\n\n$secondaryUserNote"
+    }
+}
+
 // format the last-activity timestamp for the main screen: time only (no
 //  seconds) when it is today, date and time otherwise. the platform
 //  formatters handle the locale and the device's 12/24 hour setting (issue #189)
