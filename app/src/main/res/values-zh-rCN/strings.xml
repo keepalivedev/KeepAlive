@@ -99,12 +99,15 @@
     <string name="monitoring_permissions_required_message">监测器已启用，但尚未授予必要权限。 请点击下面的“授予权限”按钮。</string>
     <string name="alarm_message_too_long_message">短信不得超过 160 个字符。</string>
     <string name="phone_number_invalid_message">请输入一个有效的电话号码。</string>
-    <string name="time_period_too_short_message">时间间隔不应小于 10 分钟。</string>
-    <string name="time_period_too_long_message">时间间隔不应超过 7 天。</string>
+    <string name="time_period_too_short_message">不应小于 0.17 小时（10 分钟）。</string>
+    <string name="time_period_too_long_message">不应超过 168 小时（7 天）。</string>
+    <string name="followup_period_too_short_message">不应小于 10 分钟。</string>
+    <string name="followup_period_too_long_message">不应超过 10080 分钟（7 天）。</string>
     <string name="followup_period_whole_minutes_message">分钟必须为整数。</string>
     <string name="time_period_too_many_decimals_message">小时最多保留 2 位小数。</string>
     <string name="test_phone_call_message">将至电:\n%1$s</string>
     <string name="test_sms_message">短信将发送至:\n%1$s</string>
+    <string name="test_sms_message_one_contact">短信将发送至:\n%1$s</string>
     <string name="unable_to_send_sms_message">无法发送短信\n请插入有效的SIM卡</string>
     <string name="no_configured_contacts_message">未设置联系人</string>
     <string name="permissions_button_text">授予权限</string>
@@ -115,7 +118,9 @@
     <string name="test_alert_confirmation_title">确认发送测试短信</string>
     <string name="test_alert_switch_include_warning_text">额外发送 1 条提醒短信</string>
     <string name="test_sms_configured_contacts_message">这将向您的联系人 %1$s 发送测试短信。</string>
-    <string name="test_alert_confirmation_message_with_count"><![CDATA[总共将发送 <b>%1$d</b> 条短信。 您想继续吗？]]></string>
+    <plurals name="test_alert_confirmation_message_with_count">
+        <item quantity="other"><![CDATA[总共将发送 <b>%1$d</b> 条短信。 您想继续吗？]]></item>
+    </plurals>
     <string name="test_alert_sms_default_message">The following messages are a test from the Keep Alive app. Please confirm receipt!</string>
 
     <!-- notification strings -->

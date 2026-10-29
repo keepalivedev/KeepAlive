@@ -301,7 +301,15 @@ class AlertNotificationHelper(private val context: Context) {
                 builder.setAutoCancel(true)
             }
 
-            notificationManager.notify(notificationId, builder.build())
+            val notification = builder.build()
+
+            // repeat the sound until the prompt is acknowledged (which cancels it) or the
+            //  notification shade is opened. a single sound is easy to miss over background noise
+            if (isAreYouThere) {
+                notification.flags = notification.flags or Notification.FLAG_INSISTENT
+            }
+
+            notificationManager.notify(notificationId, notification)
 
         } catch (e: Exception) {
             Log.e("sendNotification", "Failed sending notification?!", e)

@@ -3,7 +3,9 @@ package io.keepalive.android
 import android.content.Context
 import android.content.Intent
 import android.os.Looper
+import android.view.View
 import android.widget.Button
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.test.core.app.ApplicationProvider
 import io.mockk.every
@@ -19,6 +21,7 @@ import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
+import org.robolectric.annotation.Config
 
 /**
  * Tests the full-screen "Are you there?" prompt activity (issue #182):
@@ -107,5 +110,40 @@ class AreYouThereActivityTest {
 
         assertTrue("activity must finish once the countdown target has passed",
             activity.isFinishing)
+    }
+
+    // ---- landscape ---------------------------------------------------------
+
+    @Test fun `the prompt can scroll so the button is never cut off`() {
+        // in landscape or with a large font the content is taller than the screen, and
+        //  without scrolling the button was pushed off the bottom
+        val activity = launch()
+
+        var ancestor = activity.findViewById<Button>(R.id.buttonImOk).parent
+        var insideScrollView = false
+        while (ancestor != null) {
+            if (ancestor is ScrollView) {
+                insideScrollView = true
+                break
+            }
+            ancestor = ancestor.parent
+        }
+
+        assertTrue("the prompt should sit inside a ScrollView", insideScrollView)
+    }
+
+    @Test fun `portrait shows the logo and app name`() {
+        val activity = launch()
+
+        assertEquals(View.VISIBLE, activity.findViewById<View>(R.id.imageAppLogo).visibility)
+        assertEquals(View.VISIBLE, activity.findViewById<View>(R.id.textAppName).visibility)
+    }
+
+    @Test @Config(qualifiers = "land")
+    fun `landscape hides the logo and app name so the button fits`() {
+        val activity = launch()
+
+        assertEquals(View.GONE, activity.findViewById<View>(R.id.imageAppLogo).visibility)
+        assertEquals(View.GONE, activity.findViewById<View>(R.id.textAppName).visibility)
     }
 }

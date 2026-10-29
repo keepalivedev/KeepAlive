@@ -99,12 +99,15 @@
     <string name="monitoring_permissions_required_message">Мониторинг включен, но предоставлены не все разрешения. Нажмите кнопку \'Предоставить разрешения\' ниже.</string>
     <string name="alarm_message_too_long_message">Сообщение не может содержать более 160 символов.</string>
     <string name="phone_number_invalid_message">Введите корректный телефонный номер</string>
-    <string name="time_period_too_short_message">Интервал должен быть не менее 10 минут.</string>
-    <string name="time_period_too_long_message">Интервал не должен превышать 7 дней.</string>
+    <string name="time_period_too_short_message">Должно быть не менее 0.17 часа (10 минут).</string>
+    <string name="time_period_too_long_message">Должно быть не более 168 часов (7 дней).</string>
+    <string name="followup_period_too_short_message">Должно быть не менее 10 минут.</string>
+    <string name="followup_period_too_long_message">Должно быть не более 10080 минут (7 дней).</string>
     <string name="followup_period_whole_minutes_message">Минуты должны быть целым числом.</string>
     <string name="time_period_too_many_decimals_message">Часы могут иметь не более 2 знаков после запятой.</string>
     <string name="test_phone_call_message">Будет совершен вызов на:\n%1$s</string>
-    <string name="test_sms_message">SMS сообщение будет отправлено на:\n%1$s</string>
+    <string name="test_sms_message">SMS сообщения будут отправлены на:\n%1$s</string>
+    <string name="test_sms_message_one_contact">SMS сообщение будет отправлено на:\n%1$s</string>
     <string name="unable_to_send_sms_message">Невозможно отправить SMS\nУбедитесь, что у вас активна SIM-карта.</string>
     <string name="no_configured_contacts_message">Экстренные контакты не настроены</string>
     <string name="permissions_button_text">Дать разрешение</string>
@@ -115,7 +118,12 @@
     <string name="test_alert_confirmation_title">Подтвердить тестовое SMS-оповещение</string>
     <string name="test_alert_switch_include_warning_text">Включить предупреждающее сообщение</string>
     <string name="test_sms_configured_contacts_message">Это отправит тестовое SMS-оповещение вашим настроенным контактам для экстренной связи: %1$s.</string>
-    <string name="test_alert_confirmation_message_with_count"><![CDATA[Всего будет отправлено <b>%1$d</b> SMS. Хотите продолжить?]]></string>
+    <plurals name="test_alert_confirmation_message_with_count">
+        <item quantity="one"><![CDATA[Всего будет отправлено <b>%1$d</b> SMS. Хотите продолжить?]]></item>
+        <item quantity="few"><![CDATA[Всего будет отправлено <b>%1$d</b> SMS. Хотите продолжить?]]></item>
+        <item quantity="many"><![CDATA[Всего будет отправлено <b>%1$d</b> SMS. Хотите продолжить?]]></item>
+        <item quantity="other"><![CDATA[Всего будет отправлено <b>%1$d</b> SMS. Хотите продолжить?]]></item>
+    </plurals>
     <string name="test_alert_sms_default_message">Следующие сообщения являются тестом из приложения Keep Alive. Пожалуйста, подтвердите получение!</string>
 
     <!-- notification strings -->

@@ -123,6 +123,18 @@ class AlertNotificationHelperTest {
         assertFalse("are-you-there must NOT auto-cancel on tap; ack is explicit", autoCancel)
     }
 
+    @Test fun `are-you-there notification repeats its sound until acknowledged`() {
+        AlertNotificationHelper(appCtx).sendNotification(
+            "Are you there?",
+            "Please respond",
+            AppController.ARE_YOU_THERE_NOTIFICATION_ID
+        )
+
+        val notif = shadowOf(nm).allNotifications.single()
+        val insistent = (notif.flags and Notification.FLAG_INSISTENT) != 0
+        assertTrue("a single sound is easy to miss, so the prompt must repeat it", insistent)
+    }
+
     @Test fun `non-are-you-there notification auto-cancels on tap`() {
         AlertNotificationHelper(appCtx).sendNotification(
             "Sent",
@@ -133,6 +145,18 @@ class AlertNotificationHelperTest {
         val notif = shadowOf(nm).allNotifications.single()
         val autoCancel = (notif.flags and Notification.FLAG_AUTO_CANCEL) != 0
         assertTrue("status notifications auto-cancel on tap", autoCancel)
+    }
+
+    @Test fun `non-are-you-there notification sounds only once`() {
+        AlertNotificationHelper(appCtx).sendNotification(
+            "Sent",
+            "SMS delivered",
+            AppController.SMS_ALERT_SENT_NOTIFICATION_ID
+        )
+
+        val notif = shadowOf(nm).allNotifications.single()
+        val insistent = (notif.flags and Notification.FLAG_INSISTENT) != 0
+        assertFalse("status notifications must not repeat their sound", insistent)
     }
 
     @Test fun `notification has a tappable PendingIntent (contentIntent)`() {

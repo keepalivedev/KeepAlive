@@ -60,3 +60,28 @@ internal fun validateTimePeriodInput(preferenceKey: String, value: String): Time
         else -> TimeInputResult.VALID
     }
 }
+
+/**
+ * The string resource explaining why a time period can't be saved, with the limits
+ * given in the unit of the field being edited. Null when the value is valid, or when
+ * it isn't a number at all (the Save button is just disabled then).
+ */
+internal fun timeInputErrorMessage(preferenceKey: String, result: TimeInputResult): Int? {
+    val isHours = preferenceKey == PrefKeys.TIME_PERIOD_HOURS
+
+    return when (result) {
+        TimeInputResult.TOO_SHORT -> if (isHours) {
+            R.string.time_period_too_short_message
+        } else {
+            R.string.followup_period_too_short_message
+        }
+        TimeInputResult.TOO_LONG -> if (isHours) {
+            R.string.time_period_too_long_message
+        } else {
+            R.string.followup_period_too_long_message
+        }
+        TimeInputResult.WHOLE_MINUTES_REQUIRED -> R.string.followup_period_whole_minutes_message
+        TimeInputResult.TOO_MANY_DECIMALS -> R.string.time_period_too_many_decimals_message
+        TimeInputResult.VALID, TimeInputResult.INVALID -> null
+    }
+}
