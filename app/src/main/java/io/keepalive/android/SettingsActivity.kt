@@ -459,27 +459,29 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
+        fun saveSetting() {
+
+            // all of the settings we are editing in a dialog are strings
+            sharedPrefs!!.edit {
+                putString(preferenceKey, dialogEditText.text.toString())
+                if (preferenceKey == "time_period_hours") {
+                    putBoolean(PrefKeys.USE_EXACT_ALARMS, exactAlarmSwitch.isChecked)
+                }
+            }
+
+            // take action depending on what preference is changing
+            processSettingChange(preferenceKey)
+
+            // update the text views to reflect the new values
+            updateTextViewsFromPreferences()
+        }
+
         // build the dialog that will be used to edit the setting
         //val dialog = AlertDialog.Builder(this)
         val dialog = AlertDialog.Builder(this, R.style.AlertDialogTheme)
             .setTitle(dialogTitle)
             .setView(dialogView)
-            .setPositiveButton(getString(R.string.save)) { _, _ ->
-
-                // all of the settings we are editing in a dialog are strings
-                sharedPrefs!!.edit {
-                    putString(preferenceKey, dialogEditText.text.toString())
-                    if (preferenceKey == "time_period_hours") {
-                        putBoolean(PrefKeys.USE_EXACT_ALARMS, exactAlarmSwitch.isChecked)
-                    }
-                }
-
-                // take action depending on what preference is changing
-                processSettingChange(preferenceKey)
-
-                // update the text views to reflect the new values
-                updateTextViewsFromPreferences()
-            }
+            .setPositiveButton(getString(R.string.save)) { _, _ -> saveSetting() }
             .setNegativeButton(getString(R.string.cancel), null)
 
         if (showDeleteButton) {
@@ -507,6 +509,24 @@ class SettingsActivity : AppCompatActivity() {
         // add a text watcher to the edit text so that we can enable/disable the submit button
         val positiveButton = shownDialog.getButton(AlertDialog.BUTTON_POSITIVE)
         dialogEditText.addTextChangedListener(InputTextWatcher(positiveButton, this, preferenceKey, dialogEditText))
+
+        // time periods are checked when Save is pressed rather than on every key press, so
+        //  the steps on the way to a valid value (0, 0. and 0.1 on the way to 0.17) don't
+        //  raise warnings. an out of range value keeps the dialog open and shows the reason
+        if (preferenceKey == "time_period_hours" || preferenceKey == "followup_time_period_minutes") {
+            positiveButton.setOnClickListener {
+                val result = validateTimePeriodInput(preferenceKey, dialogEditText.text.toString())
+
+                if (result == TimeInputResult.VALID) {
+                    saveSetting()
+                    shownDialog.dismiss()
+                } else {
+                    timeInputErrorMessage(preferenceKey, result)?.let {
+                        dialogEditText.error = getString(it)
+                    }
+                }
+            }
+        }
     }
 
     private fun showEditRestPeriodDialog() {
@@ -808,21 +828,14 @@ class SettingsActivity : AppCompatActivity() {
             updateSubmitButtonColor()
         }
 
+        // the range is only checked when Save is pressed (see showEditSettingDialog). while
+        //  typing, Save is just disabled, silently, for a value that isn't a number at all
         private fun handleTimeInput(value: String) {
-            val result = validateTimePeriodInput(preferenceKey, value)
-            submitButton.isEnabled = result == TimeInputResult.VALID
+            submitButton.isEnabled =
+                validateTimePeriodInput(preferenceKey, value) != TimeInputResult.INVALID
 
-            when (result) {
-                TimeInputResult.TOO_SHORT ->
-                    showToast(context.getString(R.string.time_period_too_short_message))
-                TimeInputResult.TOO_LONG ->
-                    showToast(context.getString(R.string.time_period_too_long_message))
-                TimeInputResult.WHOLE_MINUTES_REQUIRED ->
-                    showToast(context.getString(R.string.followup_period_whole_minutes_message))
-                TimeInputResult.TOO_MANY_DECIMALS ->
-                    showToast(context.getString(R.string.time_period_too_many_decimals_message))
-                else -> {}
-            }
+            // clear the reason from the last Save once the value is being changed
+            editText.error = null
         }
 
         private fun handlePhoneInput(raw: String) {

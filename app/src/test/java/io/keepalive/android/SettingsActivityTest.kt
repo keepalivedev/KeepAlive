@@ -23,6 +23,7 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.shadows.ShadowDialog
+import org.robolectric.shadows.ShadowToast
 
 /**
  * Robolectric tests for the plain on/off switches on [SettingsActivity].
@@ -118,5 +119,72 @@ class SettingsActivityTest {
 
     @Test fun `a blank label is saved as no label`() {
         assertNull(addContactThroughDialog("   ").label)
+    }
+
+    // ---- time period dialogs -----------------------------------------------
+
+    private fun openTimeDialog(rowId: Int): AlertDialog {
+        val activity = launch()
+        activity.findViewById<View>(rowId).performClick()
+        return ShadowDialog.getLatestDialog() as AlertDialog
+    }
+
+    private fun AlertDialog.timeInput(): EditText = findViewById(R.id.customDialogEditText)!!
+
+    private fun AlertDialog.pressSave() {
+        getButton(AlertDialog.BUTTON_POSITIVE).performClick()
+        shadowOf(Looper.getMainLooper()).idle()
+    }
+
+    @Test fun `typing a short value on the way to a valid one shows no warning`() {
+        // typing 0.17 passes through 0, 0. and 0.1, which used to raise a toast each
+        val dialog = openTimeDialog(R.id.timePeriodRow)
+
+        for (typed in listOf("0", "0.", "0.1", "0.17")) {
+            dialog.timeInput().setText(typed)
+        }
+
+        assertNull(ShadowToast.getLatestToast())
+        assertNull(dialog.timeInput().error)
+    }
+
+    @Test fun `saving a too short hours value keeps the dialog open with the limit in hours`() {
+        val dialog = openTimeDialog(R.id.timePeriodRow)
+        dialog.timeInput().setText("0.16")
+
+        dialog.pressSave()
+
+        assertTrue("the dialog stays open so the value can be fixed", dialog.isShowing)
+        assertEquals(appCtx.getString(R.string.time_period_too_short_message),
+            dialog.timeInput().error?.toString())
+        assertNull(getAppSharedPreferences(appCtx).getString(PrefKeys.TIME_PERIOD_HOURS, null))
+    }
+
+    @Test fun `saving a valid hours value saves it and closes the dialog`() {
+        val dialog = openTimeDialog(R.id.timePeriodRow)
+        dialog.timeInput().setText("0.17")
+
+        dialog.pressSave()
+
+        assertFalse(dialog.isShowing)
+        assertEquals("0.17", getAppSharedPreferences(appCtx).getString(PrefKeys.TIME_PERIOD_HOURS, null))
+    }
+
+    @Test fun `the minutes dialog gives its limit in minutes`() {
+        val dialog = openTimeDialog(R.id.followupPeriodRow)
+        dialog.timeInput().setText("9")
+
+        dialog.pressSave()
+
+        assertTrue(dialog.isShowing)
+        assertEquals(appCtx.getString(R.string.followup_period_too_short_message),
+            dialog.timeInput().error?.toString())
+    }
+
+    @Test fun `an empty time value cannot be saved`() {
+        val dialog = openTimeDialog(R.id.timePeriodRow)
+        dialog.timeInput().setText("")
+
+        assertFalse(dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled)
     }
 }

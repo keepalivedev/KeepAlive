@@ -85,4 +85,15 @@ class ContactLabelTest {
 
         assertEquals("Daughter: #1, #3", smsContactsDisplayString(contacts) { "#$it" })
     }
+
+    @Test fun `enabled contacts leave out disabled or empty ones`() {
+        // the count picks the singular or plural heading above the recipient list
+        val contacts = listOf(
+            SMSEmergencyContactSetting("1", "x", true, false),
+            SMSEmergencyContactSetting("2", "x", false, false),
+            SMSEmergencyContactSetting("", "x", true, false)
+        )
+
+        assertEquals(listOf("1"), enabledSmsContacts(contacts).map { it.phoneNumber })
+    }
 }

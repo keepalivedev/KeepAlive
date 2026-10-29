@@ -316,7 +316,8 @@ class MainActivity : AppCompatActivity() {
 
         fun buildProceedSMSCountMessage(messageCount: Int): Spanned {
 
-            val proceedMessage = getString(R.string.test_alert_confirmation_message_with_count, messageCount)
+            val proceedMessage = resources.getQuantityString(
+                R.plurals.test_alert_confirmation_message_with_count, messageCount, messageCount)
 
             // deal with fromHtml deprecation
             val formattedProceedMessage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -691,10 +692,23 @@ class MainActivity : AppCompatActivity() {
                 testAlertSMSButton.isEnabled = true
                 smsPhoneTextView.visibility = View.VISIBLE
                 testAlertSMSButton.visibility = View.VISIBLE
-                smsPhoneTextView.text =
-                    String.format(getString(R.string.test_sms_message), smsPhoneNumbers)
+
+                // the sentence has no number in it, so only one contact vs more matters.
+                //  plurals would follow the number instead (Russian uses the singular for 21)
+                val testSMSMessage = if (getSMSContactCount() == 1) {
+                    R.string.test_sms_message_one_contact
+                } else {
+                    R.string.test_sms_message
+                }
+                smsPhoneTextView.text = String.format(getString(testSMSMessage), smsPhoneNumbers)
             }
         }
+    }
+
+    private fun getSMSContactCount(): Int {
+        val smsContacts: MutableList<SMSEmergencyContactSetting> = loadJSONSharedPreference(sharedPrefs,
+            "PHONE_NUMBER_SETTINGS")
+        return enabledSmsContacts(smsContacts).size
     }
 
     private fun getSMSContactString(): String {

@@ -99,12 +99,15 @@
     <string name="monitoring_permissions_required_message">La surveillance est activée, mais toutes les autorisations n\'ont pas été accordées. Veuillez cliquer sur le bouton « Accorder des autorisations » ci-dessous.</string>
     <string name="alarm_message_too_long_message">Le message ne peut pas contenir plus de 160 caractères.</string>
     <string name="phone_number_invalid_message">Veuillez saisir un numéro de téléphone valide.</string>
-    <string name="time_period_too_short_message">L\'intervalle doit être d\'au moins 10 minutes.</string>
-    <string name="time_period_too_long_message">L\'intervalle ne peut pas dépasser 7 jours.</string>
+    <string name="time_period_too_short_message">Doit être d\'au moins 0.17 heure (10 minutes).</string>
+    <string name="time_period_too_long_message">Ne peut pas dépasser 168 heures (7 jours).</string>
+    <string name="followup_period_too_short_message">Doit être d\'au moins 10 minutes.</string>
+    <string name="followup_period_too_long_message">Ne peut pas dépasser 10080 minutes (7 jours).</string>
     <string name="followup_period_whole_minutes_message">Les minutes doivent être un nombre entier.</string>
     <string name="time_period_too_many_decimals_message">Les heures peuvent avoir au maximum 2 décimales.</string>
     <string name="test_phone_call_message">Un appel téléphonique sera passé à:\n%1$s</string>
-    <string name="test_sms_message">Le(s) message(s) SMS sera envoyé à:\n%1$s</string>
+    <string name="test_sms_message">Les messages SMS seront envoyés à:\n%1$s</string>
+    <string name="test_sms_message_one_contact">Le message SMS sera envoyé à:\n%1$s</string>
     <string name="unable_to_send_sms_message">Impossible d\'envoyer des SMS\nVeuillez vérifier que vous disposez d\'une carte SIM active</string>
     <string name="no_configured_contacts_message">Aucun contact d\'urgence n\'a été configuré</string>
     <string name="permissions_button_text">Accorder des autorisations</string>
@@ -115,7 +118,11 @@
     <string name="test_alert_confirmation_title">Confirmer l\'alerte test par SMS</string>
     <string name="test_alert_switch_include_warning_text">Inclure un message d\'avertissement</string>
     <string name="test_sms_configured_contacts_message">Cela enverra une alerte test par SMS à vos contacts d\'urgence configurés : %1$s.</string>
-    <string name="test_alert_confirmation_message_with_count"><![CDATA[Un total de <b>%1$d</b> SMS seront envoyés. Voulez-vous continuer ?]]></string>
+    <plurals name="test_alert_confirmation_message_with_count">
+        <item quantity="one"><![CDATA[Un total de <b>%1$d</b> SMS sera envoyé. Voulez-vous continuer ?]]></item>
+        <item quantity="many"><![CDATA[Un total de <b>%1$d</b> SMS seront envoyés. Voulez-vous continuer ?]]></item>
+        <item quantity="other"><![CDATA[Un total de <b>%1$d</b> SMS seront envoyés. Voulez-vous continuer ?]]></item>
+    </plurals>
     <string name="test_alert_sms_default_message">Les messages suivants sont un test de l\'application Keep Alive. Veuillez confirmer la réception !</string>
 
     <!-- notification strings -->

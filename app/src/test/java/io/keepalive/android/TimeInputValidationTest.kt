@@ -1,6 +1,7 @@
 package io.keepalive.android
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 /**
@@ -113,5 +114,33 @@ class TimeInputValidationTest {
         // "NaN".toFloatOrNull() parses, and NaN compares false against
         // both the minimum and maximum
         assertEquals(TimeInputResult.INVALID, validateTimePeriodInput(HOURS, "NaN"))
+    }
+
+    // --- messages, in the unit of the field being edited ---
+
+    @Test fun `0_17 is the smallest hours value accepted, as the message says`() {
+        // with at most 2 decimals, 0.17 h (10.2 min) is the first value at or above 10 minutes
+        assertEquals(TimeInputResult.VALID, validateTimePeriodInput(HOURS, "0.17"))
+        assertEquals(TimeInputResult.TOO_SHORT, validateTimePeriodInput(HOURS, "0.16"))
+    }
+
+    @Test fun `the hours field gets its limits in hours`() {
+        assertEquals(R.string.time_period_too_short_message,
+            timeInputErrorMessage(HOURS, TimeInputResult.TOO_SHORT))
+        assertEquals(R.string.time_period_too_long_message,
+            timeInputErrorMessage(HOURS, TimeInputResult.TOO_LONG))
+    }
+
+    @Test fun `the minutes field gets its limits in minutes`() {
+        assertEquals(R.string.followup_period_too_short_message,
+            timeInputErrorMessage(MINUTES, TimeInputResult.TOO_SHORT))
+        assertEquals(R.string.followup_period_too_long_message,
+            timeInputErrorMessage(MINUTES, TimeInputResult.TOO_LONG))
+    }
+
+    @Test fun `valid and unparseable input have no message`() {
+        // an unparseable value (empty, a lone '.') just leaves Save disabled
+        assertNull(timeInputErrorMessage(HOURS, TimeInputResult.VALID))
+        assertNull(timeInputErrorMessage(HOURS, TimeInputResult.INVALID))
     }
 }
