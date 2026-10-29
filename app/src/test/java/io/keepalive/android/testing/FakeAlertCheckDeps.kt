@@ -50,6 +50,7 @@ class FakeAlertCheckDeps : AlertCheckDeps {
     var overlayShowCount = 0
     var overlayLastFollowupMinutes: Int? = null
     var acknowledgeCount = 0
+    var dismissCount = 0
     val finalAlertCalls = mutableListOf<FinalAlertCall>()
 
     // --- AlertCheckDeps impl ---
@@ -91,6 +92,10 @@ class FakeAlertCheckDeps : AlertCheckDeps {
 
     override fun acknowledgeAreYouThere() {
         acknowledgeCount++
+    }
+
+    override fun dismissAreYouThere() {
+        dismissCount++
     }
 
     override fun dispatchFinalAlert(

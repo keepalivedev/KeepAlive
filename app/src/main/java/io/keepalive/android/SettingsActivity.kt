@@ -375,6 +375,10 @@ class SettingsActivity : AppCompatActivity() {
                 Log.d("processSettingChange", "App has been disabled, canceling alarm")
 
                 cancelAlarm(this)
+
+                // and any prompt from the cancelled cycle, which can no longer be answered
+                //  and would keep repeating its sound
+                AcknowledgeAreYouThere.dismissPrompt(this)
             }
         }
         // if we change the time period hours then we need to update the alarm
@@ -399,6 +403,9 @@ class SettingsActivity : AppCompatActivity() {
 
             // don't need to cancel the existing alarm, just set a new one
             setAlarm(this, System.currentTimeMillis(), (newValue * 60).toInt(), "periodic", restPeriods)
+
+            // a new cycle starts now, so a prompt counting down to the replaced alarm goes too
+            AcknowledgeAreYouThere.dismissPrompt(this)
         }
     }
 

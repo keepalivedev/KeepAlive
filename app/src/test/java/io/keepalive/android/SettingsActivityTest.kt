@@ -1,5 +1,8 @@
 package io.keepalive.android
 
+import android.Manifest
+import android.app.Application
+import android.app.NotificationManager
 import android.content.Context
 import android.os.Looper
 import android.view.View
@@ -14,6 +17,7 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.test.core.app.ApplicationProvider
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -59,6 +63,40 @@ class SettingsActivityTest {
 
         assertFalse("switch must write the preference the logger reads",
             getAppSharedPreferences(appCtx).getBoolean("debug_logging_enabled", true))
+    }
+
+    // ---- monitoring switch --------------------------------------------------
+
+    @Test fun `turning monitoring off takes down a prompt that is still showing`() {
+        // the prompt repeats its sound until it is cancelled, so one left over from the
+        //  cancelled cycle would keep sounding after monitoring is off
+        shadowOf(appCtx as Application).grantPermissions(Manifest.permission.POST_NOTIFICATIONS)
+        getAppSharedPreferences(appCtx).edit().putBoolean(PrefKeys.ENABLED, true).commit()
+        val activity = launch()
+        AlertNotificationHelper(appCtx).sendNotification(
+            "Are you still there?", "Tap here", AppController.ARE_YOU_THERE_NOTIFICATION_ID)
+        val nm = appCtx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        assertNotNull(shadowOf(nm).getNotification(AppController.ARE_YOU_THERE_NOTIFICATION_ID))
+
+        activity.findViewById<SwitchCompat>(R.id.monitoringEnabledSwitch).isChecked = false
+
+        assertNull(shadowOf(nm).getNotification(AppController.ARE_YOU_THERE_NOTIFICATION_ID))
+    }
+
+    @Test fun `saving a new check period takes down a prompt that is still showing`() {
+        // saving re-arms monitoring with a periodic alarm, replacing the final one the
+        //  prompt was counting down to
+        shadowOf(appCtx as Application).grantPermissions(Manifest.permission.POST_NOTIFICATIONS)
+        getAppSharedPreferences(appCtx).edit().putBoolean(PrefKeys.ENABLED, true).commit()
+        val dialog = openTimeDialog(R.id.timePeriodRow)
+        AlertNotificationHelper(appCtx).sendNotification(
+            "Are you still there?", "Tap here", AppController.ARE_YOU_THERE_NOTIFICATION_ID)
+        val nm = appCtx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        dialog.timeInput().setText("6")
+        dialog.pressSave()
+
+        assertNull(shadowOf(nm).getNotification(AppController.ARE_YOU_THERE_NOTIFICATION_ID))
     }
 
     // ---- contact label (issue #188) ----------------------------------------

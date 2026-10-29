@@ -326,5 +326,9 @@ internal fun doAlertCheck(deps: AlertCheckDeps, alarmStage: String) {
         // set a new alarm so we can check again in the future
         deps.scheduleAlarm(lastInteractiveEventTimestamp, (checkPeriodHours * 60).toInt(),
             "periodic", restPeriods)
+
+        // a prompt the user came back without answering is no longer needed, and its sound
+        //  repeats until it is cancelled
+        deps.dismissAreYouThere()
     }
 }

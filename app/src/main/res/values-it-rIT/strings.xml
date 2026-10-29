@@ -107,7 +107,7 @@
         <string name="time_period_too_many_decimals_message">Le ore possono avere al massimo 2 cifre decimali.</string>
         <string name="test_phone_call_message">Verrà effettuata una telefonata a:\n%1$s</string>  
         <string name="test_sms_message">I messaggi SMS verranno inviati a:\n%1$s</string>
-        <string name="test_sms_message_one_contact">Il messaggio SMS verrà inviato a:\n%1$s</string>
+        <string name="test_sms_message_one">Il messaggio SMS verrà inviato a:\n%1$s</string>
         <string name="unable_to_send_sms_message">Impossibile inviare SMS\nVerifica di avere una SIM attiva</string>  
         <string name="no_configured_contacts_message">Nessun contatto di emergenza configurato</string>  
         <string name="permissions_button_text">Concedi autorizzazioni</string>  
