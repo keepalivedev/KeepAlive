@@ -249,6 +249,12 @@ class AlertNotificationHelper(private val context: Context) {
                     .setVisibility(Notification.VISIBILITY_PUBLIC)
                     .setOngoing(true)
 
+                    // channels decide this on API 26+, but the Zepp app reads this legacy field
+                    //  and won't forward an ongoing notification to the watch below high (issue
+                    //  #230). the system raises it when a full-screen intent is attached, but
+                    //  that isn't always the case
+                    .setPriority(Notification.PRIORITY_HIGH)
+
 
                 // Don't auto dismiss just because they tapped the notification.
                 // We cancel it explicitly on acknowledgement.
