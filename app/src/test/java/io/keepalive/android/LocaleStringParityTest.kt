@@ -54,6 +54,20 @@ class LocaleStringParityTest {
                 translatable = el.getAttribute("translatable") != "false"
             )
         }
+
+        // a <plurals> counts as one key. which forms it has depends on the language, but
+        //  every language has "other", so that item stands in for the format check
+        val plurals = doc.getElementsByTagName("plurals")
+        for (i in 0 until plurals.length) {
+            val el = plurals.item(i) as Element
+            val items = el.getElementsByTagName("item")
+            val other = (0 until items.length).map { items.item(it) as Element }
+                .firstOrNull { it.getAttribute("quantity") == "other" }
+            result[el.getAttribute("name")] = StringRes(
+                value = other?.textContent ?: "",
+                translatable = el.getAttribute("translatable") != "false"
+            )
+        }
         return result
     }
 

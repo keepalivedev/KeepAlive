@@ -693,22 +693,17 @@ class MainActivity : AppCompatActivity() {
                 smsPhoneTextView.visibility = View.VISIBLE
                 testAlertSMSButton.visibility = View.VISIBLE
 
-                // the sentence has no number in it, so only one contact vs more matters.
-                //  plurals would follow the number instead (Russian uses the singular for 21)
-                val testSMSMessage = if (getSMSContactCount() == 1) {
-                    R.string.test_sms_message_one_contact
+                // the sentence has no number in it, so only one message vs more matters (a
+                //  contact with location gets two). plurals would follow the number instead
+                //  (Russian uses the singular for 21)
+                val testSMSMessage = if (getSMSMessageCount(false) == 1) {
+                    R.string.test_sms_message_one
                 } else {
                     R.string.test_sms_message
                 }
                 smsPhoneTextView.text = String.format(getString(testSMSMessage), smsPhoneNumbers)
             }
         }
-    }
-
-    private fun getSMSContactCount(): Int {
-        val smsContacts: MutableList<SMSEmergencyContactSetting> = loadJSONSharedPreference(sharedPrefs,
-            "PHONE_NUMBER_SETTINGS")
-        return enabledSmsContacts(smsContacts).size
     }
 
     private fun getSMSContactString(): String {

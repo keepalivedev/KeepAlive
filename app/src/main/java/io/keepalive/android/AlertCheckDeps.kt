@@ -79,6 +79,9 @@ interface AlertCheckDeps {
     /** Cancel the "Are you there?" prompt and reset monitoring to periodic. */
     fun acknowledgeAreYouThere()
 
+    /** Take down the "Are you there?" prompt without touching the alarm. */
+    fun dismissAreYouThere()
+
     /** Dispatch the real alert via AlertService, persist the post-alert stage, and optionally restart periodic. */
     fun dispatchFinalAlert(prefs: SharedPreferences, nowTimestamp: Long, checkPeriodHours: Float, restPeriods: MutableList<RestPeriod>)
 }
@@ -136,6 +139,10 @@ class ProductionAlertCheckDeps(private val context: Context) : AlertCheckDeps {
 
     override fun acknowledgeAreYouThere() {
         AcknowledgeAreYouThere.acknowledge(context)
+    }
+
+    override fun dismissAreYouThere() {
+        AcknowledgeAreYouThere.dismissPrompt(context)
     }
 
     override fun dispatchFinalAlert(

@@ -47,17 +47,13 @@ fun smsContactDisplayText(contact: SMSEmergencyContactSetting, formattedNumber: 
     return if (label.isNullOrEmpty()) formattedNumber else "$label: $formattedNumber"
 }
 
-// the contacts an SMS alert is actually sent to
-fun enabledSmsContacts(contacts: List<SMSEmergencyContactSetting>): List<SMSEmergencyContactSetting> {
-    return contacts.filter { it.isEnabled && it.phoneNumber != "" }
-}
-
 // csv of the enabled contacts, as shown on the main screen and in the test alert dialog
 fun smsContactsDisplayString(
     contacts: List<SMSEmergencyContactSetting>,
     formatNumber: (String) -> String
 ): String {
-    return enabledSmsContacts(contacts)
+    return contacts
+        .filter { it.isEnabled && it.phoneNumber != "" }
         .joinToString(", ") { smsContactDisplayText(it, formatNumber(it.phoneNumber)) }
 }
 

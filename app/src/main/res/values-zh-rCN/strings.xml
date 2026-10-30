@@ -107,7 +107,7 @@
     <string name="time_period_too_many_decimals_message">小时最多保留 2 位小数。</string>
     <string name="test_phone_call_message">将至电:\n%1$s</string>
     <string name="test_sms_message">短信将发送至:\n%1$s</string>
-    <string name="test_sms_message_one_contact">短信将发送至:\n%1$s</string>
+    <string name="test_sms_message_one">短信将发送至:\n%1$s</string>
     <string name="unable_to_send_sms_message">无法发送短信\n请插入有效的SIM卡</string>
     <string name="no_configured_contacts_message">未设置联系人</string>
     <string name="permissions_button_text">授予权限</string>

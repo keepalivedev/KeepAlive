@@ -263,6 +263,18 @@ class DoAlertCheckTest {
         assertEquals("periodic", deps.scheduledAlarms[0].stage)
     }
 
+    @Test fun `final alarm with recent activity takes down a prompt that was never answered`() {
+        // the user came back without tapping the prompt. it repeats its sound until it
+        //  is cancelled, so leaving it up would keep it sounding into the next cycle
+        deps.userUnlockedValue = true
+        deps.nowValue = hours(13)
+        deps.lastActivity = fakeUsageEvent(timeStamp = hours(12) + minutes(30))
+
+        doAlertCheck(deps, "final")
+
+        assertEquals(1, deps.dismissCount)
+    }
+
     @Test fun `unlocked every check writes last_check_timestamp to device prefs`() {
         deps.userUnlockedValue = true
         deps.nowValue = hours(24)
