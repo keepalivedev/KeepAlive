@@ -411,6 +411,7 @@
     <string name="debug_log_webhook_config_saved">Конфигурация вебхука сохранена</string>
     <string name="debug_log_webhook_config_deleted">Конфигурация вебхука удалена</string>
     <string name="debug_log_invalid_header_json">Недопустимый JSON заголовка</string>
+    <string name="debug_log_webhook_location_migrated">Сохранённая настройка местоположения вебхука %1$s преобразована в %2$s</string>
 
     <!-- Are You There overlay strings -->
     <string name="are_you_there_title">Вы всё ещё здесь?</string>

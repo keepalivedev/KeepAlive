@@ -51,7 +51,7 @@ class DebugFunctions {
             //  in a more user friendly way
             putString(PrefKeys.WEBHOOK_URL, "https://example.com/webhook_test")
             putString(PrefKeys.WEBHOOK_METHOD, "POST")
-            putString(PrefKeys.WEBHOOK_INCLUDE_LOCATION, "JSON - Body")
+            putString(PrefKeys.WEBHOOK_INCLUDE_LOCATION, WebhookLocationOption.BODY_JSON.savedValue)
             putInt(PrefKeys.WEBHOOK_TIMEOUT, 30)
             putInt(PrefKeys.WEBHOOK_RETRIES, 3)
             putBoolean(PrefKeys.WEBHOOK_VERIFY_CERTIFICATE, false)

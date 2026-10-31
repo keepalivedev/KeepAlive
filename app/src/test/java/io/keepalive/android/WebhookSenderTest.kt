@@ -1,17 +1,21 @@
 package io.keepalive.android
 
 import android.content.Context
+import android.content.res.Configuration
 import androidx.test.core.app.ApplicationProvider
 import mockwebserver3.MockResponse
 import mockwebserver3.MockWebServer
+import mockwebserver3.RecordedRequest
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import java.util.Locale
 
 /**
  * Tests [WebhookSender] with a real in-process MockWebServer — no Android
@@ -42,7 +46,7 @@ class WebhookSenderTest {
 
     private fun makeConfig(
         method: String = "GET",
-        includeLocation: String = "",
+        includeLocation: WebhookLocationOption = WebhookLocationOption.DO_NOT_INCLUDE,
         timeout: Int = 5,
         retries: Int = 0,
         headers: Map<String, String> = emptyMap()
@@ -165,7 +169,7 @@ class WebhookSenderTest {
             appCtx,
             makeConfig(
                 method = "GET",
-                includeLocation = appCtx.getString(R.string.webhook_location_query_parameters)
+                includeLocation = WebhookLocationOption.QUERY_PARAMETERS
             )
         ).sendRequest(locationResult = sampleLocation(), callback = cb)
 
@@ -184,7 +188,7 @@ class WebhookSenderTest {
             appCtx,
             makeConfig(
                 method = "POST",
-                includeLocation = appCtx.getString(R.string.webhook_location_body_json)
+                includeLocation = WebhookLocationOption.BODY_JSON
             )
         ).sendRequest(locationResult = sampleLocation(), callback = cb)
 
@@ -205,7 +209,7 @@ class WebhookSenderTest {
             appCtx,
             makeConfig(
                 method = "POST",
-                includeLocation = appCtx.getString(R.string.webhook_location_body_form)
+                includeLocation = WebhookLocationOption.BODY_FORM
             )
         ).sendRequest(locationResult = sampleLocation(), callback = cb)
 
@@ -214,6 +218,78 @@ class WebhookSenderTest {
         assertEquals("application/x-www-form-urlencoded",
             recorded.headers["Content-Type"])
         assertTrue("form body has lat=40.5: $body", body.contains("lat=40.5"))
+    }
+
+    // ---- saved location setting ---------------------------------------------
+
+    // the app's context switched to another language, the way a device language change would
+    private fun contextIn(languageTag: String): Context {
+        val config = Configuration(appCtx.resources.configuration)
+        config.setLocale(Locale.forLanguageTag(languageTag))
+        return appCtx.createConfigurationContext(config)
+    }
+
+    private fun saveIncludeLocation(value: String) {
+        getAppSharedPreferences(appCtx).edit()
+            .putString("webhook_url", server.url("/hook").toString())
+            .putString("webhook_method", "POST")
+            .putString("webhook_include_location", value)
+            .putBoolean("webhook_location_enabled", true)
+            .commit()
+    }
+
+    // send the alert the way AlertService does: everything comes from the saved prefs
+    private fun sendSavedConfig(context: Context = appCtx): RecordedRequest {
+        server.enqueue(MockResponse(code = 200))
+        val config = WebhookConfigManager(context, null).getWebhookConfig()
+        WebhookSender(context, config).sendRequest(sampleLocation(), RecordingCallback())
+        return server.takeRequest()
+    }
+
+    @Test fun `a JSON label saved in another language still sends JSON`() {
+        saveIncludeLocation("Körper - JSON")
+
+        val recorded = sendSavedConfig()
+
+        assertEquals("application/json; charset=utf-8", recorded.headers["Content-Type"])
+        assertTrue(recorded.body?.utf8().orEmpty().contains("\"lat\":40.5"))
+    }
+
+    @Test fun `a form label saved in another language still sends a form`() {
+        saveIncludeLocation("Тело - Форма")
+
+        val recorded = sendSavedConfig()
+
+        assertEquals("application/x-www-form-urlencoded", recorded.headers["Content-Type"])
+        assertTrue(recorded.body?.utf8().orEmpty().contains("lat=40.5"))
+    }
+
+    @Test fun `a query parameter label saved in another language still adds to the URL`() {
+        saveIncludeLocation("Parámetros de consulta")
+
+        val recorded = sendSavedConfig()
+
+        assertTrue(recorded.url.toString().contains("lat=40.5"))
+    }
+
+    @Test fun `do not include saved in another language sends no location`() {
+        saveIncludeLocation("Nie Dołączaj")
+
+        val recorded = sendSavedConfig()
+
+        assertFalse(recorded.url.toString().contains("lat="))
+        assertEquals("", recorded.body?.utf8().orEmpty())
+    }
+
+    @Test fun `a language change after saving has no effect`() {
+        saveIncludeLocation("Body - JSON")
+
+        listOf("de-DE", "ru-RU", "zh-CN", "en-US").forEach { languageTag ->
+            val recorded = sendSavedConfig(contextIn(languageTag))
+
+            assertEquals(languageTag, "application/json; charset=utf-8", recorded.headers["Content-Type"])
+            assertTrue(languageTag, recorded.body?.utf8().orEmpty().contains("\"lat\":40.5"))
+        }
     }
 
     // ---- headers ------------------------------------------------------------

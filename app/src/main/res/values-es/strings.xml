@@ -410,6 +410,7 @@
     <string name="debug_log_webhook_config_saved">Configuración del webhook guardada</string>
     <string name="debug_log_webhook_config_deleted">Configuración del webhook eliminada</string>
     <string name="debug_log_invalid_header_json">JSON de encabezado no válido</string>
+    <string name="debug_log_webhook_location_migrated">Ajuste de ubicación del webhook guardado %1$s convertido a %2$s</string>
 
     <!-- AlertFunctions.kt -->
     <string name="debug_log_direct_boot_final_alarm_due">Direct Boot: La alarma final está vencida — enviando alerta</string>

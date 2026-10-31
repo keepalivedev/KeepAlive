@@ -32,10 +32,10 @@
     <string name="webhook_dialog_title">Webhook Configuration</string>
     <string name="webhook_dialog_description">When an Alert is triggered an HTTP request will be sent using the settings below. By default, no other data is included in the request. If enabled, location data is sent in the following format:\n{\"lat\": latitude, \"lon\": longitude, \"acc\": accuracy, \"address\": \"address\", \"loc_message\": \"location message\"}.</string>
     <string name="webhook_not_configured">Not Configured</string>
-    <string name="webhook_location_do_not_include">Do Not Include</string>
-    <string name="webhook_location_body_json">Body - JSON</string>
-    <string name="webhook_location_body_form">Body - Form</string>
-    <string name="webhook_location_query_parameters">Query Parameters</string>
+    <string name="webhook_location_do_not_include">不包含</string>
+    <string name="webhook_location_body_json">请求正文 - JSON</string>
+    <string name="webhook_location_body_form">请求正文 - 表单</string>
+    <string name="webhook_location_query_parameters">查询参数</string>
     <string name="webhook_url_empty_error">Please enter a webhook URL</string>
     <string name="webhook_url_invalid_error">URL Invalid</string>
     <string name="webhook_url_invalid_error_with_url">URL Invalid: %1$s</string>
@@ -408,6 +408,7 @@
     <string name="debug_log_webhook_config_saved">Webhook configuration saved</string>
     <string name="debug_log_webhook_config_deleted">Webhook configuration deleted</string>
     <string name="debug_log_invalid_header_json">无效的标头 JSON</string>
+    <string name="debug_log_webhook_location_migrated">已将保存的 Webhook 位置设置 %1$s 转换为 %2$s</string>
 
     <!-- Are You There overlay strings -->
     <string name="are_you_there_title">你还在吗？</string>
