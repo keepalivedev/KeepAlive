@@ -319,10 +319,28 @@ class AlertMessageSender @JvmOverloads constructor(
 
                         DebugLogger.d("sendLocationAlertMsg", context.getString(R.string.debug_log_sending_location_message_to, maskPhoneNumber(contact.phoneNumber)))
 
-                        // send the location message
-                        smsManager.sendTextMessage(
-                            contact.phoneNumber, null, locationStr, null, null
-                        )
+                        // one character outside the GSM 7-bit alphabet lowers the limit for
+                        //  a single SMS from 160 to 70, which the template and coordinates
+                        //  already exceed, and sendTextMessage drops an oversized message
+                        //  without throwing, so it always has to be split
+                        val messageParts = smsManager.divideMessage(locationStr)
+
+                        // only use sendMultipartTextMessage if there is more than 1 part
+                        if (messageParts.size > 1) {
+                            DebugLogger.d("sendLocationAlertMsg", context.getString(R.string.debug_log_sending_multipart_sms, messageParts.size))
+
+                            // send the location message
+                            smsManager.sendMultipartTextMessage(
+                                contact.phoneNumber, null, messageParts, null, null
+                            )
+                        } else {
+                            DebugLogger.d("sendLocationAlertMsg", context.getString(R.string.debug_log_sending_single_sms))
+
+                            // send the location message
+                            smsManager.sendTextMessage(
+                                contact.phoneNumber, null, locationStr, null, null
+                            )
+                        }
                     }
 
                 } catch (e: Exception) {
