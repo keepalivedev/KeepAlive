@@ -76,6 +76,9 @@ class AppController : Application() {
 
         migrateAreYouThereOverlayDefault(this)
 
+        // the alert reads the webhook location flag before it loads the webhook config
+        WebhookConfigManager.migrateIncludeLocation(this)
+
         // must precede any recovery path: it repairs state left by builds that had
         //  no "alert_sent" marker, which recovery would otherwise act on
         AlarmRecovery.migrateAlertSentMarker(this)

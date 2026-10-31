@@ -26,6 +26,34 @@ import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 class WebhookConfigManager(private val context: Context, private val activity: AppCompatActivity?) {
 
+    companion object {
+
+        // older versions saved the label of the include location option, in whatever language
+        //  the app was in, so it stopped matching as soon as the language changed. this replaces
+        //  a saved label with its fixed value and is a no-op once there is nothing left to
+        //  replace. Direct Boot reads the device-protected copy, so that has to be converted as
+        //  well; while the device is locked both of these are that copy. nothing here should
+        //  stop an alert from going out, a label that wasn't replaced still reads correctly
+        fun migrateIncludeLocation(context: Context) {
+            try {
+                listOf(getAppSharedPreferences(context), getDeviceProtectedPreferences(context)).forEach { prefs ->
+                    val saved = prefs.getString(PrefKeys.WEBHOOK_INCLUDE_LOCATION, null) ?: return@forEach
+                    val option = WebhookLocationOption.fromSavedValue(saved)
+
+                    if (option.savedValue != saved) {
+                        prefs.edit {
+                            putString(PrefKeys.WEBHOOK_INCLUDE_LOCATION, option.savedValue)
+                            putBoolean(PrefKeys.WEBHOOK_LOCATION_ENABLED, option != WebhookLocationOption.DO_NOT_INCLUDE)
+                        }
+                        DebugLogger.d("WebhookConfigManager", context.getString(R.string.debug_log_webhook_location_migrated, saved, option.savedValue))
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("WebhookConfigManager", "Error migrating the include location setting", e)
+            }
+        }
+    }
+
     private val sharedPref = getAppSharedPreferences(context)
     private val maxHeaders = 10
     private val maxRetries = 10
@@ -72,19 +100,18 @@ class WebhookConfigManager(private val context: Context, private val activity: A
         spinnerHttpMethod.setAdapter(methodAdapter)
 
         // options for the Include Location dropdown
-        val includeLocationOptions = arrayOf(
-            context.getString(R.string.webhook_location_do_not_include),
-            context.getString(R.string.webhook_location_body_json),
-            context.getString(R.string.webhook_location_body_form),
-            context.getString(R.string.webhook_location_query_parameters)
-        )
+        val includeLocationOptions = WebhookLocationOption.entries
 
         // Setup Include Location spinner
-        val locationAdapter = ArrayAdapter(context, R.layout.spinner_list_item, includeLocationOptions)
+        val locationLabels = includeLocationOptions.map { context.getString(it.labelResId) }
+        val locationAdapter = ArrayAdapter(context, R.layout.spinner_list_item, locationLabels)
         spinnerIncludeLocation.setAdapter(locationAdapter)
 
         // load the saved preferences into a WebhookConfig object
         val webhookConfig = getWebhookConfig()
+
+        // the dropdown only shows the translated label so keep track of the option itself
+        var selectedLocationOption = webhookConfig.includeLocation
 
         // load saved settings into the dialog
         editTextWebhookUrl.setText(webhookConfig.url)
@@ -92,7 +119,7 @@ class WebhookConfigManager(private val context: Context, private val activity: A
         editTextRetries.setText(webhookConfig.retries.toString())
         switchVerifyCertificate.isChecked = webhookConfig.verifyCertificate
         spinnerHttpMethod.setText(webhookConfig.method, false)
-        spinnerIncludeLocation.setText(webhookConfig.includeLocation, false)
+        spinnerIncludeLocation.setText(context.getString(webhookConfig.includeLocation.labelResId), false)
 
         // warn the user whenever certificate verification is turned off
         val textViewCertificateWarning = dialogView.findViewById<TextView>(R.id.textViewCertificateWarning)
@@ -103,7 +130,7 @@ class WebhookConfigManager(private val context: Context, private val activity: A
         }
 
         // Disable HTTP method selection if saved location is Body - JSON or Body - Form
-        if (webhookConfig.includeLocation == context.getString(R.string.webhook_location_body_json) || webhookConfig.includeLocation == context.getString(R.string.webhook_location_body_form)) {
+        if (webhookConfig.includeLocation == WebhookLocationOption.BODY_JSON || webhookConfig.includeLocation == WebhookLocationOption.BODY_FORM) {
             spinnerHttpMethod.setText(context.getString(R.string.webhook_post), false)
 
             // disabling just the spinner still leaves the carrot at the edge working so
@@ -125,8 +152,10 @@ class WebhookConfigManager(private val context: Context, private val activity: A
 
         // Add listener to Include Location spinner
         spinnerIncludeLocation.setOnItemClickListener { _, _, position, _ ->
-            when (includeLocationOptions[position]) {
-                context.getString(R.string.webhook_location_body_json), context.getString(R.string.webhook_location_body_form) -> {
+            selectedLocationOption = includeLocationOptions[position]
+
+            when (selectedLocationOption) {
+                WebhookLocationOption.BODY_JSON, WebhookLocationOption.BODY_FORM -> {
                     spinnerHttpMethod.setText(context.getString(R.string.webhook_post), false)
                     spinnerHttpMethod.isEnabled = false
                     spinnerHttpMethodLayout.isEnabled = false
@@ -150,7 +179,7 @@ class WebhookConfigManager(private val context: Context, private val activity: A
         // Test Webhook button listener with the current settings
         buttonTestWebhook.setOnClickListener {
 
-            val shouldIncludeLocation = spinnerIncludeLocation.text.toString() != context.getString(R.string.webhook_location_do_not_include)
+            val shouldIncludeLocation = selectedLocationOption != WebhookLocationOption.DO_NOT_INCLUDE
 
             // in order to fully test the webhook we need to be able to pull the location so
             //  check those here and request if needed
@@ -169,7 +198,7 @@ class WebhookConfigManager(private val context: Context, private val activity: A
                 testWebhook(
                     editTextWebhookUrl.text.toString(),
                     spinnerHttpMethod.text.toString(),
-                    spinnerIncludeLocation.text.toString(),
+                    selectedLocationOption,
                     editTextTimeout.text.toString().toIntOrNull() ?: 10,
                     switchVerifyCertificate.isChecked,
                     headerAdapter.getHeaders()
@@ -196,13 +225,13 @@ class WebhookConfigManager(private val context: Context, private val activity: A
                     putBoolean(PrefKeys.WEBHOOK_ENABLED, true)
 
                     // location is enabled if it is anything but the 'do not include' option
-                    putBoolean(PrefKeys.WEBHOOK_LOCATION_ENABLED, spinnerIncludeLocation.text.toString() != context.getString(R.string.webhook_location_do_not_include))
+                    putBoolean(PrefKeys.WEBHOOK_LOCATION_ENABLED, selectedLocationOption != WebhookLocationOption.DO_NOT_INCLUDE)
 
                     // save the raw url instead of from toHttpUrlOrNull so that it will show up
                     //  in a more user friendly way
                     putString(PrefKeys.WEBHOOK_URL, editTextWebhookUrl.text.toString())
                     putString(PrefKeys.WEBHOOK_METHOD, spinnerHttpMethod.text.toString())
-                    putString(PrefKeys.WEBHOOK_INCLUDE_LOCATION, spinnerIncludeLocation.text.toString())
+                    putString(PrefKeys.WEBHOOK_INCLUDE_LOCATION, selectedLocationOption.savedValue)
                     putInt(PrefKeys.WEBHOOK_TIMEOUT, editTextTimeout.text.toString().toIntOrNull() ?: 10)
                     putInt(PrefKeys.WEBHOOK_RETRIES, editTextRetries.text.toString().toIntOrNull() ?: 0)
                     putBoolean(PrefKeys.WEBHOOK_VERIFY_CERTIFICATE, switchVerifyCertificate.isChecked)
@@ -318,7 +347,7 @@ class WebhookConfigManager(private val context: Context, private val activity: A
         })
     }
 
-    private fun testWebhook(url: String, method: String, includeLocation: String, timeout: Int, verifyCertificate: Boolean, headers: Map<String, String>) {
+    private fun testWebhook(url: String, method: String, includeLocation: WebhookLocationOption, timeout: Int, verifyCertificate: Boolean, headers: Map<String, String>) {
         CoroutineScope(Dispatchers.IO).launch{
             try {
                 // force retries to 0 when testing
@@ -326,7 +355,7 @@ class WebhookConfigManager(private val context: Context, private val activity: A
                 val sender = WebhookSender(context, config)
 
                 // check whether the user wants to include the location in the request
-                if (includeLocation != context.getString(R.string.webhook_location_do_not_include)) {
+                if (includeLocation != WebhookLocationOption.DO_NOT_INCLUDE) {
 
                     Log.d("WebhookConfigManager", "Testing webhook with location")
 
@@ -387,9 +416,14 @@ class WebhookConfigManager(private val context: Context, private val activity: A
 
     // pull the webhook settings from shared preferences and load them into a WebhookConfig object
     fun getWebhookConfig(): WebhookConfig {
+
+        // startup does this too but it can't reach the main prefs if the device was locked
+        //  at the time, and the process can still be running after the user unlocks
+        migrateIncludeLocation(context)
+
         val webhookUrl = sharedPref.getString(PrefKeys.WEBHOOK_URL, "") ?: ""
         val webhookMethod = sharedPref.getString(PrefKeys.WEBHOOK_METHOD, context.getString(R.string.webhook_get)) ?: context.getString(R.string.webhook_get)
-        val includeLocation = sharedPref.getString(PrefKeys.WEBHOOK_INCLUDE_LOCATION, context.getString(R.string.webhook_location_do_not_include)) ?: context.getString(R.string.webhook_location_do_not_include)
+        val includeLocation = WebhookLocationOption.fromSavedValue(sharedPref.getString(PrefKeys.WEBHOOK_INCLUDE_LOCATION, null))
         val timeout = sharedPref.getInt(PrefKeys.WEBHOOK_TIMEOUT, 10)
         val retries = sharedPref.getInt(PrefKeys.WEBHOOK_RETRIES, 0)
         val verifyCertificate = sharedPref.getBoolean(PrefKeys.WEBHOOK_VERIFY_CERTIFICATE, true)
@@ -585,10 +619,82 @@ class WebhookConfigManager(private val context: Context, private val activity: A
     }
 }
 
+// how the location is added to the webhook request. savedValue is what goes in the prefs and
+//  the label is only for display, so that the setting doesn't depend on the app's language.
+//  saved values are on disk and must never change, same as the keys in PrefKeys. they are
+//  spelled out so that renaming a constant can't change what gets saved
+enum class WebhookLocationOption(val savedValue: String, val labelResId: Int) {
+    DO_NOT_INCLUDE("do_not_include", R.string.webhook_location_do_not_include),
+    BODY_JSON("body_json", R.string.webhook_location_body_json),
+    BODY_FORM("body_form", R.string.webhook_location_body_form),
+    QUERY_PARAMETERS("query_parameters", R.string.webhook_location_query_parameters);
+
+    companion object {
+
+        // every label in every language, because the label on screen is what older versions
+        //  saved. these are what is on people's devices, so don't change one when its
+        //  translation changes
+        private val savedLabels = mapOf(
+            "Do Not Include" to DO_NOT_INCLUDE,
+            "Body - JSON" to BODY_JSON,
+            "Body - Form" to BODY_FORM,
+            "Query Parameters" to QUERY_PARAMETERS,
+
+            // de
+            "Nicht einschließen" to DO_NOT_INCLUDE,
+            "Körper - JSON" to BODY_JSON,
+            "Körper - Formular" to BODY_FORM,
+            "Abfrageparameter" to QUERY_PARAMETERS,
+
+            // es
+            "No incluir" to DO_NOT_INCLUDE,
+            "Cuerpo - JSON" to BODY_JSON,
+            "Cuerpo - Formulario" to BODY_FORM,
+            "Parámetros de consulta" to QUERY_PARAMETERS,
+
+            // fr
+            "Ne pas inclure" to DO_NOT_INCLUDE,
+            "Corps - JSON" to BODY_JSON,
+            "Corps - Formulaire" to BODY_FORM,
+            "Paramètres de requête" to QUERY_PARAMETERS,
+
+            // it
+            "Non includere" to DO_NOT_INCLUDE,
+            "Corpo - JSON" to BODY_JSON,
+            "Corpo - Formulario" to BODY_FORM,
+            "Parametri di query" to QUERY_PARAMETERS,
+
+            // pl
+            "Nie Dołączaj" to DO_NOT_INCLUDE,
+            "Treść - JSON" to BODY_JSON,
+            "Treść - Formularz" to BODY_FORM,
+            "Parametry Zapytania" to QUERY_PARAMETERS,
+
+            // ru
+            "Не включать" to DO_NOT_INCLUDE,
+            "Тело - JSON" to BODY_JSON,
+            "Тело - Форма" to BODY_FORM,
+            "Параметры запроса" to QUERY_PARAMETERS,
+
+            // zh-CN
+            "不包含" to DO_NOT_INCLUDE,
+            "请求正文 - JSON" to BODY_JSON,
+            "请求正文 - 表单" to BODY_FORM,
+            "查询参数" to QUERY_PARAMETERS
+        )
+
+        // anything unrecognised means no location. no version could have saved it so there is
+        //  nothing to say which format was meant, and a wrong guess could send the location
+        //  where it wasn't wanted or in a form the endpoint rejects, losing the alert
+        fun fromSavedValue(saved: String?): WebhookLocationOption =
+            entries.firstOrNull { it.savedValue == saved } ?: savedLabels[saved] ?: DO_NOT_INCLUDE
+    }
+}
+
 data class WebhookConfig(
     val url: String,
     val method: String,
-    val includeLocation: String,
+    val includeLocation: WebhookLocationOption,
     val timeout: Int,
     val retries: Int,
     val verifyCertificate: Boolean,

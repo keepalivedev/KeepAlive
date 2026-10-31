@@ -409,6 +409,7 @@
     <string name="debug_log_webhook_config_saved">Webhook-Konfiguration gespeichert</string>
     <string name="debug_log_webhook_config_deleted">Webhook-Konfiguration gelöscht</string>
     <string name="debug_log_invalid_header_json">Ungültiges Header-JSON</string>
+    <string name="debug_log_webhook_location_migrated">Gespeicherte Webhook-Standorteinstellung %1$s in %2$s umgewandelt</string>
 
     <!-- Are You There overlay strings -->
     <string name="are_you_there_title">Bist du noch da?</string>

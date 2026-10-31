@@ -425,6 +425,7 @@
     <string name="debug_log_webhook_config_saved">Webhook configuration saved</string>
     <string name="debug_log_webhook_config_deleted">Webhook configuration deleted</string>
     <string name="debug_log_invalid_header_json">Invalid header JSON</string>
+    <string name="debug_log_webhook_location_migrated">Converted the saved webhook location setting %1$s to %2$s</string>
 
     <!-- AlertFunctions.kt -->
     <string name="debug_log_direct_boot_final_alarm_due">Direct Boot: Final alarm is due — sending alert</string>

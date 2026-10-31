@@ -408,6 +408,7 @@
     <string name="debug_log_webhook_config_saved">Webhook configuration saved</string>
     <string name="debug_log_webhook_config_deleted">Webhook configuration deleted</string>
     <string name="debug_log_invalid_header_json">无效的标头 JSON</string>
+    <string name="debug_log_webhook_location_migrated">已将保存的 Webhook 位置设置 %1$s 转换为 %2$s</string>
 
     <!-- Are You There overlay strings -->
     <string name="are_you_there_title">你还在吗？</string>
