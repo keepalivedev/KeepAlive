@@ -135,6 +135,18 @@ class AlertNotificationHelperTest {
         assertTrue("a single sound is easy to miss, so the prompt must repeat it", insistent)
     }
 
+    @Test fun `are-you-there notification has high priority`() {
+        AlertNotificationHelper(appCtx).sendNotification(
+            "Are you there?",
+            "Please respond",
+            AppController.ARE_YOU_THERE_NOTIFICATION_ID
+        )
+
+        val notif = shadowOf(nm).allNotifications.single()
+        assertEquals("Zepp does not forward an ongoing notification to a watch below high priority",
+            Notification.PRIORITY_HIGH, notif.priority)
+    }
+
     @Test fun `non-are-you-there notification auto-cancels on tap`() {
         AlertNotificationHelper(appCtx).sendNotification(
             "Sent",
