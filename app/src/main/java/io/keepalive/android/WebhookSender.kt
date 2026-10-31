@@ -137,7 +137,7 @@ class WebhookSender(private val context: Context, private val config: WebhookCon
 
         // if there is a location result then include it in the request based on the user config
         if (locationResult != null) {
-            if (config.includeLocation == context.getString(R.string.webhook_location_query_parameters)) {
+            if (config.includeLocation == WebhookLocationOption.QUERY_PARAMETERS) {
 
                 // add the locationResult fields to the query parameters
                 locationResult.let {
@@ -153,7 +153,7 @@ class WebhookSender(private val context: Context, private val config: WebhookCon
 
             // build the request body based on the config
             requestBody = when (config.includeLocation) {
-                context.getString(R.string.webhook_location_body_json) -> {
+                WebhookLocationOption.BODY_JSON -> {
 
                     // create a JSON object with the locationResult fields
                     val json = JSONObject().apply {
@@ -168,7 +168,7 @@ class WebhookSender(private val context: Context, private val config: WebhookCon
                     json.toString().toRequestBody("application/json".toMediaType())
                 }
 
-                context.getString(R.string.webhook_location_body_form) -> {
+                WebhookLocationOption.BODY_FORM -> {
 
                     // create a form-encoded body with the locationResult fields
                     FormBody.Builder().apply {
