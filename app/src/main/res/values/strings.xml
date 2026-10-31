@@ -302,6 +302,7 @@
     <string name="debug_log_sending_text_message_to">Sending text message to: %1$s</string>
     <string name="debug_log_sending_multipart_sms">Sending multipart SMS message with %1$d parts</string>
     <string name="debug_log_sending_single_sms">Sending single SMS message</string>
+    <string name="debug_log_splitting_sms_without_android">Android could not split the SMS message so it was split into %1$d parts instead</string>
     <string name="debug_log_failed_sending_sms">Failed sending SMS message to %1$s!? %2$s</string>
     <string name="debug_log_sms_phone_blank">SMS phone # was blank?!</string>
     <string name="debug_log_sending_location_message_to">Sending location message to: %1$s</string>

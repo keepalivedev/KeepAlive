@@ -285,6 +285,7 @@
     <string name="debug_log_sending_text_message_to">正在向 %1$s 发送短信</string>
     <string name="debug_log_sending_multipart_sms">正在发送包含 %1$d 个部分的多段短信</string>
     <string name="debug_log_sending_single_sms">正在发送单条短信</string>
+    <string name="debug_log_splitting_sms_without_android">Android 无法拆分短信，因此已改为拆分成 %1$d 部分</string>
     <string name="debug_log_failed_sending_sms">向 %1$s 发送短信失败？！%2$s</string>
     <string name="debug_log_sms_phone_blank">短信电话号码为空？！</string>
     <string name="debug_log_sending_location_message_to">正在向 %1$s 发送位置短信</string>
