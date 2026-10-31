@@ -287,6 +287,7 @@
     <string name="debug_log_sending_text_message_to">Enviando mensaje de texto a: %1$s</string>
     <string name="debug_log_sending_multipart_sms">Enviando mensaje SMS multiparte con %1$d partes</string>
     <string name="debug_log_sending_single_sms">Enviando un único mensaje SMS</string>
+    <string name="debug_log_splitting_sms_without_android">Android no pudo dividir el mensaje SMS, así que se dividió en %1$d partes</string>
     <string name="debug_log_failed_sending_sms">¿Error al enviar el mensaje SMS a %1$s? %2$s</string>
     <string name="debug_log_sms_phone_blank">¿El número de teléfono SMS estaba en blanco?</string>
     <string name="debug_log_sending_location_message_to">Enviando mensaje de ubicación a: %1$s</string>

@@ -328,6 +328,78 @@ class AlertMessageSenderTest {
         assertSentAsSinglePart(text, sendLocationMessage(text))
     }
 
+    // ---- divideMessage refused ---------------------------------------------
+
+    private val longUcs2Text = "GPS координаты: (41.87811, -87.62980). Точность (m): 15. " +
+            "Приблизительный адрес: ул. Тверская, 1, Москва. "
+
+    // what divideMessage did on a Pixel 8 Pro without READ_PHONE_STATE, for UCS-2 text over
+    //  70 characters
+    private fun smsWithoutPhoneState(): SmsManager = mockk(relaxed = true) {
+        every { divideMessage(any()) } throws SecurityException("getGroupIdLevel1")
+    }
+
+    private fun assertSplitHolds(text: String, parts: List<String>) {
+        assertTrue("expected more than one part, got ${parts.size}", parts.size > 1)
+        assertEquals("no text may be lost in the split", text, parts.joinToString(""))
+        assertTrue("every part must fit an SMS in any encoding", parts.all { it.length <= 66 })
+    }
+
+    @Test fun `location message still goes out when divideMessage is refused`() {
+        seedContacts(contact("+15551111111", includeLocation = true))
+        val sms = smsWithoutPhoneState()
+        val parts = slot<ArrayList<String>>()
+
+        AlertMessageSender(appCtx, sms).sendLocationAlertMessage(longUcs2Text)
+
+        verify(exactly = 1) { sms.sendMultipartTextMessage("+15551111111", null, capture(parts), null, null) }
+        assertSplitHolds(longUcs2Text, parts.captured)
+    }
+
+    @Test fun `alert message still goes out when divideMessage is refused`() {
+        seedContacts(contact("+15551111111", msg = longUcs2Text))
+        val sms = smsWithoutPhoneState()
+        val parts = slot<ArrayList<String>>()
+        val sentIntents = slot<ArrayList<android.app.PendingIntent>>()
+
+        AlertMessageSender(appCtx, sms).sendAlertMessage()
+
+        verify(exactly = 1) {
+            sms.sendMultipartTextMessage("+15551111111", null, capture(parts), capture(sentIntents), null)
+        }
+        assertSplitHolds(longUcs2Text, parts.captured)
+        assertEquals("one sent result is expected per part", parts.captured.size, sentIntents.captured.size)
+        assertEquals(1, registeredSMSSentReceiverCount())
+    }
+
+    @Test fun `test warning and alert both go out when divideMessage is refused`() {
+        seedContacts(contact("+15551111111", msg = longUcs2Text))
+        val sms = smsWithoutPhoneState()
+        val warning = longUcs2Text + "Это тест."
+        val warningParts = slot<ArrayList<String>>()
+
+        AlertMessageSender(appCtx, sms).sendAlertMessage(testWarningMessage = warning)
+
+        verify(exactly = 1) { sms.sendMultipartTextMessage("+15551111111", null, capture(warningParts), null, null) }
+        assertSplitHolds(warning, warningParts.captured)
+        verify(exactly = 1) { sms.sendMultipartTextMessage("+15551111111", null, any(), match { it.isNotEmpty() }, null) }
+    }
+
+    @Test fun `splitting without divideMessage keeps an emoji in one part`() {
+        // the emoji's two UTF-16 units fall either side of the 66 unit limit
+        val text = "a".repeat(65) + "😀" + "b".repeat(10)
+        seedContacts(contact("+15551111111", includeLocation = true))
+        val sms = smsWithoutPhoneState()
+        val parts = slot<ArrayList<String>>()
+
+        AlertMessageSender(appCtx, sms).sendLocationAlertMessage(text)
+
+        verify(exactly = 1) { sms.sendMultipartTextMessage("+15551111111", null, capture(parts), null, null) }
+        assertSplitHolds(text, parts.captured)
+        assertTrue("a part must not end halfway through an emoji",
+            parts.captured.none { it.last().isHighSurrogate() })
+    }
+
     @Test fun `test warning over the UCS-2 limit goes out as multipart`() {
         val warning = "Следующие сообщения являются тестом из приложения Keep Alive. " +
                 "Пожалуйста, подтвердите получение!"

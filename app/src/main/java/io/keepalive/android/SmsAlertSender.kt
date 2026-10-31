@@ -103,6 +103,10 @@ class AlertMessageSender @JvmOverloads constructor(
         // guards against a sendTextMessage call that throws synchronously (so
         // the matching broadcast never comes) leaving the receiver registered.
         private const val SMS_RECEIVER_SAFETY_TIMEOUT_MS = 2 * 60 * 1000L
+
+        // the most UTF-16 units that fit one part of a multipart SMS in any encoding. a UCS-2
+        //  part holds 67 and carriers without EMS support take 1 more for the page number
+        private const val MAX_FALLBACK_SMS_PART_LENGTH = 66
     }
 
     private val prefs = getAppSharedPreferences(context)
@@ -197,7 +201,7 @@ class AlertMessageSender @JvmOverloads constructor(
                 Log.d("sendAlertMessage", "Alert message is blank, skipping...")
                 continue
             }
-            val parts = smsManager.divideMessage(contact.alertMessage)
+            val parts = divideSms(smsManager, contact.alertMessage)
             pendingSmsList.add(PendingSms(contact, parts))
             expectedBroadcasts += parts.size
         }
@@ -334,12 +338,43 @@ class AlertMessageSender @JvmOverloads constructor(
         Log.d( "sendLocationAlertMsg", "Done sending location alert messages")
     }
 
+    // on some devices divideMessage needs READ_PHONE_STATE for UCS-2 text over 70 characters
+    //  and throws without it. we don't ask for that permission and an alert shouldn't depend
+    //  on it, only divideMessage needs it and not the sending, so split the message here instead
+    private fun divideSms(manager: SmsManager, message: String): ArrayList<String> {
+        return try {
+            manager.divideMessage(message)
+        } catch (e: Exception) {
+            val messageParts = splitSms(message)
+            DebugLogger.d("divideSms", context.getString(R.string.debug_log_splitting_sms_without_android, messageParts.size), e)
+            messageParts
+        }
+    }
+
+    private fun splitSms(message: String): ArrayList<String> {
+        val messageParts = ArrayList<String>()
+        var start = 0
+
+        while (start < message.length) {
+            var end = minOf(start + MAX_FALLBACK_SMS_PART_LENGTH, message.length)
+
+            // an emoji is 2 UTF-16 units, don't leave half of it in each part
+            if (end < message.length && message[end - 1].isHighSurrogate()) {
+                end--
+            }
+
+            messageParts.add(message.substring(start, end))
+            start = end
+        }
+        return messageParts
+    }
+
     // send a message without a sentIntent, so its result isn't reported
     // one character outside the GSM 7-bit alphabet lowers the limit for a single SMS from
     //  160 to 70, and sendTextMessage drops an oversized message without throwing, so
     //  even a message that looks short has to go through divideMessage
     private fun sendUnreportedSms(manager: SmsManager, phoneNumber: String, message: String) {
-        val messageParts = manager.divideMessage(message)
+        val messageParts = divideSms(manager, message)
 
         // only use sendMultipartTextMessage if there is more than 1 part
         if (messageParts.size > 1) {

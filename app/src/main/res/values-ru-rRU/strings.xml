@@ -288,6 +288,7 @@
     <string name="debug_log_sending_text_message_to">Отправка текстового сообщения: %1$s</string>
     <string name="debug_log_sending_multipart_sms">Отправка многочастного SMS-сообщения с %1$d частями</string>
     <string name="debug_log_sending_single_sms">Отправка одиночного SMS-сообщения</string>
+    <string name="debug_log_splitting_sms_without_android">Android не смог разделить SMS-сообщение, поэтому оно разделено на части: %1$d</string>
     <string name="debug_log_failed_sending_sms">Не удалось отправить SMS-сообщение на %1$s!? %2$s</string>
     <string name="debug_log_sms_phone_blank">Номер телефона SMS был пустым?!</string>
     <string name="debug_log_sending_location_message_to">Отправка сообщения о местоположении: %1$s</string>
