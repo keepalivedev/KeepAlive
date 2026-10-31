@@ -253,7 +253,7 @@ class AlertMessageSender @JvmOverloads constructor(
                     DebugLogger.d("sendAlertMessage", context.getString(R.string.debug_log_sending_warning_sms, maskPhoneNumber(contact.phoneNumber)))
 
                     // don't include a sentIntent for the test message
-                    smsManager.sendTextMessage(contact.phoneNumber, null, testWarningMessage, null, null)
+                    sendUnreportedSms(smsManager, contact.phoneNumber, testWarningMessage)
                 }
 
                 // don't log the parts themselves — they contain the alert message content
@@ -320,9 +320,7 @@ class AlertMessageSender @JvmOverloads constructor(
                         DebugLogger.d("sendLocationAlertMsg", context.getString(R.string.debug_log_sending_location_message_to, maskPhoneNumber(contact.phoneNumber)))
 
                         // send the location message
-                        smsManager.sendTextMessage(
-                            contact.phoneNumber, null, locationStr, null, null
-                        )
+                        sendUnreportedSms(smsManager, contact.phoneNumber, locationStr)
                     }
 
                 } catch (e: Exception) {
@@ -334,5 +332,24 @@ class AlertMessageSender @JvmOverloads constructor(
             }
         }
         Log.d( "sendLocationAlertMsg", "Done sending location alert messages")
+    }
+
+    // send a message without a sentIntent, so its result isn't reported
+    // one character outside the GSM 7-bit alphabet lowers the limit for a single SMS from
+    //  160 to 70, and sendTextMessage drops an oversized message without throwing, so
+    //  even a message that looks short has to go through divideMessage
+    private fun sendUnreportedSms(manager: SmsManager, phoneNumber: String, message: String) {
+        val messageParts = manager.divideMessage(message)
+
+        // only use sendMultipartTextMessage if there is more than 1 part
+        if (messageParts.size > 1) {
+            DebugLogger.d("sendUnreportedSms", context.getString(R.string.debug_log_sending_multipart_sms, messageParts.size))
+
+            manager.sendMultipartTextMessage(phoneNumber, null, messageParts, null, null)
+        } else {
+            DebugLogger.d("sendUnreportedSms", context.getString(R.string.debug_log_sending_single_sms))
+
+            manager.sendTextMessage(phoneNumber, null, message, null, null)
+        }
     }
 }

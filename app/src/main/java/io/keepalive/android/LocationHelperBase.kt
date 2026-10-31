@@ -273,11 +273,8 @@ open class LocationHelperBase(
                 )
 
                 // default to a message indicating we couldn't geocode the location and just include
-                //  the raw GPS coordinates
-                locationResult.formattedLocationString = String.format(
-                    context.getString(R.string.geocode_invalid_message),
-                    loc.latitude.toString(), loc.longitude.toString(), loc.accuracy.toString()
-                )
+                //  the GPS coordinates
+                locationResult.formattedLocationString = buildGeocodedLocationStr("", loc)
 
                 // start a timeout handler in case the geocoder hangs
                 startGeocodingTimeoutHandler()
@@ -326,11 +323,8 @@ open class LocationHelperBase(
                 )
 
                 // default to a message indicating we couldn't geocode the location and just include
-                //  the raw GPS coordinates
-                locationResult.formattedLocationString = String.format(
-                    context.getString(R.string.geocode_invalid_message),
-                    loc.latitude.toString(), loc.longitude.toString(), loc.accuracy.toString()
-                )
+                //  the GPS coordinates
+                locationResult.formattedLocationString = buildGeocodedLocationStr("", loc)
 
                 // start a timeout handler in case the geocoder hangs
                 startGeocodingTimeoutHandler()
