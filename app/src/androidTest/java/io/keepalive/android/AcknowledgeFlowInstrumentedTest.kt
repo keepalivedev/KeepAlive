@@ -98,7 +98,12 @@ class AcknowledgeFlowInstrumentedTest {
         // state without alarm stacking or notification re-appearing.
         repeat(5) { AcknowledgeAreYouThere.acknowledge(targetContext) }
 
-        assertFalse(hasNotification(AppController.ARE_YOU_THERE_NOTIFICATION_ID))
+        // NotificationManager.cancel() is async, so poll for the prompt to
+        // clear rather than asserting synchronously — on a loaded emulator the
+        // cancel can lag the assertion (matches the wait in
+        // acknowledgingFromTheAreYouThereStateResetsToPeriodic above).
+        assertTrue("prompt should stay cleared after rapid acknowledges",
+            waitUntil { !hasNotification(AppController.ARE_YOU_THERE_NOTIFICATION_ID) })
         assertTrue("periodic alarm still scheduled", hasPendingKeepAliveAlarm())
     }
 }

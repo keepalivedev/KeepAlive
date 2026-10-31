@@ -225,6 +225,13 @@ class MainActivity : AppCompatActivity() {
         val checkAppRestrictionsButton: Button = findViewById(R.id.buttonCheckAppRestriction)
         checkAppRestrictionsButton.setOnClickListener { _ ->
 
+            // the "Restricted" battery setting lives on the app's own settings page and
+            //  has no hibernation-style dialog to route through (issue #194)
+            if (isBackgroundRestricted(this)) {
+                openAppSettings()
+                return@setOnClickListener
+            }
+
             val future: ListenableFuture<Int> =
                 PackageManagerCompat.getUnusedAppRestrictionsStatus(this)
 
@@ -309,7 +316,8 @@ class MainActivity : AppCompatActivity() {
 
         fun buildProceedSMSCountMessage(messageCount: Int): Spanned {
 
-            val proceedMessage = getString(R.string.test_alert_confirmation_message_with_count, messageCount)
+            val proceedMessage = resources.getQuantityString(
+                R.plurals.test_alert_confirmation_message_with_count, messageCount, messageCount)
 
             // deal with fromHtml deprecation
             val formattedProceedMessage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -527,6 +535,22 @@ class MainActivity : AppCompatActivity() {
                         monitoringMessageTextView.text =
                             getString(R.string.monitoring_no_recipient_message)
 
+                    } else if (locationNeededButDisabled(this, sharedPrefs)) {
+
+                        // a contact or the webhook includes location but the device's
+                        //  location services are off, so the alert would only carry the
+                        //  "unable to determine location" fallback - warn here rather
+                        //  than let the recipient find out (issue #213)
+                        DebugLogger.d(tag, getString(R.string.debug_log_location_services_disabled))
+
+                        monitoringStatusTextView.text =
+                            getString(R.string.monitoring_location_disabled_title)
+                        monitoringStatusTextView.setTextColor(
+                            getColorCompat(this, R.color.monitoringImpaired)
+                        )
+                        monitoringMessageTextView.text =
+                            getString(R.string.monitoring_location_disabled_message)
+
                     } else {
                         Log.d(tag, "Don't need any permissions, we are all set?!")
 
@@ -559,6 +583,17 @@ class MainActivity : AppCompatActivity() {
                             ContextCompat.getMainExecutor(this)
                         )
                     }
+                }
+
+                // the reboot limitation of a secondary user holds whichever of the states above
+                //  is showing while an alarm is scheduled, so its note goes under all of them,
+                //  not only the healthy one. the restriction check leaves an existing note alone
+                if (isSecondaryUser(this)) {
+                    monitoringMessageTextView.text = impairedStatusMessage(
+                        monitoringMessageTextView.text.toString(),
+                        null,
+                        getString(R.string.monitoring_secondary_user_message)
+                    )
                 }
             } else {
                 DebugLogger.d(tag, getString(R.string.debug_log_no_active_alarm_showing_restart_button))
@@ -657,8 +692,16 @@ class MainActivity : AppCompatActivity() {
                 testAlertSMSButton.isEnabled = true
                 smsPhoneTextView.visibility = View.VISIBLE
                 testAlertSMSButton.visibility = View.VISIBLE
-                smsPhoneTextView.text =
-                    String.format(getString(R.string.test_sms_message), smsPhoneNumbers)
+
+                // the sentence has no number in it, so only one message vs more matters (a
+                //  contact with location gets two). plurals would follow the number instead
+                //  (Russian uses the singular for 21)
+                val testSMSMessage = if (getSMSMessageCount(false) == 1) {
+                    R.string.test_sms_message_one
+                } else {
+                    R.string.test_sms_message
+                }
+                smsPhoneTextView.text = String.format(getString(testSMSMessage), smsPhoneNumbers)
             }
         }
     }
@@ -667,20 +710,11 @@ class MainActivity : AppCompatActivity() {
         val smsContacts: MutableList<SMSEmergencyContactSetting> = loadJSONSharedPreference(sharedPrefs,
             "PHONE_NUMBER_SETTINGS")
 
-        var smsPhoneNumbers = ""
-
-        // loop through the SMS contacts and create a csv string of the enabled contacts
-        for (contact in smsContacts) {
-
-            if (contact.isEnabled && contact.phoneNumber != "") {
-                smsPhoneNumbers += PhoneNumberUtils.formatNumber(
-                    contact.phoneNumber,
-                    Locale.getDefault().country
-                ) + ", "
-            }
+        // csv of the enabled contacts, each shown as its optional label plus the number.
+        //  formatNumber returns null for a number it can't parse, so fall back to the raw one
+        return smsContactsDisplayString(smsContacts) { number ->
+            PhoneNumberUtils.formatNumber(number, Locale.getDefault().country) ?: number
         }
-
-        return smsPhoneNumbers.dropLast(2)
     }
 
     // get the number of SMS messages that will be sent when the test alert is triggered
@@ -793,6 +827,49 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
+
+        // the per-app "Restricted" battery setting is a separate mechanism from
+        //  hibernation but has the same effect on monitoring - checks get delayed or
+        //  dropped - so it shares the impaired state and the button (issue #194)
+        val backgroundRestricted = isBackgroundRestricted(this)
+        if (backgroundRestricted) {
+            DebugLogger.d(tag, getString(R.string.debug_log_background_restricted))
+            checkAppRestrictionsButton.visibility = View.VISIBLE
+        }
+
+        // an install in a secondary user can't run after a reboot until someone switches
+        //  to that user, and no setting fixes that, so it gets an explanation but no
+        //  button (issue #215)
+        val secondaryUser = isSecondaryUser(this)
+        if (secondaryUser) {
+            DebugLogger.d(tag, getString(R.string.debug_log_secondary_user))
+        }
+
+        if (backgroundRestricted || secondaryUser) {
+            monitoringStatusTextView.text = getString(R.string.monitoring_impaired_title)
+            monitoringStatusTextView.setTextColor(
+                getColorCompat(this, R.color.monitoringImpaired)
+            )
+
+            // both can apply at once, and then both messages have to stay visible
+            val messageTextView =
+                binding.root.findViewById<TextView>(R.id.textviewMonitoringMessage)
+            messageTextView.text = impairedStatusMessage(
+                messageTextView.text.toString(),
+                if (backgroundRestricted) {
+                    getString(R.string.monitoring_background_restricted_message)
+                } else {
+                    null
+                },
+                if (secondaryUser) getString(R.string.monitoring_secondary_user_message) else null
+            )
+        }
+    }
+
+    // open the app's own settings page, where the battery usage restriction is changed
+    private fun openAppSettings() {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, "package:$packageName".toUri())
+        startActivity(intent)
     }
 
     // check whether app restrictions/hibernation is enabled and,

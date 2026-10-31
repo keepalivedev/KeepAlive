@@ -54,6 +54,13 @@ interface AlertCheckDeps {
     /** Latest lock/unlock or app-foreground event since [startTimestamp], or null. */
     fun getLastDeviceActivity(startTimestamp: Long, monitoredApps: List<String>): UsageEvents.Event?
 
+    /**
+     * Whether another user of a multi-user device is in the foreground with the screen on
+     * and the keyguard hidden, i.e. someone is using the device in a profile this user's
+     * usage events cannot show (issue #215).
+     */
+    fun isOtherUserActive(): Boolean
+
     // --- Actions ---
 
     /** Schedule the next [io.keepalive.android.receivers.AlarmReceiver] firing via AlarmManager. */
@@ -71,6 +78,9 @@ interface AlertCheckDeps {
 
     /** Cancel the "Are you there?" prompt and reset monitoring to periodic. */
     fun acknowledgeAreYouThere()
+
+    /** Take down the "Are you there?" prompt without touching the alarm. */
+    fun dismissAreYouThere()
 
     /** Dispatch the real alert via AlertService, persist the post-alert stage, and optionally restart periodic. */
     fun dispatchFinalAlert(prefs: SharedPreferences, nowTimestamp: Long, checkPeriodHours: Float, restPeriods: MutableList<RestPeriod>)
@@ -98,6 +108,8 @@ class ProductionAlertCheckDeps(private val context: Context) : AlertCheckDeps {
     override fun getLastDeviceActivity(startTimestamp: Long, monitoredApps: List<String>): UsageEvents.Event? =
         getLastDeviceActivity(context, startTimestamp, monitoredApps)
 
+    override fun isOtherUserActive(): Boolean = isOtherUserActive(context)
+
     override fun scheduleAlarm(baseTimestamp: Long, periodMinutes: Int, stage: String, restPeriods: MutableList<RestPeriod>?) {
         setAlarm(context, baseTimestamp, periodMinutes, stage, restPeriods)
     }
@@ -114,17 +126,23 @@ class ProductionAlertCheckDeps(private val context: Context) : AlertCheckDeps {
     }
 
     override fun showAreYouThereOverlay(followupPeriodMinutes: Int) {
+        // the final alarm doAlertCheck sets right after this is now + follow-up
         AreYouThereOverlay.show(
             context,
             String.format(
                 context.getString(R.string.initial_check_notification_text),
                 followupPeriodMinutes.toString()
-            )
+            ),
+            System.currentTimeMillis() + followupPeriodMinutes * 60_000L
         )
     }
 
     override fun acknowledgeAreYouThere() {
         AcknowledgeAreYouThere.acknowledge(context)
+    }
+
+    override fun dismissAreYouThere() {
+        AcknowledgeAreYouThere.dismissPrompt(context)
     }
 
     override fun dispatchFinalAlert(
@@ -172,14 +190,15 @@ class ProductionAlertCheckDeps(private val context: Context) : AlertCheckDeps {
         //    re-arm monitoring and cause false alerts (issue #181)
         // Every path that re-arms monitoring goes through setAlarm(), which overwrites
         // this with the new stage — including the auto-restart scheduleAlarm() below.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            try {
-                getDeviceProtectedPreferences(context).edit(commit = true) {
-                    putString(PrefKeys.LAST_ALARM_STAGE, "alert_sent")
-                }
-            } catch (e: Exception) {
-                Log.e("doAlertCheck", "Error resetting alarm stage after sending alert", e)
+        // NOT gated on API N — getDeviceProtectedPreferences() falls back to the
+        // default prefs below N, and without this marker the watchdog and the boot
+        // receiver would read the default "periodic" and re-arm after an alert.
+        try {
+            getDeviceProtectedPreferences(context).edit(commit = true) {
+                putString(PrefKeys.LAST_ALARM_STAGE, "alert_sent")
             }
+        } catch (e: Exception) {
+            Log.e("doAlertCheck", "Error resetting alarm stage after sending alert", e)
         }
 
         if (prefs.getBoolean(PrefKeys.AUTO_RESTART_MONITORING, false)) {

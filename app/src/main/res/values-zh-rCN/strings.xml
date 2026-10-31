@@ -92,15 +92,22 @@
     <string name="monitoring_no_activity_detected_message">监测器已启用，但在过去 %1$s 小时没有检测到任何活动。 请确保屏幕锁定已启用并授予了使用情况访问权限。</string>
     <string name="monitoring_no_recipient_title">没有紧急联系人</string>
     <string name="monitoring_no_recipient_message">监测器正在运行，但没有已启用的紧急联系人，因此无法发送提醒。请在设置中添加或启用紧急联系人。</string>
+    <string name="monitoring_location_disabled_title">定位服务已关闭</string>
+    <string name="monitoring_location_disabled_message">监控正在运行，但定位服务已关闭，因此警报无法包含您的位置。请在设备设置中开启定位，或为紧急联系人关闭“附带位置信息”。</string>
+    <string name="monitoring_background_restricted_message">Keep Alive 的后台活动受到限制，因此活动检查可能被延迟或根本不会运行，警报也可能无法发送。请点击下方按钮，将电池用量设置为“不受限制”或“优化”。</string>
+    <string name="monitoring_secondary_user_message">Keep Alive 安装在次要用户配置文件中。重启后，在您再次切换到此配置文件之前它无法运行，因此在此之前无法发送警报。</string>
     <string name="monitoring_permissions_required_message">监测器已启用，但尚未授予必要权限。 请点击下面的“授予权限”按钮。</string>
     <string name="alarm_message_too_long_message">短信不得超过 160 个字符。</string>
     <string name="phone_number_invalid_message">请输入一个有效的电话号码。</string>
-    <string name="time_period_too_short_message">时间间隔不应小于 10 分钟。</string>
-    <string name="time_period_too_long_message">时间间隔不应超过 7 天。</string>
+    <string name="time_period_too_short_message">不应小于 0.17 小时（10 分钟）。</string>
+    <string name="time_period_too_long_message">不应超过 168 小时（7 天）。</string>
+    <string name="followup_period_too_short_message">不应小于 10 分钟。</string>
+    <string name="followup_period_too_long_message">不应超过 10080 分钟（7 天）。</string>
     <string name="followup_period_whole_minutes_message">分钟必须为整数。</string>
     <string name="time_period_too_many_decimals_message">小时最多保留 2 位小数。</string>
     <string name="test_phone_call_message">将至电:\n%1$s</string>
     <string name="test_sms_message">短信将发送至:\n%1$s</string>
+    <string name="test_sms_message_one">短信将发送至:\n%1$s</string>
     <string name="unable_to_send_sms_message">无法发送短信\n请插入有效的SIM卡</string>
     <string name="no_configured_contacts_message">未设置联系人</string>
     <string name="permissions_button_text">授予权限</string>
@@ -111,7 +118,9 @@
     <string name="test_alert_confirmation_title">确认发送测试短信</string>
     <string name="test_alert_switch_include_warning_text">额外发送 1 条提醒短信</string>
     <string name="test_sms_configured_contacts_message">这将向您的联系人 %1$s 发送测试短信。</string>
-    <string name="test_alert_confirmation_message_with_count"><![CDATA[总共将发送 <b>%1$d</b> 条短信。 您想继续吗？]]></string>
+    <plurals name="test_alert_confirmation_message_with_count">
+        <item quantity="other"><![CDATA[总共将发送 <b>%1$d</b> 条短信。 您想继续吗？]]></item>
+    </plurals>
     <string name="test_alert_sms_default_message">The following messages are a test from the Keep Alive app. Please confirm receipt!</string>
 
     <!-- notification strings -->
@@ -139,6 +148,8 @@
     <string name="sms_service_failure_notification_text">发送提醒短信时发生错误，请插入有效的SIM卡。</string>
     <string name="sms_permission_revoked_notification_title">短信权限已被撤销！</string>
     <string name="sms_permission_revoked_notification_text">Keep Alive 无法再发送短信提醒。点击此处打开应用并重新授予短信权限。</string>
+    <string name="background_restricted_notification_title">后台活动受到限制！</string>
+    <string name="background_restricted_notification_text">Keep Alive 可能无法执行活动检查或发送警报。点击此处打开应用并允许后台活动。</string>
     <string name="alert_service_notification_title">正在发送提醒…</string>
     <string name="alert_service_notification_message">提醒消息正在发送给您的联系人，请稍候。</string>
 
@@ -158,6 +169,8 @@
     <string name="sample_alert_message">提醒文本示例</string>
     <string name="include_location_information">附带位置信息</string>
     <string name="phone_number_hint">输入短信号码</string>
+    <string name="contact_label_title">姓名或关系（可选）</string>
+    <string name="contact_label_hint">例如：女儿</string>
     <string name="alert_message_hint">输入短信内容</string>
     <string name="delete_phone_number_dialog_title">删除联系人</string>
     <string name="delete_phone_number_dialog_description">您确定要删除此条目吗？</string>
@@ -174,6 +187,7 @@
     <!-- Main Settings -->
     <string name="enabled_title">启用监测器</string>
     <string name="auto_restart_title">发出提醒后自动重启监测器</string>
+    <string name="debug_logging_title">调试日志</string>
     <string name="time_period_title">闲置多久后弹出通知</string>
     <string name="time_period_description">设备超过 # 小时不活动，系统将弹出 \'你还在吗？\' 的通知。</string>
     <string name="followup_time_period_title">等待多久后发出提醒</string>
@@ -259,8 +273,8 @@
 
     <!-- AlertFunctions.kt -->
     <string name="debug_log_doing_alert_check">Doing periodic check, alarm stage is %1$s</string>
-    <string name="debug_log_full_screen_prompt_shown">Full-screen Are you there? prompt shown over lock screen</string>
-    <string name="debug_log_full_screen_prompt_acknowledged">Full-screen Are you there? prompt acknowledged</string>
+    <string name="debug_log_full_screen_prompt_shown">全屏“您还在吗？”提示已显示在锁定屏幕上</string>
+    <string name="debug_log_full_screen_prompt_acknowledged">全屏“您还在吗？”提示已确认</string>
     <string name="debug_log_sending_alert_sms">Sending alert SMS!</string>
     <string name="debug_log_getting_sms_manager_with_sub_id">Getting SMS manager with context.getSystemService and sub id %1$d</string>
     <string name="debug_log_getting_sms_manager_with_context">Getting SMS manager with context.getSystemService</string>
@@ -290,7 +304,7 @@
     <string name="debug_log_alert_service_start">Starting Alert Service</string>
     <string name="debug_log_alert_service_stop">Stopping Alert Service</string>
     <string name="debug_log_alert_service_error">Error occurred in the Alert Service: %1$s</string>
-    <string name="debug_log_failed_to_start_alert_service">Failed to start AlertService: %1$s</string>
+    <string name="debug_log_failed_to_start_alert_service">AlertService 启动失败：%1$s</string>
     <string name="debug_log_auto_restart_monitoring">Auto-Restart Monitoring is enabled, restarting alarm…</string>
     <string name="debug_log_sending_warning_sms">Sending warning SMS to %1$s</string>
 
@@ -315,6 +329,7 @@
     <string name="debug_log_attempting_to_get_location">Attempting to get location…</string>
     <string name="debug_log_device_idle_not_getting_current_location">Device is in idle mode, not getting current location</string>
     <string name="debug_log_no_location_permission_executing_callback">Don\'t have location permission, executing callback</string>
+    <string name="debug_log_location_services_disabled">定位服务已关闭，无法确定位置</string>
     <string name="debug_log_failed_getting_current_location">Failed getting current location?!</string>
     <string name="debug_log_geocoding_timeout_reached">Timeout reached, locationString is %1$s</string>
     <string name="debug_log_failed_geocoding_gps_coordinates">Failed geocoding GPS coordinates?!</string>
@@ -334,11 +349,11 @@
     <!-- MainActivity.kt -->
     <string name="debug_log_no_alarm_or_monitoring_disabled">No alarm found or monitoring is disabled</string>
     <string name="debug_log_no_events_found_lock_screen">No events found, may not have lock screen?</string>
-    <string name="debug_log_no_alert_channel">Monitoring is enabled but no alert recipient is configured!</string>
+    <string name="debug_log_no_alert_channel">监控已启用，但未配置警报接收人！</string>
     <string name="debug_log_no_active_alarm_showing_restart_button">No active alarm found, showing button to restart</string>
     <string name="debug_log_failed_getting_sms_manager_disable_button">Failed to get SMS manager? Disabling SMS test button</string>
     <string name="debug_log_current_alarm_time">Current alarm set for %1$s local time</string>
-    <string name="debug_log_direct_boot_notification_pending_app_open">Direct Boot notification still pending on app open — acknowledging</string>
+    <string name="debug_log_direct_boot_notification_pending_app_open">应用打开时 Direct Boot 通知仍在等待中 — 正在确认</string>
 
     <!-- PermissionManager.kt -->
     <string name="debug_log_still_need_some_permissions">Still need some permissions</string>
@@ -347,7 +362,10 @@
 
     <!-- AlarmReceiver.kt -->
     <string name="debug_log_alarm_just_fired">Alarm just fired!</string>
-    <string name="debug_log_sms_permission_revoked">SEND_SMS permission is no longer granted!</string>
+    <string name="debug_log_sms_permission_revoked">SEND_SMS 权限已不再授予！</string>
+    <string name="debug_log_background_restricted">后台活动受到电池设置的限制</string>
+    <string name="debug_log_secondary_user">正在次要用户配置文件中运行，重启后在该用户启动之前无法运行任何内容</string>
+    <string name="debug_log_other_user_active">此配置文件中没有活动，但另一个用户配置文件正在使用中，视为活动</string>
     <string name="debug_log_app_not_enabled_alarm_went_off">App is not enabled, why did the alarm go off?!</string>
     <string name="debug_log_alarm_time_comparison">Time is %1$s UTC, alarm was supposed to go off at %2$s UTC, which was %3$d seconds ago</string>
     <string name="debug_log_failed_processing_alarm">Failed while processing alarm:</string>
@@ -355,35 +373,41 @@
     <string name="debug_log_app_in_background">KeepAlive is currently in the background</string>
     <string name="debug_log_flag_receiver_true">FLAG_RECEIVER_FOREGROUND is true</string>
     <string name="debug_log_flag_receiver_false">FLAG_RECEIVER_FOREGROUND is false</string>
-    <string name="debug_log_final_alarm_stale">Final alarm is stale: fired %1$ds late (threshold: %2$ds). Downgrading to \'periodic\' to avoid false alert.</string>
+    <string name="debug_log_final_alarm_stale">最终闹钟已过时：延迟 %1$ds 触发（阈值：%2$ds）。降级为 \'periodic\' 以避免误报。</string>
 
     <!-- AlertService.kt -->
     <string name="debug_log_wake_lock_acquired">Acquiring wake lock</string>
     <string name="debug_log_wake_lock_released">Releasing wake lock</string>
-    <string name="debug_log_alert_intent_skipping">Skipping alert intent trigger=%1$d (savedTrigger=%2$d, savedSteps=%3$d)</string>
-    <string name="debug_log_alert_intent_resuming">Resuming alert trigger=%1$d (completedSteps=%2$d)</string>
+    <string name="debug_log_alert_intent_skipping">跳过警报意图：trigger=%1$d (savedTrigger=%2$d, savedSteps=%3$d)</string>
+    <string name="debug_log_alert_intent_resuming">恢复警报：trigger=%1$d (completedSteps=%2$d)</string>
 
     <!-- SMSSentReceiver.kt -->
     <string name="debug_log_sms_sent">SMS sent!</string>
     <string name="debug_log_sms_send_error">SMS send error: %1$s</string>
-    <string name="debug_log_sms_receiver_not_registered">Receiver not registered</string>
+    <string name="debug_log_sms_receiver_not_registered">接收器未注册</string>
 
     <!-- BootBroadcastReceiver.kt -->
     <string name="debug_log_boot_completed">Boot completed!? %1$s</string>
     <string name="debug_log_app_is_disabled">App is disabled?</string>
     <string name="debug_log_boot_receiver_exception">Exception in BootBroadcastReceiver: %1$s</string>
     <string name="debug_log_boot_completed_flag_status">BOOT_COMPLETED: direct_boot_notification_pending=%1$b, isUserUnlocked=%2$b</string>
-    <string name="debug_log_boot_completed_user_unlocked">BOOT_COMPLETED: User unlocked device - treating as activity, cancelling notification and resetting alarm</string>
-    <string name="debug_log_boot_completed_no_pending_notification">BOOT_COMPLETED: No Direct Boot notification pending, proceeding normally</string>
-    <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED received, skipping Direct Boot notification check. %1$s</string>
-    <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: User is already unlocked, deferring to BOOT_COMPLETED</string>
-    <string name="debug_log_restored_alarm_stage">Restored alarm stage from device-protected storage: %1$s, calling doAlertCheck()</string>
-    <string name="debug_log_boot_alert_already_sent">Alert was already sent and Auto-Restart Monitoring is off, staying disarmed after reboot</string>
+    <string name="debug_log_boot_completed_user_unlocked">BOOT_COMPLETED: 用户已解锁设备 — 视为活动，取消通知并重置闹钟</string>
+    <string name="debug_log_boot_completed_no_pending_notification">BOOT_COMPLETED: 没有待处理的 Direct Boot 通知，正常继续</string>
+    <string name="debug_log_locked_boot_completed_skipping">收到 LOCKED_BOOT_COMPLETED，跳过 Direct Boot 通知检查。%1$s</string>
+    <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED：用户已解锁，延迟到 BOOT_COMPLETED 处理</string>
+    <string name="debug_log_restored_alarm_stage">从设备保护存储中恢复了闹钟阶段：%1$s，调用 doAlertCheck()</string>
+    <string name="debug_log_boot_alert_already_sent">警报已发送且自动重启监控已停用，保持停用状态</string>
+    <string name="debug_log_watchdog_rearming">看门狗：闹钟原定于 %1$s 触发但从未触发，正在重新启动监控</string>
+    <string name="debug_log_alarm_not_due_rescheduling">闹钟尚未到期（原定于 %1$s UTC），改为重新调度而非检查</string>
+    <string name="debug_log_saved_alarm_implausible">保存的闹钟时间 %1$s UTC 远得不合理，开始新的检查周期</string>
+    <string name="debug_log_alert_sent_migrated">上一版本将已发送的警报记录为待处理的最终闹钟，现将其标记为已发送，以免本次更新重复发送</string>
+    <string name="debug_log_stale_alarm_ignored">已忽略 %1$s 闹钟触发，因为保存的阶段为 %2$s</string>
+    <string name="debug_log_prompt_lost_reposting">“你在吗？”提示未能保留，为 %1$s UTC 的最终闹钟再次显示</string>
 
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Webhook configuration saved</string>
     <string name="debug_log_webhook_config_deleted">Webhook configuration deleted</string>
-    <string name="debug_log_invalid_header_json">Invalid header JSON</string>
+    <string name="debug_log_invalid_header_json">无效的标头 JSON</string>
 
     <!-- Are You There overlay strings -->
     <string name="are_you_there_title">你还在吗？</string>
@@ -407,9 +431,9 @@
     <string name="debug_log_sending_webhook_failed">Failed while sending webhook: %1$s</string>
 
     <!-- AlertFunctions.kt (Direct Boot) -->
-    <string name="debug_log_direct_boot_final_alarm_due">Direct Boot: Final alarm is due — sending alert</string>
-    <string name="debug_log_direct_boot_cleared_pending_flag">Direct Boot: Cleared direct_boot_notification_pending</string>
-    <string name="debug_log_direct_boot_set_pending_flag">Direct Boot: Set direct_boot_notification_pending=true</string>
-    <string name="debug_log_direct_boot_activity_newer_skipping">Direct Boot: activity at %1$s is newer than \'Are you there?\' posted at %2$s; skipping final alert</string>
+    <string name="debug_log_direct_boot_final_alarm_due">Direct Boot: 最终闹钟已到期 — 正在发送提醒</string>
+    <string name="debug_log_direct_boot_cleared_pending_flag">Direct Boot: 已清除 direct_boot_notification_pending</string>
+    <string name="debug_log_direct_boot_set_pending_flag">Direct Boot: 已设置 direct_boot_notification_pending=true</string>
+    <string name="debug_log_direct_boot_activity_newer_skipping">Direct Boot：%1$s 的活动比 %2$s 发布的\'你还在吗？\'更新；跳过最终警报</string>
 
 </resources>

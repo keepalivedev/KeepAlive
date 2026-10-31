@@ -98,7 +98,7 @@ class OverlayInstrumentedTest {
         // Direct invocation from the instrumentation context. This hits the
         // real WindowManager.addView — i.e., the production code path that
         // Robolectric can't simulate.
-        AreYouThereOverlay.show(targetContext, "test message")
+        AreYouThereOverlay.show(targetContext, "test message", System.currentTimeMillis() + 60 * 60_000L)
 
         val okButton = device.wait(
             Until.findObject(By.res(targetContext.packageName, "buttonImOk")),
@@ -148,7 +148,7 @@ class OverlayInstrumentedTest {
 
     @Test fun overlayShowsConfiguredMessage() {
         val message = "please respond within 60 minutes"
-        AreYouThereOverlay.show(targetContext, message)
+        AreYouThereOverlay.show(targetContext, message, System.currentTimeMillis() + 60 * 60_000L)
 
         val messageView = device.wait(
             Until.findObject(By.res(targetContext.packageName, "textAreYouThereMessage")),
@@ -162,7 +162,7 @@ class OverlayInstrumentedTest {
     }
 
     @Test fun dismissActionRemovesTheOverlayWithoutAcknowledging() {
-        AreYouThereOverlay.show(targetContext, "test")
+        AreYouThereOverlay.show(targetContext, "test", System.currentTimeMillis() + 60 * 60_000L)
 
         // Wait for it to be visible, then dismiss via stopService (which is
         // what the static AreYouThereOverlay.dismiss() does).

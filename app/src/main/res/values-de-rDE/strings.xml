@@ -92,15 +92,22 @@
     <string name="monitoring_no_activity_detected_message">Die Überwachung ist aktiviert, aber in den letzten %1$s Stunden wurde keine Aktivität festgestellt.  Bitte stellen Sie sicher, dass Sie eine Bildschirmsperre aktiviert haben und die Zugriffsrechte für die Nutzung erteilt haben.</string>
     <string name="monitoring_no_recipient_title">Kein Alarm-Empfänger</string>
     <string name="monitoring_no_recipient_message">Die Überwachung läuft, aber kein Notfallkontakt ist aktiv, daher kann kein Alarm gesendet werden. Bitte fügen Sie in den Einstellungen einen Notfallkontakt hinzu oder aktivieren Sie einen.</string>
+    <string name="monitoring_location_disabled_title">Standortdienste ausgeschaltet</string>
+    <string name="monitoring_location_disabled_message">Die Überwachung läuft, aber die Standortdienste sind ausgeschaltet, daher können Alarme Ihren Standort nicht enthalten. Bitte schalten Sie den Standort in den Geräteeinstellungen ein oder deaktivieren Sie \"Standortinformation mitsenden\" für Ihre Notfallkontakte.</string>
+    <string name="monitoring_background_restricted_message">Die Hintergrundaktivität von Keep Alive ist eingeschränkt, daher können die Aktivitätsprüfungen verzögert werden oder ganz ausbleiben und Alarme möglicherweise nicht gesendet werden. Bitte tippen Sie auf die Schaltfläche unten und stellen Sie die Akkunutzung auf \"Uneingeschränkt\" oder \"Optimiert\".</string>
+    <string name="monitoring_secondary_user_message">Keep Alive ist in einem sekundären Benutzerprofil installiert. Nach einem Neustart kann es erst wieder laufen, wenn Sie zu diesem Profil wechseln, daher kann bis dahin kein Alarm gesendet werden.</string>
     <string name="monitoring_permissions_required_message">Die Überwachung ist aktiviert, aber es wurden nicht alle Berechtigungen erteilt.  Bitte klicken Sie unten auf die Schaltfläche "Berechtigungen erteilen".</string>
     <string name="alarm_message_too_long_message">Die Nachricht darf nicht länger als 160 Zeichen sein.</string>
     <string name="phone_number_invalid_message">Bitte geben Sie eine gültige Telefonnummer ein.</string>
-    <string name="time_period_too_short_message">Das Intervall muss mindestens 10 Minuten betragen.</string>
-    <string name="time_period_too_long_message">Das Intervall darf höchstens 7 Tage betragen.</string>
+    <string name="time_period_too_short_message">Muss mindestens 0.17 Stunden (10 Minuten) betragen.</string>
+    <string name="time_period_too_long_message">Darf höchstens 168 Stunden (7 Tage) betragen.</string>
+    <string name="followup_period_too_short_message">Muss mindestens 10 Minuten betragen.</string>
+    <string name="followup_period_too_long_message">Darf höchstens 10080 Minuten (7 Tage) betragen.</string>
     <string name="followup_period_whole_minutes_message">Die Minuten müssen eine ganze Zahl sein.</string>
     <string name="time_period_too_many_decimals_message">Die Stunden dürfen höchstens 2 Nachkommastellen haben.</string>
     <string name="test_phone_call_message">Es wird ein Anruf getätigt an:\n%1$s</string>
-    <string name="test_sms_message">SMS-Nachricht(en) werden gesendet an:\n%1$s</string>
+    <string name="test_sms_message">SMS-Nachrichten werden gesendet an:\n%1$s</string>
+    <string name="test_sms_message_one">SMS-Nachricht wird gesendet an:\n%1$s</string>
     <string name="unable_to_send_sms_message">SMS-Versand nicht möglich Bitte überprüfen Sie,\n ob Sie eine aktive SIM-Karte haben</string>
     <string name="no_configured_contacts_message">Es wurden keine Notfallkontakte konfiguriert</string>
     <string name="permissions_button_text">Berechtigungen erteilen</string>
@@ -111,7 +118,10 @@
     <string name="test_alert_confirmation_title">SMS-Testalarm bestätigen</string>
     <string name="test_alert_switch_include_warning_text">Eine Warnmeldung einschließen</string>
     <string name="test_sms_configured_contacts_message">Dies sendet einen Test-SMS-Alarm an Ihre konfigurierten Notfallkontakte: %1$s.</string>
-    <string name="test_alert_confirmation_message_with_count"><![CDATA[Insgesamt werden <b>%1$d</b> SMS gesendet. Möchten Sie fortfahren?]]></string>
+    <plurals name="test_alert_confirmation_message_with_count">
+        <item quantity="one"><![CDATA[Insgesamt wird <b>%1$d</b> SMS gesendet. Möchten Sie fortfahren?]]></item>
+        <item quantity="other"><![CDATA[Insgesamt werden <b>%1$d</b> SMS gesendet. Möchten Sie fortfahren?]]></item>
+    </plurals>
     <string name="test_alert_sms_default_message">Die folgenden Nachrichten sind ein Test der Keep Alive App. Bitte bestätigen Sie den Empfang!</string>
 
     <!-- notification strings -->
@@ -139,6 +149,8 @@
     <string name="sms_service_failure_notification_text">Beim Versuch, eine Alarm-SMS zu senden, ist ein Fehler aufgetreten.  Bitte überprüfen Sie, ob Sie eine aktive SIM-Karte haben.</string>
     <string name="sms_permission_revoked_notification_title">SMS-Berechtigung wurde entzogen!</string>
     <string name="sms_permission_revoked_notification_text">Keep Alive kann keine SMS-Alarme mehr senden. Tippen Sie hier, um die App zu öffnen und die SMS-Berechtigung erneut zu erteilen.</string>
+    <string name="background_restricted_notification_title">Hintergrundaktivität ist eingeschränkt!</string>
+    <string name="background_restricted_notification_text">Keep Alive kann möglicherweise keine Aktivitätsprüfungen durchführen oder Alarme senden. Tippen Sie hier, um die App zu öffnen und Hintergrundaktivität zu erlauben.</string>
     <string name="alert_service_notification_title">Alarm wird gesendet…</string>
     <string name="alert_service_notification_message">Alarm(e) werden an Ihre konfigurierten Kontakte gesendet, bitte warten.</string>
 
@@ -158,6 +170,8 @@
     <string name="sample_alert_message">Beispiel Alarm-Meldung</string>
     <string name="include_location_information">Standortinformation mitsenden</string>
     <string name="phone_number_hint">Telefonnummer eingeben</string>
+    <string name="contact_label_title">Name oder Beziehung (optional)</string>
+    <string name="contact_label_hint">Zum Beispiel: Tochter</string>
     <string name="alert_message_hint">Alarm-Meldung eingeben</string>
     <string name="delete_phone_number_dialog_title">Notfallkontakt löschen</string>
     <string name="delete_phone_number_dialog_description">Sind Sie sicher, dass Sie diesen Eintrag löschen wollen?</string>
@@ -174,6 +188,7 @@
     <!-- Main Settings -->
     <string name="enabled_title">Überwachung aktiv</string>
     <string name="auto_restart_title">Automatischer Neustart der Überwachung nach Alarmierung</string>
+    <string name="debug_logging_title">Debug-Protokollierung</string>
     <string name="time_period_title">Stunden Inaktivität bis zur Aufforderung</string>
     <string name="time_period_description">Anzahl der Stunden der Inaktivität, bevor eine \"Bist du noch da?\"-Benachrichtigung erscheint.</string>
     <string name="followup_time_period_title">Minuten bis zur Bestätigung warten</string>
@@ -315,6 +330,7 @@
     <string name="debug_log_attempting_to_get_location">Versuche, den Standort abzurufen…</string>
     <string name="debug_log_device_idle_not_getting_current_location">Gerät ist im Ruhezustand, aktueller Standort wird nicht abgerufen</string>
     <string name="debug_log_no_location_permission_executing_callback">Keine Standortberechtigung, führe Rückruf aus</string>
+    <string name="debug_log_location_services_disabled">Standortdienste sind ausgeschaltet, Standort kann nicht ermittelt werden</string>
     <string name="debug_log_failed_getting_current_location">Fehler beim Abrufen des aktuellen Standorts?!</string>
     <string name="debug_log_geocoding_timeout_reached">Timeout erreicht, locationString ist %1$s</string>
     <string name="debug_log_failed_geocoding_gps_coordinates">Fehler beim Geocodieren der GPS-Koordinaten?!</string>
@@ -348,6 +364,9 @@
     <!-- AlarmReceiver.kt -->
     <string name="debug_log_alarm_just_fired">Alarm gerade ausgelöst!</string>
     <string name="debug_log_sms_permission_revoked">Die Berechtigung SEND_SMS ist nicht mehr erteilt!</string>
+    <string name="debug_log_background_restricted">Die Hintergrundaktivität ist durch die Akkueinstellungen eingeschränkt</string>
+    <string name="debug_log_secondary_user">Läuft in einem sekundären Benutzerprofil, nach einem Neustart kann nichts laufen, bis dieser Benutzer gestartet wird</string>
+    <string name="debug_log_other_user_active">Keine Aktivität in diesem Profil, aber ein anderes Benutzerprofil wird verwendet, dies zählt als Aktivität</string>
     <string name="debug_log_app_not_enabled_alarm_went_off">App ist nicht aktiviert, warum wurde der Alarm ausgelöst?!</string>
     <string name="debug_log_alarm_time_comparison">Uhrzeit ist %1$s UTC, Alarm sollte um %2$s UTC ausgelöst werden, was %3$d Sekunden her ist</string>
     <string name="debug_log_failed_processing_alarm">Fehler bei der Alarmverarbeitung:</string>
@@ -378,7 +397,13 @@
     <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED empfangen, Direct-Boot-Benachrichtigungsprüfung wird übersprungen. %1$s</string>
     <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: Benutzer ist bereits entsperrt, Verarbeitung wird an BOOT_COMPLETED übergeben</string>
     <string name="debug_log_restored_alarm_stage">Alarmstufe aus gerätegeschütztem Speicher wiederhergestellt: %1$s, doAlertCheck() wird aufgerufen</string>
-    <string name="debug_log_boot_alert_already_sent">Alarm wurde bereits gesendet und der automatische Neustart der Überwachung ist deaktiviert, bleibt nach dem Neustart deaktiviert</string>
+    <string name="debug_log_boot_alert_already_sent">Alarm wurde bereits gesendet und der automatische Neustart der Überwachung ist deaktiviert, bleibt deaktiviert</string>
+    <string name="debug_log_watchdog_rearming">Watchdog: Alarm war für %1$s fällig, wurde aber nie ausgelöst – Überwachung wird neu gestartet</string>
+    <string name="debug_log_alarm_not_due_rescheduling">Alarm war noch nicht fällig (war für %1$s UTC gesetzt), wird neu geplant statt geprüft</string>
+    <string name="debug_log_saved_alarm_implausible">Gespeicherte Alarmzeit %1$s UTC liegt unglaubwürdig weit in der Zukunft, ein neuer Prüfzeitraum wird gestartet</string>
+    <string name="debug_log_alert_sent_migrated">Die vorherige Version hat einen gesendeten Alarm als ausstehenden Endalarm hinterlassen; er wird als bereits gesendet markiert, damit dieses Update ihn nicht wiederholt</string>
+    <string name="debug_log_stale_alarm_ignored">Zustellung eines %1$s-Alarms wird ignoriert, da der gespeicherte Status %2$s ist</string>
+    <string name="debug_log_prompt_lost_reposting">Die Frage „Bist du da?“ wurde nicht beibehalten, sie wird für den Endalarm um %1$s UTC erneut angezeigt</string>
 
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Webhook-Konfiguration gespeichert</string>

@@ -46,12 +46,22 @@ object PrefKeys {
     // when the user was last notified about a revoked SMS permission
     const val SMS_PERMISSION_NOTIFIED_AT = "sms_permission_notified_at"
 
+    // when the user was last notified that background activity is restricted
+    const val BACKGROUND_RESTRICTED_NOTIFIED_AT = "background_restricted_notified_at"
+
     // runtime state in device-protected storage (Direct Boot)
     const val LAST_ALARM_STAGE = "last_alarm_stage"
     const val LAST_ACTIVITY_TIMESTAMP = "last_activity_timestamp"
     const val LAST_CHECK_TIMESTAMP = "last_check_timestamp"
     const val DIRECT_BOOT_NOTIFICATION_PENDING = "direct_boot_notification_pending"
 
+    // one-time repair of last_alarm_stage for installs upgrading from builds
+    //  that never wrote "alert_sent" (see AlarmRecovery.migrateAlertSentMarker)
+    const val ALERT_SENT_MARKER_MIGRATED = "alert_sent_marker_migrated"
+
     // UI preferences
     const val LOG_DISPLAY_TEXT_SIZE = "log_display_text_size"
+
+    // whether DebugLogger persists entries at all (issue #166); defaults to on
+    const val DEBUG_LOGGING_ENABLED = "debug_logging_enabled"
 }

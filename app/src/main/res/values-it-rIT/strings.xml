@@ -92,15 +92,22 @@
         <string name="monitoring_no_activity_detected_message">Il monitoraggio è attivato, ma non è stata rilevata alcuna attività nelle ultime %1$s ore. Assicurati che il tuo blocco schermo sia attivo e di aver concesso le autorizzazioni di accesso all\'utilizzo.</string>  
         <string name="monitoring_no_recipient_title">Nessun destinatario di avviso</string>
         <string name="monitoring_no_recipient_message">Il monitoraggio è in corso, ma nessun contatto di emergenza è attivo, quindi non è possibile inviare alcun avviso. Aggiungi o attiva un contatto di emergenza nelle impostazioni.</string>
+    <string name="monitoring_location_disabled_title">Servizi di localizzazione disattivati</string>
+    <string name="monitoring_location_disabled_message">Il monitoraggio è in corso, ma i servizi di localizzazione sono disattivati, quindi gli avvisi non possono includere la tua posizione. Attiva la localizzazione nelle impostazioni del dispositivo o disattiva \"Includi le informazioni sulla posizione\" per i tuoi contatti di emergenza.</string>
+    <string name="monitoring_background_restricted_message">L\'attività in background di Keep Alive è limitata, quindi i controlli di attività potrebbero essere ritardati o non essere mai eseguiti e gli avvisi potrebbero non essere inviati. Tocca il pulsante qui sotto e imposta l\'utilizzo della batteria su \"Senza limitazioni\" o \"Ottimizzato\".</string>
+    <string name="monitoring_secondary_user_message">Keep Alive è installato in un profilo utente secondario. Dopo un riavvio non può funzionare finché non torni a questo profilo, quindi fino ad allora non può essere inviato alcun avviso.</string>
         <string name="monitoring_permissions_required_message">Il monitoraggio è attivato, ma non tutte le autorizzazioni sono state concesse. Fare clic sul pulsante "Concedi autorizzazioni" sottostante.</string>  
         <string name="alarm_message_too_long_message">Il messaggio non può contenere più di 160 caratteri.</string>  
         <string name="phone_number_invalid_message">Si prega di inserire un numero di telefono valido.</string>  
-        <string name="time_period_too_short_message">L\'intervallo deve essere di almeno 10 minuti.</string>  
-        <string name="time_period_too_long_message">L\'intervallo non può superare i 7 giorni.</string>
+        <string name="time_period_too_short_message">Deve essere di almeno 0.17 ore (10 minuti).</string>
+        <string name="time_period_too_long_message">Non può superare le 168 ore (7 giorni).</string>
+        <string name="followup_period_too_short_message">Deve essere di almeno 10 minuti.</string>
+        <string name="followup_period_too_long_message">Non può superare i 10080 minuti (7 giorni).</string>
         <string name="followup_period_whole_minutes_message">I minuti devono essere un numero intero.</string>
         <string name="time_period_too_many_decimals_message">Le ore possono avere al massimo 2 cifre decimali.</string>
         <string name="test_phone_call_message">Verrà effettuata una telefonata a:\n%1$s</string>  
-        <string name="test_sms_message">Il messaggio SMS verranno inviati a:\n%1$s</string>
+        <string name="test_sms_message">I messaggi SMS verranno inviati a:\n%1$s</string>
+        <string name="test_sms_message_one">Il messaggio SMS verrà inviato a:\n%1$s</string>
         <string name="unable_to_send_sms_message">Impossibile inviare SMS\nVerifica di avere una SIM attiva</string>  
         <string name="no_configured_contacts_message">Nessun contatto di emergenza configurato</string>  
         <string name="permissions_button_text">Concedi autorizzazioni</string>  
@@ -111,7 +118,11 @@
         <string name="test_alert_confirmation_title">Conferma l\'avviso di test via SMS</string>  
         <string name="test_alert_switch_include_warning_text">Includi un messaggio di avviso</string>  
         <string name="test_sms_configured_contacts_message">Questo invierà un avviso di test via SMS ai tuoi contatti di emergenza configurati: %1$s.</string>  
-        <string name="test_alert_confirmation_message_with_count"><![CDATA[Verranno inviati un totale di <b>%1$d</b> SMS. Vuoi continuare?]]></string>  
+        <plurals name="test_alert_confirmation_message_with_count">
+            <item quantity="one"><![CDATA[Verrà inviato un totale di <b>%1$d</b> SMS. Vuoi continuare?]]></item>
+            <item quantity="many"><![CDATA[Verranno inviati un totale di <b>%1$d</b> SMS. Vuoi continuare?]]></item>
+            <item quantity="other"><![CDATA[Verranno inviati un totale di <b>%1$d</b> SMS. Vuoi continuare?]]></item>
+        </plurals>
         <string name="test_alert_sms_default_message">I messaggi seguenti sono un test dell\'applicazione Keep Alive. Si prega di confermare la ricezione!</string>  
       
         <!-- notification strings -->  
@@ -139,6 +150,8 @@
         <string name="sms_service_failure_notification_text">Si è verificato un errore durante il tentativo di invio di un SMS di avviso, si prega di verificare di avere una SIM attiva</string>  
         <string name="sms_permission_revoked_notification_title">L\'autorizzazione SMS è stata revocata!</string>
         <string name="sms_permission_revoked_notification_text">Keep Alive non può più inviare avvisi SMS. Tocca qui per aprire l\'app e concedere di nuovo l\'autorizzazione SMS.</string>
+    <string name="background_restricted_notification_title">L\'attività in background è limitata!</string>
+    <string name="background_restricted_notification_text">Keep Alive potrebbe non riuscire a eseguire i controlli di attività o a inviare avvisi. Tocca qui per aprire l\'app e consentire l\'attività in background.</string>
         <string name="alert_service_notification_title">Invio dell\'avviso in corso…</string>
         <string name="alert_service_notification_message">L\'avviso (o gli avvisi) è in corso di invio ai tuoi contatti configurati, si prega di attendere.</string>  
       
@@ -158,6 +171,8 @@
         <string name="sample_alert_message">Esempio di messaggio di avviso</string>  
         <string name="include_location_information">Includi le informazioni sulla posizione</string>  
         <string name="phone_number_hint">Inserire il numero di telefono</string>  
+    <string name="contact_label_title">Nome o relazione (facoltativo)</string>
+    <string name="contact_label_hint">Ad esempio: Figlia</string>
         <string name="alert_message_hint">Inserire un messaggio di avviso</string>  
         <string name="delete_phone_number_dialog_title">Elimina il contatto di emergenza</string>  
         <string name="delete_phone_number_dialog_description">Sei sicuro di voler eliminare questa voce?</string>  
@@ -174,6 +189,7 @@
         <!-- Main Settings -->  
         <string name="enabled_title">Monitoraggio attivato</string>  
         <string name="auto_restart_title">Monitoraggio di riavvio automatico dopo l\'avviso</string>  
+    <string name="debug_logging_title">Registrazione di debug</string>
         <string name="time_period_title">Ore di inattività prima della notifica</string>  
         <string name="time_period_description">Il numero di ore di inattività prima di ricevere una notifica "Ci sei?".\n\nNOTA: Questo ritardo non è esatto e il sistema potrebbe ritardare questa notifica fino a un\'ora.</string>  
         <string name="followup_time_period_title">Minuti di attesa per la conferma</string>  
@@ -315,6 +331,7 @@
 <string name="debug_log_attempting_to_get_location">Tentativo di ottenimento della posizione…</string>  
 <string name="debug_log_device_idle_not_getting_current_location">Dispositivo in modalità inattiva, non si ottiene la posizione corrente</string>  
 <string name="debug_log_no_location_permission_executing_callback">Nessun permesso di localizzazione, esecuzione del callback</string>  
+    <string name="debug_log_location_services_disabled">I servizi di localizzazione sono disattivati, impossibile determinare la posizione</string>
 <string name="debug_log_failed_getting_current_location">Impossibile ottenere la posizione corrente?!</string>  
 <string name="debug_log_geocoding_timeout_reached">Timeout di geocodifica raggiunto, locationString è %1$s</string>  
 <string name="debug_log_failed_geocoding_gps_coordinates">Impossibile geocodificare le coordinate GPS?!</string>  
@@ -348,6 +365,9 @@
 <!-- AlarmReceiver.kt -->  
 <string name="debug_log_alarm_just_fired">L\'allarme è appena scattato!</string>  
 <string name="debug_log_sms_permission_revoked">L\'autorizzazione SEND_SMS non è più concessa!</string>
+    <string name="debug_log_background_restricted">L\'attività in background è limitata dalle impostazioni della batteria</string>
+    <string name="debug_log_secondary_user">In esecuzione in un profilo utente secondario, dopo un riavvio nulla può essere eseguito finché questo utente non viene avviato</string>
+    <string name="debug_log_other_user_active">Nessuna attività in questo profilo, ma un altro profilo utente è in uso, viene considerato attività</string>
 <string name="debug_log_app_not_enabled_alarm_went_off">L\'applicazione non è abilitata, perché l\'allarme è scattato?!</string>  
 <string name="debug_log_alarm_time_comparison">L\'ora è %1$s UTC, l\'allarme doveva scattare a %2$s UTC, ovvero %3$d secondi fa</string>  
 <string name="debug_log_failed_processing_alarm">Impossibile elaborare l\'allarme:</string>  
@@ -378,7 +398,13 @@
 <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED ricevuto, salto del controllo notifica Direct Boot. %1$s</string>
 <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: L\'utente è già sbloccato, rinvio a BOOT_COMPLETED</string>
 <string name="debug_log_restored_alarm_stage">Fase dell\'allarme ripristinata dall\'archivio protetto del dispositivo: %1$s, chiamata a doAlertCheck()</string>
-<string name="debug_log_boot_alert_already_sent">L\'allarme è già stato inviato e il riavvio automatico del monitoraggio è disattivato, rimane disarmato dopo il riavvio</string>
+<string name="debug_log_boot_alert_already_sent">L\'allarme è già stato inviato e il riavvio automatico del monitoraggio è disattivato, rimane disarmato</string>
+<string name="debug_log_watchdog_rearming">Watchdog: la sveglia era prevista per %1$s ma non è mai scattata, riattivazione del monitoraggio</string>
+<string name="debug_log_alarm_not_due_rescheduling">La sveglia non era ancora scaduta (era impostata per %1$s UTC), riprogrammazione invece del controllo</string>
+<string name="debug_log_saved_alarm_implausible">L\'orario sveglia salvato %1$s UTC è troppo lontano nel futuro, viene avviato un nuovo periodo di controllo</string>
+<string name="debug_log_alert_sent_migrated">La versione precedente ha lasciato un avviso inviato registrato come sveglia finale in sospeso; viene contrassegnato come già inviato così questo aggiornamento non lo ripete</string>
+<string name="debug_log_stale_alarm_ignored">Consegna di una sveglia %1$s ignorata perché lo stato salvato è %2$s</string>
+<string name="debug_log_prompt_lost_reposting">La richiesta «Ci sei?» non è sopravvissuta, viene mostrata di nuovo per la sveglia finale delle %1$s UTC</string>
 
 <!-- WebhookConfigManager.kt -->  
 <string name="debug_log_webhook_config_saved">Configurazione webhook salvata</string>  

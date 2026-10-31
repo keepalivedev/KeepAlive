@@ -92,15 +92,22 @@
     <string name="monitoring_no_activity_detected_message">Monitorowanie jest włączone ale nie wykryto żadnej aktywności przez ostatnie %1$s godzin. Sprawdź czy masz skonfigurowany ekran blokady i czy aplikacja ma Dostęp do Informacji o Korzystaniu z Aplikacji.</string>
     <string name="monitoring_no_recipient_title">Brak odbiorcy alarmu</string>
     <string name="monitoring_no_recipient_message">Monitorowanie działa, ale żaden kontakt alarmowy nie jest aktywny, więc nie można wysłać alarmu. Dodaj lub włącz kontakt alarmowy w ustawieniach.</string>
+    <string name="monitoring_location_disabled_title">Usługi lokalizacyjne wyłączone</string>
+    <string name="monitoring_location_disabled_message">Monitorowanie działa, ale usługi lokalizacyjne są wyłączone, więc alarmy nie mogą zawierać Twojej lokalizacji. Włącz lokalizację w ustawieniach urządzenia lub wyłącz \"Dodaj Informacje o Lokalizacji\" dla kontaktów alarmowych.</string>
+    <string name="monitoring_background_restricted_message">Aktywność w tle aplikacji Keep Alive jest ograniczona, więc sprawdzanie aktywności może być opóźnione lub nigdy się nie uruchomić, a alarmy mogą nie zostać wysłane. Naciśnij przycisk poniżej i ustaw zużycie baterii na \"Bez ograniczeń\" lub \"Zoptymalizowane\".</string>
+    <string name="monitoring_secondary_user_message">Keep Alive jest zainstalowany w dodatkowym profilu użytkownika. Po ponownym uruchomieniu nie może działać, dopóki nie przełączysz się ponownie na ten profil, więc do tego czasu nie można wysłać alarmu.</string>
     <string name="monitoring_permissions_required_message">Monitorowanie jest włączone lecz nie wszystkie uprawnienia zostały przyznane. Kliknij przycisk "Udziel Uprawnień" poniżej.</string>
     <string name="alarm_message_too_long_message">Wiadomość nie może mieć więcej niż 160 znaków.</string>
     <string name="phone_number_invalid_message">Wpisz poprawny numer telefonu.</string>
-    <string name="time_period_too_short_message">Na potwierdzenie musi być przynajmniej 10 minut.</string>
-    <string name="time_period_too_long_message">Interwał nie może być dłuższy niż 7 dni.</string>
+    <string name="time_period_too_short_message">Musi wynosić co najmniej 0.17 godziny (10 minut).</string>
+    <string name="time_period_too_long_message">Nie może przekraczać 168 godzin (7 dni).</string>
+    <string name="followup_period_too_short_message">Musi wynosić co najmniej 10 minut.</string>
+    <string name="followup_period_too_long_message">Nie może przekraczać 10080 minut (7 dni).</string>
     <string name="followup_period_whole_minutes_message">Minuty muszą być liczbą całkowitą.</string>
     <string name="time_period_too_many_decimals_message">Godziny mogą mieć najwyżej 2 miejsca po przecinku.</string>
     <string name="test_phone_call_message">Połączenie telefoniczne zostanie nawiązane z:\n%1$s</string>
     <string name="test_sms_message">Wiadomości SMS zostaną wysłane do:\n%1$s</string>
+    <string name="test_sms_message_one">Wiadomość SMS zostanie wysłana do:\n%1$s</string>
     <string name="unable_to_send_sms_message">Nie można wysłać SMS\nUpewnij się, że masz aktywną kartę SIM</string>
     <string name="no_configured_contacts_message">Nie skonfigurowano numerów alarmowych</string>
     <string name="permissions_button_text">Udziel Uprawnień</string>
@@ -111,7 +118,12 @@
     <string name="test_alert_confirmation_title">Potwierdź testowy alert SMS</string>
     <string name="test_alert_switch_include_warning_text">Dołącz wiadomość ostrzegawczą</string>
     <string name="test_sms_configured_contacts_message">To wyśle testowy alert SMS do skonfigurowanych kontaktów alarmowych: %1$s.</string>
-    <string name="test_alert_confirmation_message_with_count"><![CDATA[Łącznie zostanie wysłanych <b>%1$d</b> SMS-ów. Czy chcesz kontynuować?]]></string>
+    <plurals name="test_alert_confirmation_message_with_count">
+        <item quantity="one"><![CDATA[Łącznie zostanie wysłany <b>%1$d</b> SMS. Czy chcesz kontynuować?]]></item>
+        <item quantity="few"><![CDATA[Łącznie zostaną wysłane <b>%1$d</b> SMS-y. Czy chcesz kontynuować?]]></item>
+        <item quantity="many"><![CDATA[Łącznie zostanie wysłanych <b>%1$d</b> SMS-ów. Czy chcesz kontynuować?]]></item>
+        <item quantity="other"><![CDATA[Łącznie zostanie wysłanych <b>%1$d</b> SMS-ów. Czy chcesz kontynuować?]]></item>
+    </plurals>
     <string name="test_alert_sms_default_message">Poniższe wiadomości to test z aplikacji Keep Alive. Proszę potwierdzić odbiór!</string>
 
     <!-- notification strings -->
@@ -139,6 +151,8 @@
     <string name="sms_service_failure_notification_text">Wystąpił błąd podczas wysyłania Alertu SMS, upewnij się, że masz aktywną kartę SIM</string>
     <string name="sms_permission_revoked_notification_title">Uprawnienie SMS zostało cofnięte!</string>
     <string name="sms_permission_revoked_notification_text">Keep Alive nie może już wysyłać alarmów SMS. Dotknij tutaj, aby otworzyć aplikację i ponownie przyznać uprawnienie SMS.</string>
+    <string name="background_restricted_notification_title">Aktywność w tle jest ograniczona!</string>
+    <string name="background_restricted_notification_text">Keep Alive może nie być w stanie sprawdzać aktywności ani wysyłać alarmów. Naciśnij tutaj, aby otworzyć aplikację i zezwolić na aktywność w tle.</string>
     <string name="alert_service_notification_title">Wysyłanie alertu…</string>
     <string name="alert_service_notification_message">Alert(y) są wysyłane do skonfigurowanych kontaktów, proszę czekać.</string>
 
@@ -158,6 +172,8 @@
     <string name="sample_alert_message">Przykładowa Treść Alertu</string>
     <string name="include_location_information">Dodaj Informacje o Lokalizacji</string>
     <string name="phone_number_hint">Wpisz Numer Telefonu</string>
+    <string name="contact_label_title">Imię lub relacja (opcjonalnie)</string>
+    <string name="contact_label_hint">Na przykład: Córka</string>
     <string name="alert_message_hint">Wpisz Treść Alertu</string>
     <string name="delete_phone_number_dialog_title">Usuń Kontakt Alarmowy</string>
     <string name="delete_phone_number_dialog_description">Czy jesteś pewien, że chcesz usunąć ten kontakt?</string>
@@ -174,6 +190,7 @@
     <!-- Main Settings -->
     <string name="enabled_title">Monitorowanie Aktywne</string>
     <string name="auto_restart_title">Auto-Restart Monitorowania Po Alercie</string>
+    <string name="debug_logging_title">Rejestrowanie debugowania</string>
     <string name="time_period_title">Godziny Nieaktywności przed Zapytaniem</string>
     <string name="time_period_description">Liczba godzin bezczynności przed wyświetleniem powiadomienia \'Jesteś tam?\'</string>
     <string name="followup_time_period_title">Minuty oczekiwania na potwierdzenie</string>
@@ -315,6 +332,7 @@
     <string name="debug_log_attempting_to_get_location">Próba pobrania lokalizacji…</string>
     <string name="debug_log_device_idle_not_getting_current_location">Urządzenie jest w trybie bezczynności, nie pobiera bieżącej lokalizacji</string>
     <string name="debug_log_no_location_permission_executing_callback">Brak uprawnień lokalizacji, wykonywanie wywołania zwrotnego</string>
+    <string name="debug_log_location_services_disabled">Usługi lokalizacyjne są wyłączone, nie można ustalić lokalizacji</string>
     <string name="debug_log_failed_getting_current_location">Nie udało się pobrać bieżącej lokalizacji?!</string>
     <string name="debug_log_geocoding_timeout_reached">Osiągnięto limit czasu, locationString to %1$s</string>
     <string name="debug_log_failed_geocoding_gps_coordinates">Nie udało się geokodować współrzędnych GPS?!</string>
@@ -348,6 +366,9 @@
     <!-- AlarmReceiver.kt -->
     <string name="debug_log_alarm_just_fired">Alarm właśnie się uruchomił!</string>
     <string name="debug_log_sms_permission_revoked">Uprawnienie SEND_SMS nie jest już przyznane!</string>
+    <string name="debug_log_background_restricted">Aktywność w tle jest ograniczona przez ustawienia baterii</string>
+    <string name="debug_log_secondary_user">Działa w dodatkowym profilu użytkownika, po ponownym uruchomieniu nic nie może działać, dopóki ten użytkownik nie zostanie uruchomiony</string>
+    <string name="debug_log_other_user_active">Brak aktywności w tym profilu, ale używany jest inny profil użytkownika, liczone jako aktywność</string>
     <string name="debug_log_app_not_enabled_alarm_went_off">Aplikacja nie jest włączona, dlaczego alarm się uruchomił?!</string>
     <string name="debug_log_alarm_time_comparison">Czas to %1$s UTC, alarm miał się uruchomić o %2$s UTC, co było %3$d sekund temu</string>
     <string name="debug_log_failed_processing_alarm">Nie udało się przetworzyć alarmu:</string>
@@ -378,7 +399,13 @@
     <string name="debug_log_locked_boot_completed_skipping">Otrzymano LOCKED_BOOT_COMPLETED, pomijanie sprawdzania powiadomienia Direct Boot. %1$s</string>
     <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: Użytkownik jest już odblokowany, przekazywanie do BOOT_COMPLETED</string>
     <string name="debug_log_restored_alarm_stage">Przywrócono etap alarmu z chronionego magazynu urządzenia: %1$s, wywołanie doAlertCheck()</string>
-    <string name="debug_log_boot_alert_already_sent">Alarm został już wysłany, a automatyczne ponowne uruchamianie monitorowania jest wyłączone, pozostaje rozbrojony po ponownym uruchomieniu</string>
+    <string name="debug_log_boot_alert_already_sent">Alarm został już wysłany, a automatyczne ponowne uruchamianie monitorowania jest wyłączone, pozostaje rozbrojony</string>
+    <string name="debug_log_watchdog_rearming">Watchdog: alarm miał zadziałać %1$s, ale nigdy się nie uruchomił – ponowne uzbrajanie monitorowania</string>
+    <string name="debug_log_alarm_not_due_rescheduling">Alarm jeszcze nie nadszedł (ustawiony na %1$s UTC) – przeplanowanie zamiast sprawdzania</string>
+    <string name="debug_log_saved_alarm_implausible">Zapisany czas alarmu %1$s UTC jest nieprawdopodobnie odległy – rozpoczynany jest nowy okres sprawdzania</string>
+    <string name="debug_log_alert_sent_migrated">Poprzednia wersja zostawiła wysłany alert zapisany jako oczekujący alarm końcowy – oznaczany jako już wysłany, aby ta aktualizacja go nie powtórzyła</string>
+    <string name="debug_log_stale_alarm_ignored">Zignorowano dostarczenie alarmu %1$s, ponieważ zapisany etap to %2$s</string>
+    <string name="debug_log_prompt_lost_reposting">Pytanie „Jesteś tam?” nie przetrwało – wyświetlane ponownie dla alarmu końcowego o %1$s UTC</string>
 
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Konfiguracja webhooka zapisana</string>

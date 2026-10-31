@@ -27,6 +27,7 @@ class AppController : Application() {
         const val ALERT_SERVICE_NOTIFICATION_ID = 5
         const val WEBHOOK_ALERT_SENT_NOTIFICATION_ID = 6
         const val PERMISSION_REVOKED_NOTIFICATION_ID = 7
+        const val BACKGROUND_RESTRICTED_NOTIFICATION_ID = 8
 
         // when doing a sanity check to see if we can see ANY events, this is the # of hours
         //  to use with getLastDeviceActivity().  if the user has a higher value set it
@@ -74,6 +75,10 @@ class AppController : Application() {
         DebugLogger.d(TAG, getString(R.string.debug_log_starting_up))
 
         migrateAreYouThereOverlayDefault(this)
+
+        // must precede any recovery path: it repairs state left by builds that had
+        //  no "alert_sent" marker, which recovery would otherwise act on
+        AlarmRecovery.migrateAlertSentMarker(this)
 
         // alternative is to check BuildConfig.DEBUG?
         if ((this.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0) {

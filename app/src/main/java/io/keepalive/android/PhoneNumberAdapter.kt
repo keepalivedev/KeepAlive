@@ -22,6 +22,7 @@ class PhoneNumberAdapter(
     private val gson = Gson()
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val phoneNumberTitle: TextView = itemView.findViewById(R.id.phoneNumberTitle)
         val phoneNumberText: TextView = itemView.findViewById(R.id.phoneNumberText)
         val alertMessageText: TextView = itemView.findViewById(R.id.alertMessageText)
         val enabledSwitch: SwitchCompat = itemView.findViewById(R.id.enabledSwitch)
@@ -72,6 +73,15 @@ class PhoneNumberAdapter(
         val currentItem = phoneNumberList[position]
 
         holder.isInitializing = true
+
+        // the optional label replaces the static heading. rows are recycled so the
+        //  heading has to be set either way
+        val label = currentItem.label?.trim()
+        holder.phoneNumberTitle.text = if (label.isNullOrEmpty()) {
+            holder.itemView.context.getString(R.string.phone_number_title)
+        } else {
+            label
+        }
 
         // format the phone number for display
         holder.phoneNumberText.text = PhoneNumberUtils.formatNumber(

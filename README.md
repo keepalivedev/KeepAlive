@@ -70,6 +70,20 @@ Supports Android 5.1 (API 22) and up
   to unlock your device after a reboot, the alert will **not** be sent.
 
 
+## Multiple Users and Profiles
+  Keep Alive only sees activity in the user profile it is installed in. On a device with more than one user profile 
+  this limits where it can be used:
+
+  - **Installed in the owner profile while you work in another profile:** Keep Alive cannot see your activity in the
+    other profile. On Android 12 and later it treats the device as in use when, at the time of a check, another
+    profile is in the foreground, unlocked and has its screen on, which avoids most false alerts. It cannot see activity that happened
+    between checks, so a check that finds the device locked or the screen off can still lead to an alert, and the 'Are you there?'
+    prompt is not shown while another profile is in the foreground. On older Android versions it cannot see the
+    other profile at all and may send a false alert.
+  - **Installed in a secondary profile:** Android only starts the owner profile when the device boots. After a reboot, 
+    Keep Alive cannot run at all until you switch to that profile again, and no alert can be sent until then. The 
+    main screen shows a warning when Keep Alive is running in a secondary profile.
+
 ## Requirements
   - **Active SIM** - used to send SMS and place phone calls
     - WiFi calling and messaging will be used if the device supports it
@@ -89,6 +103,10 @@ Supports Android 5.1 (API 22) and up
 - **Show Full-Screen 'Are you there?' Prompt**
   - If enabled, a full-screen prompt is displayed over other apps when the 'Are you there?' check is triggered, making it harder to miss and helping to prevent a false alert
   - Requires the Manage Overlay permission
+- **Debug Logging**
+  - Keeps a log of what Keep Alive does, viewable from the menu under Debug Logs. It is the first thing to 
+    include when reporting a problem
+  - Enabled by default and limited to the most recent entries; when disabled nothing new is written to the log
 - **Rest Period Time Range**
   - A range of time during which inactivity will not be counted
   - For example, with 'Hours of Inactivity' set at 6 hours and a Rest Period of 22:00 – 6:00, if the device is last used at 18:00, the 'Are you there?' check would not be sent until 8:00  
@@ -101,8 +119,11 @@ Supports Android 5.1 (API 22) and up
 ## Emergency Contact Settings
 - **SMS Contact(s)**:
   - **Phone Number**: the phone number to send the Alert SMS to
+  - **Name or Relationship (Optional)**: a label such as "Daughter" that is shown with the number inside the 
+    app so the right person is easy to recognise. It is not part of any message that is sent
   - **Alert Message**: the message that will be sent when an Alert is triggered
-  - **Include Location**: if enabled, your location will be included in a second SMS
+  - **Include Location**: if enabled, your location will be included in a second SMS. The device's location 
+    services must be turned on; the main screen shows a 'Location Services Off' warning if they are not
 - **Phone Call (Optional)**: 
   - **Phone Number**: when an Alert is triggered a phone call will be placed to this number with speakerphone enabled
 
@@ -134,6 +155,11 @@ permissions revoked, possibly preventing it from sending an Alert.
 Keep Alive was designed to operate as unobtrusively as possible and, as an alternative to bugging the user to
 open the app periodically, expects this behavior to be disabled. On the most recent version of Android this is called 
 'Pause app activity if unused' and can be found on the App Info screen for Keep Alive. 
+
+On Android 9 and later, Keep Alive also warns when its battery usage is set to **Restricted**, because Android then 
+delays or drops the background checks it depends on. The main screen shows 'Monitoring Active But May Be Impaired' 
+and its 'Disable App Restrictions' button opens the App Info screen, where battery usage can be set to 
+Unrestricted or Optimized. A notification is also shown, at most once a day, while the restriction is in place.
 
 
 ## Why?

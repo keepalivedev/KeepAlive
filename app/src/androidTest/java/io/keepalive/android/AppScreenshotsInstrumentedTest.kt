@@ -106,7 +106,8 @@ class AppScreenshotsInstrumentedTest {
             String.format(
                 targetContext.getString(R.string.initial_check_notification_text),
                 "60"
-            )
+            ),
+            System.currentTimeMillis() + 60 * 60_000L
         )
         Thread.sleep(2000)
         Screengrab.screenshot("6-AreYouThereOverlayScreen")

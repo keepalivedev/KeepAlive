@@ -57,11 +57,34 @@ class AlarmReceiver : BroadcastReceiver() {
             // failure notification if an SMS attempt actually fails
             checkSmsPermissionStillGranted(context, prefs)
 
+            // likewise warn about the "Restricted" battery setting, which delays or
+            //  drops these very alarms (issue #194)
+            checkBackgroundNotRestricted(context, prefs)
+
             // get the current alarm stage from the intent extras
             val alarmStage = getAlarmStage(context, intent)
 
-            // take action depending on what alarm stage it is
-            doAlertCheck(context, alarmStage)
+            // under the same lock the recovery paths and setAlarm() use, so nothing
+            //  can read the stage while this check is mid-dispatch and re-arm a
+            //  second final alarm on top of it
+            synchronized(AlarmRecovery.stateLock) {
+
+                // A delivery is only valid if the saved state still expects it. A
+                //  "final" whose saved stage is no longer "final" was superseded -
+                //  acknowledged, auto-restarted, or already dispatched - and running it
+                //  would send the alert a second time. Anything after "alert_sent"
+                //  would silently re-arm a deliberate disarm.
+                val savedStage = getDeviceProtectedPreferences(context)
+                    .getString(PrefKeys.LAST_ALARM_STAGE, "periodic") ?: "periodic"
+                val declaredStage = intent.getStringExtra("AlarmStage") ?: "periodic"
+                if (savedStage == "alert_sent" || (declaredStage == "final" && savedStage != "final")) {
+                    DebugLogger.d(tag, context.getString(
+                        R.string.debug_log_stale_alarm_ignored, declaredStage, savedStage))
+                    return
+                }
+
+                doAlertCheck(context, alarmStage)
+            }
 
             Log.d(tag, "AlarmReceiver.onReceive() finished")
 
@@ -114,6 +137,43 @@ class AlarmReceiver : BroadcastReceiver() {
         } catch (e: Exception) {
             // never let the permission check interfere with the alert check
             Log.e(tag, "Error checking SMS permission from background", e)
+        }
+    }
+
+    // The per-app "Restricted" battery setting (API 28+) delays or drops the periodic
+    // checks, so the app could sit silently unable to do its job until it is next
+    // opened. This receiver is one of the few things that still runs, so use it to
+    // warn the user, at most once a day while the restriction stays (issue #194).
+    private fun checkBackgroundNotRestricted(context: Context, prefs: SharedPreferences) {
+        try {
+            if (!isBackgroundRestricted(context)) {
+                // clear the notified marker so a future restriction notifies immediately
+                if (prefs.getLong(PrefKeys.BACKGROUND_RESTRICTED_NOTIFIED_AT, 0L) != 0L) {
+                    prefs.edit { putLong(PrefKeys.BACKGROUND_RESTRICTED_NOTIFIED_AT, 0L) }
+                }
+                return
+            }
+
+            DebugLogger.d(tag, context.getString(R.string.debug_log_background_restricted))
+
+            // notify at most once per day while the restriction stays in place
+            val lastNotifiedAt = prefs.getLong(PrefKeys.BACKGROUND_RESTRICTED_NOTIFIED_AT, 0L)
+            if (System.currentTimeMillis() - lastNotifiedAt < 24 * 60 * 60 * 1000L) {
+                return
+            }
+
+            // tapping the notification opens MainActivity, which shows the impaired
+            //  state and the button that leads to the app's battery settings
+            AlertNotificationHelper(context).sendNotification(
+                context.getString(R.string.background_restricted_notification_title),
+                context.getString(R.string.background_restricted_notification_text),
+                AppController.BACKGROUND_RESTRICTED_NOTIFICATION_ID
+            )
+
+            prefs.edit { putLong(PrefKeys.BACKGROUND_RESTRICTED_NOTIFIED_AT, System.currentTimeMillis()) }
+        } catch (e: Exception) {
+            // never let the restriction check interfere with the alert check
+            Log.e(tag, "Error checking background restriction from background", e)
         }
     }
 

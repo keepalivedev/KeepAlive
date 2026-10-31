@@ -9,12 +9,17 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertSame
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
+import org.robolectric.shadows.ShadowSmsManager
 
 /**
  * Tests for [AlertMessageSender.sendAlertMessage] batching + single-receiver
@@ -251,5 +256,90 @@ class AlertMessageSenderTest {
 
         verify(exactly = 1) { sms.sendTextMessage("+15550000001", null, "help", any(), null) }
         verify(exactly = 1) { sms.sendTextMessage("+15550000002", null, "help", any(), null) }
+    }
+
+    // ---- Location SMS and test warning --------------------------------------
+    //
+    // A single-part sendTextMessage drops an oversized message without throwing,
+    // so these use the real SmsManager to let the real encoder pick the encoding
+    // and the split, rather than a stubbed divideMessage.
+
+    // an explicit sub id, because the default manager resolves its id through
+    //  the telephony service, which Robolectric doesn't have
+    private fun realSmsManager() = SmsManager.getSmsManagerForSubscriptionId(1)
+
+    private fun sendLocationMessage(text: String): ShadowSmsManager {
+        seedContacts(contact("+15551111111", includeLocation = true))
+        val sms = realSmsManager()
+        AlertMessageSender(appCtx, sms).sendLocationAlertMessage(text)
+        return shadowOf(sms)
+    }
+
+    private fun assertMultipartHolds(text: String, shadow: ShadowSmsManager) {
+        val params = shadow.lastSentMultipartTextMessageParams
+        assertNotNull("must go out as multipart", params)
+        assertTrue("expected more than one part, got ${params.parts.size}", params.parts.size > 1)
+        assertEquals("no text may be lost in the split", text, params.parts.joinToString(""))
+    }
+
+    private fun assertSentAsMultipart(text: String, shadow: ShadowSmsManager) {
+        assertNull("must not go out as a single SMS", shadow.lastSentTextMessageParams)
+        assertMultipartHolds(text, shadow)
+    }
+
+    private fun assertSentAsSinglePart(text: String, shadow: ShadowSmsManager) {
+        assertNull("must not go out as multipart", shadow.lastSentMultipartTextMessageParams)
+        assertEquals(text, shadow.lastSentTextMessageParams.text)
+    }
+
+    @Test fun `translated location message over the UCS-2 limit goes out as multipart`() {
+        val text = "GPS координаты: (41.87811, -87.62980). Точность (m): 15. " +
+                "Приблизительный адрес: ул. Тверская, 1, Москва. "
+
+        assertSentAsMultipart(text, sendLocationMessage(text))
+    }
+
+    @Test fun `one non-GSM character in the address makes an English location message multipart`() {
+        // 118 characters would fit a GSM-7 SMS; the ã forces UCS-2, whose limit is 70
+        val text = "GPS Coordinates: (41.87811, -87.62980). Accuracy (m): 15. " +
+                "Possible address: Rua São João, 100, São Paulo, SP, Brasil. "
+
+        assertSentAsMultipart(text, sendLocationMessage(text))
+    }
+
+    @Test fun `GSM-7 location message over 160 characters goes out as multipart`() {
+        val text = "GPS Coordinates: (41.87811, -87.62980). Accuracy (m): 15. Possible address: " +
+                "12345 North Martin Luther King Junior Boulevard, Apartment 1234, " +
+                "San Francisco, CA 94102, USA. "
+
+        assertSentAsMultipart(text, sendLocationMessage(text))
+    }
+
+    @Test fun `short location message goes out as a single part`() {
+        val text = "GPS Coordinates: (41.87811, -87.62980). Accuracy (m): 15. " +
+                "Possible address: 123 Main St, Chicago, IL 60601, USA. "
+
+        assertSentAsSinglePart(text, sendLocationMessage(text))
+    }
+
+    @Test fun `short UCS-2 location message goes out as a single part`() {
+        val text = "Невозможно определить местоположение"
+
+        assertSentAsSinglePart(text, sendLocationMessage(text))
+    }
+
+    @Test fun `test warning over the UCS-2 limit goes out as multipart`() {
+        val warning = "Следующие сообщения являются тестом из приложения Keep Alive. " +
+                "Пожалуйста, подтвердите получение!"
+        val sms = realSmsManager()
+
+        AlertMessageSender(appCtx, sms).sendAlertMessage(testWarningMessage = warning)
+
+        val shadow = shadowOf(sms)
+        assertMultipartHolds(warning, shadow)
+        assertTrue("the warning must stay out of the batch's SMS_SENT count",
+            shadow.lastSentMultipartTextMessageParams.sentIntents.isNullOrEmpty())
+        assertEquals("the alert itself must still go out",
+            "help", shadow.lastSentTextMessageParams.text)
     }
 }

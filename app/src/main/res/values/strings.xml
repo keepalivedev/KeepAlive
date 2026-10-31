@@ -104,15 +104,22 @@
     <string name="monitoring_no_activity_detected_message">Monitoring is enabled but no activity has been detected in the last %1$s hours. Please ensure you have a lock screen enabled and have granted Usage access permissions.</string>
     <string name="monitoring_no_recipient_title">No Alert Recipient</string>
     <string name="monitoring_no_recipient_message">Monitoring is running but no emergency contact is active, so no Alert can be sent. Please add or enable an emergency contact in the Settings.</string>
+    <string name="monitoring_location_disabled_title">Location Services Off</string>
+    <string name="monitoring_location_disabled_message">Monitoring is running but location services are turned off, so Alerts cannot include your location. Please turn on location in the device Settings or disable \"Include Location Information\" for your emergency contacts.</string>
+    <string name="monitoring_background_restricted_message">Background activity for Keep Alive is restricted, so the activity checks may be delayed or never run and Alerts may not be sent. Please tap the button below and set Battery usage to \"Unrestricted\" or \"Optimized\".</string>
+    <string name="monitoring_secondary_user_message">Keep Alive is installed in a secondary user profile. After a reboot it cannot run until you switch to this profile again, so no Alert can be sent until then.</string>
     <string name="monitoring_permissions_required_message">Monitoring is enabled but not all permissions have been granted. Please click the "Grant Permissions" button below.</string>
     <string name="alarm_message_too_long_message">The message cannot be more than 160 characters.</string>
     <string name="phone_number_invalid_message">Please enter a valid phone number.</string>
-    <string name="time_period_too_short_message">Interval must be at least 10 minutes.</string>
-    <string name="time_period_too_long_message">Interval cannot be more than 7 days.</string>
+    <string name="time_period_too_short_message">Must be at least 0.17 hours (10 minutes).</string>
+    <string name="time_period_too_long_message">Must be at most 168 hours (7 days).</string>
+    <string name="followup_period_too_short_message">Must be at least 10 minutes.</string>
+    <string name="followup_period_too_long_message">Must be at most 10080 minutes (7 days).</string>
     <string name="followup_period_whole_minutes_message">Minutes must be a whole number.</string>
     <string name="time_period_too_many_decimals_message">Hours can have at most 2 decimal places.</string>
     <string name="test_phone_call_message">A phone call will be made to:\n%1$s</string>
-    <string name="test_sms_message">SMS message(s) will be sent to:\n%1$s</string>
+    <string name="test_sms_message">SMS messages will be sent to:\n%1$s</string>
+    <string name="test_sms_message_one">SMS message will be sent to:\n%1$s</string>
     <string name="unable_to_send_sms_message">Unable to send SMS\nPlease verify you have an active SIM</string>
     <string name="no_configured_contacts_message">No Emergency Contacts have been configured</string>
     <string name="permissions_button_text">Grant Permissions</string>
@@ -123,7 +130,10 @@
     <string name="test_alert_confirmation_title">Confirm SMS Test Alert</string>
     <string name="test_alert_switch_include_warning_text">Include a Warning Message</string>
     <string name="test_sms_configured_contacts_message">This will send a test SMS alert to your configured emergency contacts: %1$s.</string>
-    <string name="test_alert_confirmation_message_with_count"><![CDATA[A total of <b>%1$d</b> SMS will be sent. Do you want to proceed?]]></string>
+    <plurals name="test_alert_confirmation_message_with_count">
+        <item quantity="one"><![CDATA[A total of <b>%1$d</b> SMS will be sent. Do you want to proceed?]]></item>
+        <item quantity="other"><![CDATA[A total of <b>%1$d</b> SMS will be sent. Do you want to proceed?]]></item>
+    </plurals>
     <string name="test_alert_sms_default_message">The following messages are a test from the Keep Alive app. Please confirm receipt!</string>
 
     <!-- notification strings -->
@@ -151,6 +161,8 @@
     <string name="sms_service_failure_notification_text">Error occurred while attempting to send Alert SMS, please verify you have an active SIM</string>
     <string name="sms_permission_revoked_notification_title">SMS permission has been revoked!</string>
     <string name="sms_permission_revoked_notification_text">Keep Alive can no longer send SMS Alerts. Tap here to open the app and grant the SMS permission again.</string>
+    <string name="background_restricted_notification_title">Background activity is restricted!</string>
+    <string name="background_restricted_notification_text">Keep Alive may not be able to run its activity checks or send Alerts. Tap here to open the app and allow background activity.</string>
     <string name="alert_service_notification_title">Sending Alert…</string>
     <string name="alert_service_notification_message">Alert(s) are being sent to your configured contacts, please wait.</string>
 
@@ -170,6 +182,8 @@
     <string name="sample_alert_message">Sample Alert Message</string>
     <string name="include_location_information">Include Location Information</string>
     <string name="phone_number_hint">Enter Phone Number</string>
+    <string name="contact_label_title">Name or Relationship (Optional)</string>
+    <string name="contact_label_hint">For example: Daughter</string>
     <string name="alert_message_hint">Enter Alert Message</string>
     <string name="delete_phone_number_dialog_title">Delete Emergency Contact</string>
     <string name="delete_phone_number_dialog_description">Are you sure you want to delete this entry?</string>
@@ -186,6 +200,7 @@
     <!-- Main Settings -->
     <string name="enabled_title">Monitoring Enabled</string>
     <string name="auto_restart_title">Auto-Restart Monitoring After Alert</string>
+    <string name="debug_logging_title">Debug Logging</string>
     <string name="time_period_title">Hours of Inactivity Before Prompt</string>
     <string name="time_period_description">The # of hours of inactivity before you will be prompted with an \'Are you there?\' notification.</string>
     <string name="followup_time_period_title">Minutes to Wait for Confirmation</string>
@@ -331,6 +346,7 @@
     <string name="debug_log_attempting_to_get_location">Attempting to get location…</string>
     <string name="debug_log_device_idle_not_getting_current_location">Device is in idle mode, not getting current location</string>
     <string name="debug_log_no_location_permission_executing_callback">Don\'t have location permission, executing callback</string>
+    <string name="debug_log_location_services_disabled">Location services are turned off, unable to determine location</string>
     <string name="debug_log_failed_getting_current_location">Failed getting current location?!</string>
     <string name="debug_log_geocoding_timeout_reached">Timeout reached, locationString is %1$s</string>
     <string name="debug_log_failed_geocoding_gps_coordinates">Failed geocoding GPS coordinates?!</string>
@@ -364,6 +380,9 @@
     <!-- AlarmReceiver.kt -->
     <string name="debug_log_alarm_just_fired">Alarm just fired!</string>
     <string name="debug_log_sms_permission_revoked">SEND_SMS permission is no longer granted!</string>
+    <string name="debug_log_background_restricted">Background activity is restricted by the battery settings</string>
+    <string name="debug_log_secondary_user">Running in a secondary user profile, nothing can run after a reboot until this user is started</string>
+    <string name="debug_log_other_user_active">No activity in this profile but another user profile is being used, counting it as activity</string>
     <string name="debug_log_app_not_enabled_alarm_went_off">App is not enabled, why did the alarm go off?!</string>
     <string name="debug_log_alarm_time_comparison">Time is %1$s UTC, alarm was supposed to go off at %2$s UTC, which was %3$d seconds ago</string>
     <string name="debug_log_failed_processing_alarm">Failed while processing alarm:</string>
@@ -394,7 +413,13 @@
     <string name="debug_log_locked_boot_completed_skipping">LOCKED_BOOT_COMPLETED received, skipping Direct Boot notification check. %1$s</string>
     <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: User is already unlocked, deferring to BOOT_COMPLETED</string>
     <string name="debug_log_restored_alarm_stage">Restored alarm stage from device-protected storage: %1$s, calling doAlertCheck()</string>
-    <string name="debug_log_boot_alert_already_sent">Alert was already sent and Auto-Restart Monitoring is off, staying disarmed after reboot</string>
+    <string name="debug_log_boot_alert_already_sent">Alert was already sent and Auto-Restart Monitoring is off, staying disarmed</string>
+    <string name="debug_log_watchdog_rearming">Watchdog: alarm was due %1$s but never fired, re-arming monitoring</string>
+    <string name="debug_log_alarm_not_due_rescheduling">Alarm was not due yet (was set for %1$s UTC), rescheduling instead of checking</string>
+    <string name="debug_log_saved_alarm_implausible">Saved alarm time %1$s UTC is implausibly far in the future, starting a fresh check period</string>
+    <string name="debug_log_alert_sent_migrated">Previous build left a sent alert recorded as a pending final alarm, marking it as already sent so this update does not repeat it</string>
+    <string name="debug_log_stale_alarm_ignored">Ignoring a %1$s alarm delivery because the saved stage is %2$s</string>
+    <string name="debug_log_prompt_lost_reposting">Are you there? prompt did not survive, showing it again for the final alarm at %1$s UTC</string>
 
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Webhook configuration saved</string>

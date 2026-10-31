@@ -12,6 +12,13 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import androidx.work.testing.WorkManagerTestInitHelper
+import io.mockk.every
+import io.mockk.mockkObject
+import io.mockk.unmockkObject
+import org.junit.After
 
 /**
  * Tests for [setAlarm] — the AlarmManager interaction for scheduling the
@@ -45,6 +52,47 @@ class SetAlarmTest {
         getAppSharedPreferences(appCtx).edit()
             .putBoolean("use_exact_alarms", false)
             .commit()
+        // setAlarm() enqueues the watchdog and cancelAlarm() cancels it. On older
+        // SDKs WorkManager schedules through AlarmManager itself, which would put
+        // a second entry in scheduledAlarms and break the alarm-count assertions
+        // here, so the wiring is mocked out by default; the two lifecycle tests
+        // below call through to the real thing against a test WorkManager.
+        mockkObject(MonitoringWatchdogWorker.Companion)
+        every { MonitoringWatchdogWorker.enqueue(any()) } returns Unit
+        every { MonitoringWatchdogWorker.cancel(any()) } returns Unit
+    }
+
+    @After fun tearDown() {
+        unmockkObject(MonitoringWatchdogWorker.Companion)
+    }
+
+    private fun useRealWatchdog() {
+        WorkManagerTestInitHelper.initializeTestWorkManager(appCtx)
+        every { MonitoringWatchdogWorker.enqueue(any()) } answers { callOriginal() }
+        every { MonitoringWatchdogWorker.cancel(any()) } answers { callOriginal() }
+    }
+
+    private fun watchdogState(): WorkInfo.State? =
+        WorkManager.getInstance(appCtx)
+            .getWorkInfosForUniqueWork("monitoring_watchdog").get()
+            .firstOrNull()?.state
+
+    @Test fun `setAlarm enqueues the monitoring watchdog`() {
+        // The watchdog's lifetime follows the alarm it watches: every arming path
+        // goes through setAlarm(), so wiring it here means no path can forget it.
+        useRealWatchdog()
+        setAlarm(appCtx, System.currentTimeMillis(), 10, "periodic")
+
+        assertEquals(WorkInfo.State.ENQUEUED, watchdogState())
+    }
+
+    @Test fun `cancelAlarm cancels the monitoring watchdog`() {
+        useRealWatchdog()
+        setAlarm(appCtx, System.currentTimeMillis(), 10, "periodic")
+
+        cancelAlarm(appCtx)
+
+        assertEquals(WorkInfo.State.CANCELLED, watchdogState())
     }
 
     @Test fun `periodic alarm is scheduled in the future`() {
@@ -99,6 +147,20 @@ class SetAlarmTest {
             getDeviceProtectedPreferences(appCtx).getString("last_alarm_stage", null))
     }
 
+    @Test
+    @Config(sdk = [23])
+    fun `last_alarm_stage is recorded below API N`() {
+        // Below N getDeviceProtectedPreferences() falls back to the default prefs.
+        // The stage still has to land there: BootBroadcastReceiver and
+        // MonitoringWatchdogWorker read it to tell an "alert_sent" disarm apart
+        // from a dropped alarm, and a missing key defaults to "periodic" - which
+        // would make the watchdog re-arm monitoring after an alert (issue #181).
+        setAlarm(appCtx, System.currentTimeMillis(), 30, "final")
+
+        assertEquals("final",
+            getDeviceProtectedPreferences(appCtx).getString("last_alarm_stage", null))
+    }
+
     @Test fun `setting a periodic alarm overwrites a previous one (same PendingIntent)`() {
         val now = System.currentTimeMillis()
         setAlarm(appCtx, now, 10, "periodic")
@@ -127,6 +189,19 @@ class SetAlarmTest {
         // ShadowAlarmManager removes the scheduled alarm when cancel() is called
         // on a matching PendingIntent.
         assertEquals(0, shadowAlarm.scheduledAlarms.size)
+    }
+
+    @Test fun `cancelAlarm clears the tracked alarm timestamp`() {
+        // A cancelled alarm used to leave NextAlarmTimestamp holding its old
+        // scheduled time, so the main screen kept counting down toward an alarm
+        // that would never fire.
+        setAlarm(appCtx, System.currentTimeMillis(), 10, "periodic")
+        assertTrue(getAppSharedPreferences(appCtx).getLong("NextAlarmTimestamp", -1L) > 0)
+
+        cancelAlarm(appCtx)
+
+        assertEquals(-1L, getAppSharedPreferences(appCtx).getLong("NextAlarmTimestamp", -1L))
+        assertEquals(-1L, getDeviceProtectedPreferences(appCtx).getLong("NextAlarmTimestamp", -1L))
     }
 
     @Test fun `exact-alarm user preference is honored when the system permits`() {

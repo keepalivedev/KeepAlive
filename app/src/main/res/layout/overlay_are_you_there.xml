@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- scrolls when the content is taller than the screen (landscape, large font sizes)
+  so the button can't be pushed off the bottom -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/areYouThereRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:background="@color/overlayBackground"
     android:clickable="true"
     android:focusable="true"
@@ -11,13 +14,14 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
         android:padding="24dp">
 
         <ImageView
             android:id="@+id/imageAppLogo"
+            style="@style/AreYouThereHeader"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:src="@drawable/ic_launcher_foreground"
@@ -25,6 +29,7 @@
 
         <TextView
             android:id="@+id/textAppName"
+            style="@style/AreYouThereHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/primary"
@@ -76,4 +81,4 @@
 
     </LinearLayout>
 
-</FrameLayout>
+</ScrollView>

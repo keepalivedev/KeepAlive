@@ -14,6 +14,7 @@ import android.os.PowerManager
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.core.location.LocationManagerCompat
 import java.util.Locale
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -63,9 +64,8 @@ open class LocationHelperBase(
             // check whether the GPS, network and location services are enabled
             locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                locationEnabled = locationManager.isLocationEnabled
-            }
+            // LocationManagerCompat falls back to the Settings.Secure lookup below API 28
+            locationEnabled = LocationManagerCompat.isLocationEnabled(locationManager)
 
             availableProviders = locationManager.getProviders(true)
 
@@ -206,6 +206,20 @@ open class LocationHelperBase(
                     context.getString(R.string.debug_log_power_and_idle_status, isPowerSaveMode, isDeviceIdleMode)
                 )
 
+                // no app can obtain a location while location services are off, so send
+                //  the fallback now instead of after the provider timeout (issue #213)
+                if (!locationEnabled) {
+                    DebugLogger.d(
+                        "getLocationAndExecute",
+                        context.getString(R.string.debug_log_location_services_disabled)
+                    )
+
+                    locationResult.formattedLocationString = context.getString(R.string.location_invalid_message)
+                    stopGlobalTimeoutHandler()
+                    myCallback(context, locationResult)
+                    return
+                }
+
                 // todo this might not be the case since the switch to AlertService...
                 // if the device is in power save mode then we can't get the current location or it
                 //  will just freeze and never return?
@@ -259,11 +273,8 @@ open class LocationHelperBase(
                 )
 
                 // default to a message indicating we couldn't geocode the location and just include
-                //  the raw GPS coordinates
-                locationResult.formattedLocationString = String.format(
-                    context.getString(R.string.geocode_invalid_message),
-                    loc.latitude.toString(), loc.longitude.toString(), loc.accuracy.toString()
-                )
+                //  the GPS coordinates
+                locationResult.formattedLocationString = buildGeocodedLocationStr("", loc)
 
                 // start a timeout handler in case the geocoder hangs
                 startGeocodingTimeoutHandler()
@@ -312,11 +323,8 @@ open class LocationHelperBase(
                 )
 
                 // default to a message indicating we couldn't geocode the location and just include
-                //  the raw GPS coordinates
-                locationResult.formattedLocationString = String.format(
-                    context.getString(R.string.geocode_invalid_message),
-                    loc.latitude.toString(), loc.longitude.toString(), loc.accuracy.toString()
-                )
+                //  the GPS coordinates
+                locationResult.formattedLocationString = buildGeocodedLocationStr("", loc)
 
                 // start a timeout handler in case the geocoder hangs
                 startGeocodingTimeoutHandler()
@@ -381,15 +389,25 @@ open class LocationHelperBase(
 
     // build the location string that will be sent to the callback
     private fun buildGeocodedLocationStr(addressStr: String, loc: Location): String {
+
+        // 5 decimal places is about 1 m, which already matches the best accuracy the
+        //  location APIs deliver; the raw Double/Float toString() output implied
+        //  nanometre precision and ate SMS characters (issue #214)
+        // Locale.ROOT keeps a decimal point so the "lat, lon" pair stays unambiguous
+        //  in comma-decimal locales
+        val latStr = String.format(Locale.ROOT, "%.5f", loc.latitude)
+        val lonStr = String.format(Locale.ROOT, "%.5f", loc.longitude)
+        val accuracyStr = String.format(Locale.ROOT, "%.0f", loc.accuracy)
+
         return if (addressStr == "") {
             String.format(
                 context.getString(R.string.geocode_invalid_message),
-                loc.latitude.toString(), loc.longitude.toString(), loc.accuracy.toString()
+                latStr, lonStr, accuracyStr
             )
         } else {
             String.format(
                 context.getString(R.string.geocode_valid_message),
-                loc.latitude.toString(), loc.longitude.toString(), loc.accuracy.toString(), addressStr
+                latStr, lonStr, accuracyStr, addressStr
             )
         }
     }

@@ -2,6 +2,7 @@ package io.keepalive.android
 
 import android.content.Context
 import android.os.Looper
+import android.os.UserManager
 import android.provider.Settings
 import android.view.View
 import android.widget.Button
@@ -15,6 +16,7 @@ import io.mockk.unmockkStatic
 import io.mockk.verify
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Before
@@ -59,6 +61,8 @@ class AreYouThereOverlayTest {
 
     private fun idleMain() = shadowOf(Looper.getMainLooper()).idle()
 
+    private fun anHourOut() = System.currentTimeMillis() + 60 * 60_000L
+
     /** Reads the private `overlayView` field on the singleton — no public accessor exists. */
     private fun overlayView(): View? {
         val field = AreYouThereOverlay::class.java.getDeclaredField("overlayView")
@@ -67,22 +71,36 @@ class AreYouThereOverlayTest {
     }
 
     @Test fun `show inflates an overlay view`() {
-        AreYouThereOverlay.show(appCtx, "test message")
+        AreYouThereOverlay.show(appCtx, "test message", anHourOut())
         idleMain()
 
         assertNotNull("overlayView should be populated after show()", overlayView())
     }
 
     @Test fun `show acquires a screen wake lock`() {
-        AreYouThereOverlay.show(appCtx, "test message")
+        AreYouThereOverlay.show(appCtx, "test message", anHourOut())
         idleMain()
 
         assertNotNull("show() should acquire a wake lock to wake the screen",
             ShadowPowerManager.getLatestWakeLock())
     }
 
+    @Test fun `show does not wake the screen while another user is in the foreground`() {
+        // from a background user the prompt can't be seen, so a wake-up only leaves the
+        //  screen lit with nobody there - and the check for another user being active
+        //  would later read that as someone using the device and skip the alert (issue #215)
+        val userManager = appCtx.getSystemService(Context.USER_SERVICE) as UserManager
+        shadowOf(userManager).setUserForeground(false)
+
+        AreYouThereOverlay.show(appCtx, "test message", anHourOut())
+        idleMain()
+
+        assertNull("no wake lock expected from a background user",
+            ShadowPowerManager.getLatestWakeLock())
+    }
+
     @Test fun `I'm OK button invokes acknowledge and clears the overlay reference`() {
-        AreYouThereOverlay.show(appCtx, "test message")
+        AreYouThereOverlay.show(appCtx, "test message", anHourOut())
         idleMain()
 
         overlayView()!!.findViewById<Button>(R.id.buttonImOk).performClick()
@@ -93,7 +111,7 @@ class AreYouThereOverlayTest {
     }
 
     @Test fun `dismiss removes the overlay without calling acknowledge`() {
-        AreYouThereOverlay.show(appCtx, "test message")
+        AreYouThereOverlay.show(appCtx, "test message", anHourOut())
         idleMain()
         assertNotNull(overlayView())
 
@@ -105,12 +123,12 @@ class AreYouThereOverlayTest {
     }
 
     @Test fun `show twice does not stack overlays`() {
-        AreYouThereOverlay.show(appCtx, "test message")
+        AreYouThereOverlay.show(appCtx, "test message", anHourOut())
         idleMain()
         val first = overlayView()
         assertNotNull(first)
 
-        AreYouThereOverlay.show(appCtx, "test message")
+        AreYouThereOverlay.show(appCtx, "test message", anHourOut())
         idleMain()
 
         // Same view retained — showOnMain returns early when overlayView != null.
@@ -119,11 +137,23 @@ class AreYouThereOverlayTest {
     }
 
     @Test fun `overlay message is rendered from the argument`() {
-        AreYouThereOverlay.show(appCtx, "test message")
+        AreYouThereOverlay.show(appCtx, "test message", anHourOut())
         idleMain()
 
         val messageView = overlayView()!!.findViewById<TextView>(R.id.textAreYouThereMessage)
         assertEquals("test message", messageView.text.toString())
+    }
+
+    @Test fun `countdown runs to the deadline, not the configured follow-up`() {
+        // A prompt restored part-way through its window (reboot, update, watchdog)
+        // must not promise the full follow-up period when the alarm is minutes away.
+        getAppSharedPreferences(appCtx).edit().putString("followup_time_period_minutes", "60").commit()
+        AreYouThereOverlay.show(appCtx, "test message", System.currentTimeMillis() + 5 * 60_000L)
+        idleMain()
+
+        val countdown = overlayView()!!.findViewById<TextView>(R.id.textAreYouThereCountdown).text.toString()
+        val minutes = Regex("(\\d+):(\\d\\d)").find(countdown)!!.groupValues[1].toInt()
+        assertTrue("expected about 5 minutes, got: $countdown", minutes in 4..5)
     }
 
     // ---- SYSTEM_ALERT_WINDOW denied path -----------------------------------
@@ -134,7 +164,7 @@ class AreYouThereOverlayTest {
     @Test fun `show does not inflate an overlay when canDrawOverlays is false`() {
         every { Settings.canDrawOverlays(any()) } returns false
 
-        AreYouThereOverlay.show(appCtx, "test message")
+        AreYouThereOverlay.show(appCtx, "test message", anHourOut())
         idleMain()
 
         assertNull("overlay must NOT be inflated when SYSTEM_ALERT_WINDOW is denied",
@@ -147,7 +177,7 @@ class AreYouThereOverlayTest {
         // as present).
         every { Settings.canDrawOverlays(any()) } returns false
 
-        AreYouThereOverlay.show(appCtx, "test message")
+        AreYouThereOverlay.show(appCtx, "test message", anHourOut())
         idleMain()
 
         verify(exactly = 0) { AcknowledgeAreYouThere.acknowledge(any()) }

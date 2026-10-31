@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Application
 import android.app.NotificationManager
 import android.content.Context
+import android.os.UserManager
 import androidx.test.core.app.ApplicationProvider
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
@@ -104,4 +105,19 @@ class FullScreenIntentNotificationTest {
         assertNull(notif.fullScreenIntent)
     }
 
+    @Test
+    @Config(sdk = [33])
+    fun `no full-screen intent from a background user`() {
+        // a full-screen intent wakes the screen even when its user is not the one in front,
+        //  where the prompt cannot be seen. the lit screen would later be read by the check
+        //  for another user being active as someone using the device (issue #215)
+        val userManager = appCtx.getSystemService(Context.USER_SERVICE) as UserManager
+        shadowOf(userManager).setUserForeground(false)
+
+        postAreYouThere()
+
+        val notif = shadowOf(nm).getNotification(null, AppController.ARE_YOU_THERE_NOTIFICATION_ID)
+        assertNotNull("the notification itself must still be posted", notif)
+        assertNull("no full-screen intent expected from a background user", notif.fullScreenIntent)
+    }
 }

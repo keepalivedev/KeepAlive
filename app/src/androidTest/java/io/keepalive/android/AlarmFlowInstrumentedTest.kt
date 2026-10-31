@@ -8,6 +8,7 @@ import io.keepalive.android.AlertFlowTestUtil.hasNotification
 import io.keepalive.android.AlertFlowTestUtil.hasPendingKeepAliveAlarm
 import io.keepalive.android.AlertFlowTestUtil.resetToCleanEnabledState
 import io.keepalive.android.AlertFlowTestUtil.savedAlarmStage
+import io.keepalive.android.AlertFlowTestUtil.seedSavedAlarmStage
 import io.keepalive.android.AlertFlowTestUtil.targetContext
 import io.keepalive.android.AlertFlowTestUtil.waitUntil
 import org.junit.After
@@ -153,6 +154,7 @@ class AlarmFlowInstrumentedTest {
         // instead of immediately sending the alert.
         val longAgo = System.currentTimeMillis() - 24L * 60 * 60 * 1000
 
+        seedSavedAlarmStage("final")
         fireAlarm("final", alarmTimestamp = longAgo)
 
         // Downgrade means doAlertCheck("periodic") ran. Most reliable

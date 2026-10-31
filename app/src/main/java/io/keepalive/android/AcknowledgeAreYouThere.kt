@@ -10,18 +10,20 @@ import androidx.core.content.edit
  */
 object AcknowledgeAreYouThere {
 
+    // Under the same lock recovery and setAlarm() use. Otherwise the watchdog
+    //  could read a "final" it is about to re-post in the gap between the
+    //  dismissals below and the periodic re-arm at the end, and the prompt would
+    //  come back on screen after the user had already answered it.
     fun acknowledge(context: Context) {
+        synchronized(AlarmRecovery.stateLock) {
+            acknowledgeLocked(context)
+        }
+    }
+
+    private fun acknowledgeLocked(context: Context) {
         val sharedPrefs = getAppSharedPreferences(context)
 
-        // Cancel the on-screen notification.
-        AlertNotificationHelper(context).cancelNotification(AppController.ARE_YOU_THERE_NOTIFICATION_ID)
-
-        // If we showed the over-other-apps overlay, remove it.
-        AreYouThereOverlay.dismiss(context)
-
-        // If the full-screen prompt activity is showing (launched over the lock
-        //  screen via the notification's full-screen intent), close it too.
-        AreYouThereActivity.finishActive()
+        dismissPrompt(context)
 
         // Clear the Direct Boot notification flag in case it's still set, and
         // record the acknowledgement as activity in device-protected storage.
@@ -55,5 +57,20 @@ object AcknowledgeAreYouThere {
             "periodic",
             restPeriods
         )
+    }
+
+    // take down every form of the prompt. also used when monitoring is turned off, since
+    //  the notification's sound repeats until it is cancelled
+    fun dismissPrompt(context: Context) {
+
+        // Cancel the on-screen notification.
+        AlertNotificationHelper(context).cancelNotification(AppController.ARE_YOU_THERE_NOTIFICATION_ID)
+
+        // If we showed the over-other-apps overlay, remove it.
+        AreYouThereOverlay.dismiss(context)
+
+        // If the full-screen prompt activity is showing (launched over the lock
+        //  screen via the notification's full-screen intent), close it too.
+        AreYouThereActivity.finishActive()
     }
 }

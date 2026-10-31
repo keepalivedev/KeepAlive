@@ -143,6 +143,14 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
+        // listener for the debug logging switch
+        val debugLoggingSwitch: SwitchCompat = findViewById(R.id.debugLoggingSwitch)
+        debugLoggingSwitch.setOnCheckedChangeListener { _, isChecked ->
+            sharedPrefs!!.edit {
+                putBoolean(PrefKeys.DEBUG_LOGGING_ENABLED, isChecked)
+            }
+        }
+
         // set up listeners for each setting row so that the user can click
         //  anywhere on the row itself to bring up the edit dialog
 
@@ -250,6 +258,9 @@ class SettingsActivity : AppCompatActivity() {
 
         val areYouThereOverlaySwitch: SwitchCompat = findViewById(R.id.areYouThereOverlaySwitch)
         areYouThereOverlaySwitch.isChecked = sharedPrefs!!.getBoolean(PrefKeys.ARE_YOU_THERE_OVERLAY_ENABLED, true)
+
+        val debugLoggingSwitch: SwitchCompat = findViewById(R.id.debugLoggingSwitch)
+        debugLoggingSwitch.isChecked = sharedPrefs!!.getBoolean(PrefKeys.DEBUG_LOGGING_ENABLED, true)
 
         val timePeriodValueTextView: TextView = findViewById(R.id.edit_time_period_hours)
         timePeriodValueTextView.text = sharedPrefs!!.getString(PrefKeys.TIME_PERIOD_HOURS, "12")
@@ -364,6 +375,10 @@ class SettingsActivity : AppCompatActivity() {
                 Log.d("processSettingChange", "App has been disabled, canceling alarm")
 
                 cancelAlarm(this)
+
+                // and any prompt from the cancelled cycle, which can no longer be answered
+                //  and would keep repeating its sound
+                AcknowledgeAreYouThere.dismissPrompt(this)
             }
         }
         // if we change the time period hours then we need to update the alarm
@@ -388,6 +403,9 @@ class SettingsActivity : AppCompatActivity() {
 
             // don't need to cancel the existing alarm, just set a new one
             setAlarm(this, System.currentTimeMillis(), (newValue * 60).toInt(), "periodic", restPeriods)
+
+            // a new cycle starts now, so a prompt counting down to the replaced alarm goes too
+            AcknowledgeAreYouThere.dismissPrompt(this)
         }
     }
 
@@ -448,27 +466,29 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
+        fun saveSetting() {
+
+            // all of the settings we are editing in a dialog are strings
+            sharedPrefs!!.edit {
+                putString(preferenceKey, dialogEditText.text.toString())
+                if (preferenceKey == "time_period_hours") {
+                    putBoolean(PrefKeys.USE_EXACT_ALARMS, exactAlarmSwitch.isChecked)
+                }
+            }
+
+            // take action depending on what preference is changing
+            processSettingChange(preferenceKey)
+
+            // update the text views to reflect the new values
+            updateTextViewsFromPreferences()
+        }
+
         // build the dialog that will be used to edit the setting
         //val dialog = AlertDialog.Builder(this)
         val dialog = AlertDialog.Builder(this, R.style.AlertDialogTheme)
             .setTitle(dialogTitle)
             .setView(dialogView)
-            .setPositiveButton(getString(R.string.save)) { _, _ ->
-
-                // all of the settings we are editing in a dialog are strings
-                sharedPrefs!!.edit {
-                    putString(preferenceKey, dialogEditText.text.toString())
-                    if (preferenceKey == "time_period_hours") {
-                        putBoolean(PrefKeys.USE_EXACT_ALARMS, exactAlarmSwitch.isChecked)
-                    }
-                }
-
-                // take action depending on what preference is changing
-                processSettingChange(preferenceKey)
-
-                // update the text views to reflect the new values
-                updateTextViewsFromPreferences()
-            }
+            .setPositiveButton(getString(R.string.save)) { _, _ -> saveSetting() }
             .setNegativeButton(getString(R.string.cancel), null)
 
         if (showDeleteButton) {
@@ -496,6 +516,24 @@ class SettingsActivity : AppCompatActivity() {
         // add a text watcher to the edit text so that we can enable/disable the submit button
         val positiveButton = shownDialog.getButton(AlertDialog.BUTTON_POSITIVE)
         dialogEditText.addTextChangedListener(InputTextWatcher(positiveButton, this, preferenceKey, dialogEditText))
+
+        // time periods are checked when Save is pressed rather than on every key press, so
+        //  the steps on the way to a valid value (0, 0. and 0.1 on the way to 0.17) don't
+        //  raise warnings. an out of range value keeps the dialog open and shows the reason
+        if (preferenceKey == "time_period_hours" || preferenceKey == "followup_time_period_minutes") {
+            positiveButton.setOnClickListener {
+                val result = validateTimePeriodInput(preferenceKey, dialogEditText.text.toString())
+
+                if (result == TimeInputResult.VALID) {
+                    saveSetting()
+                    shownDialog.dismiss()
+                } else {
+                    timeInputErrorMessage(preferenceKey, result)?.let {
+                        dialogEditText.error = getString(it)
+                    }
+                }
+            }
+        }
     }
 
     private fun showEditRestPeriodDialog() {
@@ -667,6 +705,7 @@ class SettingsActivity : AppCompatActivity() {
         val dialogView =
             LayoutInflater.from(this).inflate(R.layout.dialog_add_edit_phone_number, null)
         val phoneNumberInput: EditText = dialogView.findViewById(R.id.phoneNumberInput)
+        val labelInput: EditText = dialogView.findViewById(R.id.labelInput)
         val alertMessageInput: EditText = dialogView.findViewById(R.id.alertMessageInput)
         val enabledSwitch: SwitchCompat = dialogView.findViewById(R.id.dialogEnabledSwitch)
         val locationSwitch: SwitchCompat = dialogView.findViewById(R.id.dialogLocationSwitch)
@@ -674,6 +713,7 @@ class SettingsActivity : AppCompatActivity() {
         // update the dialog based on whether this is a new setting or an existing one
         setting?.let {
             phoneNumberInput.setText(it.phoneNumber)
+            labelInput.setText(it.label ?: "")
             alertMessageInput.setText(it.alertMessage)
             enabledSwitch.isChecked = it.isEnabled
             locationSwitch.isChecked = it.includeLocation
@@ -707,7 +747,11 @@ class SettingsActivity : AppCompatActivity() {
                     phoneNumber = phoneNumberInput.text.toString(),
                     alertMessage = alertMessageInput.text.toString(),
                     isEnabled = enabledSwitch.isChecked,
-                    includeLocation = locationSwitch.isChecked
+                    includeLocation = locationSwitch.isChecked,
+
+                    // the label is optional and display-only; a blank one is stored as
+                    //  no label so the saved contact looks the same as before labels existed
+                    label = labelInput.text.toString().trim().ifEmpty { null }
                 )
 
                 // if this is a new setting then add it to the list, otherwise edit the existing one
@@ -791,21 +835,14 @@ class SettingsActivity : AppCompatActivity() {
             updateSubmitButtonColor()
         }
 
+        // the range is only checked when Save is pressed (see showEditSettingDialog). while
+        //  typing, Save is just disabled, silently, for a value that isn't a number at all
         private fun handleTimeInput(value: String) {
-            val result = validateTimePeriodInput(preferenceKey, value)
-            submitButton.isEnabled = result == TimeInputResult.VALID
+            submitButton.isEnabled =
+                validateTimePeriodInput(preferenceKey, value) != TimeInputResult.INVALID
 
-            when (result) {
-                TimeInputResult.TOO_SHORT ->
-                    showToast(context.getString(R.string.time_period_too_short_message))
-                TimeInputResult.TOO_LONG ->
-                    showToast(context.getString(R.string.time_period_too_long_message))
-                TimeInputResult.WHOLE_MINUTES_REQUIRED ->
-                    showToast(context.getString(R.string.followup_period_whole_minutes_message))
-                TimeInputResult.TOO_MANY_DECIMALS ->
-                    showToast(context.getString(R.string.time_period_too_many_decimals_message))
-                else -> {}
-            }
+            // clear the reason from the last Save once the value is being changed
+            editText.error = null
         }
 
         private fun handlePhoneInput(raw: String) {

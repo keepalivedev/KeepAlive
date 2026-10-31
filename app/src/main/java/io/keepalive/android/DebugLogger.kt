@@ -183,6 +183,15 @@ object DebugLogger {
 
         Log.d(tag, message, ex)
 
+        // the user can turn the debug log off from the Settings (issue #166); logcat
+        //  output above is unaffected. before initialize() there is no context to read
+        //  the preference from, so the memory buffer keeps working as before
+        if (::appContext.isInitialized &&
+            !getAppSharedPreferences(appContext).getBoolean(PrefKeys.DEBUG_LOGGING_ENABLED, true)
+        ) {
+            return
+        }
+
         // build the log message; the timestamp will be stored as UTC
         val dtStr = getDateTimeStrFromTimestamp(System.currentTimeMillis())
         val logMessage = "$dtStr: $message" + (ex?.let { ". Exception: ${it.localizedMessage}" } ?: "")

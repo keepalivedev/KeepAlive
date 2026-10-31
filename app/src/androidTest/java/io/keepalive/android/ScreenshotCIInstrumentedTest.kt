@@ -113,7 +113,8 @@ class ScreenshotCIInstrumentedTest {
         cmdExec("appops set ${ctx.packageName} SYSTEM_ALERT_WINDOW allow")
         AreYouThereOverlay.show(
             ctx,
-            String.format(ctx.getString(R.string.initial_check_notification_text), "60")
+            String.format(ctx.getString(R.string.initial_check_notification_text), "60"),
+            System.currentTimeMillis() + 60 * 60_000L
         )
         // The overlay is a system window outside the activity hierarchy, so we
         // can't poll for it via Espresso — give it a bounded settle.

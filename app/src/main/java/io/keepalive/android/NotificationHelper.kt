@@ -249,6 +249,12 @@ class AlertNotificationHelper(private val context: Context) {
                     .setVisibility(Notification.VISIBILITY_PUBLIC)
                     .setOngoing(true)
 
+                    // channels decide this on API 26+, but the Zepp app reads this legacy field
+                    //  and won't forward an ongoing notification to the watch below high (issue
+                    //  #230). the system raises it when a full-screen intent is attached, but
+                    //  that isn't always the case
+                    .setPriority(Notification.PRIORITY_HIGH)
+
 
                 // Don't auto dismiss just because they tapped the notification.
                 // We cancel it explicitly on acknowledgement.
@@ -267,7 +273,13 @@ class AlertNotificationHelper(private val context: Context) {
                     val fullScreenEnabled = getAppSharedPreferences(context)
                         .getBoolean(PrefKeys.ARE_YOU_THERE_OVERLAY_ENABLED, true)
 
-                    if (fullScreenEnabled && canUseFullScreenIntent()) {
+                    // a full-screen intent wakes the screen even when this user is not the one
+                    //  in front, where the prompt can't be seen. the lit screen would later be
+                    //  read by the check for another user being active as someone using the
+                    //  device, and the alert would be skipped (issue #215)
+                    val inBackgroundUser = isInBackgroundUser(context)
+
+                    if (fullScreenEnabled && canUseFullScreenIntent() && !inBackgroundUser) {
                         val fullScreenIntent = Intent(context, AreYouThereActivity::class.java).apply {
                             flags = Intent.FLAG_ACTIVITY_NEW_TASK
                             putExtra(AreYouThereActivity.EXTRA_MESSAGE, content)
@@ -282,7 +294,8 @@ class AlertNotificationHelper(private val context: Context) {
                         Log.d("sendNotification", "Full-screen intent attached")
                     } else {
                         Log.d("sendNotification", "Full-screen intent not attached " +
-                                "(enabled=$fullScreenEnabled, canUse=${canUseFullScreenIntent()})")
+                                "(enabled=$fullScreenEnabled, canUse=${canUseFullScreenIntent()}, " +
+                                "backgroundUser=$inBackgroundUser)")
                     }
                 } catch (e: Exception) {
                     // the notification itself must still go out
@@ -294,7 +307,15 @@ class AlertNotificationHelper(private val context: Context) {
                 builder.setAutoCancel(true)
             }
 
-            notificationManager.notify(notificationId, builder.build())
+            val notification = builder.build()
+
+            // repeat the sound until the prompt is acknowledged (which cancels it) or the
+            //  notification shade is opened. a single sound is easy to miss over background noise
+            if (isAreYouThere) {
+                notification.flags = notification.flags or Notification.FLAG_INSISTENT
+            }
+
+            notificationManager.notify(notificationId, notification)
 
         } catch (e: Exception) {
             Log.e("sendNotification", "Failed sending notification?!", e)

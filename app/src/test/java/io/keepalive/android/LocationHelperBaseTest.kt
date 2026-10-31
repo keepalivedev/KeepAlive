@@ -171,6 +171,31 @@ class LocationHelperBaseTest {
         assertEquals(0, helper.getLastLocationCount)
     }
 
+    // ---- Location services off (issue #213) --------------------------------
+
+    @Test fun `location services off sends the fallback at once without a provider request`() {
+        // no app can get a fix while location services are off; waiting through the
+        //  30 s provider timeout only delays the SMS for an outcome already known
+        shadowApp.grantPermissions(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        )
+        val lm = appCtx.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        shadowOf(lm).setLocationEnabled(false)
+        val cb = CallbackRecorder()
+        val helper = RecordingHelper(appCtx, cb.asLambda)
+
+        helper.getLocationAndExecute()
+
+        val result = cb.await()
+        assertEquals("no current-location request while services are off",
+            0, helper.getCurrentLocationCount)
+        assertEquals("no last-location request while services are off",
+            0, helper.getLastLocationCount)
+        assertEquals(appCtx.getString(R.string.location_invalid_message),
+            result?.formattedLocationString)
+    }
+
     @Test fun `executeCallback runs the callback with the provided result`() {
         val cb = CallbackRecorder()
         val helper = RecordingHelper(appCtx, cb.asLambda)
@@ -411,6 +436,101 @@ class LocationHelperBaseTest {
         val result = cb.await()
         assertTrue("callback must fire even on exception — coords fallback",
             result?.formattedLocationString?.contains("7.0") == true)
+    }
+
+    // ---- Coordinate formatting (issue #214) --------------------------------
+
+    @Test
+    @Config(sdk = [33, 34, 35, 36])  // Geocoder is stubbed via mockkConstructor, TIRAMISU+ only
+    fun `location SMS rounds coordinates to 5 decimals and accuracy to whole metres`() {
+        val cb = CallbackRecorder()
+        val helper = RecordingHelper(appCtx, cb.asLambda)
+        stubGeocoderReturns(emptyList())
+
+        val loc = Location("test").apply {
+            latitude = 46.123456789012345
+            longitude = 7.987654321098765
+            accuracy = 12.744998f
+        }
+        helper.GeocodingHelper().geocodeLocationAndExecute(loc)
+
+        val formatted = cb.await()?.formattedLocationString ?: ""
+        assertTrue("coords should be rounded to 5 decimals: $formatted",
+            formatted.contains("(46.12346, 7.98765)"))
+        assertTrue("accuracy should be whole metres: $formatted",
+            formatted.contains("Accuracy (m): 13."))
+    }
+
+    @Test
+    @Config(sdk = [33, 34, 35, 36])  // Geocoder is stubbed via mockkConstructor, TIRAMISU+ only
+    fun `location SMS keeps a decimal point in comma-decimal locales`() {
+        // the pair separator is a comma, so a locale-formatted "46,50000, 7,25000"
+        //  would be ambiguous to both readers and map apps
+        val original = java.util.Locale.getDefault()
+        java.util.Locale.setDefault(java.util.Locale.GERMANY)
+        try {
+            val cb = CallbackRecorder()
+            val helper = RecordingHelper(appCtx, cb.asLambda)
+            stubGeocoderReturns(emptyList())
+
+            val loc = Location("test").apply {
+                latitude = 46.5; longitude = 7.25; accuracy = 12.7f
+            }
+            helper.GeocodingHelper().geocodeLocationAndExecute(loc)
+
+            val formatted = cb.await()?.formattedLocationString ?: ""
+            assertTrue("lat/lon pair must keep decimal points: $formatted",
+                formatted.contains("(46.50000, 7.25000)"))
+        } finally {
+            java.util.Locale.setDefault(original)
+        }
+    }
+
+    private fun unroundedLocation() = Location("test").apply {
+        latitude = 46.123456789012345
+        longitude = 7.987654321098765
+        accuracy = 12.744998f
+    }
+
+    private fun assertRoundedFallback(formatted: String) {
+        assertTrue("coords should be rounded to 5 decimals: $formatted",
+            formatted.contains("(46.12346, 7.98765)"))
+        assertTrue("accuracy should be whole metres: $formatted",
+            formatted.contains("Accuracy (m): 13."))
+    }
+
+    @Test
+    @Config(sdk = [33, 34, 35, 36])  // GeocodeListener only exists on TIRAMISU+
+    fun `API33 fallback text rounds coordinates when the geocoder fails`() {
+        val cb = CallbackRecorder()
+        val helper = RecordingHelper(appCtx, cb.asLambda)
+        mockkConstructor(Geocoder::class)
+        every {
+            anyConstructed<Geocoder>().getFromLocation(
+                any<Double>(), any<Double>(), any<Int>(), any<Geocoder.GeocodeListener>()
+            )
+        } throws java.io.IOException("geocoder went boom")
+
+        helper.GeocodingHelperAPI33Plus().geocodeLocationAndExecute(unroundedLocation())
+
+        assertRoundedFallback(cb.await()?.formattedLocationString ?: "")
+    }
+
+    @Test
+    @Config(sdk = [33, 34, 35, 36])  // Geocoder is stubbed via mockkConstructor, TIRAMISU+ only
+    fun `pre33 fallback text rounds coordinates when the geocoder fails`() {
+        val cb = CallbackRecorder()
+        val helper = RecordingHelper(appCtx, cb.asLambda)
+        mockkConstructor(Geocoder::class)
+        every {
+            anyConstructed<Geocoder>().getFromLocation(
+                any<Double>(), any<Double>(), any<Int>()
+            )
+        } throws java.io.IOException("sync geocoder failed")
+
+        helper.GeocodingHelper().geocodeLocationAndExecute(unroundedLocation())
+
+        assertRoundedFallback(cb.await()?.formattedLocationString ?: "")
     }
 
     @Test fun `no-location fast-path does not call getCurrentLocation a second time via timeout`() {

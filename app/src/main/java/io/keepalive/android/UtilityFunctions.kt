@@ -1,10 +1,12 @@
 package io.keepalive.android
 
 import android.app.AlarmManager
+import android.app.ActivityManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.location.LocationManager
 import android.os.Build
 import android.os.SystemClock
 import android.os.UserManager
@@ -21,6 +23,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 import androidx.core.content.edit
+import androidx.core.location.LocationManagerCompat
 
 
 // data class used to represent an SMS emergency contact setting
@@ -28,8 +31,31 @@ data class SMSEmergencyContactSetting(
     var phoneNumber: String,
     var alertMessage: String,
     var isEnabled: Boolean,
-    var includeLocation: Boolean
+    var includeLocation: Boolean,
+
+    // optional display-only name or relationship (issue #188). nullable because gson
+    //  builds stored contacts without calling this constructor, so contacts saved
+    //  before the field existed come back with null here whatever default is declared
+    var label: String? = null
 )
+
+// how a contact is shown to the user: the optional label together with the number, so
+//  the label helps recognise the person while the number itself can still be checked
+fun smsContactDisplayText(contact: SMSEmergencyContactSetting, formattedNumber: String): String {
+    val label = contact.label?.trim()
+
+    return if (label.isNullOrEmpty()) formattedNumber else "$label: $formattedNumber"
+}
+
+// csv of the enabled contacts, as shown on the main screen and in the test alert dialog
+fun smsContactsDisplayString(
+    contacts: List<SMSEmergencyContactSetting>,
+    formatNumber: (String) -> String
+): String {
+    return contacts
+        .filter { it.isEnabled && it.phoneNumber != "" }
+        .joinToString(", ") { smsContactDisplayText(it, formatNumber(it.phoneNumber)) }
+}
 
 // data class used to represent a rest period
 data class RestPeriod(
@@ -71,6 +97,79 @@ fun hasActiveAlertChannel(sharedPrefs: SharedPreferences): Boolean {
     }
 
     return false
+}
+
+// location was requested for an SMS contact or the webhook but the device's location
+//  services are switched off, so no app could obtain one. surfaced on the main screen
+//  so the user finds out before an alert does (issue #213)
+fun locationNeededButDisabled(context: Context, sharedPrefs: SharedPreferences): Boolean {
+    val locationNeeded = sharedPrefs.getBoolean(PrefKeys.LOCATION_ENABLED, false) ||
+            sharedPrefs.getBoolean(PrefKeys.WEBHOOK_LOCATION_ENABLED, false)
+
+    if (!locationNeeded) {
+        return false
+    }
+
+    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
+        ?: return false
+
+    // LocationManagerCompat falls back to the Settings.Secure lookup below API 28
+    return !LocationManagerCompat.isLocationEnabled(locationManager)
+}
+
+// Android's per-app "Restricted" battery setting (API 28+) stops the app from running in
+//  the background, which delays or drops the periodic checks. below API 28 the setting
+//  does not exist so there is nothing to report (issue #194)
+fun isBackgroundRestricted(context: Context): Boolean {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+        return false
+    }
+
+    val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
+        ?: return false
+
+    return activityManager.isBackgroundRestricted
+}
+
+// on a multi-user device android only starts the owner (system) user at boot, so an
+//  install in any other user can't run at all after a reboot until someone switches to
+//  that user - there is no direct boot phase for it (issue #215)
+fun isSecondaryUser(context: Context): Boolean {
+
+    // isSystemUser was added in API 23
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        return false
+    }
+
+    val userManager = context.getSystemService(Context.USER_SERVICE) as? UserManager
+        ?: return false
+
+    // nobody switches to a work profile, android starts it along with its owner, so
+    //  the warning would be wrong there. it can only be told apart from API 30
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && userManager.isManagedProfile) {
+        return false
+    }
+
+    return !userManager.isSystemUser
+}
+
+// the text under the "may be impaired" status. a background restriction replaces the usual
+//  status lines with instructions because the user can act on it (issue #194). the
+//  secondary-user note is a standing limitation, so it goes beneath whichever message is
+//  showing and is never hidden by another warning (issue #215). the main screen builds this
+//  more than once per refresh, so a note that is already there is not added again
+fun impairedStatusMessage(
+    currentMessage: String,
+    backgroundRestrictedMessage: String?,
+    secondaryUserNote: String?
+): String {
+    val message = backgroundRestrictedMessage ?: currentMessage
+
+    return if (secondaryUserNote == null || message.contains(secondaryUserNote)) {
+        message
+    } else {
+        "$message\n\n$secondaryUserNote"
+    }
 }
 
 // format the last-activity timestamp for the main screen: time only (no
@@ -279,13 +378,30 @@ fun getDateTimeStrFromTimestamp(timestamp: Long, timeZoneId: String = "UTC"): St
 }
 
 
-// set an alarm so that we can check up on the user in the future
+// set an alarm so that we can check up on the user in the future.
+// every writer of the saved alarm state goes through AlarmRecovery.stateLock so a
+//  recovery can't read the stage between somebody else's read and write. the
+//  watchdog follows the alarm: an armed alarm always has one, a cancelled alarm
+//  never does.
 fun setAlarm(
     context: Context,
     lastActivityTimestamp: Long,
     desiredAlarmInMinutes: Int,
     alarmStage: String,
     restPeriods: MutableList<RestPeriod>? = null
+) {
+    synchronized(AlarmRecovery.stateLock) {
+        setAlarmLocked(context, lastActivityTimestamp, desiredAlarmInMinutes, alarmStage, restPeriods)
+        MonitoringWatchdogWorker.enqueue(context)
+    }
+}
+
+private fun setAlarmLocked(
+    context: Context,
+    lastActivityTimestamp: Long,
+    desiredAlarmInMinutes: Int,
+    alarmStage: String,
+    restPeriods: MutableList<RestPeriod>?
 ) {
 
     // calendar object set to the last activity time
@@ -471,21 +587,28 @@ fun setAlarm(
     // use commit=true because this often runs inside a BroadcastReceiver where the
     // process can be killed after onReceive() returns — apply() is async and may not
     // flush to disk in time.
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        try {
-            val devicePrefs = getDeviceProtectedPreferences(context)
-            devicePrefs.edit(commit = true) {
-                putString(PrefKeys.LAST_ALARM_STAGE, alarmStage)
-                putLong(PrefKeys.NEXT_ALARM_TIMESTAMP, alarmTimestamp)
-            }
-        } catch (e: Exception) {
-            Log.e("setAlarm", "Error saving alarm stage to device-protected storage", e)
+    // NOT gated on API N: getDeviceProtectedPreferences() falls back to the default
+    // prefs below N, and AlarmRecovery needs last_alarm_stage on every API level.
+    try {
+        val devicePrefs = getDeviceProtectedPreferences(context)
+        devicePrefs.edit(commit = true) {
+            putString(PrefKeys.LAST_ALARM_STAGE, alarmStage)
+            putLong(PrefKeys.NEXT_ALARM_TIMESTAMP, alarmTimestamp)
         }
+    } catch (e: Exception) {
+        Log.e("setAlarm", "Error saving alarm stage to device-protected storage", e)
     }
 }
 
 // cancelling alarm usually not necessary as setting a new one will overwrite any existing ones
 fun cancelAlarm(context: Context) {
+    synchronized(AlarmRecovery.stateLock) {
+        cancelAlarmLocked(context)
+        MonitoringWatchdogWorker.cancel(context)
+    }
+}
+
+private fun cancelAlarmLocked(context: Context) {
 
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     val intent = Intent(context, AlarmReceiver::class.java)
@@ -494,6 +617,21 @@ fun cancelAlarm(context: Context) {
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
     alarmManager.cancel(pendingIntent)
+
+    // the alarm is gone but NextAlarmTimestamp still holds its scheduled time, which
+    //  the main screen reads to decide whether monitoring is active. clear it so a
+    //  cancelled cycle can't keep showing a countdown for an alarm that won't fire.
+    //  both copies, mirroring setAlarm(); see there for why this isn't gated on N.
+    getAppSharedPreferences(context).edit {
+        remove(PrefKeys.NEXT_ALARM_TIMESTAMP)
+    }
+    try {
+        getDeviceProtectedPreferences(context).edit(commit = true) {
+            remove(PrefKeys.NEXT_ALARM_TIMESTAMP)
+        }
+    } catch (e: Exception) {
+        Log.e("cancelAlarm", "Error clearing alarm timestamp from device-protected storage", e)
+    }
 }
 
 // adjust a timestamp to the end of a rest period if it is within the rest period

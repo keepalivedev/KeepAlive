@@ -21,6 +21,7 @@ class FakeAlertCheckDeps : AlertCheckDeps {
     val credPrefs: FakeSharedPreferences = FakeSharedPreferences()
     val devPrefs: FakeSharedPreferences = FakeSharedPreferences()
     var lastActivity: UsageEvents.Event? = null
+    var otherUserActiveValue: Boolean = false
 
     /** Canned resource strings. Tests rarely need to customize this. */
     var getStringImpl: (Int, Array<out Any>) -> String = { resId, args ->
@@ -43,11 +44,13 @@ class FakeAlertCheckDeps : AlertCheckDeps {
 
     val scheduledAlarms = mutableListOf<ScheduledAlarm>()
     val activityQueries = mutableListOf<Pair<Long, List<String>>>()
+    var otherUserActiveQueries = 0
     var notificationShowCount = 0
     var notificationLastFollowupMinutes: Int? = null
     var overlayShowCount = 0
     var overlayLastFollowupMinutes: Int? = null
     var acknowledgeCount = 0
+    var dismissCount = 0
     val finalAlertCalls = mutableListOf<FinalAlertCall>()
 
     // --- AlertCheckDeps impl ---
@@ -61,6 +64,11 @@ class FakeAlertCheckDeps : AlertCheckDeps {
     override fun getLastDeviceActivity(startTimestamp: Long, monitoredApps: List<String>): UsageEvents.Event? {
         activityQueries.add(startTimestamp to monitoredApps)
         return lastActivity
+    }
+
+    override fun isOtherUserActive(): Boolean {
+        otherUserActiveQueries++
+        return otherUserActiveValue
     }
 
     override fun scheduleAlarm(
@@ -84,6 +92,10 @@ class FakeAlertCheckDeps : AlertCheckDeps {
 
     override fun acknowledgeAreYouThere() {
         acknowledgeCount++
+    }
+
+    override fun dismissAreYouThere() {
+        dismissCount++
     }
 
     override fun dispatchFinalAlert(

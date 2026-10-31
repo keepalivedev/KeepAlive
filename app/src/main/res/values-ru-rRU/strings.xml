@@ -92,15 +92,22 @@
     <string name="monitoring_no_activity_detected_message">Мониторинг включен, но за последние %1$s часов активности не обнаружено. Убедитесь, что у вас включен экран блокировки и предоставлены разрешения на использование.</string>
     <string name="monitoring_no_recipient_title">Нет получателя оповещения</string>
     <string name="monitoring_no_recipient_message">Мониторинг работает, но ни один экстренный контакт не активен, поэтому оповещение не может быть отправлено. Добавьте или включите экстренный контакт в настройках.</string>
+    <string name="monitoring_location_disabled_title">Службы геолокации отключены</string>
+    <string name="monitoring_location_disabled_message">Мониторинг работает, но службы геолокации отключены, поэтому оповещения не могут содержать ваше местоположение. Включите геолокацию в настройках устройства или отключите \"Включить информацию о местоположении\" для экстренных контактов.</string>
+    <string name="monitoring_background_restricted_message">Фоновая активность Keep Alive ограничена, поэтому проверки активности могут задерживаться или не выполняться вовсе, а оповещения могут не отправляться. Нажмите кнопку ниже и установите для использования батареи режим \"Без ограничений\" или \"Оптимизировано\".</string>
+    <string name="monitoring_secondary_user_message">Keep Alive установлен в дополнительном профиле пользователя. После перезагрузки он не может работать, пока вы снова не переключитесь на этот профиль, поэтому до тех пор оповещение отправить невозможно.</string>
     <string name="monitoring_permissions_required_message">Мониторинг включен, но предоставлены не все разрешения. Нажмите кнопку \'Предоставить разрешения\' ниже.</string>
     <string name="alarm_message_too_long_message">Сообщение не может содержать более 160 символов.</string>
     <string name="phone_number_invalid_message">Введите корректный телефонный номер</string>
-    <string name="time_period_too_short_message">Интервал должен быть не менее 10 минут.</string>
-    <string name="time_period_too_long_message">Интервал не должен превышать 7 дней.</string>
+    <string name="time_period_too_short_message">Должно быть не менее 0.17 часа (10 минут).</string>
+    <string name="time_period_too_long_message">Должно быть не более 168 часов (7 дней).</string>
+    <string name="followup_period_too_short_message">Должно быть не менее 10 минут.</string>
+    <string name="followup_period_too_long_message">Должно быть не более 10080 минут (7 дней).</string>
     <string name="followup_period_whole_minutes_message">Минуты должны быть целым числом.</string>
     <string name="time_period_too_many_decimals_message">Часы могут иметь не более 2 знаков после запятой.</string>
     <string name="test_phone_call_message">Будет совершен вызов на:\n%1$s</string>
-    <string name="test_sms_message">SMS сообщение будет отправлено на:\n%1$s</string>
+    <string name="test_sms_message">SMS сообщения будут отправлены на:\n%1$s</string>
+    <string name="test_sms_message_one">SMS сообщение будет отправлено на:\n%1$s</string>
     <string name="unable_to_send_sms_message">Невозможно отправить SMS\nУбедитесь, что у вас активна SIM-карта.</string>
     <string name="no_configured_contacts_message">Экстренные контакты не настроены</string>
     <string name="permissions_button_text">Дать разрешение</string>
@@ -111,7 +118,12 @@
     <string name="test_alert_confirmation_title">Подтвердить тестовое SMS-оповещение</string>
     <string name="test_alert_switch_include_warning_text">Включить предупреждающее сообщение</string>
     <string name="test_sms_configured_contacts_message">Это отправит тестовое SMS-оповещение вашим настроенным контактам для экстренной связи: %1$s.</string>
-    <string name="test_alert_confirmation_message_with_count"><![CDATA[Всего будет отправлено <b>%1$d</b> SMS. Хотите продолжить?]]></string>
+    <plurals name="test_alert_confirmation_message_with_count">
+        <item quantity="one"><![CDATA[Всего будет отправлено <b>%1$d</b> SMS. Хотите продолжить?]]></item>
+        <item quantity="few"><![CDATA[Всего будет отправлено <b>%1$d</b> SMS. Хотите продолжить?]]></item>
+        <item quantity="many"><![CDATA[Всего будет отправлено <b>%1$d</b> SMS. Хотите продолжить?]]></item>
+        <item quantity="other"><![CDATA[Всего будет отправлено <b>%1$d</b> SMS. Хотите продолжить?]]></item>
+    </plurals>
     <string name="test_alert_sms_default_message">Следующие сообщения являются тестом из приложения Keep Alive. Пожалуйста, подтвердите получение!</string>
 
     <!-- notification strings -->
@@ -139,6 +151,8 @@
     <string name="sms_service_failure_notification_text">Произошла ошибка при попытке отправить SMS-сообщение с оповещением. Убедитесь, что у вас активна SIM-карта.</string>
     <string name="sms_permission_revoked_notification_title">Разрешение на отправку SMS было отозвано!</string>
     <string name="sms_permission_revoked_notification_text">Keep Alive больше не может отправлять SMS-оповещения. Нажмите здесь, чтобы открыть приложение и снова предоставить разрешение на SMS.</string>
+    <string name="background_restricted_notification_title">Фоновая активность ограничена!</string>
+    <string name="background_restricted_notification_text">Keep Alive может не выполнять проверки активности и не отправлять оповещения. Нажмите здесь, чтобы открыть приложение и разрешить фоновую активность.</string>
     <string name="alert_service_notification_title">Отправка оповещения…</string>
     <string name="alert_service_notification_message">Оповещение(я) отправляются вашим настроенным контактам, пожалуйста, подождите.</string>
 
@@ -158,6 +172,8 @@
     <string name="sample_alert_message">Пример текста оповещения</string>
     <string name="include_location_information">Включить информацию о местоположении</string>
     <string name="phone_number_hint">Введите номер телефона</string>
+    <string name="contact_label_title">Имя или кем приходится (необязательно)</string>
+    <string name="contact_label_hint">Например: Дочь</string>
     <string name="alert_message_hint">Введите текст оповещения</string>
     <string name="delete_phone_number_dialog_title">Удалить экстренный контакт</string>
     <string name="delete_phone_number_dialog_description">Вы уверены, что хотите удалить этот элемент?</string>
@@ -174,6 +190,7 @@
     <!-- Main Settings -->
     <string name="enabled_title">Мониторинг включен</string>
     <string name="auto_restart_title">Перезапускать мониторинг после срабатывания оповещения</string>
+    <string name="debug_logging_title">Ведение журнала отладки</string>
     <string name="time_period_title">Часов неактивности до проверки</string>
     <string name="time_period_description">Количество часов бездействия перед появлением уведомления \'Вы здесь?\'</string>
     <string name="followup_time_period_title">Сколько минут ожидать подтверждения</string>
@@ -315,6 +332,7 @@
     <string name="debug_log_attempting_to_get_location">Попытка получить местоположение…</string>
     <string name="debug_log_device_idle_not_getting_current_location">Устройство находится в режиме ожидания, не получает текущее местоположение</string>
     <string name="debug_log_no_location_permission_executing_callback">Нет разрешения на местоположение, выполнение обратного вызова</string>
+    <string name="debug_log_location_services_disabled">Службы геолокации отключены, невозможно определить местоположение</string>
     <string name="debug_log_failed_getting_current_location">Не удалось получить текущее местоположение?!</string>
     <string name="debug_log_geocoding_timeout_reached">Достигнут тайм-аут, locationString - %1$s</string>
     <string name="debug_log_failed_geocoding_gps_coordinates">Не удалось выполнить геокодирование GPS-координат?!</string>
@@ -348,6 +366,9 @@
     <!-- AlarmReceiver.kt -->
     <string name="debug_log_alarm_just_fired">Будильник только что сработал!</string>
     <string name="debug_log_sms_permission_revoked">Разрешение SEND_SMS больше не предоставлено!</string>
+    <string name="debug_log_background_restricted">Фоновая активность ограничена настройками батареи</string>
+    <string name="debug_log_secondary_user">Работает в дополнительном профиле пользователя, после перезагрузки ничего не может работать, пока этот пользователь не запущен</string>
+    <string name="debug_log_other_user_active">В этом профиле нет активности, но используется другой профиль пользователя, это считается активностью</string>
     <string name="debug_log_app_not_enabled_alarm_went_off">Приложение не включено, почему сработал будильник?!</string>
     <string name="debug_log_alarm_time_comparison">Время %1$s UTC, будильник должен был сработать в %2$s UTC, что было %3$d секунд назад</string>
     <string name="debug_log_failed_processing_alarm">Не удалось обработать будильник:</string>
@@ -378,7 +399,13 @@
     <string name="debug_log_locked_boot_completed_skipping">Получен LOCKED_BOOT_COMPLETED, пропускаем проверку уведомления Direct Boot. %1$s</string>
     <string name="debug_log_locked_boot_user_already_unlocked">LOCKED_BOOT_COMPLETED: Пользователь уже разблокирован, передаём обработку BOOT_COMPLETED</string>
     <string name="debug_log_restored_alarm_stage">Восстановлен этап будильника из защищённого хранилища устройства: %1$s, вызываем doAlertCheck()</string>
-    <string name="debug_log_boot_alert_already_sent">Оповещение уже было отправлено, а автоматический перезапуск мониторинга отключён, после перезагрузки остаётся отключённым</string>
+    <string name="debug_log_boot_alert_already_sent">Оповещение уже было отправлено, а автоматический перезапуск мониторинга отключён, остаётся отключённым</string>
+    <string name="debug_log_watchdog_rearming">Watchdog: сигнал должен был сработать %1$s, но не сработал — мониторинг перезапускается</string>
+    <string name="debug_log_alarm_not_due_rescheduling">Сигнал ещё не наступил (был назначен на %1$s UTC), перепланирование вместо проверки</string>
+    <string name="debug_log_saved_alarm_implausible">Сохранённое время сигнала %1$s UTC неправдоподобно далеко в будущем, начинается новый период проверки</string>
+    <string name="debug_log_alert_sent_migrated">Предыдущая версия оставила отправленное оповещение записанным как ожидающий финальный сигнал; оно помечается как уже отправленное, чтобы это обновление не повторило его</string>
+    <string name="debug_log_stale_alarm_ignored">Доставка сигнала %1$s проигнорирована, так как сохранённый этап — %2$s</string>
+    <string name="debug_log_prompt_lost_reposting">Вопрос «Вы здесь?» не сохранился, показывается снова для финального сигнала в %1$s UTC</string>
 
     <!-- WebhookConfigManager.kt -->
     <string name="debug_log_webhook_config_saved">Конфигурация вебхука сохранена</string>
