@@ -9,6 +9,7 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
@@ -257,26 +258,33 @@ class AlertMessageSenderTest {
         verify(exactly = 1) { sms.sendTextMessage("+15550000002", null, "help", any(), null) }
     }
 
-    // ---- Location SMS ------------------------------------------------------
+    // ---- Location SMS and test warning --------------------------------------
     //
     // A single-part sendTextMessage drops an oversized message without throwing,
     // so these use the real SmsManager to let the real encoder pick the encoding
     // and the split, rather than a stubbed divideMessage.
 
+    // an explicit sub id, because the default manager resolves its id through
+    //  the telephony service, which Robolectric doesn't have
+    private fun realSmsManager() = SmsManager.getSmsManagerForSubscriptionId(1)
+
     private fun sendLocationMessage(text: String): ShadowSmsManager {
         seedContacts(contact("+15551111111", includeLocation = true))
-        // an explicit sub id, because the default manager resolves its id through
-        //  the telephony service, which Robolectric doesn't have
-        val sms = SmsManager.getSmsManagerForSubscriptionId(1)
+        val sms = realSmsManager()
         AlertMessageSender(appCtx, sms).sendLocationAlertMessage(text)
         return shadowOf(sms)
     }
 
+    private fun assertMultipartHolds(text: String, shadow: ShadowSmsManager) {
+        val params = shadow.lastSentMultipartTextMessageParams
+        assertNotNull("must go out as multipart", params)
+        assertTrue("expected more than one part, got ${params.parts.size}", params.parts.size > 1)
+        assertEquals("no text may be lost in the split", text, params.parts.joinToString(""))
+    }
+
     private fun assertSentAsMultipart(text: String, shadow: ShadowSmsManager) {
         assertNull("must not go out as a single SMS", shadow.lastSentTextMessageParams)
-        val parts = shadow.lastSentMultipartTextMessageParams.parts
-        assertTrue("expected more than one part, got ${parts.size}", parts.size > 1)
-        assertEquals("no text may be lost in the split", text, parts.joinToString(""))
+        assertMultipartHolds(text, shadow)
     }
 
     private fun assertSentAsSinglePart(text: String, shadow: ShadowSmsManager) {
@@ -318,5 +326,20 @@ class AlertMessageSenderTest {
         val text = "Невозможно определить местоположение"
 
         assertSentAsSinglePart(text, sendLocationMessage(text))
+    }
+
+    @Test fun `test warning over the UCS-2 limit goes out as multipart`() {
+        val warning = "Следующие сообщения являются тестом из приложения Keep Alive. " +
+                "Пожалуйста, подтвердите получение!"
+        val sms = realSmsManager()
+
+        AlertMessageSender(appCtx, sms).sendAlertMessage(testWarningMessage = warning)
+
+        val shadow = shadowOf(sms)
+        assertMultipartHolds(warning, shadow)
+        assertTrue("the warning must stay out of the batch's SMS_SENT count",
+            shadow.lastSentMultipartTextMessageParams.sentIntents.isNullOrEmpty())
+        assertEquals("the alert itself must still go out",
+            "help", shadow.lastSentTextMessageParams.text)
     }
 }
