@@ -486,6 +486,53 @@ class LocationHelperBaseTest {
         }
     }
 
+    private fun unroundedLocation() = Location("test").apply {
+        latitude = 46.123456789012345
+        longitude = 7.987654321098765
+        accuracy = 12.744998f
+    }
+
+    private fun assertRoundedFallback(formatted: String) {
+        assertTrue("coords should be rounded to 5 decimals: $formatted",
+            formatted.contains("(46.12346, 7.98765)"))
+        assertTrue("accuracy should be whole metres: $formatted",
+            formatted.contains("Accuracy (m): 13."))
+    }
+
+    @Test
+    @Config(sdk = [33, 34, 35, 36])  // GeocodeListener only exists on TIRAMISU+
+    fun `API33 fallback text rounds coordinates when the geocoder fails`() {
+        val cb = CallbackRecorder()
+        val helper = RecordingHelper(appCtx, cb.asLambda)
+        mockkConstructor(Geocoder::class)
+        every {
+            anyConstructed<Geocoder>().getFromLocation(
+                any<Double>(), any<Double>(), any<Int>(), any<Geocoder.GeocodeListener>()
+            )
+        } throws java.io.IOException("geocoder went boom")
+
+        helper.GeocodingHelperAPI33Plus().geocodeLocationAndExecute(unroundedLocation())
+
+        assertRoundedFallback(cb.await()?.formattedLocationString ?: "")
+    }
+
+    @Test
+    @Config(sdk = [33, 34, 35, 36])  // Geocoder is stubbed via mockkConstructor, TIRAMISU+ only
+    fun `pre33 fallback text rounds coordinates when the geocoder fails`() {
+        val cb = CallbackRecorder()
+        val helper = RecordingHelper(appCtx, cb.asLambda)
+        mockkConstructor(Geocoder::class)
+        every {
+            anyConstructed<Geocoder>().getFromLocation(
+                any<Double>(), any<Double>(), any<Int>()
+            )
+        } throws java.io.IOException("sync geocoder failed")
+
+        helper.GeocodingHelper().geocodeLocationAndExecute(unroundedLocation())
+
+        assertRoundedFallback(cb.await()?.formattedLocationString ?: "")
+    }
+
     @Test fun `no-location fast-path does not call getCurrentLocation a second time via timeout`() {
         // The global timeout handler fires an invalid-location callback after
         // ~61s if nothing resolved. On the no-permission fast-path we fire
