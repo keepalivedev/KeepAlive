@@ -47,6 +47,10 @@ class AppController : Application() {
 
         // request code used with AlarmReceiver intent
         const val ACTIVITY_ALARM_REQUEST_CODE = 99
+        const val ARE_YOU_THERE_REPOST_ALARM_REQUEST_CODE = 98
+
+        // how long the prompt's sound can stay stopped when something interrupts it
+        const val ARE_YOU_THERE_REPOST_INTERVAL_MS = 60_000L
 
         // request code used with AppHibernationActivity intent
         const val APP_HIBERNATION_ACTIVITY_RESULT_CODE = 98
