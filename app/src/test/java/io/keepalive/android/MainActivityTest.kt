@@ -51,7 +51,15 @@ class MainActivityTest {
         getDeviceProtectedPreferences(appCtx).edit().clear().commit()
     }
 
+    // the activities the permission tests launch, closed again afterwards: one left open
+    //  with its dialogs keeps its memory for the rest of the test run
+    private val launched = mutableListOf<ActivityController<MainActivity>>()
+
+    private fun launchMain(): ActivityController<MainActivity> =
+        Robolectric.buildActivity(MainActivity::class.java).setup().also { launched.add(it) }
+
     @After fun tearDown() {
+        launched.forEach { it.close() }
         unmockkObject(AcknowledgeAreYouThere)
     }
 
@@ -117,7 +125,7 @@ class MainActivityTest {
             appCtx.packageName,
             AppOpsManager.MODE_IGNORED
         )
-        return Robolectric.buildActivity(MainActivity::class.java).setup()
+        return launchMain()
     }
 
     private fun showingDialogs(): List<Dialog> = ShadowDialog.getShownDialogs().filter { it.isShowing }
@@ -249,7 +257,7 @@ class MainActivityTest {
             .putBoolean(PrefKeys.LOCATION_ENABLED, true)
             .putBoolean(PrefKeys.ARE_YOU_THERE_OVERLAY_ENABLED, true)
             .commit()
-        val controller = Robolectric.buildActivity(MainActivity::class.java).setup()
+        val controller = launchMain()
         controller.get().findViewById<View>(R.id.permissionsButton).performClick()
         assertEquals(
             listOf(appCtx.getString(R.string.permission_access_fine_location_title)),

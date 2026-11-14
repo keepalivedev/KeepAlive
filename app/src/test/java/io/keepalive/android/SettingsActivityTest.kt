@@ -15,6 +15,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SwitchCompat
 import androidx.test.core.app.ApplicationProvider
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -26,6 +27,7 @@ import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
+import org.robolectric.android.controller.ActivityController
 import org.robolectric.shadows.ShadowDialog
 import org.robolectric.shadows.ShadowToast
 
@@ -43,8 +45,16 @@ class SettingsActivityTest {
         getAppSharedPreferences(appCtx).edit().clear().commit()
     }
 
+    // closed again afterwards: an activity left open with its dialogs keeps its memory
+    //  for the rest of the test run
+    private val launched = mutableListOf<ActivityController<SettingsActivity>>()
+
+    @After fun tearDown() {
+        launched.forEach { it.close() }
+    }
+
     private fun launch(): SettingsActivity =
-        Robolectric.buildActivity(SettingsActivity::class.java).setup().get()
+        Robolectric.buildActivity(SettingsActivity::class.java).setup().also { launched.add(it) }.get()
 
     // ---- debug logging switch (issue #166) ---------------------------------
 
