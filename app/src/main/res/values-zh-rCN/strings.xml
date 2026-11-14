@@ -97,6 +97,8 @@
     <string name="monitoring_background_restricted_message">Keep Alive 的后台活动受到限制，因此活动检查可能被延迟或根本不会运行，提醒也可能无法发送。请点击下方按钮，将电池用量设置为“不受限制”或“优化”。</string>
     <string name="monitoring_secondary_user_message">Keep Alive 安装在次要用户配置文件中。重启后，在您再次切换到此配置文件之前它无法运行，因此在此之前无法发送提醒。</string>
     <string name="monitoring_permissions_required_message">监测器已启用，但尚未授予必要权限。 请点击下面的“授予权限”按钮。</string>
+    <string name="monitoring_sms_permission_required_title">需要短信权限</string>
+    <string name="monitoring_sms_permission_required_message">监测器已启用，但 Keep Alive 无权发送短信，因此无法发送短信提醒。请点击下面的“授予权限”按钮。</string>
     <string name="alarm_message_too_long_message">短信不得超过 160 个字符。</string>
     <string name="phone_number_invalid_message">请输入一个有效的电话号码。</string>
     <string name="time_period_too_short_message">不应小于 0.17 小时（10 分钟）。</string>
@@ -146,8 +148,8 @@
     <string name="sms_alert_failure_notification_text_with_error">发送短信时发生错误: %1$s</string>
     <string name="sms_service_failure_notification_title">无法发送提醒短信</string>
     <string name="sms_service_failure_notification_text">发送提醒短信时发生错误，请插入有效的SIM卡。</string>
-    <string name="sms_permission_revoked_notification_title">短信权限已被撤销！</string>
-    <string name="sms_permission_revoked_notification_text">Keep Alive 无法再发送短信提醒。点击此处打开应用并重新授予短信权限。</string>
+    <string name="sms_permission_revoked_notification_title">短信权限未授予！</string>
+    <string name="sms_permission_revoked_notification_text">Keep Alive 无法发送短信提醒。点击此处打开应用并授予短信权限。</string>
     <string name="background_restricted_notification_title">后台活动受到限制！</string>
     <string name="background_restricted_notification_text">Keep Alive 可能无法执行活动检查或发送提醒。点击此处打开应用并允许后台活动。</string>
     <string name="alert_service_notification_title">正在发送提醒…</string>
@@ -363,7 +365,7 @@
 
     <!-- AlarmReceiver.kt -->
     <string name="debug_log_alarm_just_fired">闹钟刚刚触发！</string>
-    <string name="debug_log_sms_permission_revoked">SEND_SMS 权限已不再授予！</string>
+    <string name="debug_log_sms_permission_revoked">SEND_SMS 权限未授予！</string>
     <string name="debug_log_background_restricted">后台活动受到电池设置的限制</string>
     <string name="debug_log_secondary_user">正在次要用户配置文件中运行，重启后在该用户启动之前无法运行任何内容</string>
     <string name="debug_log_other_user_active">此配置文件中没有活动，但另一个用户配置文件正在使用中，视为活动</string>

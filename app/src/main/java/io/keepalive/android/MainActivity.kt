@@ -46,6 +46,12 @@ class MainActivity : AppCompatActivity() {
 
     private val tag = this.javaClass.name
 
+    // the pass over the missing permissions started by the Grant Permissions button, and
+    //  whether the user has just been sent off to grant one of them. when they come back
+    //  the next one is requested, so the requests appear one after another
+    private var permissionRequests: PermissionManager? = null
+    private var continuePermissionRequests = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -75,6 +81,37 @@ class MainActivity : AppCompatActivity() {
 
         val needPermissions = PermissionManager(this, this).checkNeedAnyPermissions()
         updateMainContent(needPermissions)
+
+        if (continuePermissionRequests) {
+            continuePermissionRequests = false
+            requestNextPermission()
+        }
+    }
+
+    // ask for the next missing permission of the current pass, if there is one
+    private fun requestNextPermission() {
+        val haveAllPerms = permissionRequests?.checkHavePermissions() ?: return
+
+        // if we don't actually need any more then hide the permissions button
+        adjustPermissionsComponents(!haveAllPerms)
+
+        // unused app restrictions would take the permissions away again later, so
+        //  finish setup by asking for those to be turned off
+        if (haveAllPerms) {
+            val future: ListenableFuture<Int> =
+                PackageManagerCompat.getUnusedAppRestrictionsStatus(this)
+
+            future.addListener(
+                {
+                    when (val status = future.get()) {
+                        UnusedAppRestrictionsConstants.API_30_BACKPORT,
+                        UnusedAppRestrictionsConstants.API_30,
+                        UnusedAppRestrictionsConstants.API_31 -> requestDisableAppRestrictions(status)
+                    }
+                },
+                ContextCompat.getMainExecutor(this)
+            )
+        }
     }
 
     /**
@@ -180,8 +217,11 @@ class MainActivity : AppCompatActivity() {
 
         // if a permission was permanently denied the system dialog won't appear
         //  anymore, so route the user to the app's settings page instead of
-        //  silently no-op'ing the request
-        permissionManager.handlePermissionResult(permissions, grantResults)
+        //  silently no-op'ing the request. that dialog takes the place of the
+        //  next permission request
+        if (permissionManager.handlePermissionResult(permissions, grantResults)) {
+            continuePermissionRequests = false
+        }
 
         // don't really need to check whether the permissions were granted or not?
         //  just check all of the permissions and hide the button appropriately
@@ -214,11 +254,9 @@ class MainActivity : AppCompatActivity() {
         // listener for the permissions button
         binding.permissionsButton.setOnClickListener { _ ->
 
-            // attempt to request the necessary permissions and if we don't actually need any
-            //  then hide the permissions button
-            val haveAllPerms = PermissionManager(this, this).checkHavePermissions()
-
-            adjustPermissionsComponents(!haveAllPerms)
+            // start a new pass over the missing permissions
+            permissionRequests = PermissionManager(this, this) { continuePermissionRequests = true }
+            requestNextPermission()
         }
 
         // listener for the Check App Restrictions button (only visible if app restrictions are enabled)
@@ -512,13 +550,27 @@ class MainActivity : AppCompatActivity() {
                     if (needPerms) {
                         Log.d(tag, "Still need some permissions, making sure user is aware..")
 
-                        monitoringStatusTextView.text =
-                            getString(R.string.monitoring_permissions_required_title)
+                        // a missing SMS permission means no SMS alert can go out, which
+                        //  the user has to be told in so many words
+                        val smsMissing = smsPermissionMissing(this, sharedPrefs)
+
+                        monitoringStatusTextView.text = getString(
+                            if (smsMissing) {
+                                R.string.monitoring_sms_permission_required_title
+                            } else {
+                                R.string.monitoring_permissions_required_title
+                            }
+                        )
                         monitoringStatusTextView.setTextColor(
                             getColorCompat(this, R.color.monitoringImpaired)
                         )
-                        monitoringMessageTextView.text =
-                            getString(R.string.monitoring_permissions_required_message)
+                        monitoringMessageTextView.text = getString(
+                            if (smsMissing) {
+                                R.string.monitoring_sms_permission_required_message
+                            } else {
+                                R.string.monitoring_permissions_required_message
+                            }
+                        )
 
                     } else if (!hasActiveAlertChannel(sharedPrefs)) {
 

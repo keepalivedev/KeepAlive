@@ -1,11 +1,13 @@
 package io.keepalive.android
 
+import android.Manifest
 import android.app.AlarmManager
 import android.app.ActivityManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Build
 import android.os.SystemClock
@@ -13,6 +15,7 @@ import android.os.UserManager
 import android.text.format.DateFormat
 import android.util.Log
 import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -97,6 +100,18 @@ fun hasActiveAlertChannel(sharedPrefs: SharedPreferences): Boolean {
     }
 
     return false
+}
+
+// an enabled SMS contact is configured but the app isn't allowed to send SMS, so no SMS
+//  alert could go out. used to ask for the permission as soon as it is needed and to
+//  say so on the main screen
+fun smsPermissionMissing(context: Context, sharedPrefs: SharedPreferences): Boolean {
+    val smsContacts: MutableList<SMSEmergencyContactSetting> =
+        loadJSONSharedPreference(sharedPrefs, PrefKeys.PHONE_NUMBER_SETTINGS)
+
+    return smsContacts.any { it.isEnabled && it.phoneNumber.isNotEmpty() } &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) !=
+            PackageManager.PERMISSION_GRANTED
 }
 
 // location was requested for an SMS contact or the webhook but the device's location

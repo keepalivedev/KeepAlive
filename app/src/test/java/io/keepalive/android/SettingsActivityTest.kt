@@ -159,6 +159,60 @@ class SettingsActivityTest {
         assertNull(addContactThroughDialog("   ").label)
     }
 
+    // ---- SMS permission asked for when it becomes needed --------------------
+
+    private fun denySms() {
+        shadowOf(appCtx as Application).denyPermissions(Manifest.permission.SEND_SMS)
+    }
+
+    private fun seedEnabledContact() {
+        getAppSharedPreferences(appCtx).edit().putString(
+            PrefKeys.PHONE_NUMBER_SETTINGS,
+            """[{"phoneNumber":"5550100","alertMessage":"x","isEnabled":true,"includeLocation":false}]"""
+        ).commit()
+    }
+
+    private fun latestDialogTitle(): String =
+        (ShadowDialog.getLatestDialog() as AlertDialog)
+            .findViewById<TextView>(androidx.appcompat.R.id.alertTitle)!!.text.toString()
+
+    @Test fun `adding a contact without the SMS permission asks for it`() {
+        // setup used to look finished at this point, with no SMS alert possible
+        denySms()
+
+        addContactThroughDialog("")
+
+        assertEquals(appCtx.getString(R.string.permission_send_sms_title), latestDialogTitle())
+        assertTrue(ShadowDialog.getLatestDialog().isShowing)
+    }
+
+    @Test fun `adding a contact with the SMS permission asks for nothing`() {
+        shadowOf(appCtx as Application).grantPermissions(Manifest.permission.SEND_SMS)
+
+        addContactThroughDialog("")
+
+        assertFalse(ShadowDialog.getLatestDialog().isShowing)
+    }
+
+    @Test fun `turning monitoring on without the SMS permission asks for it`() {
+        denySms()
+        seedEnabledContact()
+        val activity = launch()
+
+        activity.findViewById<SwitchCompat>(R.id.monitoringEnabledSwitch).isChecked = true
+
+        assertEquals(appCtx.getString(R.string.permission_send_sms_title), latestDialogTitle())
+    }
+
+    @Test fun `turning monitoring on without an SMS contact asks for nothing`() {
+        denySms()
+        val activity = launch()
+
+        activity.findViewById<SwitchCompat>(R.id.monitoringEnabledSwitch).isChecked = true
+
+        assertNull(ShadowDialog.getLatestDialog())
+    }
+
     // ---- time period dialogs -----------------------------------------------
 
     private fun openTimeDialog(rowId: Int): AlertDialog {

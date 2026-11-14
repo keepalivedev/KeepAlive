@@ -17,7 +17,14 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
 
-class PermissionManager(private val context: Context, private val activity: AppCompatActivity?) {
+class PermissionManager(
+    private val context: Context,
+    private val activity: AppCompatActivity?,
+
+    // called when the user accepts an explanation and is sent off to the system dialog or
+    //  settings page, so the caller can carry on with the next permission when they return
+    private val onRequestLaunched: (() -> Unit)? = null
+) {
 
     private val tag = this.javaClass.name
 
@@ -27,6 +34,18 @@ class PermissionManager(private val context: Context, private val activity: AppC
 
     // start with no permissions
     private val basicPermissions = mutableListOf<String>()
+
+    // the special permissions, in the order they are asked for
+    private val specialChecks: List<(Boolean) -> Boolean> = listOf(
+        ::checkUsageStatsPermissions,
+        ::checkScheduleExactAlarmPermissions,
+        ::checkBackgroundLocationPermissions,
+        ::checkOverlayPermissions,
+        ::checkFullScreenIntentPermissions
+    )
+
+    // the basic permissions and special checks that checkHavePermissions has asked for
+    private val asked = mutableSetOf<Any>()
 
     // map of a permission to the title and description to use in the explanation dialog
     private val permissionExplanations = mutableMapOf(
@@ -173,39 +192,40 @@ class PermissionManager(private val context: Context, private val activity: AppC
         return false
     }
 
-    // returns true if we have all of the permissions
+    // returns true if we have all of the permissions. otherwise asks for the next missing
+    //  one that this instance hasn't asked for yet. only one per call: dialogs on top of
+    //  each other launch their requests together and Android drops all but one. call it
+    //  again on the same instance when the user comes back, and one pass asks for each
+    //  missing permission once, so a permission the user won't grant doesn't hold up the rest
     fun checkHavePermissions(): Boolean {
 
-        // check every permission and request it if needed using an explanation dialog
         for (permission in basicPermissions) {
-            if (ContextCompat.checkSelfPermission(
+            if (permission !in asked && ContextCompat.checkSelfPermission(
                     context,
                     permission
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
+                asked.add(permission)
+
                 // launch a dialog to explain the permission and then request it
                 explainPermission(
                     permission,
                     permissionExplanations[permission]!![0],
                     permissionExplanations[permission]!![1]
                 )
+                return false
             }
         }
 
-        // this will only execute one of these at a time so that it doesn't pop up multiple dialogs
-        //  at the same time
-        return if (!checkUsageStatsPermissions(true) ||
-            !checkScheduleExactAlarmPermissions(true) ||
-            !checkBackgroundLocationPermissions(true) ||
-            !checkOverlayPermissions(true) ||
-            !checkFullScreenIntentPermissions(true)
-        ) {
-            DebugLogger.d(tag, context.getString(R.string.debug_log_finished_requesting_permissions))
-            false
-        } else {
-            DebugLogger.d(tag, context.getString(R.string.debug_log_have_all_permissions))
-            true
+        for (check in specialChecks) {
+            if (check !in asked && !check(true)) {
+                asked.add(check)
+                DebugLogger.d(tag, context.getString(R.string.debug_log_finished_requesting_permissions))
+                return false
+            }
         }
+
+        return !checkNeedAnyPermissions()
     }
 
     // check and request a single permission
@@ -246,6 +266,7 @@ class PermissionManager(private val context: Context, private val activity: AppC
 
                 // request the permission
                 Log.d(tag, "Requesting permission: $permission")
+                onRequestLaunched?.invoke()
                 activity?.let {
                     ActivityCompat.requestPermissions(it, arrayOf(permission), 0)
                 } ?: Log.e(tag, "Activity reference is null, cannot request $permission")
@@ -265,6 +286,7 @@ class PermissionManager(private val context: Context, private val activity: AppC
 
                 // request the permission by taking the user to the settings page
                 Log.d(tag, "Requesting setting permission: $permission")
+                onRequestLaunched?.invoke()
                 val myIntent = Intent(permission)
 
                 // the full-screen intent settings action expects a package URI
@@ -288,17 +310,19 @@ class PermissionManager(private val context: Context, private val activity: AppC
     //  requestPermissions() no longer shows the system dialog and silently
     //  returns denied (the framework logs "No requestable permission in the
     //  request."), so the explain-then-request path dead-ends. In that case send
-    //  the user to the app's settings page where they can re-enable it.
-    fun handlePermissionResult(permissions: Array<out String>, grantResults: IntArray) {
-        val act = activity ?: return
+    //  the user to the app's settings page where they can re-enable it. Returns
+    //  true if it showed that dialog.
+    fun handlePermissionResult(permissions: Array<out String>, grantResults: IntArray): Boolean {
+        val act = activity ?: return false
         val permanentlyDenied = firstPermanentlyDeniedPermission(
             permissions,
             grantResults,
             shouldShowRationale = { ActivityCompat.shouldShowRequestPermissionRationale(act, it) },
             isKnown = { permissionExplanations.containsKey(it) }
-        ) ?: return
+        ) ?: return false
 
         explainPermanentlyDeniedPermission(permanentlyDenied)
+        return true
     }
 
     private fun explainPermanentlyDeniedPermission(permission: String) {

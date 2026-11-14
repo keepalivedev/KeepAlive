@@ -97,6 +97,8 @@
     <string name="monitoring_background_restricted_message">Фоновая активность Keep Alive ограничена, поэтому проверки активности могут задерживаться или не выполняться вовсе, а оповещения могут не отправляться. Нажмите кнопку ниже и установите для использования батареи режим \"Без ограничений\" или \"Оптимизировано\".</string>
     <string name="monitoring_secondary_user_message">Keep Alive установлен в дополнительном профиле пользователя. После перезагрузки он не может работать, пока вы снова не переключитесь на этот профиль, поэтому до тех пор оповещение отправить невозможно.</string>
     <string name="monitoring_permissions_required_message">Мониторинг включен, но предоставлены не все разрешения. Нажмите кнопку \'Предоставить разрешения\' ниже.</string>
+    <string name="monitoring_sms_permission_required_title">Предоставьте разрешение на SMS</string>
+    <string name="monitoring_sms_permission_required_message">Мониторинг включен, но у Keep Alive нет разрешения на отправку SMS, поэтому SMS-оповещение не может быть отправлено. Нажмите кнопку \'Дать разрешение\' ниже.</string>
     <string name="alarm_message_too_long_message">Сообщение не может содержать более 160 символов.</string>
     <string name="phone_number_invalid_message">Введите корректный телефонный номер</string>
     <string name="time_period_too_short_message">Должно быть не менее 0.17 часа (10 минут).</string>
@@ -149,8 +151,8 @@
     <string name="sms_alert_failure_notification_text_with_error">Произошла ошибка при попытке отправить SMS-оповещение: %1$s</string>
     <string name="sms_service_failure_notification_title">Невозможно отправить SMS-оповещение</string>
     <string name="sms_service_failure_notification_text">Произошла ошибка при попытке отправить SMS-сообщение с оповещением. Убедитесь, что у вас активна SIM-карта.</string>
-    <string name="sms_permission_revoked_notification_title">Разрешение на отправку SMS было отозвано!</string>
-    <string name="sms_permission_revoked_notification_text">Keep Alive больше не может отправлять SMS-оповещения. Нажмите здесь, чтобы открыть приложение и снова предоставить разрешение на SMS.</string>
+    <string name="sms_permission_revoked_notification_title">Разрешение на отправку SMS не предоставлено!</string>
+    <string name="sms_permission_revoked_notification_text">Keep Alive не может отправлять SMS-оповещения. Нажмите здесь, чтобы открыть приложение и предоставить разрешение на SMS.</string>
     <string name="background_restricted_notification_title">Фоновая активность ограничена!</string>
     <string name="background_restricted_notification_text">Keep Alive может не выполнять проверки активности и не отправлять оповещения. Нажмите здесь, чтобы открыть приложение и разрешить фоновую активность.</string>
     <string name="alert_service_notification_title">Отправка оповещения…</string>
@@ -366,7 +368,7 @@
 
     <!-- AlarmReceiver.kt -->
     <string name="debug_log_alarm_just_fired">Будильник только что сработал!</string>
-    <string name="debug_log_sms_permission_revoked">Разрешение SEND_SMS больше не предоставлено!</string>
+    <string name="debug_log_sms_permission_revoked">Разрешение SEND_SMS не предоставлено!</string>
     <string name="debug_log_background_restricted">Фоновая активность ограничена настройками батареи</string>
     <string name="debug_log_secondary_user">Работает в дополнительном профиле пользователя, после перезагрузки ничего не может работать, пока этот пользователь не запущен</string>
     <string name="debug_log_other_user_active">В этом профиле нет активности, но используется другой профиль пользователя, это считается активностью</string>

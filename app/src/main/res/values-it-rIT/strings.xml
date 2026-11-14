@@ -97,6 +97,8 @@
     <string name="monitoring_background_restricted_message">L\'attività in background di Keep Alive è limitata, quindi i controlli di attività potrebbero essere ritardati o non essere mai eseguiti e gli avvisi potrebbero non essere inviati. Tocca il pulsante qui sotto e imposta l\'utilizzo della batteria su \"Senza limitazioni\" o \"Ottimizzato\".</string>
     <string name="monitoring_secondary_user_message">Keep Alive è installato in un profilo utente secondario. Dopo un riavvio non può funzionare finché non torni a questo profilo, quindi fino ad allora non può essere inviato alcun avviso.</string>
         <string name="monitoring_permissions_required_message">Il monitoraggio è attivato, ma non tutte le autorizzazioni sono state concesse. Fare clic sul pulsante "Concedi autorizzazioni" sottostante.</string>  
+        <string name="monitoring_sms_permission_required_title">Autorizzazione SMS richiesta</string>
+        <string name="monitoring_sms_permission_required_message">Il monitoraggio è attivato, ma Keep Alive non è autorizzato a inviare SMS, quindi non è possibile inviare alcun avviso SMS. Fare clic sul pulsante "Concedi autorizzazioni" sottostante.</string>
         <string name="alarm_message_too_long_message">Il messaggio non può contenere più di 160 caratteri.</string>  
         <string name="phone_number_invalid_message">Si prega di inserire un numero di telefono valido.</string>  
         <string name="time_period_too_short_message">Deve essere di almeno 0.17 ore (10 minuti).</string>
@@ -148,8 +150,8 @@
         <string name="sms_alert_failure_notification_text_with_error">Si è verificato un errore durante il tentativo di invio di un SMS di avviso: %1$s</string>  
         <string name="sms_service_failure_notification_title">Impossibile trasmettere l\'avviso SMS</string>  
         <string name="sms_service_failure_notification_text">Si è verificato un errore durante il tentativo di invio di un SMS di avviso, si prega di verificare di avere una SIM attiva</string>  
-        <string name="sms_permission_revoked_notification_title">L\'autorizzazione SMS è stata revocata!</string>
-        <string name="sms_permission_revoked_notification_text">Keep Alive non può più inviare avvisi SMS. Tocca qui per aprire l\'app e concedere di nuovo l\'autorizzazione SMS.</string>
+        <string name="sms_permission_revoked_notification_title">L\'autorizzazione SMS non è concessa!</string>
+        <string name="sms_permission_revoked_notification_text">Keep Alive non può inviare avvisi SMS. Tocca qui per aprire l\'app e concedere l\'autorizzazione SMS.</string>
     <string name="background_restricted_notification_title">L\'attività in background è limitata!</string>
     <string name="background_restricted_notification_text">Keep Alive potrebbe non riuscire a eseguire i controlli di attività o a inviare avvisi. Tocca qui per aprire l\'app e consentire l\'attività in background.</string>
         <string name="alert_service_notification_title">Invio dell\'avviso in corso…</string>
@@ -365,7 +367,7 @@
   
 <!-- AlarmReceiver.kt -->  
 <string name="debug_log_alarm_just_fired">L\'allarme è appena scattato!</string>  
-<string name="debug_log_sms_permission_revoked">L\'autorizzazione SEND_SMS non è più concessa!</string>
+<string name="debug_log_sms_permission_revoked">L\'autorizzazione SEND_SMS non è concessa!</string>
     <string name="debug_log_background_restricted">L\'attività in background è limitata dalle impostazioni della batteria</string>
     <string name="debug_log_secondary_user">In esecuzione in un profilo utente secondario, dopo un riavvio nulla può essere eseguito finché questo utente non viene avviato</string>
     <string name="debug_log_other_user_active">Nessuna attività in questo profilo, ma un altro profilo utente è in uso, viene considerato attività</string>
