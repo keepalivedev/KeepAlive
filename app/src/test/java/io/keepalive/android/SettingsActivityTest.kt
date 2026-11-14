@@ -204,6 +204,25 @@ class SettingsActivityTest {
         assertEquals(appCtx.getString(R.string.permission_send_sms_title), latestDialogTitle())
     }
 
+    @Test fun `switching a contact back on without the SMS permission asks for it`() {
+        denySms()
+        getAppSharedPreferences(appCtx).edit().putString(
+            PrefKeys.PHONE_NUMBER_SETTINGS,
+            """[{"phoneNumber":"5550100","alertMessage":"x","isEnabled":false,"includeLocation":false}]"""
+        ).commit()
+        val activity = launch()
+        val list = activity.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerView)
+        list.measure(
+            View.MeasureSpec.makeMeasureSpec(1080, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(1920, View.MeasureSpec.EXACTLY))
+        list.layout(0, 0, 1080, 1920)
+
+        list.findViewHolderForAdapterPosition(0)!!.itemView
+            .findViewById<SwitchCompat>(R.id.enabledSwitch).isChecked = true
+
+        assertEquals(appCtx.getString(R.string.permission_send_sms_title), latestDialogTitle())
+    }
+
     @Test fun `turning monitoring on without an SMS contact asks for nothing`() {
         denySms()
         val activity = launch()

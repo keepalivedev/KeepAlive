@@ -21,9 +21,18 @@ class PermissionManager(
     private val context: Context,
     private val activity: AppCompatActivity?,
 
-    // called when the user accepts an explanation and is sent off to the system dialog or
-    //  settings page, so the caller can carry on with the next permission when they return
-    private val onRequestLaunched: (() -> Unit)? = null
+    // for a pass over the missing permissions (checkHavePermissions): called when the user
+    //  accepts an explanation and is sent off to the system dialog or a settings page, so
+    //  the caller can carry on with the next permission when they return
+    private val onRequestLaunched: (() -> Unit)? = null,
+
+    // and called when the user cancels an explanation, so the caller can carry on at once
+    private val onRequestCancelled: (() -> Unit)? = null,
+
+    // what the pass has asked for so far: basic permissions and the names of special
+    //  checks. the caller can save it and hand it to a new instance, so that the pass
+    //  survives the activity being recreated
+    val asked: MutableSet<String> = mutableSetOf()
 ) {
 
     private val tag = this.javaClass.name
@@ -36,16 +45,13 @@ class PermissionManager(
     private val basicPermissions = mutableListOf<String>()
 
     // the special permissions, in the order they are asked for
-    private val specialChecks: List<(Boolean) -> Boolean> = listOf(
-        ::checkUsageStatsPermissions,
-        ::checkScheduleExactAlarmPermissions,
-        ::checkBackgroundLocationPermissions,
-        ::checkOverlayPermissions,
-        ::checkFullScreenIntentPermissions
+    private val specialChecks: List<Pair<String, (Boolean) -> Boolean>> = listOf(
+        "usage_access" to ::checkUsageStatsPermissions,
+        "exact_alarms" to ::checkScheduleExactAlarmPermissions,
+        "background_location" to ::checkBackgroundLocationPermissions,
+        "overlay" to ::checkOverlayPermissions,
+        "full_screen_intent" to ::checkFullScreenIntentPermissions
     )
-
-    // the basic permissions and special checks that checkHavePermissions has asked for
-    private val asked = mutableSetOf<Any>()
 
     // map of a permission to the title and description to use in the explanation dialog
     private val permissionExplanations = mutableMapOf(
@@ -217,9 +223,9 @@ class PermissionManager(
             }
         }
 
-        for (check in specialChecks) {
-            if (check !in asked && !check(true)) {
-                asked.add(check)
+        for ((name, check) in specialChecks) {
+            if (name !in asked && !check(true)) {
+                asked.add(name)
                 DebugLogger.d(tag, context.getString(R.string.debug_log_finished_requesting_permissions))
                 return false
             }
@@ -271,7 +277,9 @@ class PermissionManager(
                     ActivityCompat.requestPermissions(it, arrayOf(permission), 0)
                 } ?: Log.e(tag, "Activity reference is null, cannot request $permission")
             }
-            .setNegativeButton(context.getString(R.string.cancel), null)
+            .setNegativeButton(context.getString(R.string.cancel)) { _, _ ->
+                onRequestCancelled?.invoke()
+            }
             .show()
     }
 
@@ -300,7 +308,9 @@ class PermissionManager(
                     context.startActivity(myIntent)
                 }
             }
-            .setNegativeButton(context.getString(R.string.cancel), null)
+            .setNegativeButton(context.getString(R.string.cancel)) { _, _ ->
+                onRequestCancelled?.invoke()
+            }
             .show()
     }
 
@@ -336,6 +346,7 @@ class PermissionManager(
 
                 // the system request dialog won't appear anymore, so open the
                 //  app's details page where the permission can be re-enabled
+                onRequestLaunched?.invoke()
                 val intent = Intent(
                     Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                     Uri.fromParts("package", context.packageName, null)
@@ -345,7 +356,9 @@ class PermissionManager(
                     context.startActivity(intent)
                 }
             }
-            .setNegativeButton(context.getString(R.string.cancel), null)
+            .setNegativeButton(context.getString(R.string.cancel)) { _, _ ->
+                onRequestCancelled?.invoke()
+            }
             .show()
     }
 
@@ -404,8 +417,11 @@ class PermissionManager(
                 return true
             }
         } else {
+            // fine location comes first, so there is nothing to ask for here. when
+            //  requesting, say so by returning true, which lets a pass over the missing
+            //  permissions move on to the next one instead of stopping without a dialog
             Log.d(tag, "Don't have fine location permissions?!")
-            return false
+            return requestPermissions
         }
     }
 

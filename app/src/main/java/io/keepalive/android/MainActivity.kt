@@ -63,6 +63,14 @@ class MainActivity : AppCompatActivity() {
         // load the preferences
         sharedPrefs = getAppSharedPreferences(this.applicationContext)
 
+        // pick up a pass over the missing permissions that was under way when the
+        //  activity was recreated, which rotating the device on a settings page does
+        savedInstanceState?.getStringArrayList(STATE_PERMISSIONS_ASKED)?.let {
+            permissionRequests = newPermissionRequests(it.toMutableSet())
+            continuePermissionRequests =
+                savedInstanceState.getBoolean(STATE_CONTINUE_PERMISSION_REQUESTS)
+        }
+
         Log.d(tag, "KeepAlive onCreate")
 
         // don't need to do anything else here, onResume also gets called...
@@ -87,6 +95,26 @@ class MainActivity : AppCompatActivity() {
             requestNextPermission()
         }
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        permissionRequests?.let {
+            outState.putStringArrayList(STATE_PERMISSIONS_ASKED, ArrayList(it.asked))
+            outState.putBoolean(STATE_CONTINUE_PERMISSION_REQUESTS, continuePermissionRequests)
+        }
+    }
+
+    // a pass over the missing permissions: it carries on when the user comes back from a
+    //  request, and straight away when they cancel one
+    private fun newPermissionRequests(asked: MutableSet<String> = mutableSetOf()) =
+        PermissionManager(
+            this,
+            this,
+            onRequestLaunched = { continuePermissionRequests = true },
+            onRequestCancelled = { requestNextPermission() },
+            asked = asked
+        )
 
     // ask for the next missing permission of the current pass, if there is one
     private fun requestNextPermission() {
@@ -213,19 +241,18 @@ class MainActivity : AppCompatActivity() {
             "requestCode: $requestCode, permissions: ${permissions.contentToString()}, grantResults: ${grantResults.contentToString()}"
         )
 
-        val permissionManager = PermissionManager(this, this)
-
         // if a permission was permanently denied the system dialog won't appear
         //  anymore, so route the user to the app's settings page instead of
-        //  silently no-op'ing the request. that dialog takes the place of the
-        //  next permission request
+        //  silently no-op'ing the request. that dialog goes through the pass in
+        //  progress, which carries on once the user has dealt with it
+        val permissionManager = permissionRequests ?: PermissionManager(this, this)
         if (permissionManager.handlePermissionResult(permissions, grantResults)) {
             continuePermissionRequests = false
         }
 
         // don't really need to check whether the permissions were granted or not?
         //  just check all of the permissions and hide the button appropriately
-        adjustPermissionsComponents(permissionManager.checkNeedAnyPermissions())
+        adjustPermissionsComponents(PermissionManager(this, this).checkNeedAnyPermissions())
     }
 
     private fun updateMainContent(needPermissions: Boolean) {
@@ -255,7 +282,7 @@ class MainActivity : AppCompatActivity() {
         binding.permissionsButton.setOnClickListener { _ ->
 
             // start a new pass over the missing permissions
-            permissionRequests = PermissionManager(this, this) { continuePermissionRequests = true }
+            permissionRequests = newPermissionRequests()
             requestNextPermission()
         }
 
@@ -318,9 +345,9 @@ class MainActivity : AppCompatActivity() {
             // wait a second for the alarm to be set and then update the text views
             Handler(Looper.getMainLooper()).postDelayed({
 
-                // assume we don't need any perms here, if the button to restart monitoring is
-                //  visible then that means we have all permissions?
-                updateStatusTextViews(false)
+                // the button to restart monitoring shows whether or not permissions are
+                //  missing, so check instead of showing monitoring as healthy regardless
+                updateStatusTextViews(PermissionManager(this, this).checkNeedAnyPermissions())
             }, 1000)
         }
     }
@@ -1040,6 +1067,8 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val EXTRA_ALERT_CHECK = "AlertCheck"
+        private const val STATE_PERMISSIONS_ASKED = "permissions_asked"
+        private const val STATE_CONTINUE_PERMISSION_REQUESTS = "continue_permission_requests"
 
         /**
          * Used to open the app in the same way as tapping the "Are you there?" notification.

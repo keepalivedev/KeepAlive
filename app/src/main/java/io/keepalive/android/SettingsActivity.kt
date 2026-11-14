@@ -53,7 +53,8 @@ class SettingsActivity : AppCompatActivity() {
         //  the SMS contact number settings
         sharedPrefs = getAppSharedPreferences(this)
         phoneNumberList.addAll(loadJSONSharedPreference(sharedPrefs!!,PrefKeys.PHONE_NUMBER_SETTINGS))
-        phoneNumberAdapter = PhoneNumberAdapter(phoneNumberList, sharedPrefs!!, ::editPhoneNumber)
+        phoneNumberAdapter = PhoneNumberAdapter(
+            phoneNumberList, sharedPrefs!!, ::requestSmsPermissionIfMissing, ::editPhoneNumber)
 
         // initialize the recycler view and link it to the adapter
         recyclerView = findViewById(R.id.recyclerView)
