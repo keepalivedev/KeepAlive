@@ -316,6 +316,9 @@ class AlertService : Service() {
                 AlertNotificationHelper(context).cancelNotification(
                     AppController.ARE_YOU_THERE_NOTIFICATION_ID
                 )
+
+                // the prompt is over, also for a phone call it was paused for
+                AreYouThereCallPause.stop(context)
             }
             override fun dismissAreYouThereOverlay() {
                 AreYouThereOverlay.dismiss(context)

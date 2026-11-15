@@ -320,6 +320,9 @@ class AlertNotificationHelper(private val context: Context) {
             // android stops the repeating sound for the shade or the next notification
             if (isAreYouThere) {
                 AreYouThereRepost.schedule(context)
+
+                // and the prompt has to step aside for a phone call
+                AreYouThereCallPause.watch(context)
             }
 
         } catch (e: Exception) {

@@ -142,7 +142,7 @@
     <string name="activity_notification_message">Замечательно, что с тобой всё в порядке! Отмена оповещений</string>
     <string name="initial_check_notification_title">Вы всё еще здесь?</string>
     <string name="overlay_countdown_format">Оповещение будет отправлено через %1$d:%2$02d</string>
-    <string name="initial_check_notification_text">Нажмите здесь, чтобы подтвердить, что вы в порядке. В противном случае оповещение будет отправлено через %1$s минут.</string>
+    <string name="initial_check_notification_text">Нажмите здесь, чтобы подтвердить, что вы в порядке. В противном случае оповещение будет отправлено через %1$s минут. Отключение звука не считается ответом.</string>
     <string name="alert_notification_title">Keep Alive Alert сработало!</string>
     <string name="call_alert_notification_text">Звонок отправлен вашему контактному лицу: %1$s</string>
     <string name="sms_alert_notification_text">SMS было отправлено вашим экстренным контактам!</string>
@@ -280,6 +280,9 @@
     <string name="debug_log_doing_alert_check">Выполнение периодической проверки, этап оповещения %1$s</string>
     <string name="debug_log_full_screen_prompt_shown">Полноэкранный запрос \'Вы ещё здесь?\' показан поверх экрана блокировки</string>
     <string name="debug_log_full_screen_prompt_acknowledged">Полноэкранный запрос \'Вы ещё здесь?\' подтверждён</string>
+    <string name="debug_log_prompt_paused_for_call">Идёт звонок, запрос \'Вы ещё здесь?\' скрыт и заглушён до его окончания</string>
+    <string name="debug_log_prompt_back_after_call">Запрос \'Вы ещё здесь?\' снова показан после паузы на время звонка</string>
+    <string name="debug_log_prompt_answered_by_unlock">Телефон был разблокирован после запроса \'Вы ещё здесь?\', это засчитано как ответ</string>
     <string name="debug_log_sending_alert_sms">Отправка SMS-оповещения!</string>
     <string name="debug_log_getting_sms_manager_with_sub_id">Получение менеджера SMS с помощью context.getSystemService и идентификатора подписки %1$d</string>
     <string name="debug_log_getting_sms_manager_with_context">Получение менеджера SMS с помощью context.getSystemService</string>

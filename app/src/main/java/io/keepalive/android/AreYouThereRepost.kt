@@ -33,8 +33,21 @@ object AreYouThereRepost {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+    /**
+     * Whether the timer is one Android runs on time. Without the exact alarm permission it
+     * is an ordinary alarm: late by design, held back in Doze and under battery saver, and
+     * cut off after about ten runs an hour for an app that isn't in active use.
+     */
+    fun runsOnTime(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            return true
+        }
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+        return alarmManager?.canScheduleExactAlarms() == true
+    }
+
     @SuppressLint("NewApi")
-    fun schedule(context: Context) {
+    fun schedule(context: Context, intervalMs: Long = AppController.ARE_YOU_THERE_REPOST_INTERVAL_MS) {
 
         // active notifications can't be read below API 23, so there'd be no way to
         //  tell that the prompt had been answered
@@ -43,14 +56,10 @@ object AreYouThereRepost {
         }
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager ?: return
-        val intervalMs = AppController.ARE_YOU_THERE_REPOST_INTERVAL_MS
-
-        val canScheduleExactAlarms = Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
-                alarmManager.canScheduleExactAlarms()
 
         // same as the final alarm, this is the only thing Doze won't delay. the prompt is
         //  already showing the alarm icon because of that alarm
-        if (canScheduleExactAlarms) {
+        if (runsOnTime(context)) {
             val pendingIntent = pendingIntent(context)
             alarmManager.setAlarmClock(
                 AlarmManager.AlarmClockInfo(System.currentTimeMillis() + intervalMs, pendingIntent),
@@ -81,17 +90,31 @@ object AreYouThereRepost {
                 repostLocked(context)
             } catch (e: Exception) {
                 Log.e(TAG, "Failed reposting the prompt", e)
+
+                // this timer is all that brings a paused prompt back, so it has to
+                //  outlive a run that failed
+                try {
+                    if (waitingForAnAnswer(context)) {
+                        schedule(context)
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed setting the next repost", e)
+                }
             }
         }
     }
 
-    @SuppressLint("NewApi")
-    private fun repostLocked(context: Context) {
+    private fun waitingForAnAnswer(context: Context): Boolean {
         val stage = getDeviceProtectedPreferences(context).getString(PrefKeys.LAST_ALARM_STAGE, null)
         val enabled = getAppSharedPreferences(context).getBoolean(PrefKeys.ENABLED, false)
+        return stage == "final" && enabled
+    }
 
-        if (stage != "final" || !enabled) {
-            Log.d(TAG, "Not waiting for an answer anymore, stage is $stage")
+    @SuppressLint("NewApi")
+    private fun repostLocked(context: Context) {
+        if (!waitingForAnAnswer(context)) {
+            Log.d(TAG, "Not waiting for an answer anymore")
+            AreYouThereCallPause.stop(context)
             return
         }
 
@@ -100,19 +123,66 @@ object AreYouThereRepost {
 
         val prompt = notificationManager.activeNotifications
             .firstOrNull { it.id == AppController.ARE_YOU_THERE_NOTIFICATION_ID }
+            ?.notification
 
-        if (prompt == null) {
+        val paused = AreYouThereCallPause.isPaused(context)
+
+        // a paused prompt has no notification, it is posted again when the call is over
+        if (prompt == null && !paused) {
             Log.d(TAG, "The prompt is gone")
+            AreYouThereCallPause.stop(context)
             return
         }
 
-        // a full-screen intent would wake the screen every minute, and a lit screen can
-        //  look like someone using the device and stop the alert from going out
-        val repost = prompt.notification.clone()
-        repost.fullScreenIntent = null
+        // the final check would count the unlock as activity anyway, but until then the
+        //  prompt and its sound would carry on for someone who is plainly there
+        val postedAt = AreYouThereCallPause.promptPostedAt(context) ?: prompt?.`when`
+        if (postedAt != null && answeredByUnlock(context, postedAt)) {
+            DebugLogger.d(TAG, context.getString(R.string.debug_log_prompt_answered_by_unlock))
+            AcknowledgeAreYouThere.acknowledge(context)
+            return
+        }
 
-        notificationManager.notify(AppController.ARE_YOU_THERE_NOTIFICATION_ID, repost)
+        when {
+            // nothing to repost, the prompt stays out of the way until the call ends
+            AreYouThereCallPause.shouldStepAside(context) ->
+                AreYouThereCallPause.pause(context, prompt)
 
-        schedule(context)
+            paused -> AreYouThereCallPause.resume(context, replace = prompt != null)
+
+            prompt != null -> {
+                // a full-screen intent would wake the screen every minute, and a lit screen
+                //  can look like someone using the device and stop the alert from going out
+                val repost = prompt.clone()
+                repost.fullScreenIntent = null
+
+                notificationManager.notify(AppController.ARE_YOU_THERE_NOTIFICATION_ID, repost)
+            }
+        }
+
+        // android stops this process from running a while into a call, so the end of the
+        //  call is only seen here. look more often until then
+        if (AreYouThereCallPause.isPaused(context)) {
+            schedule(context, AppController.ARE_YOU_THERE_PAUSED_CHECK_INTERVAL_MS)
+        } else {
+            schedule(context)
+        }
+        AreYouThereCallPause.watch(context)
+    }
+
+    // whether the phone was unlocked after the prompt went up at [promptPostedAt]. with
+    //  apps to monitor it is using those apps that counts as activity, not the unlock, so
+    //  the prompt is left for the final check to decide
+    private fun answeredByUnlock(context: Context, promptPostedAt: Long): Boolean {
+
+        // usage events can't be read before the first unlock
+        if (!isUserUnlocked(context)) {
+            return false
+        }
+
+        val monitoredApps: MutableList<MonitoredAppDetails> =
+            loadJSONSharedPreference(getAppSharedPreferences(context), PrefKeys.APPS_TO_MONITOR)
+
+        return monitoredApps.isEmpty() && wasUnlockedSince(context, promptPostedAt)
     }
 }

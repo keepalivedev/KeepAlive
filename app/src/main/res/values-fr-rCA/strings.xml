@@ -141,7 +141,7 @@
     <string name="activity_notification_message">Ravi de voir que vous allez bien! Annulation de l\'alerte.</string>
     <string name="initial_check_notification_title">Êtes-vous toujours là?</string>
     <string name="overlay_countdown_format">L\'alerte sera envoyée dans %1$d:%2$02d</string>
-    <string name="initial_check_notification_text">Appuyez ici pour confirmer que vous allez bien. Sinon, une alerte sera envoyée dans %1$s minutes.</string>
+    <string name="initial_check_notification_text">Appuyez ici pour confirmer que vous allez bien. Sinon, une alerte sera envoyée dans %1$s minutes. Couper le son ne compte pas comme une réponse.</string>
     <string name="alert_notification_title">Alerte Keep Alive enclenché!</string>
     <string name="call_alert_notification_text">Un appel téléphonique a été passé à votre contact d\'urgence: %1$s</string>
     <string name="sms_alert_notification_text">Un SMS a été envoyé à votre(vos) contact(s) d\'urgence!</string>
@@ -279,6 +279,9 @@
     <string name="debug_log_doing_alert_check">Effectuer une vérification périodique, l\'étape d\'alerte est %1$s</string>
     <string name="debug_log_full_screen_prompt_shown">Invite plein écran \'Êtes-vous là?\' affichée sur l\'écran de verrouillage</string>
     <string name="debug_log_full_screen_prompt_acknowledged">Invite plein écran \'Êtes-vous là?\' confirmée</string>
+    <string name="debug_log_prompt_paused_for_call">Appel en cours, invite \'Êtes-vous là?\' masquée et mise en sourdine jusqu\'à la fin de l\'appel</string>
+    <string name="debug_log_prompt_back_after_call">L\'invite \'Êtes-vous là?\' est affichée de nouveau après la pause pour un appel</string>
+    <string name="debug_log_prompt_answered_by_unlock">Téléphone déverrouillé après l\'invite \'Êtes-vous là?\', compté comme réponse</string>
     <string name="debug_log_sending_alert_sms">Envoi d\'un SMS d\'alerte!</string>
     <string name="debug_log_getting_sms_manager_with_sub_id">Obtention du gestionnaire de SMS avec context.getSystemService et l\'identifiant d\'abonnement %1$d</string>
     <string name="debug_log_getting_sms_manager_with_context">Obtention du gestionnaire de SMS avec context.getSystemService</string>

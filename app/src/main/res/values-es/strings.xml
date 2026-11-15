@@ -141,7 +141,7 @@
     <string name="activity_notification_message">¡Qué bueno ver que sigues bien! Cancelando la alerta.</string>
     <string name="initial_check_notification_title">¿Sigues ahí?</string>
     <string name="overlay_countdown_format">La alerta se enviará en %1$d:%2$02d</string>
-    <string name="initial_check_notification_text">¡Toca aquí si sigues bien! De lo contrario, se enviará una alerta en %1$s minutos.</string>
+    <string name="initial_check_notification_text">¡Toca aquí si sigues bien! De lo contrario, se enviará una alerta en %1$s minutos. Silenciar el sonido no cuenta como respuesta.</string>
     <string name="alert_notification_title">¡Alerta de Keep Alive activada!</string>
     <string name="call_alert_notification_text">Se ha realizado una llamada telefónica a tu contacto de emergencia: %1$s</string>
     <string name="sms_alert_notification_text">¡Se ha enviado un SMS a tu(s) contacto(s) de emergencia!</string>
@@ -279,6 +279,9 @@
     <string name="debug_log_doing_alert_check">Realizando verificación periódica, la etapa de alarma es %1$s</string>
     <string name="debug_log_full_screen_prompt_shown">Aviso a pantalla completa \'¿Sigues ahí?\' mostrado sobre la pantalla de bloqueo</string>
     <string name="debug_log_full_screen_prompt_acknowledged">Aviso a pantalla completa \'¿Sigues ahí?\' confirmado</string>
+    <string name="debug_log_prompt_paused_for_call">Llamada en curso, aviso \'¿Sigues ahí?\' oculto y silenciado hasta que termine</string>
+    <string name="debug_log_prompt_back_after_call">Se vuelve a mostrar el aviso \'¿Sigues ahí?\' tras pausarlo por una llamada</string>
+    <string name="debug_log_prompt_answered_by_unlock">El teléfono se desbloqueó después del aviso \'¿Sigues ahí?\', se cuenta como respuesta</string>
     <string name="debug_log_sending_alert_sms">¡Enviando alerta SMS!</string>
     <string name="debug_log_getting_sms_manager_with_sub_id">Obteniendo el gestor de SMS con context.getSystemService y el id de suscripción %1$d</string>
     <string name="debug_log_getting_sms_manager_with_context">Obteniendo el gestor de SMS con context.getSystemService</string>

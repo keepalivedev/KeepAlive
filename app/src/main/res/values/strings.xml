@@ -152,7 +152,7 @@
     <string name="activity_notification_message">Glad you\'re OK! Cancelling Alert.</string>
     <string name="initial_check_notification_title">Are you still there?</string>
     <string name="overlay_countdown_format">Alert will be sent in %1$d:%2$02d</string>
-    <string name="initial_check_notification_text">Tap here to confirm you\'re OK. Otherwise an alert will be sent in %1$s minutes.</string>
+    <string name="initial_check_notification_text">Tap here to confirm you\'re OK. Otherwise an alert will be sent in %1$s minutes. Silencing the sound does not count as an answer.</string>
     <string name="alert_notification_title">Keep Alive Alert triggered!</string>
     <string name="call_alert_notification_text">A phone call has been placed to your emergency contact: %1$s</string>
     <string name="sms_alert_notification_text">An SMS has been sent to your emergency contact(s)!</string>
@@ -291,6 +291,9 @@
     <!-- AreYouThereActivity.kt -->
     <string name="debug_log_full_screen_prompt_shown">Full-screen Are you there? prompt shown over lock screen</string>
     <string name="debug_log_full_screen_prompt_acknowledged">Full-screen Are you there? prompt acknowledged</string>
+    <string name="debug_log_prompt_paused_for_call">Phone call in progress, Are you there? prompt hidden and silenced until it ends</string>
+    <string name="debug_log_prompt_back_after_call">Showing the Are you there? prompt again after pausing it for a phone call</string>
+    <string name="debug_log_prompt_answered_by_unlock">Phone was unlocked after the Are you there? prompt, treating it as the answer</string>
 
     <!-- AlertFunctions.kt -->
     <string name="debug_log_doing_alert_check">Doing periodic check, alarm stage is %1$s</string>

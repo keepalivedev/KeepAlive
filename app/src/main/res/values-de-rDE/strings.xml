@@ -140,7 +140,7 @@
     <string name="activity_notification_message">Schön, dass es Ihnen gut geht! Alarm wird aufgehoben.</string>
     <string name="initial_check_notification_title">Sind Sie noch da?</string>
     <string name="overlay_countdown_format">Alarm wird in %1$d:%2$02d gesendet</string>
-    <string name="initial_check_notification_text">Tippen Sie hier, um zu bestätigen, dass es Ihnen gut geht. Andernfalls wird in %1$s Minuten ein Alarm gesendet.</string>
+    <string name="initial_check_notification_text">Tippen Sie hier, um zu bestätigen, dass es Ihnen gut geht. Andernfalls wird in %1$s Minuten ein Alarm gesendet. Das Stummschalten des Tons zählt nicht als Antwort.</string>
     <string name="alert_notification_title">Keep Alive Alarm ausgelöst!</string>
     <string name="call_alert_notification_text">Ihr Notfallkontakt wurde angerufen: %1$s</string>
     <string name="sms_alert_notification_text">Eine SMS wurde an Ihre(n) Notfallkontakt(e) gesendet!</string>
@@ -278,6 +278,9 @@
     <string name="debug_log_doing_alert_check">Führe regelmäßige Überprüfung durch, Alarmphase ist %1$s</string>
     <string name="debug_log_full_screen_prompt_shown">Vollbild-\'Sind Sie noch da?\'-Abfrage über dem Sperrbildschirm angezeigt</string>
     <string name="debug_log_full_screen_prompt_acknowledged">Vollbild-\'Sind Sie noch da?\'-Abfrage bestätigt</string>
+    <string name="debug_log_prompt_paused_for_call">Anruf läuft, \'Sind Sie noch da?\'-Abfrage bis zum Ende des Anrufs ausgeblendet und stummgeschaltet</string>
+    <string name="debug_log_prompt_back_after_call">\'Sind Sie noch da?\'-Abfrage wird nach der Pause für einen Anruf wieder angezeigt</string>
+    <string name="debug_log_prompt_answered_by_unlock">Telefon wurde nach der \'Sind Sie noch da?\'-Abfrage entsperrt, wird als Antwort gewertet</string>
     <string name="debug_log_sending_alert_sms">Sende Alarm-SMS!</string>
     <string name="debug_log_getting_sms_manager_with_sub_id">Erhalte SMS-Manager mit context.getSystemService und Sub-ID %1$d</string>
     <string name="debug_log_getting_sms_manager_with_context">Erhalte SMS-Manager mit context.getSystemService</string>

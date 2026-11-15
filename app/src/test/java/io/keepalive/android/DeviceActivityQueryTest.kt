@@ -6,7 +6,9 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import io.keepalive.android.testing.fakeUsageEvent
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -101,6 +103,52 @@ class DeviceActivityQueryTest {
         // API 28+: empty list triggers the fallback to system keyguard monitoring.
         // Robolectric runs at SDK 35 via properties, so we exercise that path.
         assertEquals(2_000L, result?.timeStamp)
+    }
+
+    // ---- wasUnlockedSince --------------------------------------------------
+    //
+    // What answers the "Are you there?" prompt between checks. Narrower than
+    // getLastDeviceActivity on purpose: only the unlock, never the lock.
+
+    @Test
+    @Config(sdk = [28, 33, 34, 35, 36])
+    fun `wasUnlockedSince finds an unlock inside the window`() {
+        addEvent("android", UsageEvents.Event.KEYGUARD_HIDDEN, 2_000L)
+
+        assertTrue(wasUnlockedSince(appCtx, 1_000L))
+    }
+
+    @Test
+    @Config(sdk = [28, 33, 34, 35, 36])
+    fun `wasUnlockedSince ignores an unlock from before the window`() {
+        addEvent("android", UsageEvents.Event.KEYGUARD_HIDDEN, 500L)
+
+        assertFalse(wasUnlockedSince(appCtx, 1_000L))
+    }
+
+    @Test
+    @Config(sdk = [28, 33, 34, 35, 36])
+    fun `wasUnlockedSince does not take the phone locking for an unlock`() {
+        addEvent("android", UsageEvents.Event.KEYGUARD_SHOWN, 2_000L)
+
+        assertFalse(wasUnlockedSince(appCtx, 1_000L))
+    }
+
+    @Test
+    @Config(sdk = [28, 33, 34, 35, 36])
+    fun `wasUnlockedSince ignores other apps`() {
+        addEvent("com.example.other", UsageEvents.Event.KEYGUARD_HIDDEN, 2_000L)
+        addEvent("com.example.other", UsageEvents.Event.ACTIVITY_RESUMED, 3_000L)
+
+        assertFalse(wasUnlockedSince(appCtx, 1_000L))
+    }
+
+    @Test
+    @Config(sdk = [23])
+    fun `wasUnlockedSince is false where lock and unlock events don't exist`() {
+        addEvent("android", UsageEvents.Event.KEYGUARD_HIDDEN, 2_000L)
+
+        assertFalse(wasUnlockedSince(appCtx, 1_000L))
     }
 
     // ---- PACKAGE_USAGE_STATS permission denied -----------------------------

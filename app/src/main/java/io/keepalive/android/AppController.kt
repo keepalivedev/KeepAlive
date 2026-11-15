@@ -52,6 +52,9 @@ class AppController : Application() {
         // how long the prompt's sound can stay stopped when something interrupts it
         const val ARE_YOU_THERE_REPOST_INTERVAL_MS = 60_000L
 
+        // how long the prompt can stay away after a phone call it stepped aside for
+        const val ARE_YOU_THERE_PAUSED_CHECK_INTERVAL_MS = 15_000L
+
         // request code used with AppHibernationActivity intent
         const val APP_HIBERNATION_ACTIVITY_RESULT_CODE = 98
 

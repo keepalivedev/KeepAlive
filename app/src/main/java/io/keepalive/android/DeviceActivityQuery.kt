@@ -109,6 +109,34 @@ fun getLastDeviceActivity(context: Context, startTimestamp: Long, monitoredApps:
     return lastInteractiveEvent
 }
 
+// whether the phone was unlocked since the given time. unlike getLastDeviceActivity() this
+//  takes the unlock only: a phone also locks by itself, with nobody there
+fun wasUnlockedSince(context: Context, startTimestamp: Long): Boolean {
+    if (Build.VERSION.SDK_INT < AppController.MIN_API_LEVEL_FOR_DEVICE_LOCK_UNLOCK) {
+        return false
+    }
+
+    // like the query above, this returns nothing without the usage access permission
+    return try {
+        val usageStatsManager =
+            context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+        val events = usageStatsManager.queryEvents(startTimestamp, System.currentTimeMillis())
+            ?: return false
+
+        val event = UsageEvents.Event()
+        while (events.hasNextEvent()) {
+            events.getNextEvent(event)
+            if (event.packageName == "android" && event.eventType == UsageEvents.Event.KEYGUARD_HIDDEN) {
+                return true
+            }
+        }
+        false
+    } catch (e: Exception) {
+        Log.e("wasUnlockedSince", "Failed checking for an unlock", e)
+        false
+    }
+}
+
 // usage events are per user, so on a multi-user device this user's events say nothing
 //  about someone using the device in another profile. three device-wide signals fill the
 //  gap: whether this user is in the foreground, whether the keyguard is showing, and
