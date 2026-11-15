@@ -127,11 +127,13 @@
 
     <!-- notification strings -->
     <string name="default_notification_channel_title">进入等待期</string>
+    <string name="silent_prompt_notification_channel_title">“你还在吗？”提示（闹铃声）</string>
     <string name="sms_sent_notification_channel_title">短信发送</string>
     <string name="call_sent_notification_channel_title">电话拨号</string>
     <string name="webhook_sent_notification_channel_title">Webhook 已发送通知</string>
     <string name="alert_service_notification_channel_title">提醒服务</string>
     <string name="default_notification_channel_description">“你还在吗？”提示</string>
+    <string name="silent_prompt_notification_channel_description">由 Keep Alive 自行播放闹铃声时的“你还在吗？”提示</string>
     <string name="sms_sent_notification_channel_description">触发短信提醒时发送</string>
     <string name="call_sent_notification_channel_description">触发电话提醒时发送</string>
     <string name="webhook_sent_notification_channel_description">触发 Webhook 提醒时发送</string>
@@ -154,6 +156,7 @@
     <string name="background_restricted_notification_text">Keep Alive 可能无法执行活动检查或发送提醒。点击此处打开应用并允许后台活动。</string>
     <string name="alert_service_notification_title">正在发送提醒…</string>
     <string name="alert_service_notification_message">提醒消息正在发送给您的联系人，请稍候。</string>
+    <string name="alarm_service_notification_text">闹铃会一直响，直到你确认平安。</string>
 
     <!-- alert location strings -->
     <string name="location_invalid_message">无法确定地理位置。</string>
@@ -280,6 +283,8 @@
     <string name="debug_log_prompt_paused_for_call">正在通话，“你还在吗？”提示已隐藏并静音，直到通话结束</string>
     <string name="debug_log_prompt_back_after_call">因通话暂停后，再次显示“你还在吗？”提示</string>
     <string name="debug_log_prompt_answered_by_unlock">在“你还在吗？”提示出现后手机已解锁，视为已回应</string>
+    <string name="debug_log_alarm_started">“你还在吗？”闹铃正在响</string>
+    <string name="debug_log_alarm_failed">无法播放“你还在吗？”闹铃，改用通知提示音：%1$s</string>
     <string name="debug_log_sending_alert_sms">正在发送提醒短信！</string>
     <string name="debug_log_getting_sms_manager_with_sub_id">正在通过 context.getSystemService 获取短信管理器，订阅 ID 为 %1$d</string>
     <string name="debug_log_getting_sms_manager_with_context">正在通过 context.getSystemService 获取短信管理器</string>
@@ -423,6 +428,7 @@
     <string name="are_you_there_waiting_for_acknowledgement">等待确认</string>
     <string name="are_you_there_im_ok">我没事</string>
     <string name="are_you_there_overlay_title">全屏显示\'你还在吗？\'提示</string>
+    <string name="alarm_in_silent_mode_title">静音模式下也响起“你还在吗？”闹铃</string>
 
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">正在禁用 Webhook 证书验证！</string>

@@ -168,6 +168,14 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
+        // listener for the alarm-in-silent-mode switch
+        val alarmInSilentModeSwitch: SwitchCompat = findViewById(R.id.alarmInSilentModeSwitch)
+        alarmInSilentModeSwitch.setOnCheckedChangeListener { _, isChecked ->
+            sharedPrefs!!.edit {
+                putBoolean(PrefKeys.ALARM_IN_SILENT_MODE, isChecked)
+            }
+        }
+
         // listener for the debug logging switch
         val debugLoggingSwitch: SwitchCompat = findViewById(R.id.debugLoggingSwitch)
         debugLoggingSwitch.setOnCheckedChangeListener { _, isChecked ->
@@ -283,6 +291,9 @@ class SettingsActivity : AppCompatActivity() {
 
         val areYouThereOverlaySwitch: SwitchCompat = findViewById(R.id.areYouThereOverlaySwitch)
         areYouThereOverlaySwitch.isChecked = sharedPrefs!!.getBoolean(PrefKeys.ARE_YOU_THERE_OVERLAY_ENABLED, true)
+
+        val alarmInSilentModeSwitch: SwitchCompat = findViewById(R.id.alarmInSilentModeSwitch)
+        alarmInSilentModeSwitch.isChecked = sharedPrefs!!.getBoolean(PrefKeys.ALARM_IN_SILENT_MODE, true)
 
         val debugLoggingSwitch: SwitchCompat = findViewById(R.id.debugLoggingSwitch)
         debugLoggingSwitch.isChecked = sharedPrefs!!.getBoolean(PrefKeys.DEBUG_LOGGING_ENABLED, true)

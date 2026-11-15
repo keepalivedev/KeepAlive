@@ -33,6 +33,16 @@ class AlertNotificationHelper(private val context: Context) {
                 context.getString(R.string.default_notification_channel_description)
             )
 
+            // the same, for when the app plays the alarm itself. a channel's sound can't
+            //  be changed once it exists, and a notification can't be silenced on its own
+            //  without also losing its full-screen prompt
+            createNotificationChannel(
+                AppController.ARE_YOU_THERE_SILENT_NOTIFICATION_CHANNEL_ID,
+                context.getString(R.string.silent_prompt_notification_channel_title),
+                context.getString(R.string.silent_prompt_notification_channel_description),
+                silent = true
+            )
+
             // notification sent when an SMS Alert is sent
             createNotificationChannel(
                 AppController.SMS_SENT_NOTIFICATION_CHANNEL_ID,
@@ -75,7 +85,8 @@ class AlertNotificationHelper(private val context: Context) {
     private fun createNotificationChannel(
         channelId: String,
         channelTitle: String,
-        channelDesc: String
+        channelDesc: String,
+        silent: Boolean = false
     ) {
 
         // ONCE THESE SETTINGS ARE SET WE CAN'T MAKE THEM MORE INTRUSIVE UNLESS WE REINSTALL
@@ -109,9 +120,14 @@ class AlertNotificationHelper(private val context: Context) {
         channel.enableLights(true)
         channel.lightColor = Color.RED
 
-        // this works
-        channel.enableVibration(true)
-        channel.vibrationPattern = longArrayOf(100, 200, 300, 400, 500)
+        if (silent) {
+            channel.setSound(null, null)
+            channel.enableVibration(false)
+        } else {
+            // this works
+            channel.enableVibration(true)
+            channel.vibrationPattern = longArrayOf(100, 200, 300, 400, 500)
+        }
 
         // Register the channel with the system
         notificationManager.createNotificationChannel(channel)
@@ -174,6 +190,11 @@ class AlertNotificationHelper(private val context: Context) {
 
             val isAreYouThere = notificationId == AppController.ARE_YOU_THERE_NOTIFICATION_ID
 
+            // where the app can play the prompt's sound itself, as an alarm, the
+            //  notification goes out without one
+            val alarm = if (isAreYouThere) AreYouThereAlarm.start(context) else null
+            val appOwnedSound = alarm == AreYouThereAlarm.Start.PLAYING
+
             // Always try to create the PendingIntent, even during Direct Boot.
             // PendingIntent.getActivity() creates a system-level token that doesn't
             // resolve the target activity at creation time. Normally the "Are you there?"
@@ -207,7 +228,9 @@ class AlertNotificationHelper(private val context: Context) {
 
             // get the correct channel id based on which notification id this is
             val notificationChannelId = when (notificationId) {
-                AppController.ARE_YOU_THERE_NOTIFICATION_ID -> AppController.ARE_YOU_THERE_NOTIFICATION_CHANNEL_ID
+                AppController.ARE_YOU_THERE_NOTIFICATION_ID ->
+                    if (appOwnedSound) AppController.ARE_YOU_THERE_SILENT_NOTIFICATION_CHANNEL_ID
+                    else AppController.ARE_YOU_THERE_NOTIFICATION_CHANNEL_ID
                 AppController.SMS_ALERT_SENT_NOTIFICATION_ID -> AppController.SMS_SENT_NOTIFICATION_CHANNEL_ID
                 AppController.CALL_ALERT_SENT_NOTIFICATION_ID -> AppController.CALL_SENT_NOTIFICATION_CHANNEL_ID
                 AppController.ALERT_SERVICE_NOTIFICATION_ID -> AppController.ALERT_SERVICE_NOTIFICATION_CHANNEL_ID
@@ -218,6 +241,10 @@ class AlertNotificationHelper(private val context: Context) {
             // notification channels were added in API 26
             val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 Notification.Builder(context, notificationChannelId)
+            } else if (appOwnedSound) {
+                Notification.Builder(context)
+                    .setPriority(Notification.PRIORITY_HIGH)
+                    .setLights(Color.RED, 300, 100)
             } else {
                 // settings are normally controlled via the channels so without them we have to
                 //  set whatever we need to here
@@ -311,15 +338,31 @@ class AlertNotificationHelper(private val context: Context) {
 
             // repeat the sound until the prompt is acknowledged (which cancels it). a single
             //  sound is easy to miss over background noise
-            if (isAreYouThere) {
+            if (isAreYouThere && !appOwnedSound) {
                 notification.flags = notification.flags or Notification.FLAG_INSISTENT
+            }
+
+            // it has no sound to repeat, and without this an update pops it up again as a
+            //  banner over its own full-screen prompt
+            if (appOwnedSound) {
+                notification.flags = notification.flags or Notification.FLAG_ONLY_ALERT_ONCE
+            }
+
+            // so the repost timer can tell which of the two is posted
+            if (isAreYouThere) {
+                notification.extras.putBoolean(AreYouThereAlarm.EXTRA_APP_OWNED_SOUND, appOwnedSound)
             }
 
             notificationManager.notify(notificationId, notification)
 
-            // android stops the repeating sound for the shade or the next notification
+            // android stops the repeating sound for the shade or the next notification.
+            //  and the timer is allowed to start the alarm where this code was not
             if (isAreYouThere) {
-                AreYouThereRepost.schedule(context)
+                if (alarm == AreYouThereAlarm.Start.REFUSED) {
+                    AreYouThereRepost.schedule(context, AppController.ARE_YOU_THERE_ALARM_RETRY_MS)
+                } else {
+                    AreYouThereRepost.schedule(context)
+                }
 
                 // and the prompt has to step aside for a phone call
                 AreYouThereCallPause.watch(context)

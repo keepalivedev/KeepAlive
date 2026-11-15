@@ -129,11 +129,13 @@
       
         <!-- notification strings -->  
         <string name="default_notification_channel_title">Notifiche di avviso</string>  
+        <string name="silent_prompt_notification_channel_title">Avvisi «Ci sei ancora?» (suono di allarme)</string>
         <string name="sms_sent_notification_channel_title">Notifiche di invio SMS</string>  
         <string name="call_sent_notification_channel_title">Notifiche di chiamata inviata</string>  
         <string name="webhook_sent_notification_channel_title">Notifiche di invio webhook</string>  
         <string name="alert_service_notification_channel_title">Notifiche del servizio di avviso</string>  
         <string name="default_notification_channel_description">Ci sei?</string>  
+        <string name="silent_prompt_notification_channel_description">Avvisi «Ci sei ancora?» mentre Keep Alive riproduce il suono di allarme</string>
         <string name="sms_sent_notification_channel_description">Inviato quando viene attivato un avviso SMS</string>  
         <string name="call_sent_notification_channel_description">Inviato quando viene attivato un avviso di chiamata telefonica</string>  
         <string name="webhook_sent_notification_channel_description">Inviato quando viene attivato un avviso webhook</string>  
@@ -156,6 +158,7 @@
     <string name="background_restricted_notification_text">Keep Alive potrebbe non riuscire a eseguire i controlli di attività o a inviare avvisi. Tocca qui per aprire l\'app e consentire l\'attività in background.</string>
         <string name="alert_service_notification_title">Invio dell\'avviso in corso…</string>
         <string name="alert_service_notification_message">L\'avviso (o gli avvisi) è in corso di invio ai tuoi contatti configurati, si prega di attendere.</string>  
+        <string name="alarm_service_notification_text">L\'allarme suona finché non confermi di stare bene.</string>
       
         <!-- alert location strings -->  
         <string name="location_invalid_message">Impossibile determinare la posizione.</string>  
@@ -282,6 +285,8 @@
         <string name="debug_log_prompt_paused_for_call">Chiamata in corso, avviso \'Ci sei ancora?\' nascosto e silenziato fino al termine</string>
         <string name="debug_log_prompt_back_after_call">L\'avviso \'Ci sei ancora?\' viene mostrato di nuovo dopo la pausa per una chiamata</string>
         <string name="debug_log_prompt_answered_by_unlock">Telefono sbloccato dopo l\'avviso \'Ci sei ancora?\', considerato come risposta</string>
+        <string name="debug_log_alarm_started">L\'allarme \'Ci sei ancora?\' sta suonando</string>
+        <string name="debug_log_alarm_failed">Impossibile riprodurre l\'allarme \'Ci sei ancora?\', viene usato il suono di notifica: %1$s</string>
         <string name="debug_log_sending_alert_sms">Invio di un SMS di avviso!</string>  
         <string name="debug_log_getting_sms_manager_with_sub_id">Ottenimento del gestore SMS con context.getSystemService e l\'ID di abbonamento %1$d</string>  
         <string name="debug_log_getting_sms_manager_with_context">Ottenimento del gestore SMS con context.getSystemService</string>  
@@ -425,6 +430,7 @@
 <string name="are_you_there_waiting_for_acknowledgement">In attesa di conferma</string>
 <string name="are_you_there_im_ok">Sto bene</string>
 <string name="are_you_there_overlay_title">Mostra richiesta a tutto schermo \'Sei lì?\'</string>
+<string name="alarm_in_silent_mode_title">Riproduci l\'allarme \'Ci sei ancora?\' anche in modalità silenziosa</string>
 
 <!-- WebhookSender.kt -->
 <string name="debug_log_disable_certificate_verification">Disabilitazione della verifica del certificato webhook!</string>  

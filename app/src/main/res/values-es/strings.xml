@@ -129,11 +129,13 @@
 
     <!-- notification strings -->
     <string name="default_notification_channel_title">Notificaciones de alerta</string>
+    <string name="silent_prompt_notification_channel_title">Avisos «¿Sigues ahí?» (sonido de alarma)</string>
     <string name="sms_sent_notification_channel_title">Notificaciones de SMS enviado</string>
     <string name="call_sent_notification_channel_title">Notificaciones de llamada realizada</string>
     <string name="webhook_sent_notification_channel_title">Notificaciones de webhook enviado</string>
     <string name="alert_service_notification_channel_title">Notificaciones del servicio de alerta</string>
     <string name="default_notification_channel_description">Avisos de ¿Sigues ahí?</string>
+    <string name="silent_prompt_notification_channel_description">Avisos «¿Sigues ahí?» mientras Keep Alive reproduce el sonido de alarma</string>
     <string name="sms_sent_notification_channel_description">Se envía cuando se activa una alerta por SMS</string>
     <string name="call_sent_notification_channel_description">Se envía cuando se activa una alerta por llamada telefónica</string>
     <string name="webhook_sent_notification_channel_description">Se envía cuando se activa una alerta por webhook</string>
@@ -156,6 +158,7 @@
     <string name="background_restricted_notification_text">Es posible que Keep Alive no pueda realizar sus comprobaciones de actividad ni enviar alertas. Toque aquí para abrir la aplicación y permitir la actividad en segundo plano.</string>
     <string name="alert_service_notification_title">Enviando alerta…</string>
     <string name="alert_service_notification_message">Se están enviando alertas a tus contactos configurados, por favor espera.</string>
+    <string name="alarm_service_notification_text">La alarma suena hasta que confirmes que estás bien.</string>
 
     <!-- alert location strings -->
     <string name="location_invalid_message">No se puede determinar la ubicación.</string>
@@ -282,6 +285,8 @@
     <string name="debug_log_prompt_paused_for_call">Llamada en curso, aviso \'¿Sigues ahí?\' oculto y silenciado hasta que termine</string>
     <string name="debug_log_prompt_back_after_call">Se vuelve a mostrar el aviso \'¿Sigues ahí?\' tras pausarlo por una llamada</string>
     <string name="debug_log_prompt_answered_by_unlock">El teléfono se desbloqueó después del aviso \'¿Sigues ahí?\', se cuenta como respuesta</string>
+    <string name="debug_log_alarm_started">Está sonando la alarma \'¿Sigues ahí?\'</string>
+    <string name="debug_log_alarm_failed">No se pudo reproducir la alarma \'¿Sigues ahí?\', se usa el sonido de notificación: %1$s</string>
     <string name="debug_log_sending_alert_sms">¡Enviando alerta SMS!</string>
     <string name="debug_log_getting_sms_manager_with_sub_id">Obteniendo el gestor de SMS con context.getSystemService y el id de suscripción %1$d</string>
     <string name="debug_log_getting_sms_manager_with_context">Obteniendo el gestor de SMS con context.getSystemService</string>
@@ -431,6 +436,7 @@
     <string name="are_you_there_waiting_for_acknowledgement">Esperando confirmación</string>
     <string name="are_you_there_im_ok">Estoy bien</string>
     <string name="are_you_there_overlay_title">Mostrar el aviso \'¿Sigues ahí?\' a pantalla completa</string>
+    <string name="alarm_in_silent_mode_title">Hacer sonar la alarma \'¿Sigues ahí?\' en modo silencio</string>
 
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">¡Desactivando la verificación de certificado del webhook!</string>

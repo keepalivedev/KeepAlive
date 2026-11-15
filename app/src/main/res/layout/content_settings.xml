@@ -137,6 +137,16 @@
         android:text="@string/are_you_there_overlay_title"
         android:textSize="@dimen/default_text_size" />
 
+    <!-- Switch for sounding the are-you-there alarm with the phone on silent or vibrate -->
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/alarmInSilentModeSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="8dp"
+        android:text="@string/alarm_in_silent_mode_title"
+        android:textSize="@dimen/default_text_size" />
+
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/debugLoggingSwitch"
         android:layout_width="match_parent"

@@ -129,11 +129,13 @@
 
     <!-- notification strings -->
     <string name="default_notification_channel_title">Notifications d\'alerte</string>
+    <string name="silent_prompt_notification_channel_title">Invites « Êtes-vous là? » (son d\'alarme)</string>
     <string name="sms_sent_notification_channel_title">Notifications d\'envoi SMS</string>
     <string name="call_sent_notification_channel_title">Notifications d\'appel envoyé</string>
     <string name="webhook_sent_notification_channel_title">Notifications d\'envoi de webhook</string>
     <string name="alert_service_notification_channel_title">Notifications du service d\'alerte</string>
     <string name="default_notification_channel_description">Êtes-vous là?</string>
+    <string name="silent_prompt_notification_channel_description">Invites « Êtes-vous là? » pendant que Keep Alive joue lui-même le son d\'alarme</string>
 	<string name="sms_sent_notification_channel_description">Envoyé lorsqu\'une alerte SMS est déclenchée</string>
     <string name="call_sent_notification_channel_description">Envoyé lorsqu\'une alerte d\'appel téléphonique est déclenchée</string>
     <string name="webhook_sent_notification_channel_description">Envoyé lorsqu\'une alerte webhook est déclenchée</string>
@@ -156,6 +158,7 @@
     <string name="background_restricted_notification_text">Keep Alive pourrait ne pas pouvoir effectuer ses vérifications d\'activité ni envoyer d\'alertes. Appuyez ici pour ouvrir l\'application et autoriser l\'activité en arrière-plan.</string>
     <string name="alert_service_notification_title">Envoi de l\'alerte en cours…</string>
     <string name="alert_service_notification_message">L\'alerte (ou les alertes) est en cours d\'envoi à vos contacts configurés, veuillez patienter.</string>
+    <string name="alarm_service_notification_text">L\'alarme sonne jusqu\'à ce que vous confirmiez que vous allez bien.</string>
 
     <!-- alert location strings -->
     <string name="location_invalid_message">Impossible de déterminer l\'emplacement.</string>
@@ -282,6 +285,8 @@
     <string name="debug_log_prompt_paused_for_call">Appel en cours, invite \'Êtes-vous là?\' masquée et mise en sourdine jusqu\'à la fin de l\'appel</string>
     <string name="debug_log_prompt_back_after_call">L\'invite \'Êtes-vous là?\' est affichée de nouveau après la pause pour un appel</string>
     <string name="debug_log_prompt_answered_by_unlock">Téléphone déverrouillé après l\'invite \'Êtes-vous là?\', compté comme réponse</string>
+    <string name="debug_log_alarm_started">L\'alarme \'Êtes-vous là?\' sonne</string>
+    <string name="debug_log_alarm_failed">Impossible de jouer l\'alarme \'Êtes-vous là?\', le son de notification est utilisé à la place : %1$s</string>
     <string name="debug_log_sending_alert_sms">Envoi d\'un SMS d\'alerte!</string>
     <string name="debug_log_getting_sms_manager_with_sub_id">Obtention du gestionnaire de SMS avec context.getSystemService et l\'identifiant d\'abonnement %1$d</string>
     <string name="debug_log_getting_sms_manager_with_context">Obtention du gestionnaire de SMS avec context.getSystemService</string>
@@ -425,6 +430,7 @@
     <string name="are_you_there_waiting_for_acknowledgement">En attente de confirmation</string>
     <string name="are_you_there_im_ok">Je vais bien</string>
     <string name="are_you_there_overlay_title">Afficher l\'invite plein écran \'Êtes-vous là?\'</string>
+    <string name="alarm_in_silent_mode_title">Faire sonner l\'alarme \'Êtes-vous là?\' en mode silencieux</string>
 
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Désactivation de la vérification du certificat du webhook !</string>

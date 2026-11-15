@@ -130,11 +130,13 @@
 
     <!-- notification strings -->
     <string name="default_notification_channel_title">Powiadomienia o Alertach</string>
+    <string name="silent_prompt_notification_channel_title">Monity „Czy nadal tam jesteś?” (dźwięk alarmu)</string>
     <string name="sms_sent_notification_channel_title">Powiadomienia o Wysłanych SMSach</string>
     <string name="call_sent_notification_channel_title">Powiadomienia o Połączeniach Telefonicznych</string>
     <string name="webhook_sent_notification_channel_title">Powiadomienia o Wysłanych Webhookach</string>
     <string name="alert_service_notification_channel_title">Powiadomienia usługi alertów</string>
     <string name="default_notification_channel_description">Pytania \'Jesteś tam?\'</string>
+    <string name="silent_prompt_notification_channel_description">Monity „Czy nadal tam jesteś?”, gdy Keep Alive sam odtwarza dźwięk alarmu</string>
     <string name="sms_sent_notification_channel_description">Wysyłane kiedy alert SMS zostanie aktywowany</string>
     <string name="call_sent_notification_channel_description">Wysyłane kiedy alert z połączeniem telefonicznym zostanie aktywowany</string>
     <string name="webhook_sent_notification_channel_description">Wysyłane kiedy alert webhooka zostanie aktywowany</string>
@@ -157,6 +159,7 @@
     <string name="background_restricted_notification_text">Keep Alive może nie być w stanie sprawdzać aktywności ani wysyłać alarmów. Naciśnij tutaj, aby otworzyć aplikację i zezwolić na aktywność w tle.</string>
     <string name="alert_service_notification_title">Wysyłanie alertu…</string>
     <string name="alert_service_notification_message">Alert(y) są wysyłane do skonfigurowanych kontaktów, proszę czekać.</string>
+    <string name="alarm_service_notification_text">Alarm dzwoni, dopóki nie potwierdzisz, że wszystko w porządku.</string>
 
     <!-- alert location strings -->
     <string name="location_invalid_message">Nie udało się ustalić lokalizacji.</string>
@@ -283,6 +286,8 @@
     <string name="debug_log_prompt_paused_for_call">Trwa połączenie, monit \'Czy nadal tam jesteś?\' ukryty i wyciszony do jego zakończenia</string>
     <string name="debug_log_prompt_back_after_call">Monit \'Czy nadal tam jesteś?\' jest ponownie wyświetlany po wstrzymaniu na czas połączenia</string>
     <string name="debug_log_prompt_answered_by_unlock">Telefon został odblokowany po monicie \'Czy nadal tam jesteś?\', liczy się to jako odpowiedź</string>
+    <string name="debug_log_alarm_started">Alarm \'Czy nadal tam jesteś?\' dzwoni</string>
+    <string name="debug_log_alarm_failed">Nie udało się odtworzyć alarmu \'Czy nadal tam jesteś?\', używany jest dźwięk powiadomienia: %1$s</string>
     <string name="debug_log_sending_alert_sms">Wysyłanie alertu SMS!</string>
     <string name="debug_log_getting_sms_manager_with_sub_id">Pobieranie menedżera SMS za pomocą context.getSystemService i identyfikatora sub %1$d</string>
     <string name="debug_log_getting_sms_manager_with_context">Pobieranie menedżera SMS za pomocą context.getSystemService</string>
@@ -426,6 +431,7 @@
     <string name="are_you_there_waiting_for_acknowledgement">Oczekiwanie na potwierdzenie</string>
     <string name="are_you_there_im_ok">Wszystko OK</string>
     <string name="are_you_there_overlay_title">Pokaż pełnoekranowy monit \'Czy jesteś tam?\'</string>
+    <string name="alarm_in_silent_mode_title">Odtwarzaj alarm \'Czy nadal tam jesteś?\' także w trybie cichym</string>
 
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Wyłączanie weryfikacji certyfikatu webhooka!</string>

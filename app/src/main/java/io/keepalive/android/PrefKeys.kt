@@ -16,6 +16,9 @@ object PrefKeys {
     const val USE_EXACT_ALARMS = "use_exact_alarms"
     const val AUTO_RESTART_MONITORING = "auto_restart_monitoring"
     const val ARE_YOU_THERE_OVERLAY_ENABLED = "are_you_there_overlay_enabled"
+
+    // whether the "Are you there?" alarm also sounds with the phone on silent or vibrate
+    const val ALARM_IN_SILENT_MODE = "alarm_in_silent_mode"
     const val REST_PERIODS = "REST_PERIODS"
     const val APPS_TO_MONITOR = "APPS_TO_MONITOR"
 
@@ -60,6 +63,9 @@ object PrefKeys {
 
     // when a prompt that has been paused for a call first went up
     const val PROMPT_POSTED_AT = "prompt_posted_at"
+
+    // the alarm service could not start for this prompt, the notification makes the sound
+    const val ALARM_UNAVAILABLE = "alarm_unavailable"
 
     // one-time repair of last_alarm_stage for installs upgrading from builds
     //  that never wrote "alert_sent" (see AlarmRecovery.migrateAlertSentMarker)

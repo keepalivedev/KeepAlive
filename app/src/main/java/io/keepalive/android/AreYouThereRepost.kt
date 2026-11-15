@@ -104,7 +104,7 @@ object AreYouThereRepost {
         }
     }
 
-    private fun waitingForAnAnswer(context: Context): Boolean {
+    internal fun waitingForAnAnswer(context: Context): Boolean {
         val stage = getDeviceProtectedPreferences(context).getString(PrefKeys.LAST_ALARM_STAGE, null)
         val enabled = getAppSharedPreferences(context).getBoolean(PrefKeys.ENABLED, false)
         return stage == "final" && enabled
@@ -115,6 +115,7 @@ object AreYouThereRepost {
         if (!waitingForAnAnswer(context)) {
             Log.d(TAG, "Not waiting for an answer anymore")
             AreYouThereCallPause.stop(context)
+            AreYouThereAlarm.stop(context)
             return
         }
 
@@ -131,6 +132,7 @@ object AreYouThereRepost {
         if (prompt == null && !paused) {
             Log.d(TAG, "The prompt is gone")
             AreYouThereCallPause.stop(context)
+            AreYouThereAlarm.stop(context)
             return
         }
 
@@ -151,12 +153,31 @@ object AreYouThereRepost {
             paused -> AreYouThereCallPause.resume(context, replace = prompt != null)
 
             prompt != null -> {
-                // a full-screen intent would wake the screen every minute, and a lit screen
-                //  can look like someone using the device and stop the alert from going out
-                val repost = prompt.clone()
-                repost.fullScreenIntent = null
+                // starts the alarm again if it died, or for the first time if it couldn't
+                //  be started when the prompt went up
+                val appOwnedSound = AreYouThereAlarm.start(context) == AreYouThereAlarm.Start.PLAYING
 
-                notificationManager.notify(AppController.ARE_YOU_THERE_NOTIFICATION_ID, repost)
+                if (appOwnedSound != prompt.extras.getBoolean(AreYouThereAlarm.EXTRA_APP_OWNED_SOUND)) {
+                    // who makes the sound has changed, so the notification that is posted
+                    //  is the wrong one of the two. as an update: the full-screen prompt
+                    //  doesn't have to open again
+                    val devicePrefs = getDeviceProtectedPreferences(context)
+                    AlarmRecovery.repostAreYouThere(
+                        context,
+                        getAppSharedPreferences(context),
+                        devicePrefs,
+                        devicePrefs.getLong(PrefKeys.NEXT_ALARM_TIMESTAMP, 0L),
+                        overwrite = true
+                    )
+                } else if (!appOwnedSound) {
+                    // a full-screen intent would wake the screen every minute, and a lit
+                    //  screen can look like someone using the device and stop the alert
+                    //  from going out
+                    val repost = prompt.clone()
+                    repost.fullScreenIntent = null
+
+                    notificationManager.notify(AppController.ARE_YOU_THERE_NOTIFICATION_ID, repost)
+                }
             }
         }
 

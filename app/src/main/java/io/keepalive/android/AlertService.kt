@@ -319,6 +319,7 @@ class AlertService : Service() {
 
                 // the prompt is over, also for a phone call it was paused for
                 AreYouThereCallPause.stop(context)
+                AreYouThereAlarm.stop(context)
             }
             override fun dismissAreYouThereOverlay() {
                 AreYouThereOverlay.dismiss(context)
