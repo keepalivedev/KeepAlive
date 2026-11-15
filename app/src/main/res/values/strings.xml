@@ -140,13 +140,13 @@
 
     <!-- notification strings -->
     <string name="default_notification_channel_title">Alert Notifications</string>
-    <string name="silent_prompt_notification_channel_title">Are you there? Prompts (alarm sound)</string>
+    <string name="silent_prompt_notification_channel_title">Are you there? Prompts (no notification sound)</string>
     <string name="sms_sent_notification_channel_title">SMS Sent Notifications</string>
     <string name="call_sent_notification_channel_title">Call Sent Notifications</string>
     <string name="webhook_sent_notification_channel_title">Webhook Sent Notifications</string>
     <string name="alert_service_notification_channel_title">Alert Service Notifications</string>
     <string name="default_notification_channel_description">Are you there? Prompts</string>
-    <string name="silent_prompt_notification_channel_description">Are you there? Prompts while Keep Alive plays the alarm sound itself</string>
+    <string name="silent_prompt_notification_channel_description">Used while Keep Alive plays the alarm sound itself</string>
     <string name="sms_sent_notification_channel_description">Sent when an SMS alert is triggered</string>
     <string name="call_sent_notification_channel_description">Sent when an Phone Call alert is triggered</string>
     <string name="webhook_sent_notification_channel_description">Sent when a Webhook alert is triggered</string>

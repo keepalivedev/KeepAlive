@@ -127,13 +127,13 @@
 
     <!-- notification strings -->
     <string name="default_notification_channel_title">进入等待期</string>
-    <string name="silent_prompt_notification_channel_title">“你还在吗？”提示（闹铃声）</string>
+    <string name="silent_prompt_notification_channel_title">“你还在吗？”提示（无通知提示音）</string>
     <string name="sms_sent_notification_channel_title">短信发送</string>
     <string name="call_sent_notification_channel_title">电话拨号</string>
     <string name="webhook_sent_notification_channel_title">Webhook 已发送通知</string>
     <string name="alert_service_notification_channel_title">提醒服务</string>
     <string name="default_notification_channel_description">“你还在吗？”提示</string>
-    <string name="silent_prompt_notification_channel_description">由 Keep Alive 自行播放闹铃声时的“你还在吗？”提示</string>
+    <string name="silent_prompt_notification_channel_description">由 Keep Alive 自行播放闹铃声时使用</string>
     <string name="sms_sent_notification_channel_description">触发短信提醒时发送</string>
     <string name="call_sent_notification_channel_description">触发电话提醒时发送</string>
     <string name="webhook_sent_notification_channel_description">触发 Webhook 提醒时发送</string>

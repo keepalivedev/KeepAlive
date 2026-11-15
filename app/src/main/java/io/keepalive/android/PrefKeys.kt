@@ -64,8 +64,9 @@ object PrefKeys {
     // when a prompt that has been paused for a call first went up
     const val PROMPT_POSTED_AT = "prompt_posted_at"
 
-    // the alarm service could not start for this prompt, the notification makes the sound
-    const val ALARM_UNAVAILABLE = "alarm_unavailable"
+    // the alarm could not be played for this prompt, so the notification makes the sound.
+    //  holds the number of the boot it happened in: a restart is a fresh start
+    const val ALARM_UNAVAILABLE = "alarm_unavailable_in_boot"
 
     // one-time repair of last_alarm_stage for installs upgrading from builds
     //  that never wrote "alert_sent" (see AlarmRecovery.migrateAlertSentMarker)

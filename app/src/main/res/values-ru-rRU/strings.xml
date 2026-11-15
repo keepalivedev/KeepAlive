@@ -130,13 +130,13 @@
 
     <!-- notification strings -->
     <string name="default_notification_channel_title">Оповещения</string>
-    <string name="silent_prompt_notification_channel_title">Запросы «Вы ещё здесь?» (звук будильника)</string>
+    <string name="silent_prompt_notification_channel_title">Запросы «Вы ещё здесь?» (без звука уведомления)</string>
     <string name="sms_sent_notification_channel_title">Уведомления об отправке СМС</string>
     <string name="call_sent_notification_channel_title">Уведомления о совершенных вызовах</string>
     <string name="webhook_sent_notification_channel_title">Уведомления об отправленных вебхуках</string>
     <string name="alert_service_notification_channel_title">Уведомления службы оповещения</string>
     <string name="default_notification_channel_description">Вы здесь? Подтверждение</string>
-    <string name="silent_prompt_notification_channel_description">Запросы «Вы ещё здесь?», когда Keep Alive сам воспроизводит звук будильника</string>
+    <string name="silent_prompt_notification_channel_description">Используется, когда Keep Alive сам воспроизводит звук будильника</string>
     <string name="sms_sent_notification_channel_description">Отправляется при срабатывании SMS-оповещения</string>
     <string name="call_sent_notification_channel_description">Отправляется при срабатывании оповещения о телефонном звонке</string>
     <string name="webhook_sent_notification_channel_description">Отправляется при срабатывании оповещения вебхука</string>

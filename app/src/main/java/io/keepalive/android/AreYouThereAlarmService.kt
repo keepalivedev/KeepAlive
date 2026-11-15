@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 
@@ -17,8 +18,7 @@ import androidx.core.app.ServiceCompat
  *
  * A foreground service, because the prompt can be up for an hour with the app in the
  * background, where Android would otherwise stop the process and the sound with it. Its
- * type is the one for continuing an alarm, which needs the exact alarm permission;
- * [AreYouThereAlarm] only starts it with that.
+ * type is the one for continuing an alarm, which needs the exact alarm permission.
  *
  * It is stopped from outside when the prompt is answered, paused or over. It also looks
  * for itself, in case nobody told it.
@@ -29,6 +29,10 @@ class AreYouThereAlarmService : Service() {
         private const val TAG = "AreYouThereAlarmService"
 
         private const val STILL_NEEDED_CHECK_MS = 30_000L
+
+        // how long the sound gets to load. AreYouThereAlarm waits about as long for the
+        //  service itself
+        private const val SOUND_START_TIMEOUT_MS = 4_000L
 
         // tests swap this for a sound that makes none
         internal var soundFactory: (Service) -> AlarmSound = { AlarmSound(it) }
@@ -44,6 +48,12 @@ class AreYouThereAlarmService : Service() {
                 return
             }
             handler.postDelayed(this, STILL_NEEDED_CHECK_MS)
+        }
+    }
+
+    private val soundStartTimeout = Runnable {
+        if (!AreYouThereAlarm.isPlaying) {
+            giveUp(IllegalStateException("The alarm sound did not start playing"))
         }
     }
 
@@ -63,21 +73,50 @@ class AreYouThereAlarmService : Service() {
                 this, AppController.ALARM_SERVICE_NOTIFICATION_ID, createNotification(), type
             )
         } catch (e: Exception) {
+            // Android turned the type down, which it does without "Alarms & reminders".
+            //  the short type has no conditions, and it lets this stop without a crash
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    ServiceCompat.startForeground(
+                        this,
+                        AppController.ALARM_SERVICE_NOTIFICATION_ID,
+                        createNotification(),
+                        ServiceInfo.FOREGROUND_SERVICE_TYPE_SHORT_SERVICE
+                    )
+                }
+            } catch (e2: Exception) {
+                Log.e(TAG, "Failed going to the foreground at all", e2)
+            }
             giveUp(e)
+            return START_NOT_STICKY
+        }
+        AreYouThereAlarm.onServiceAnswered()
+
+        // the prompt was answered or paused while this was on its way up
+        if (!AreYouThereAlarm.shouldRun) {
+            stopSelf()
             return START_NOT_STICKY
         }
 
         if (sound == null) {
             try {
-                sound = soundFactory(this).also { it.start() }
+                sound = soundFactory(this).also {
+                    it.start(
+                        onPlaying = {
+                            handler.removeCallbacks(soundStartTimeout)
+                            AreYouThereAlarm.onPlaying(true)
+                            DebugLogger.d(TAG, getString(R.string.debug_log_alarm_started))
+                        },
+                        onError = { giveUp(IllegalStateException("The alarm sound failed")) }
+                    )
+                }
             } catch (e: Exception) {
                 sound = null
                 giveUp(e)
                 return START_NOT_STICKY
             }
 
-            AreYouThereAlarm.isPlaying = true
-            DebugLogger.d(TAG, getString(R.string.debug_log_alarm_started))
+            handler.postDelayed(soundStartTimeout, SOUND_START_TIMEOUT_MS)
             handler.postDelayed(stillNeededCheck, STILL_NEEDED_CHECK_MS)
         }
 
@@ -88,9 +127,10 @@ class AreYouThereAlarmService : Service() {
 
     override fun onDestroy() {
         handler.removeCallbacks(stillNeededCheck)
+        handler.removeCallbacks(soundStartTimeout)
         sound?.stop()
         sound = null
-        AreYouThereAlarm.isPlaying = false
+        AreYouThereAlarm.onPlaying(false)
         super.onDestroy()
     }
 
@@ -98,6 +138,11 @@ class AreYouThereAlarmService : Service() {
     //  prompt again to match
     private fun giveUp(e: Exception) {
         DebugLogger.d(TAG, getString(R.string.debug_log_alarm_failed, e.localizedMessage), e)
+        AreYouThereAlarm.onServiceAnswered()
+        handler.removeCallbacks(soundStartTimeout)
+        sound?.stop()
+        sound = null
+        AreYouThereAlarm.onPlaying(false)
         AreYouThereAlarm.markUnavailable(this)
         stopSelf()
         AreYouThereRepost.repost(applicationContext)

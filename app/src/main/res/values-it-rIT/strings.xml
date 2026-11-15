@@ -129,13 +129,13 @@
       
         <!-- notification strings -->  
         <string name="default_notification_channel_title">Notifiche di avviso</string>  
-        <string name="silent_prompt_notification_channel_title">Avvisi «Ci sei ancora?» (suono di allarme)</string>
+        <string name="silent_prompt_notification_channel_title">Avvisi «Ci sei ancora?» (senza suono di notifica)</string>
         <string name="sms_sent_notification_channel_title">Notifiche di invio SMS</string>  
         <string name="call_sent_notification_channel_title">Notifiche di chiamata inviata</string>  
         <string name="webhook_sent_notification_channel_title">Notifiche di invio webhook</string>  
         <string name="alert_service_notification_channel_title">Notifiche del servizio di avviso</string>  
         <string name="default_notification_channel_description">Ci sei?</string>  
-        <string name="silent_prompt_notification_channel_description">Avvisi «Ci sei ancora?» mentre Keep Alive riproduce il suono di allarme</string>
+        <string name="silent_prompt_notification_channel_description">Usato mentre Keep Alive riproduce il suono di allarme</string>
         <string name="sms_sent_notification_channel_description">Inviato quando viene attivato un avviso SMS</string>  
         <string name="call_sent_notification_channel_description">Inviato quando viene attivato un avviso di chiamata telefonica</string>  
         <string name="webhook_sent_notification_channel_description">Inviato quando viene attivato un avviso webhook</string>  

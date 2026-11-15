@@ -128,13 +128,13 @@
 
     <!-- notification strings -->
     <string name="default_notification_channel_title">Alarm-Benachrichtigungen</string>
-    <string name="silent_prompt_notification_channel_title">„Sind Sie noch da?“-Abfragen (Alarmton)</string>
+    <string name="silent_prompt_notification_channel_title">„Sind Sie noch da?“-Abfragen (ohne Benachrichtigungston)</string>
     <string name="sms_sent_notification_channel_title">Benachrichtigungen über gesendete SMS</string>
     <string name="call_sent_notification_channel_title">Benachrichtigungen über getätigte Anrufe</string>
     <string name="webhook_sent_notification_channel_title">Benachrichtigungen über gesendete Webhooks</string>
     <string name="alert_service_notification_channel_title">Benachrichtigungen des Alarmdienstes</string>
     <string name="default_notification_channel_description">Sind Sie da?-Abfragen</string>
-    <string name="silent_prompt_notification_channel_description">„Sind Sie noch da?“-Abfragen, während Keep Alive den Alarmton selbst abspielt</string>
+    <string name="silent_prompt_notification_channel_description">Wird verwendet, während Keep Alive den Alarmton selbst abspielt</string>
     <string name="sms_sent_notification_channel_description">Wird gesendet, wenn eine Alarm-SMS ausgelöst wird</string>
     <string name="call_sent_notification_channel_description">Wird gesendet, wenn ein Alarm-Anruf ausgelöst wird</string>
     <string name="webhook_sent_notification_channel_description">Wird gesendet, wenn ein Webhook-Alarm ausgelöst wird</string>

@@ -193,7 +193,7 @@ class AlertNotificationHelper(private val context: Context) {
             // where the app can play the prompt's sound itself, as an alarm, the
             //  notification goes out without one
             val alarm = if (isAreYouThere) AreYouThereAlarm.start(context) else null
-            val appOwnedSound = alarm == AreYouThereAlarm.Start.PLAYING
+            val appOwnedSound = alarm?.appOwned == true
 
             // Always try to create the PendingIntent, even during Direct Boot.
             // PendingIntent.getActivity() creates a system-level token that doesn't
@@ -241,10 +241,6 @@ class AlertNotificationHelper(private val context: Context) {
             // notification channels were added in API 26
             val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 Notification.Builder(context, notificationChannelId)
-            } else if (appOwnedSound) {
-                Notification.Builder(context)
-                    .setPriority(Notification.PRIORITY_HIGH)
-                    .setLights(Color.RED, 300, 100)
             } else {
                 // settings are normally controlled via the channels so without them we have to
                 //  set whatever we need to here
@@ -356,9 +352,10 @@ class AlertNotificationHelper(private val context: Context) {
             notificationManager.notify(notificationId, notification)
 
             // android stops the repeating sound for the shade or the next notification.
-            //  and the timer is allowed to start the alarm where this code was not
+            //  and the timer looks after the alarm: it may start it where this code was
+            //  not allowed to, and it checks that an alarm that was asked for is playing
             if (isAreYouThere) {
-                if (alarm == AreYouThereAlarm.Start.REFUSED) {
+                if (alarm == AreYouThereAlarm.Start.REFUSED || AreYouThereAlarm.isStarting) {
                     AreYouThereRepost.schedule(context, AppController.ARE_YOU_THERE_ALARM_RETRY_MS)
                 } else {
                     AreYouThereRepost.schedule(context)

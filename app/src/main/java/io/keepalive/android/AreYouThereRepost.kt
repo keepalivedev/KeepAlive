@@ -145,17 +145,22 @@ object AreYouThereRepost {
             return
         }
 
+        var resumed = false
+
         when {
             // nothing to repost, the prompt stays out of the way until the call ends
             AreYouThereCallPause.shouldStepAside(context) ->
                 AreYouThereCallPause.pause(context, prompt)
 
-            paused -> AreYouThereCallPause.resume(context, replace = prompt != null)
+            paused -> {
+                AreYouThereCallPause.resume(context, replace = prompt != null)
+                resumed = true
+            }
 
             prompt != null -> {
                 // starts the alarm again if it died, or for the first time if it couldn't
                 //  be started when the prompt went up
-                val appOwnedSound = AreYouThereAlarm.start(context) == AreYouThereAlarm.Start.PLAYING
+                val appOwnedSound = AreYouThereAlarm.start(context).appOwned
 
                 if (appOwnedSound != prompt.extras.getBoolean(AreYouThereAlarm.EXTRA_APP_OWNED_SOUND)) {
                     // who makes the sound has changed, so the notification that is posted
@@ -181,12 +186,20 @@ object AreYouThereRepost {
             }
         }
 
-        // android stops this process from running a while into a call, so the end of the
-        //  call is only seen here. look more often until then
-        if (AreYouThereCallPause.isPaused(context)) {
-            schedule(context, AppController.ARE_YOU_THERE_PAUSED_CHECK_INTERVAL_MS)
-        } else {
-            schedule(context)
+        when {
+            // android stops this process from running a while into a call, so the end of
+            //  the call is only seen here. look more often until then
+            AreYouThereCallPause.isPaused(context) ->
+                schedule(context, AppController.ARE_YOU_THERE_PAUSED_CHECK_INTERVAL_MS)
+
+            // the alarm was asked for and has yet to say that it plays. or the prompt
+            //  just came back after a call, from code that was not allowed to start the
+            //  alarm, as this timer is
+            AreYouThereAlarm.isStarting ||
+                (resumed && AreYouThereAlarm.wanted(context) && !AreYouThereAlarm.isPlaying) ->
+                schedule(context, AppController.ARE_YOU_THERE_ALARM_RETRY_MS)
+
+            else -> schedule(context)
         }
         AreYouThereCallPause.watch(context)
     }

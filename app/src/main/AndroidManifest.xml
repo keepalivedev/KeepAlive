@@ -43,7 +43,9 @@
 
     <!-- the "Are you there?" alarm is played by a foreground service of the type for
          continuing an alarm, which Android allows for apps with the exact alarm
-         permission above. the alarm also vibrates -->
+         permission above. (its second type, shortService, is only there so that the
+         service can stop cleanly when Android turns the first one down.) the alarm
+         also vibrates -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SYSTEM_EXEMPTED"
         tools:ignore="ForegroundServicesPolicy" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -121,7 +123,7 @@
             android:name="io.keepalive.android.AreYouThereAlarmService"
             android:directBootAware="true"
             android:exported="false"
-            android:foregroundServiceType="systemExempted" />
+            android:foregroundServiceType="systemExempted|shortService" />
 
         <receiver
             android:name="io.keepalive.android.receivers.AlarmReceiver"

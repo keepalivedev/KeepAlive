@@ -130,13 +130,13 @@
 
     <!-- notification strings -->
     <string name="default_notification_channel_title">Powiadomienia o Alertach</string>
-    <string name="silent_prompt_notification_channel_title">Monity „Czy nadal tam jesteś?” (dźwięk alarmu)</string>
+    <string name="silent_prompt_notification_channel_title">Monity „Czy nadal tam jesteś?” (bez dźwięku powiadomienia)</string>
     <string name="sms_sent_notification_channel_title">Powiadomienia o Wysłanych SMSach</string>
     <string name="call_sent_notification_channel_title">Powiadomienia o Połączeniach Telefonicznych</string>
     <string name="webhook_sent_notification_channel_title">Powiadomienia o Wysłanych Webhookach</string>
     <string name="alert_service_notification_channel_title">Powiadomienia usługi alertów</string>
     <string name="default_notification_channel_description">Pytania \'Jesteś tam?\'</string>
-    <string name="silent_prompt_notification_channel_description">Monity „Czy nadal tam jesteś?”, gdy Keep Alive sam odtwarza dźwięk alarmu</string>
+    <string name="silent_prompt_notification_channel_description">Używane, gdy Keep Alive sam odtwarza dźwięk alarmu</string>
     <string name="sms_sent_notification_channel_description">Wysyłane kiedy alert SMS zostanie aktywowany</string>
     <string name="call_sent_notification_channel_description">Wysyłane kiedy alert z połączeniem telefonicznym zostanie aktywowany</string>
     <string name="webhook_sent_notification_channel_description">Wysyłane kiedy alert webhooka zostanie aktywowany</string>

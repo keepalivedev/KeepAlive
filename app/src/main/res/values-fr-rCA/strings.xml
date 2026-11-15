@@ -129,13 +129,13 @@
 
     <!-- notification strings -->
     <string name="default_notification_channel_title">Notifications d\'alerte</string>
-    <string name="silent_prompt_notification_channel_title">Invites « Êtes-vous là? » (son d\'alarme)</string>
+    <string name="silent_prompt_notification_channel_title">Invites « Êtes-vous là? » (sans son de notification)</string>
     <string name="sms_sent_notification_channel_title">Notifications d\'envoi SMS</string>
     <string name="call_sent_notification_channel_title">Notifications d\'appel envoyé</string>
     <string name="webhook_sent_notification_channel_title">Notifications d\'envoi de webhook</string>
     <string name="alert_service_notification_channel_title">Notifications du service d\'alerte</string>
     <string name="default_notification_channel_description">Êtes-vous là?</string>
-    <string name="silent_prompt_notification_channel_description">Invites « Êtes-vous là? » pendant que Keep Alive joue lui-même le son d\'alarme</string>
+    <string name="silent_prompt_notification_channel_description">Utilisé pendant que Keep Alive joue lui-même le son d\'alarme</string>
 	<string name="sms_sent_notification_channel_description">Envoyé lorsqu\'une alerte SMS est déclenchée</string>
     <string name="call_sent_notification_channel_description">Envoyé lorsqu\'une alerte d\'appel téléphonique est déclenchée</string>
     <string name="webhook_sent_notification_channel_description">Envoyé lorsqu\'une alerte webhook est déclenchée</string>

@@ -198,7 +198,7 @@ object AreYouThereCallPause {
 
         AreYouThereOverlay.dismiss(context)
         AreYouThereActivity.finishActive()
-        AreYouThereAlarm.stop(context)
+        AreYouThereAlarm.stop(context, promptOver = false)
 
         if (prompt != null) {
             (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
