@@ -66,6 +66,7 @@ object AcknowledgeAreYouThere {
         // Cancel the on-screen notification.
         AlertNotificationHelper(context).cancelNotification(AppController.ARE_YOU_THERE_NOTIFICATION_ID)
         AreYouThereRepost.cancel(context)
+        AreYouThereCallPause.stop(context)
 
         // If we showed the over-other-apps overlay, remove it.
         AreYouThereOverlay.dismiss(context)

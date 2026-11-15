@@ -115,6 +115,10 @@ class ProductionAlertCheckDeps(private val context: Context) : AlertCheckDeps {
     }
 
     override fun showAreYouThereNotification(followupPeriodMinutes: Int) {
+
+        // a new prompt starts out on screen, whatever was left over from the last one
+        AreYouThereCallPause.forgetPause(context)
+
         AlertNotificationHelper(context).sendNotification(
             context.getString(R.string.initial_check_notification_title),
             String.format(

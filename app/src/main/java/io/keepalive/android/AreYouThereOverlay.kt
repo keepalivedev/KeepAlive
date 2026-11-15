@@ -92,6 +92,13 @@ object AreYouThereOverlay {
     private fun showOnMain(appContext: Context, message: String?, deadlineMillis: Long) {
         if (overlayView != null) return
 
+        // it would cover the call screen and its buttons. AreYouThereCallPause shows the
+        //  prompt again when the call ends
+        if (AreYouThereCallPause.isPaused(appContext)) {
+            DebugLogger.d(TAG, "Paused for a phone call; not showing overlay")
+            return
+        }
+
         if (!canDrawOverlays(appContext)) {
             DebugLogger.d(TAG, "Overlay permission not granted; not showing overlay")
             return

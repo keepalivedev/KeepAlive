@@ -139,7 +139,7 @@
     <string name="activity_notification_message">很高兴你没事！取消提醒。</string>
     <string name="initial_check_notification_title">你还在吗？</string>
     <string name="overlay_countdown_format">将在 %1$d:%2$02d 后发送提醒</string>
-    <string name="initial_check_notification_text">点击此处以报平安。否则系统会在 %1$s 分钟后自动发出提醒给你的紧急联系人。</string>
+    <string name="initial_check_notification_text">点击此处以报平安。否则系统会在 %1$s 分钟后自动发出提醒给你的紧急联系人。关闭提示音不算作回应。</string>
     <string name="alert_notification_title">提醒已触发！</string>
     <string name="call_alert_notification_text">已致电您的联系人: %1$s</string>
     <string name="sms_alert_notification_text">已向您的联系人发送短信！</string>
@@ -277,6 +277,9 @@
     <string name="debug_log_doing_alert_check">正在进行定期检查，闹钟阶段为 %1$s</string>
     <string name="debug_log_full_screen_prompt_shown">全屏“你还在吗？”提示已显示在锁定屏幕上</string>
     <string name="debug_log_full_screen_prompt_acknowledged">全屏“你还在吗？”提示已确认</string>
+    <string name="debug_log_prompt_paused_for_call">正在通话，“你还在吗？”提示已隐藏并静音，直到通话结束</string>
+    <string name="debug_log_prompt_back_after_call">因通话暂停后，再次显示“你还在吗？”提示</string>
+    <string name="debug_log_prompt_answered_by_unlock">在“你还在吗？”提示出现后手机已解锁，视为已回应</string>
     <string name="debug_log_sending_alert_sms">正在发送提醒短信！</string>
     <string name="debug_log_getting_sms_manager_with_sub_id">正在通过 context.getSystemService 获取短信管理器，订阅 ID 为 %1$d</string>
     <string name="debug_log_getting_sms_manager_with_context">正在通过 context.getSystemService 获取短信管理器</string>

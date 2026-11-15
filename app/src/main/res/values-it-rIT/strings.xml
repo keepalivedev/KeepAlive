@@ -141,7 +141,7 @@
         <string name="activity_notification_message">Felice di vederti bene! Annullamento dell\'avviso.</string>  
         <string name="initial_check_notification_title">Ci sei ancora?</string>
         <string name="overlay_countdown_format">L\'avviso verrà inviato tra %1$d:%2$02d</string>
-        <string name="initial_check_notification_text">Tocca qui per confermare che stai bene. Altrimenti, un avviso verrà inviato tra %1$s minuti.</string>
+        <string name="initial_check_notification_text">Tocca qui per confermare che stai bene. Altrimenti, un avviso verrà inviato tra %1$s minuti. Silenziare il suono non vale come risposta.</string>
         <string name="alert_notification_title">Avviso Keep Alive attivato!</string>  
         <string name="call_alert_notification_text">Una telefonata è stata effettuata al tuo contatto di emergenza: %1$s</string>  
         <string name="sms_alert_notification_text">Un SMS è stato inviato al tuo contatto di emergenza!</string>
@@ -279,6 +279,9 @@
         <string name="debug_log_doing_alert_check">Esecuzione di una verifica periodica, il passaggio di avviso è %1$s</string>  
         <string name="debug_log_full_screen_prompt_shown">Avviso a schermo intero \'Ci sei ancora?\' mostrato sopra la schermata di blocco</string>
         <string name="debug_log_full_screen_prompt_acknowledged">Avviso a schermo intero \'Ci sei ancora?\' confermato</string>
+        <string name="debug_log_prompt_paused_for_call">Chiamata in corso, avviso \'Ci sei ancora?\' nascosto e silenziato fino al termine</string>
+        <string name="debug_log_prompt_back_after_call">L\'avviso \'Ci sei ancora?\' viene mostrato di nuovo dopo la pausa per una chiamata</string>
+        <string name="debug_log_prompt_answered_by_unlock">Telefono sbloccato dopo l\'avviso \'Ci sei ancora?\', considerato come risposta</string>
         <string name="debug_log_sending_alert_sms">Invio di un SMS di avviso!</string>  
         <string name="debug_log_getting_sms_manager_with_sub_id">Ottenimento del gestore SMS con context.getSystemService e l\'ID di abbonamento %1$d</string>  
         <string name="debug_log_getting_sms_manager_with_context">Ottenimento del gestore SMS con context.getSystemService</string>  

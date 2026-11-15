@@ -264,19 +264,28 @@ object AlarmRecovery {
     }
 
     // same prompt doAlertCheck posts, minus the alarm it would set; the caller
-    //  is about to put the original final alarm back
-    private fun repostAreYouThere(
-        context: Context, prefs: SharedPreferences, devicePrefs: SharedPreferences, deadlineMillis: Long
+    //  is about to put the original final alarm back. [overwrite] replaces a prompt
+    //  that is still posted, which is how it comes back after a phone call
+    internal fun repostAreYouThere(
+        context: Context, prefs: SharedPreferences, devicePrefs: SharedPreferences, deadlineMillis: Long,
+        overwrite: Boolean = false
     ) {
         val minutesRemaining = ((deadlineMillis - System.currentTimeMillis() + 59_999L) / 60_000L)
             .coerceAtLeast(1L)
         val text = String.format(
             context.getString(R.string.initial_check_notification_text), minutesRemaining.toString()
         )
+
+        // a prompt that is put back after a reboot or an update starts out on screen
+        if (!overwrite) {
+            AreYouThereCallPause.forgetPause(context)
+        }
+
         AlertNotificationHelper(context).sendNotification(
             context.getString(R.string.initial_check_notification_title),
             text,
-            AppController.ARE_YOU_THERE_NOTIFICATION_ID
+            AppController.ARE_YOU_THERE_NOTIFICATION_ID,
+            overwrite
         )
 
         if (isUserUnlocked(context)) {

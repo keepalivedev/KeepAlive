@@ -54,6 +54,14 @@ class AreYouThereActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // over the lock screen this would leave an incoming call as a banner only, with an
+        //  Answer button that asks for the PIN. AreYouThereCallPause shows the prompt again
+        //  when the call ends
+        if (AreYouThereCallPause.isPaused(this)) {
+            finish()
+            return
+        }
+
         // show over the keyguard and turn the screen on. the manifest attributes
         //  cover API 27+; these calls make the intent explicit and the window
         //  flags cover API < 27

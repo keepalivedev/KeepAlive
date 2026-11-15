@@ -55,6 +55,12 @@ object PrefKeys {
     const val LAST_CHECK_TIMESTAMP = "last_check_timestamp"
     const val DIRECT_BOOT_NOTIFICATION_PENDING = "direct_boot_notification_pending"
 
+    // the "Are you there?" prompt is off the screen and silent because of a phone call
+    const val PROMPT_PAUSED_FOR_CALL = "prompt_paused_for_call"
+
+    // when a prompt that has been paused for a call first went up
+    const val PROMPT_POSTED_AT = "prompt_posted_at"
+
     // one-time repair of last_alarm_stage for installs upgrading from builds
     //  that never wrote "alert_sent" (see AlarmRecovery.migrateAlertSentMarker)
     const val ALERT_SENT_MARKER_MIGRATED = "alert_sent_marker_migrated"
