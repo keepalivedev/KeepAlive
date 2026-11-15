@@ -15,6 +15,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SwitchCompat
 import androidx.test.core.app.ApplicationProvider
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -26,6 +27,7 @@ import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
+import org.robolectric.android.controller.ActivityController
 import org.robolectric.shadows.ShadowDialog
 import org.robolectric.shadows.ShadowToast
 
@@ -43,8 +45,16 @@ class SettingsActivityTest {
         getAppSharedPreferences(appCtx).edit().clear().commit()
     }
 
+    // closed again afterwards: an activity left open with its dialogs keeps its memory
+    //  for the rest of the test run
+    private val launched = mutableListOf<ActivityController<SettingsActivity>>()
+
+    @After fun tearDown() {
+        launched.forEach { it.close() }
+    }
+
     private fun launch(): SettingsActivity =
-        Robolectric.buildActivity(SettingsActivity::class.java).setup().get()
+        Robolectric.buildActivity(SettingsActivity::class.java).setup().also { launched.add(it) }.get()
 
     // ---- debug logging switch (issue #166) ---------------------------------
 
@@ -157,6 +167,79 @@ class SettingsActivityTest {
 
     @Test fun `a blank label is saved as no label`() {
         assertNull(addContactThroughDialog("   ").label)
+    }
+
+    // ---- SMS permission asked for when it becomes needed --------------------
+
+    private fun denySms() {
+        shadowOf(appCtx as Application).denyPermissions(Manifest.permission.SEND_SMS)
+    }
+
+    private fun seedEnabledContact() {
+        getAppSharedPreferences(appCtx).edit().putString(
+            PrefKeys.PHONE_NUMBER_SETTINGS,
+            """[{"phoneNumber":"5550100","alertMessage":"x","isEnabled":true,"includeLocation":false}]"""
+        ).commit()
+    }
+
+    private fun latestDialogTitle(): String =
+        (ShadowDialog.getLatestDialog() as AlertDialog)
+            .findViewById<TextView>(androidx.appcompat.R.id.alertTitle)!!.text.toString()
+
+    @Test fun `adding a contact without the SMS permission asks for it`() {
+        // setup used to look finished at this point, with no SMS alert possible
+        denySms()
+
+        addContactThroughDialog("")
+
+        assertEquals(appCtx.getString(R.string.permission_send_sms_title), latestDialogTitle())
+        assertTrue(ShadowDialog.getLatestDialog().isShowing)
+    }
+
+    @Test fun `adding a contact with the SMS permission asks for nothing`() {
+        shadowOf(appCtx as Application).grantPermissions(Manifest.permission.SEND_SMS)
+
+        addContactThroughDialog("")
+
+        assertFalse(ShadowDialog.getLatestDialog().isShowing)
+    }
+
+    @Test fun `turning monitoring on without the SMS permission asks for it`() {
+        denySms()
+        seedEnabledContact()
+        val activity = launch()
+
+        activity.findViewById<SwitchCompat>(R.id.monitoringEnabledSwitch).isChecked = true
+
+        assertEquals(appCtx.getString(R.string.permission_send_sms_title), latestDialogTitle())
+    }
+
+    @Test fun `switching a contact back on without the SMS permission asks for it`() {
+        denySms()
+        getAppSharedPreferences(appCtx).edit().putString(
+            PrefKeys.PHONE_NUMBER_SETTINGS,
+            """[{"phoneNumber":"5550100","alertMessage":"x","isEnabled":false,"includeLocation":false}]"""
+        ).commit()
+        val activity = launch()
+        val list = activity.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerView)
+        list.measure(
+            View.MeasureSpec.makeMeasureSpec(1080, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(1920, View.MeasureSpec.EXACTLY))
+        list.layout(0, 0, 1080, 1920)
+
+        list.findViewHolderForAdapterPosition(0)!!.itemView
+            .findViewById<SwitchCompat>(R.id.enabledSwitch).isChecked = true
+
+        assertEquals(appCtx.getString(R.string.permission_send_sms_title), latestDialogTitle())
+    }
+
+    @Test fun `turning monitoring on without an SMS contact asks for nothing`() {
+        denySms()
+        val activity = launch()
+
+        activity.findViewById<SwitchCompat>(R.id.monitoringEnabledSwitch).isChecked = true
+
+        assertNull(ShadowDialog.getLatestDialog())
     }
 
     // ---- time period dialogs -----------------------------------------------

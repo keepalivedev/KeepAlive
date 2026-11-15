@@ -1,5 +1,6 @@
 package io.keepalive.android
 
+import android.Manifest
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
@@ -52,7 +53,8 @@ class SettingsActivity : AppCompatActivity() {
         //  the SMS contact number settings
         sharedPrefs = getAppSharedPreferences(this)
         phoneNumberList.addAll(loadJSONSharedPreference(sharedPrefs!!,PrefKeys.PHONE_NUMBER_SETTINGS))
-        phoneNumberAdapter = PhoneNumberAdapter(phoneNumberList, sharedPrefs!!, ::editPhoneNumber)
+        phoneNumberAdapter = PhoneNumberAdapter(
+            phoneNumberList, sharedPrefs!!, ::requestSmsPermissionIfMissing, ::editPhoneNumber)
 
         // initialize the recycler view and link it to the adapter
         recyclerView = findViewById(R.id.recyclerView)
@@ -69,6 +71,25 @@ class SettingsActivity : AppCompatActivity() {
     override fun onDestroy() {
         Log.d("SettingsActivity", "onDestroy")
         super.onDestroy()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        // a permanently denied permission can only be allowed from the app's settings page
+        PermissionManager(this, this).handlePermissionResult(permissions, grantResults)
+    }
+
+    // ask for the SMS permission as soon as an SMS contact needs it, instead of leaving it
+    //  until the user goes back to the main screen and notices the Grant Permissions button
+    private fun requestSmsPermissionIfMissing() {
+        if (smsPermissionMissing(this, sharedPrefs!!)) {
+            PermissionManager(this, this).checkRequestSinglePermission(Manifest.permission.SEND_SMS)
+        }
     }
 
     override fun onPause() {
@@ -122,6 +143,10 @@ class SettingsActivity : AppCompatActivity() {
                 syncPrefsToDeviceProtectedStorage(this)
 
                 processSettingChange("enabled")
+
+                if (isChecked) {
+                    requestSmsPermissionIfMissing()
+                }
             }
         }
 
@@ -763,6 +788,8 @@ class SettingsActivity : AppCompatActivity() {
 
                 // save the new phone number list to shared prefs
                 saveSMSEmergencyContactSettings(sharedPrefs, phoneNumberList, gson)
+
+                requestSmsPermissionIfMissing()
             }
             .setNegativeButton(getString(R.string.cancel), null)
 

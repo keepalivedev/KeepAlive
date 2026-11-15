@@ -97,6 +97,8 @@
     <string name="monitoring_background_restricted_message">Aktywność w tle aplikacji Keep Alive jest ograniczona, więc sprawdzanie aktywności może być opóźnione lub nigdy się nie uruchomić, a alarmy mogą nie zostać wysłane. Naciśnij przycisk poniżej i ustaw zużycie baterii na \"Bez ograniczeń\" lub \"Zoptymalizowane\".</string>
     <string name="monitoring_secondary_user_message">Keep Alive jest zainstalowany w dodatkowym profilu użytkownika. Po ponownym uruchomieniu nie może działać, dopóki nie przełączysz się ponownie na ten profil, więc do tego czasu nie można wysłać alarmu.</string>
     <string name="monitoring_permissions_required_message">Monitorowanie jest włączone lecz nie wszystkie uprawnienia zostały przyznane. Kliknij przycisk "Udziel Uprawnień" poniżej.</string>
+    <string name="monitoring_sms_permission_required_title">Potrzebuje Uprawnienia SMS</string>
+    <string name="monitoring_sms_permission_required_message">Monitorowanie jest włączone, lecz Keep Alive nie ma uprawnienia do wysyłania SMS, więc nie można wysłać alarmu SMS. Kliknij przycisk "Udziel Uprawnień" poniżej.</string>
     <string name="alarm_message_too_long_message">Wiadomość nie może mieć więcej niż 160 znaków.</string>
     <string name="phone_number_invalid_message">Wpisz poprawny numer telefonu.</string>
     <string name="time_period_too_short_message">Musi wynosić co najmniej 0.17 godziny (10 minut).</string>
@@ -149,8 +151,8 @@
     <string name="sms_alert_failure_notification_text_with_error">Wystąpił błąd podczas wysyłania Alertu SMS: %1$s</string>
     <string name="sms_service_failure_notification_title">Nie udało się wysłać Alert SMS</string>
     <string name="sms_service_failure_notification_text">Wystąpił błąd podczas wysyłania Alertu SMS, upewnij się, że masz aktywną kartę SIM</string>
-    <string name="sms_permission_revoked_notification_title">Uprawnienie SMS zostało cofnięte!</string>
-    <string name="sms_permission_revoked_notification_text">Keep Alive nie może już wysyłać alarmów SMS. Dotknij tutaj, aby otworzyć aplikację i ponownie przyznać uprawnienie SMS.</string>
+    <string name="sms_permission_revoked_notification_title">Uprawnienie SMS nie jest przyznane!</string>
+    <string name="sms_permission_revoked_notification_text">Keep Alive nie może wysyłać alarmów SMS. Dotknij tutaj, aby otworzyć aplikację i przyznać uprawnienie SMS.</string>
     <string name="background_restricted_notification_title">Aktywność w tle jest ograniczona!</string>
     <string name="background_restricted_notification_text">Keep Alive może nie być w stanie sprawdzać aktywności ani wysyłać alarmów. Naciśnij tutaj, aby otworzyć aplikację i zezwolić na aktywność w tle.</string>
     <string name="alert_service_notification_title">Wysyłanie alertu…</string>
@@ -366,7 +368,7 @@
 
     <!-- AlarmReceiver.kt -->
     <string name="debug_log_alarm_just_fired">Alarm właśnie się uruchomił!</string>
-    <string name="debug_log_sms_permission_revoked">Uprawnienie SEND_SMS nie jest już przyznane!</string>
+    <string name="debug_log_sms_permission_revoked">Uprawnienie SEND_SMS nie jest przyznane!</string>
     <string name="debug_log_background_restricted">Aktywność w tle jest ograniczona przez ustawienia baterii</string>
     <string name="debug_log_secondary_user">Działa w dodatkowym profilu użytkownika, po ponownym uruchomieniu nic nie może działać, dopóki ten użytkownik nie zostanie uruchomiony</string>
     <string name="debug_log_other_user_active">Brak aktywności w tym profilu, ale używany jest inny profil użytkownika, liczone jako aktywność</string>

@@ -16,6 +16,7 @@ import java.util.Locale
 class PhoneNumberAdapter(
     private val phoneNumberList: MutableList<SMSEmergencyContactSetting>,
     private val sharedPrefs: SharedPreferences,
+    private val onContactEnabled: () -> Unit = {},
     private val onEdit: (position: Int) -> Unit
 ) : RecyclerView.Adapter<PhoneNumberAdapter.ViewHolder>() {
 
@@ -46,6 +47,10 @@ class PhoneNumberAdapter(
                     if (pos != RecyclerView.NO_POSITION) {
                         phoneNumberList[pos].isEnabled = enabledSwitch.isChecked
                         saveSMSEmergencyContactSettings(sharedPrefs, phoneNumberList, gson)
+
+                        if (enabledSwitch.isChecked) {
+                            onContactEnabled()
+                        }
                     }
                 }
             }

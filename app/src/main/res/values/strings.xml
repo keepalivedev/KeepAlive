@@ -109,6 +109,8 @@
     <string name="monitoring_background_restricted_message">Background activity for Keep Alive is restricted, so the activity checks may be delayed or never run and Alerts may not be sent. Please tap the button below and set Battery usage to \"Unrestricted\" or \"Optimized\".</string>
     <string name="monitoring_secondary_user_message">Keep Alive is installed in a secondary user profile. After a reboot it cannot run until you switch to this profile again, so no Alert can be sent until then.</string>
     <string name="monitoring_permissions_required_message">Monitoring is enabled but not all permissions have been granted. Please click the "Grant Permissions" button below.</string>
+    <string name="monitoring_sms_permission_required_title">SMS Permission Required</string>
+    <string name="monitoring_sms_permission_required_message">Monitoring is enabled but Keep Alive is not allowed to send SMS, so no SMS Alert can be sent. Please click the "Grant Permissions" button below.</string>
     <string name="alarm_message_too_long_message">The message cannot be more than 160 characters.</string>
     <string name="phone_number_invalid_message">Please enter a valid phone number.</string>
     <string name="time_period_too_short_message">Must be at least 0.17 hours (10 minutes).</string>
@@ -159,8 +161,8 @@
     <string name="sms_alert_failure_notification_text_with_error">Error occurred while attempting to send Alert SMS: %1$s</string>
     <string name="sms_service_failure_notification_title">Unable to send Alert SMS</string>
     <string name="sms_service_failure_notification_text">Error occurred while attempting to send Alert SMS, please verify you have an active SIM</string>
-    <string name="sms_permission_revoked_notification_title">SMS permission has been revoked!</string>
-    <string name="sms_permission_revoked_notification_text">Keep Alive can no longer send SMS Alerts. Tap here to open the app and grant the SMS permission again.</string>
+    <string name="sms_permission_revoked_notification_title">SMS permission is not granted!</string>
+    <string name="sms_permission_revoked_notification_text">Keep Alive cannot send SMS Alerts. Tap here to open the app and grant the SMS permission.</string>
     <string name="background_restricted_notification_title">Background activity is restricted!</string>
     <string name="background_restricted_notification_text">Keep Alive may not be able to run its activity checks or send Alerts. Tap here to open the app and allow background activity.</string>
     <string name="alert_service_notification_title">Sending Alert…</string>
@@ -380,7 +382,7 @@
 
     <!-- AlarmReceiver.kt -->
     <string name="debug_log_alarm_just_fired">Alarm just fired!</string>
-    <string name="debug_log_sms_permission_revoked">SEND_SMS permission is no longer granted!</string>
+    <string name="debug_log_sms_permission_revoked">SEND_SMS permission is not granted!</string>
     <string name="debug_log_background_restricted">Background activity is restricted by the battery settings</string>
     <string name="debug_log_secondary_user">Running in a secondary user profile, nothing can run after a reboot until this user is started</string>
     <string name="debug_log_other_user_active">No activity in this profile but another user profile is being used, counting it as activity</string>
