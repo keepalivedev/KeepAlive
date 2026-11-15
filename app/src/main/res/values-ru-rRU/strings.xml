@@ -130,11 +130,13 @@
 
     <!-- notification strings -->
     <string name="default_notification_channel_title">Оповещения</string>
+    <string name="silent_prompt_notification_channel_title">Запросы «Вы ещё здесь?» (без звука уведомления)</string>
     <string name="sms_sent_notification_channel_title">Уведомления об отправке СМС</string>
     <string name="call_sent_notification_channel_title">Уведомления о совершенных вызовах</string>
     <string name="webhook_sent_notification_channel_title">Уведомления об отправленных вебхуках</string>
     <string name="alert_service_notification_channel_title">Уведомления службы оповещения</string>
     <string name="default_notification_channel_description">Вы здесь? Подтверждение</string>
+    <string name="silent_prompt_notification_channel_description">Используется, когда Keep Alive сам воспроизводит звук будильника</string>
     <string name="sms_sent_notification_channel_description">Отправляется при срабатывании SMS-оповещения</string>
     <string name="call_sent_notification_channel_description">Отправляется при срабатывании оповещения о телефонном звонке</string>
     <string name="webhook_sent_notification_channel_description">Отправляется при срабатывании оповещения вебхука</string>
@@ -157,6 +159,7 @@
     <string name="background_restricted_notification_text">Keep Alive может не выполнять проверки активности и не отправлять оповещения. Нажмите здесь, чтобы открыть приложение и разрешить фоновую активность.</string>
     <string name="alert_service_notification_title">Отправка оповещения…</string>
     <string name="alert_service_notification_message">Оповещение(я) отправляются вашим настроенным контактам, пожалуйста, подождите.</string>
+    <string name="alarm_service_notification_text">Сигнал звучит, пока вы не подтвердите, что вы в порядке.</string>
 
     <!-- alert location strings -->
     <string name="location_invalid_message">Невозможно определить местоположение</string>
@@ -283,6 +286,8 @@
     <string name="debug_log_prompt_paused_for_call">Идёт звонок, запрос \'Вы ещё здесь?\' скрыт и заглушён до его окончания</string>
     <string name="debug_log_prompt_back_after_call">Запрос \'Вы ещё здесь?\' снова показан после паузы на время звонка</string>
     <string name="debug_log_prompt_answered_by_unlock">Телефон был разблокирован после запроса \'Вы ещё здесь?\', это засчитано как ответ</string>
+    <string name="debug_log_alarm_started">Сигнал \'Вы ещё здесь?\' звучит</string>
+    <string name="debug_log_alarm_failed">Не удалось воспроизвести сигнал \'Вы ещё здесь?\', вместо него используется звук уведомления: %1$s</string>
     <string name="debug_log_sending_alert_sms">Отправка SMS-оповещения!</string>
     <string name="debug_log_getting_sms_manager_with_sub_id">Получение менеджера SMS с помощью context.getSystemService и идентификатора подписки %1$d</string>
     <string name="debug_log_getting_sms_manager_with_context">Получение менеджера SMS с помощью context.getSystemService</string>
@@ -426,6 +431,7 @@
     <string name="are_you_there_waiting_for_acknowledgement">Ожидание подтверждения</string>
     <string name="are_you_there_im_ok">Я в порядке</string>
     <string name="are_you_there_overlay_title">Показывать полноэкранный запрос \'Вы здесь?\'</string>
+    <string name="alarm_in_silent_mode_title">Включать сигнал \'Вы ещё здесь?\' и в беззвучном режиме</string>
 
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Отключение проверки сертификата вебхука!</string>

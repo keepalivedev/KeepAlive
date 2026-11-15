@@ -104,7 +104,7 @@ object AreYouThereRepost {
         }
     }
 
-    private fun waitingForAnAnswer(context: Context): Boolean {
+    internal fun waitingForAnAnswer(context: Context): Boolean {
         val stage = getDeviceProtectedPreferences(context).getString(PrefKeys.LAST_ALARM_STAGE, null)
         val enabled = getAppSharedPreferences(context).getBoolean(PrefKeys.ENABLED, false)
         return stage == "final" && enabled
@@ -115,6 +115,7 @@ object AreYouThereRepost {
         if (!waitingForAnAnswer(context)) {
             Log.d(TAG, "Not waiting for an answer anymore")
             AreYouThereCallPause.stop(context)
+            AreYouThereAlarm.stop(context)
             return
         }
 
@@ -131,6 +132,7 @@ object AreYouThereRepost {
         if (prompt == null && !paused) {
             Log.d(TAG, "The prompt is gone")
             AreYouThereCallPause.stop(context)
+            AreYouThereAlarm.stop(context)
             return
         }
 
@@ -143,29 +145,61 @@ object AreYouThereRepost {
             return
         }
 
+        var resumed = false
+
         when {
             // nothing to repost, the prompt stays out of the way until the call ends
             AreYouThereCallPause.shouldStepAside(context) ->
                 AreYouThereCallPause.pause(context, prompt)
 
-            paused -> AreYouThereCallPause.resume(context, replace = prompt != null)
+            paused -> {
+                AreYouThereCallPause.resume(context, replace = prompt != null)
+                resumed = true
+            }
 
             prompt != null -> {
-                // a full-screen intent would wake the screen every minute, and a lit screen
-                //  can look like someone using the device and stop the alert from going out
-                val repost = prompt.clone()
-                repost.fullScreenIntent = null
+                // starts the alarm again if it died, or for the first time if it couldn't
+                //  be started when the prompt went up
+                val appOwnedSound = AreYouThereAlarm.start(context).appOwned
 
-                notificationManager.notify(AppController.ARE_YOU_THERE_NOTIFICATION_ID, repost)
+                if (appOwnedSound != prompt.extras.getBoolean(AreYouThereAlarm.EXTRA_APP_OWNED_SOUND)) {
+                    // who makes the sound has changed, so the notification that is posted
+                    //  is the wrong one of the two. as an update: the full-screen prompt
+                    //  doesn't have to open again
+                    val devicePrefs = getDeviceProtectedPreferences(context)
+                    AlarmRecovery.repostAreYouThere(
+                        context,
+                        getAppSharedPreferences(context),
+                        devicePrefs,
+                        devicePrefs.getLong(PrefKeys.NEXT_ALARM_TIMESTAMP, 0L),
+                        overwrite = true
+                    )
+                } else if (!appOwnedSound) {
+                    // a full-screen intent would wake the screen every minute, and a lit
+                    //  screen can look like someone using the device and stop the alert
+                    //  from going out
+                    val repost = prompt.clone()
+                    repost.fullScreenIntent = null
+
+                    notificationManager.notify(AppController.ARE_YOU_THERE_NOTIFICATION_ID, repost)
+                }
             }
         }
 
-        // android stops this process from running a while into a call, so the end of the
-        //  call is only seen here. look more often until then
-        if (AreYouThereCallPause.isPaused(context)) {
-            schedule(context, AppController.ARE_YOU_THERE_PAUSED_CHECK_INTERVAL_MS)
-        } else {
-            schedule(context)
+        when {
+            // android stops this process from running a while into a call, so the end of
+            //  the call is only seen here. look more often until then
+            AreYouThereCallPause.isPaused(context) ->
+                schedule(context, AppController.ARE_YOU_THERE_PAUSED_CHECK_INTERVAL_MS)
+
+            // the alarm was asked for and has yet to say that it plays. or the prompt
+            //  just came back after a call, from code that was not allowed to start the
+            //  alarm, as this timer is
+            AreYouThereAlarm.isStarting ||
+                (resumed && AreYouThereAlarm.wanted(context) && !AreYouThereAlarm.isPlaying) ->
+                schedule(context, AppController.ARE_YOU_THERE_ALARM_RETRY_MS)
+
+            else -> schedule(context)
         }
         AreYouThereCallPause.watch(context)
     }

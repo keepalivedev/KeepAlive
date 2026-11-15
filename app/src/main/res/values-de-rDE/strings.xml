@@ -128,11 +128,13 @@
 
     <!-- notification strings -->
     <string name="default_notification_channel_title">Alarm-Benachrichtigungen</string>
+    <string name="silent_prompt_notification_channel_title">„Sind Sie noch da?“-Abfragen (ohne Benachrichtigungston)</string>
     <string name="sms_sent_notification_channel_title">Benachrichtigungen über gesendete SMS</string>
     <string name="call_sent_notification_channel_title">Benachrichtigungen über getätigte Anrufe</string>
     <string name="webhook_sent_notification_channel_title">Benachrichtigungen über gesendete Webhooks</string>
     <string name="alert_service_notification_channel_title">Benachrichtigungen des Alarmdienstes</string>
     <string name="default_notification_channel_description">Sind Sie da?-Abfragen</string>
+    <string name="silent_prompt_notification_channel_description">Wird verwendet, während Keep Alive den Alarmton selbst abspielt</string>
     <string name="sms_sent_notification_channel_description">Wird gesendet, wenn eine Alarm-SMS ausgelöst wird</string>
     <string name="call_sent_notification_channel_description">Wird gesendet, wenn ein Alarm-Anruf ausgelöst wird</string>
     <string name="webhook_sent_notification_channel_description">Wird gesendet, wenn ein Webhook-Alarm ausgelöst wird</string>
@@ -155,6 +157,7 @@
     <string name="background_restricted_notification_text">Keep Alive kann möglicherweise keine Aktivitätsprüfungen durchführen oder Alarme senden. Tippen Sie hier, um die App zu öffnen und Hintergrundaktivität zu erlauben.</string>
     <string name="alert_service_notification_title">Alarm wird gesendet…</string>
     <string name="alert_service_notification_message">Alarm(e) werden an Ihre konfigurierten Kontakte gesendet, bitte warten.</string>
+    <string name="alarm_service_notification_text">Der Alarm ertönt, bis Sie bestätigen, dass es Ihnen gut geht.</string>
 
     <!-- alert location strings -->
     <string name="location_invalid_message">Standort kann nicht ermittelt werden.</string>
@@ -281,6 +284,8 @@
     <string name="debug_log_prompt_paused_for_call">Anruf läuft, \'Sind Sie noch da?\'-Abfrage bis zum Ende des Anrufs ausgeblendet und stummgeschaltet</string>
     <string name="debug_log_prompt_back_after_call">\'Sind Sie noch da?\'-Abfrage wird nach der Pause für einen Anruf wieder angezeigt</string>
     <string name="debug_log_prompt_answered_by_unlock">Telefon wurde nach der \'Sind Sie noch da?\'-Abfrage entsperrt, wird als Antwort gewertet</string>
+    <string name="debug_log_alarm_started">\'Sind Sie noch da?\'-Alarm ertönt</string>
+    <string name="debug_log_alarm_failed">\'Sind Sie noch da?\'-Alarm konnte nicht abgespielt werden, stattdessen wird der Benachrichtigungston verwendet: %1$s</string>
     <string name="debug_log_sending_alert_sms">Sende Alarm-SMS!</string>
     <string name="debug_log_getting_sms_manager_with_sub_id">Erhalte SMS-Manager mit context.getSystemService und Sub-ID %1$d</string>
     <string name="debug_log_getting_sms_manager_with_context">Erhalte SMS-Manager mit context.getSystemService</string>
@@ -424,6 +429,7 @@
     <string name="are_you_there_waiting_for_acknowledgement">Warte auf Bestätigung</string>
     <string name="are_you_there_im_ok">Mir geht\'s gut</string>
     <string name="are_you_there_overlay_title">Vollbild-\'Sind Sie da?\'-Abfrage anzeigen</string>
+    <string name="alarm_in_silent_mode_title">\'Sind Sie noch da?\'-Alarm auch im Lautlos-Modus abspielen</string>
 
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Webhook-Zertifikatsüberprüfung deaktivieren!</string>

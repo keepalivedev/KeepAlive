@@ -14,6 +14,9 @@ class AppController : Application() {
 
         // notification channel IDs
         const val ARE_YOU_THERE_NOTIFICATION_CHANNEL_ID = "AlertNotificationChannel"
+
+        // the same prompt without a sound of its own, for when the app plays the alarm
+        const val ARE_YOU_THERE_SILENT_NOTIFICATION_CHANNEL_ID = "AlertNotificationSilentChannel"
         const val CALL_SENT_NOTIFICATION_CHANNEL_ID = "CallSentNotificationChannel"
         const val SMS_SENT_NOTIFICATION_CHANNEL_ID = "SMSSentNotificationChannel"
         const val ALERT_SERVICE_NOTIFICATION_CHANNEL_ID = "AlertServiceNotificationChannel"
@@ -28,6 +31,7 @@ class AppController : Application() {
         const val WEBHOOK_ALERT_SENT_NOTIFICATION_ID = 6
         const val PERMISSION_REVOKED_NOTIFICATION_ID = 7
         const val BACKGROUND_RESTRICTED_NOTIFICATION_ID = 8
+        const val ALARM_SERVICE_NOTIFICATION_ID = 9
 
         // when doing a sanity check to see if we can see ANY events, this is the # of hours
         //  to use with getLastDeviceActivity().  if the user has a higher value set it
@@ -54,6 +58,10 @@ class AppController : Application() {
 
         // how long the prompt can stay away after a phone call it stepped aside for
         const val ARE_YOU_THERE_PAUSED_CHECK_INTERVAL_MS = 15_000L
+
+        // how soon the repost timer runs when the prompt went up without its alarm.
+        //  Android takes no alarm that is less than 5 seconds out
+        const val ARE_YOU_THERE_ALARM_RETRY_MS = 5_000L
 
         // request code used with AppHibernationActivity intent
         const val APP_HIBERNATION_ACTIVITY_RESULT_CODE = 98

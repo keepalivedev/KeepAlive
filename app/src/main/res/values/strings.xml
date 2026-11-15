@@ -140,11 +140,13 @@
 
     <!-- notification strings -->
     <string name="default_notification_channel_title">Alert Notifications</string>
+    <string name="silent_prompt_notification_channel_title">Are you there? Prompts (no notification sound)</string>
     <string name="sms_sent_notification_channel_title">SMS Sent Notifications</string>
     <string name="call_sent_notification_channel_title">Call Sent Notifications</string>
     <string name="webhook_sent_notification_channel_title">Webhook Sent Notifications</string>
     <string name="alert_service_notification_channel_title">Alert Service Notifications</string>
     <string name="default_notification_channel_description">Are you there? Prompts</string>
+    <string name="silent_prompt_notification_channel_description">Used while Keep Alive plays the alarm sound itself</string>
     <string name="sms_sent_notification_channel_description">Sent when an SMS alert is triggered</string>
     <string name="call_sent_notification_channel_description">Sent when an Phone Call alert is triggered</string>
     <string name="webhook_sent_notification_channel_description">Sent when a Webhook alert is triggered</string>
@@ -167,6 +169,7 @@
     <string name="background_restricted_notification_text">Keep Alive may not be able to run its activity checks or send Alerts. Tap here to open the app and allow background activity.</string>
     <string name="alert_service_notification_title">Sending Alert…</string>
     <string name="alert_service_notification_message">Alert(s) are being sent to your configured contacts, please wait.</string>
+    <string name="alarm_service_notification_text">The alarm sounds until you confirm you\'re OK.</string>
 
     <!-- alert location strings -->
     <string name="location_invalid_message">Unable to determine location.</string>
@@ -294,6 +297,8 @@
     <string name="debug_log_prompt_paused_for_call">Phone call in progress, Are you there? prompt hidden and silenced until it ends</string>
     <string name="debug_log_prompt_back_after_call">Showing the Are you there? prompt again after pausing it for a phone call</string>
     <string name="debug_log_prompt_answered_by_unlock">Phone was unlocked after the Are you there? prompt, treating it as the answer</string>
+    <string name="debug_log_alarm_started">Are you there? alarm is sounding</string>
+    <string name="debug_log_alarm_failed">Are you there? alarm could not be played, using the notification sound instead: %1$s</string>
 
     <!-- AlertFunctions.kt -->
     <string name="debug_log_doing_alert_check">Doing periodic check, alarm stage is %1$s</string>
@@ -446,6 +451,7 @@
     <string name="are_you_there_waiting_for_acknowledgement">Waiting for acknowledgement</string>
     <string name="are_you_there_im_ok">I\'m OK</string>
     <string name="are_you_there_overlay_title">Show full-screen \'Are you there?\' prompt</string>
+    <string name="alarm_in_silent_mode_title">Sound the \'Are you there?\' alarm in silent mode</string>
 
     <!-- WebhookSender.kt -->
     <string name="debug_log_disable_certificate_verification">Disabling webhook certificate verification!</string>

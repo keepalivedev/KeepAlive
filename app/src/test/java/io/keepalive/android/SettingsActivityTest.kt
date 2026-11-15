@@ -75,6 +75,25 @@ class SettingsActivityTest {
             getAppSharedPreferences(appCtx).getBoolean("debug_logging_enabled", true))
     }
 
+    // ---- alarm in silent mode switch -----------------------------------------
+
+    @Test fun `the alarm sounds in silent mode by default`() {
+        val activity = launch()
+
+        val switch: SwitchCompat = activity.findViewById(R.id.alarmInSilentModeSwitch)
+        assertTrue("an alarm that keeps quiet in silent mode is the old behaviour", switch.isChecked)
+    }
+
+    @Test fun `turning the silent mode switch off persists the preference`() {
+        val activity = launch()
+
+        val switch: SwitchCompat = activity.findViewById(R.id.alarmInSilentModeSwitch)
+        switch.isChecked = false
+
+        assertFalse("switch must write the preference the alarm reads",
+            getAppSharedPreferences(appCtx).getBoolean("alarm_in_silent_mode", true))
+    }
+
     // ---- monitoring switch --------------------------------------------------
 
     @Test fun `turning monitoring off takes down a prompt that is still showing`() {
