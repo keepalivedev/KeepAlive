@@ -3,7 +3,10 @@ package io.keepalive.android
 import android.Manifest
 import android.app.Notification
 import android.app.NotificationManager
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.os.Build
@@ -35,6 +38,9 @@ import androidx.core.content.edit
  * leave the prompt in the way for up to a minute, so [watch] also looks at the call state
  * every second for as long as this process lives and runs that timer's work early when
  * the state changes.
+ *
+ * The same goes for an unlock, which answers the prompt: [watch] also listens for the
+ * phone being unlocked, so the prompt and its sound end then and not up to a minute later.
  */
 object AreYouThereCallPause {
 
@@ -59,8 +65,16 @@ object AreYouThereCallPause {
 
     private val mainHandler = Handler(Looper.getMainLooper())
 
+    // Android's word of an unlock may come before the unlock shows in the usage events,
+    //  so the watcher looks for it there for this long afterwards
+    private const val LOOK_FOR_UNLOCK_MS = 5_000L
+
     // only touched on the main thread
     private var poll: Runnable? = null
+    private var unlockReceiver: BroadcastReceiver? = null
+
+    // until when the watcher looks for an unlock, in elapsed realtime. main thread only
+    private var lookForUnlockUntil = 0L
 
     // when the current call was first seen ringing, and when it was first seen to be
     //  over, in elapsed realtime. 0 when that isn't the case
@@ -248,6 +262,7 @@ object AreYouThereCallPause {
 
         mainHandler.post {
             poll?.let { mainHandler.removeCallbacks(it) }
+            listenForUnlock(appContext)
 
             val runnable = object : Runnable {
                 override fun run() {
@@ -260,8 +275,12 @@ object AreYouThereCallPause {
                                 getAppSharedPreferences(appContext).getBoolean(PrefKeys.ENABLED, false)
                         }
                         if (!waiting) {
-                            poll = null
+                            endWatch(appContext)
                             return
+                        }
+
+                        if (SystemClock.elapsedRealtime() < lookForUnlockUntil) {
+                            AreYouThereRepost.answerIfUnlocked(appContext)
                         }
 
                         if (shouldStepAside(appContext) != isPaused(appContext)) {
@@ -270,7 +289,7 @@ object AreYouThereCallPause {
                     } catch (e: Exception) {
                         // the one-minute timer starts this again
                         Log.e(TAG, "Failed checking the call state", e)
-                        poll = null
+                        endWatch(appContext)
                         return
                     }
 
@@ -286,12 +305,62 @@ object AreYouThereCallPause {
 
     /** The prompt is over: stop looking and forget any pause. Safe from any thread. */
     fun stop(context: Context) {
+        val appContext = context.applicationContext
+
         mainHandler.post {
             poll?.let { mainHandler.removeCallbacks(it) }
-            poll = null
+            endWatch(appContext)
         }
 
         forgetPause(context)
+    }
+
+    // main thread only
+    private fun endWatch(appContext: Context) {
+        poll = null
+        lookForUnlockUntil = 0L
+
+        unlockReceiver?.let {
+            try {
+                appContext.unregisterReceiver(it)
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to stop listening for an unlock", e)
+            }
+        }
+        unlockReceiver = null
+    }
+
+    // Android's word of an unlock is only a hint. On a phone without a lock screen it is
+    //  sent every time the screen comes on, and the prompt turns the screen on. Whether
+    //  the phone really was unlocked is read from the usage events, as the timer does.
+    //  main thread only
+    private fun listenForUnlock(appContext: Context) {
+        if (unlockReceiver != null) {
+            return
+        }
+
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                lookForUnlockUntil = SystemClock.elapsedRealtime() + LOOK_FOR_UNLOCK_MS
+                AreYouThereRepost.answerIfUnlocked(appContext)
+            }
+        }
+
+        try {
+            // exported: the sender is the system's lock screen, which Android counts as
+            //  another app, and a receiver that isn't exported never hears from it. no
+            //  ordinary app is allowed to send this one
+            ContextCompat.registerReceiver(
+                appContext,
+                receiver,
+                IntentFilter(Intent.ACTION_USER_PRESENT),
+                ContextCompat.RECEIVER_EXPORTED
+            )
+            unlockReceiver = receiver
+        } catch (e: Exception) {
+            // the timer still sees the unlock, within a minute
+            Log.e(TAG, "Failed to listen for an unlock", e)
+        }
     }
 
     /**

@@ -34,7 +34,8 @@ import java.time.Duration
 /**
  * Unlocking the phone has always counted as activity, but only at the final check, so
  * the prompt and its sound carried on until then for someone who had plainly come back.
- * The repost timer now looks for an unlock every minute and answers the prompt with it.
+ * The repost timer now looks for an unlock every minute and answers the prompt with it,
+ * and while the app is running it hears of the unlock from Android and answers at once.
  *
  * Lock and unlock events exist from API 28.
  */
@@ -103,6 +104,17 @@ class AreYouThereUnlockTest {
         idleMain()
     }
 
+    // what Android sends when the phone is unlocked. and, with no lock screen, whenever
+    //  the screen comes on
+    private fun sendUserPresent() {
+        ShadowSystemClock.advanceBy(Duration.ofSeconds(2))
+        appCtx.sendBroadcast(Intent(Intent.ACTION_USER_PRESENT))
+        idleMain()
+    }
+
+    private fun listensForUnlock() = shadowOf(appCtx as Application).registeredReceivers
+        .any { it.intentFilter.hasAction(Intent.ACTION_USER_PRESENT) }
+
     private fun assertAnswered() = verify(exactly = 1) { AcknowledgeAreYouThere.acknowledge(any()) }
 
     private fun assertNotAnswered() = verify(exactly = 0) { AcknowledgeAreYouThere.acknowledge(any()) }
@@ -114,6 +126,61 @@ class AreYouThereUnlockTest {
         fireTick()
 
         assertAnswered()
+    }
+
+    @Test fun `an unlock answers the prompt at once, without waiting for the timer`() {
+        val postedAt = postPrompt()
+        addEvent(UsageEvents.Event.KEYGUARD_HIDDEN, postedAt + 1_000L)
+
+        sendUserPresent()
+
+        assertAnswered()
+    }
+
+    @Test fun `an unlock that shows in the usage events a moment later still answers it`() {
+        val postedAt = postPrompt()
+        sendUserPresent()
+        assertNotAnswered()
+
+        addEvent(UsageEvents.Event.KEYGUARD_HIDDEN, postedAt + 1_000L)
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(1))
+
+        verify(atLeast = 1) { AcknowledgeAreYouThere.acknowledge(any()) }
+    }
+
+    @Test fun `the screen coming on without an unlock does not answer it`() {
+        // a phone with no lock screen: the prompt lights the screen, and Android reports
+        //  the user as present
+        postPrompt()
+
+        sendUserPresent()
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(10))
+
+        assertNotAnswered()
+    }
+
+    @Test fun `with apps to monitor an unlock does not answer it at once either`() {
+        getAppSharedPreferences(appCtx).edit().putString(
+            PrefKeys.APPS_TO_MONITOR,
+            """[{"packageName":"com.example.app","appName":"App","lastUsed":0,"className":""}]"""
+        ).commit()
+        val postedAt = postPrompt()
+        addEvent(UsageEvents.Event.KEYGUARD_HIDDEN, postedAt + 1_000L)
+
+        sendUserPresent()
+
+        assertNotAnswered()
+    }
+
+    @Test fun `the app only listens for an unlock while a prompt waits`() {
+        assertFalse(listensForUnlock())
+
+        postPrompt()
+        assertTrue(listensForUnlock())
+
+        AreYouThereCallPause.stop(appCtx)
+        idleMain()
+        assertFalse(listensForUnlock())
     }
 
     @Test fun `with no unlock the prompt is reposted as before`() {

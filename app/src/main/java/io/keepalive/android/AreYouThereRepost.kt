@@ -2,6 +2,7 @@ package io.keepalive.android
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
+import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -122,9 +123,7 @@ object AreYouThereRepost {
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        val prompt = notificationManager.activeNotifications
-            .firstOrNull { it.id == AppController.ARE_YOU_THERE_NOTIFICATION_ID }
-            ?.notification
+        val prompt = postedPrompt(notificationManager)
 
         val paused = AreYouThereCallPause.isPaused(context)
 
@@ -136,12 +135,7 @@ object AreYouThereRepost {
             return
         }
 
-        // the final check would count the unlock as activity anyway, but until then the
-        //  prompt and its sound would carry on for someone who is plainly there
-        val postedAt = AreYouThereCallPause.promptPostedAt(context) ?: prompt?.`when`
-        if (postedAt != null && answeredByUnlock(context, postedAt)) {
-            DebugLogger.d(TAG, context.getString(R.string.debug_log_prompt_answered_by_unlock))
-            AcknowledgeAreYouThere.acknowledge(context)
+        if (acknowledgeIfUnlocked(context, prompt)) {
             return
         }
 
@@ -202,6 +196,59 @@ object AreYouThereRepost {
             else -> schedule(context)
         }
         AreYouThereCallPause.watch(context)
+    }
+
+    /**
+     * Answer the prompt now if the phone was unlocked after it went up. The timer looks
+     * once a minute; this is for [AreYouThereCallPause.watch], which hears of an unlock
+     * when it happens.
+     */
+    @SuppressLint("NewApi")
+    fun answerIfUnlocked(context: Context) {
+
+        // the posted prompt can't be read below API 23, see schedule()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return
+        }
+
+        synchronized(AlarmRecovery.stateLock) {
+            try {
+                if (!waitingForAnAnswer(context)) {
+                    return
+                }
+
+                val prompt = postedPrompt(
+                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                )
+
+                // a prompt that is gone without a call is one for the timer to clear up
+                if (prompt != null || AreYouThereCallPause.isPaused(context)) {
+                    acknowledgeIfUnlocked(context, prompt)
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed checking for an unlock", e)
+            }
+        }
+    }
+
+    @SuppressLint("NewApi")
+    private fun postedPrompt(notificationManager: NotificationManager): Notification? =
+        notificationManager.activeNotifications
+            .firstOrNull { it.id == AppController.ARE_YOU_THERE_NOTIFICATION_ID }
+            ?.notification
+
+    // the final check would count the unlock as activity anyway, but until then the
+    //  prompt and its sound would carry on for someone who is plainly there.
+    //  [prompt] is the posted notification, or null while it is down for a phone call
+    private fun acknowledgeIfUnlocked(context: Context, prompt: Notification?): Boolean {
+        val postedAt = AreYouThereCallPause.promptPostedAt(context) ?: prompt?.`when`
+        if (postedAt == null || !answeredByUnlock(context, postedAt)) {
+            return false
+        }
+
+        DebugLogger.d(TAG, context.getString(R.string.debug_log_prompt_answered_by_unlock))
+        AcknowledgeAreYouThere.acknowledge(context)
+        return true
     }
 
     // whether the phone was unlocked after the prompt went up at [promptPostedAt]. with
