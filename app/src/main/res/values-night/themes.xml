@@ -28,6 +28,13 @@
         <item name="android:background">@color/dialogBackground</item>
         <item name="android:textColorHint">@color/dialogHintTextColor</item>
 
+        <!-- an overlay keeps the activity's translucent status bar, and Android 11+ does not
+          move or shrink a translucent-status dialog for the keyboard, so the keyboard hid the
+          dialog's buttons. adjustResize then shrinks a dialog that is taller than the space
+          above the keyboard, so its form scrolls and the buttons stay on screen -->
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+
         <item name="buttonBarPositiveButtonStyle">@style/AlertDialogButtonStyle</item>
         <item name="buttonBarNegativeButtonStyle">@style/AlertDialogButtonStyle</item>
         <item name="buttonBarNeutralButtonStyle">@style/AlertDialogButtonStyle</item>
