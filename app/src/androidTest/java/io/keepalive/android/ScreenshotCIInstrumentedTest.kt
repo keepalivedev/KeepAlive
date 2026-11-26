@@ -76,6 +76,7 @@ class ScreenshotCIInstrumentedTest {
         // Don't touch the UI until MainActivity is actually resumed — i.e. not
         // behind the keyguard or an ANR dialog on a slow runner.
         waitForResumedActivity()
+        waitForWindowFocus()
 
         Screengrab.screenshot("1-MainScreen")
 
@@ -144,6 +145,30 @@ class ScreenshotCIInstrumentedTest {
             if (resumed) return
             Thread.sleep(250)
         }
+    }
+
+    /**
+     * Poll until the resumed activity's window has focus. RESUMED isn't enough on
+     * a slow runner: a system dialog (e.g. an ANR prompt) can still hold focus,
+     * and Espresso gives up on the first interaction after 10 seconds. Close
+     * system dialogs while waiting, and name the focused window if it never comes.
+     */
+    private fun waitForWindowFocus(timeoutMs: Long = 60_000L) {
+        val end = System.currentTimeMillis() + timeoutMs
+        while (System.currentTimeMillis() < end) {
+            var focused = false
+            InstrumentationRegistry.getInstrumentation().runOnMainSync {
+                focused = ActivityLifecycleMonitorRegistry.getInstance()
+                    .getActivitiesInStage(Stage.RESUMED).any { it.hasWindowFocus() }
+            }
+            if (focused) return
+            cmdExec("am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS")
+            Thread.sleep(1000)
+        }
+        val focus = cmdExec("dumpsys window displays").lineSequence()
+            .filter { it.contains("mCurrentFocus") || it.contains("mFocusedApp") }
+            .joinToString(" | ") { it.trim() }
+        throw AssertionError("MainActivity never got window focus: $focus")
     }
 
     /** Poll until [matcher] resolves to a displayed view, retrying on a slow runner. */
