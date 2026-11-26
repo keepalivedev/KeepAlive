@@ -6,6 +6,7 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
+import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
@@ -91,7 +92,7 @@ class ScreenshotCIInstrumentedTest {
         onView(withId(R.id.restPeriodRow)).perform(click())
         waitUntilDisplayed(withId(android.R.id.button2))
         Screengrab.screenshot("3-ConfigureRestPeriodScreen")
-        onView(withId(android.R.id.button2)).perform(click())
+        dismissDialog()
 
         // call phone number dialog
         waitUntilDisplayed(withId(R.id.callPhoneRow))
@@ -99,14 +100,14 @@ class ScreenshotCIInstrumentedTest {
         onView(ViewMatchers.isRoot()).perform(ViewActions.closeSoftKeyboard())
         waitUntilDisplayed(withId(android.R.id.button2))
         Screengrab.screenshot("4-ConfigureCallPhoneNumberScreen")
-        onView(withId(android.R.id.button2)).perform(click())
+        dismissDialog()
 
         // first SMS contact dialog
         waitUntilDisplayed(withId(R.id.recyclerView))
         onView(withId(R.id.recyclerView)).perform(clickFirstView())
         waitUntilDisplayed(withId(android.R.id.button2))
         Screengrab.screenshot("5-AddSMSPhoneNumberScreen")
-        onView(withId(android.R.id.button2)).perform(click())
+        dismissDialog()
 
         // full-screen "Are you there?" overlay (headline safety feature).
         // SYSTEM_ALERT_WINDOW is an appop, not a runtime permission.
@@ -128,7 +129,7 @@ class ScreenshotCIInstrumentedTest {
         onView(withId(R.id.alertWebhookRow)).perform(click())
         waitUntilDisplayed(withId(android.R.id.button2))
         Screengrab.screenshot("7-ConfigureWebhookScreen")
-        onView(withId(android.R.id.button2)).perform(click())
+        dismissDialog()
     }
 
     /** Poll until at least one activity is in the RESUMED stage (or time out). */
@@ -158,6 +159,33 @@ class ScreenshotCIInstrumentedTest {
         }
         // final attempt — let it throw a meaningful failure if still not there
         onView(matcher).check(matches(isDisplayed()))
+    }
+
+    /**
+     * Dismiss the current dialog. We can't rely on clicking its Cancel button:
+     * a tall dialog (e.g. the rest-period editor with two TimePickers) pushes
+     * the button bar off a short screen, so the button can be ~4% visible and
+     * Espresso refuses to click it. The Back key dismisses a cancelable dialog
+     * regardless. Close the keyboard first (text-field dialogs open it, and it
+     * would eat the first Back), then press Back until the dialog is gone.
+     */
+    private fun dismissDialog() {
+        try {
+            onView(ViewMatchers.isRoot()).perform(ViewActions.closeSoftKeyboard())
+        } catch (_: Throwable) { /* no keyboard up — fine */ }
+        val end = System.currentTimeMillis() + 10_000L
+        while (System.currentTimeMillis() < end && isDialogShowing()) {
+            pressBack()
+            Thread.sleep(500)
+        }
+    }
+
+    /** True while a dialog (its negative button) is on screen, even if clipped. */
+    private fun isDialogShowing(): Boolean = try {
+        onView(withId(android.R.id.button2)).check(matches(isDisplayed()))
+        true
+    } catch (_: Throwable) {
+        false
     }
 
     // click the first child view (as opposed to the item, like with actionOnItemAtPosition())
