@@ -104,7 +104,7 @@ class ScreenshotCIInstrumentedTest {
         dismissDialog()
 
         // first SMS contact dialog
-        waitUntilDisplayed(withId(R.id.recyclerView))
+        waitUntilDisplayed(withId(R.id.recyclerView), scroll = true)
         onView(withId(R.id.recyclerView)).perform(clickFirstView())
         waitUntilDisplayed(withId(android.R.id.button2))
         Screengrab.screenshot("5-AddSMSPhoneNumberScreen")
@@ -126,7 +126,7 @@ class ScreenshotCIInstrumentedTest {
         Thread.sleep(1000)
 
         // webhook config dialog
-        waitUntilDisplayed(withId(R.id.alertWebhookRow))
+        waitUntilDisplayed(withId(R.id.alertWebhookRow), scroll = true)
         onView(withId(R.id.alertWebhookRow)).perform(click())
         waitUntilDisplayed(withId(android.R.id.button2))
         Screengrab.screenshot("7-ConfigureWebhookScreen")
@@ -171,14 +171,27 @@ class ScreenshotCIInstrumentedTest {
         throw AssertionError("MainActivity never got window focus: $focus")
     }
 
-    /** Poll until [matcher] resolves to a displayed view, retrying on a slow runner. */
-    private fun waitUntilDisplayed(matcher: Matcher<View>, timeoutMs: Long = 15_000L) {
+    /**
+     * Poll until [matcher] resolves to a displayed view, retrying on a slow runner.
+     * With [scroll], a view below the fold is scrolled to first: the settings page
+     * is taller than a landscape tablet's screen.
+     */
+    private fun waitUntilDisplayed(
+        matcher: Matcher<View>,
+        timeoutMs: Long = 15_000L,
+        scroll: Boolean = false
+    ) {
         val end = System.currentTimeMillis() + timeoutMs
         while (System.currentTimeMillis() < end) {
             try {
                 onView(matcher).check(matches(isDisplayed()))
                 return
             } catch (_: Throwable) {
+                if (scroll) {
+                    try {
+                        onView(matcher).perform(ViewActions.scrollTo())
+                    } catch (_: Throwable) { /* not reachable yet — retry */ }
+                }
                 Thread.sleep(250)
             }
         }
