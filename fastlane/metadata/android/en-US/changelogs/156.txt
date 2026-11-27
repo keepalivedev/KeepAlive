@@ -1,0 +1,6 @@
+* "Are you there?" now rings as an alarm until answered, even in silent mode (can be turned off)
+* It shows over the lock screen, steps aside for phone calls, and unlocking answers it
+* Fix monitoring stopping after an app update, and a false alert after a reboot
+* Fix long SMS alerts failing in some languages
+* Warn about settings that would stop an alert
+* Add labels for SMS contacts

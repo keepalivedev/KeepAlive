@@ -1,0 +1,6 @@
+* „Jesteś tam?" dzwoni teraz jak alarm aż do odpowiedzi, także w trybie cichym (można wyłączyć)
+* Monit pojawia się na ekranie blokady, ustępuje połączeniom, a odblokowanie liczy się jako odpowiedź
+* Naprawiono zatrzymywanie monitorowania po aktualizacji i fałszywy alert po ponownym uruchomieniu
+* Naprawiono błąd wysyłania długich alertów SMS w niektórych językach
+* Ostrzeżenia o ustawieniach, które uniemożliwiłyby wysłanie alertu
+* Dodanie etykiet kontaktów SMS

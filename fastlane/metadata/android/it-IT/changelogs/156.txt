@@ -1,0 +1,6 @@
+* «Ci sei ancora?» ora suona come un allarme finché non rispondi, anche in modalità silenziosa (disattivabile)
+* La richiesta appare sulla schermata di blocco, si fa da parte durante le chiamate e lo sblocco vale come risposta
+* Correggere l'arresto del monitoraggio dopo un aggiornamento e un falso allarme al riavvio
+* Correggere il mancato invio degli avvisi SMS lunghi in alcune lingue
+* Avvisare se un'impostazione impedisce l'invio di un avviso
+* Aggiungere etichette ai contatti SMS
