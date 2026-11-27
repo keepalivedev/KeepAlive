@@ -96,14 +96,14 @@ class ScreenshotCIInstrumentedTest {
         Screengrab.screenshot("2-SettingsScreen")
 
         // rest period dialog
-        onView(withId(R.id.restPeriodRow)).perform(click())
+        openDialog(withId(R.id.restPeriodRow))
         waitUntilDisplayed(withId(android.R.id.button2))
         Screengrab.screenshot("3-ConfigureRestPeriodScreen")
         dismissDialog()
 
         // call phone number dialog
         waitUntilDisplayed(withId(R.id.callPhoneRow))
-        onView(withId(R.id.callPhoneRow)).perform(click())
+        openDialog(withId(R.id.callPhoneRow))
         onView(ViewMatchers.isRoot()).perform(ViewActions.closeSoftKeyboard())
         waitUntilDisplayed(withId(android.R.id.button2))
         Screengrab.screenshot("4-ConfigureCallPhoneNumberScreen")
@@ -111,7 +111,7 @@ class ScreenshotCIInstrumentedTest {
 
         // first SMS contact dialog
         waitUntilDisplayed(withId(R.id.recyclerView), scroll = true)
-        onView(withId(R.id.recyclerView)).perform(clickFirstView())
+        openDialog(withId(R.id.recyclerView), clickFirstView())
         waitUntilDisplayed(withId(android.R.id.button2))
         Screengrab.screenshot("5-AddSMSPhoneNumberScreen")
         dismissDialog()
@@ -133,7 +133,7 @@ class ScreenshotCIInstrumentedTest {
 
         // webhook config dialog
         waitUntilDisplayed(withId(R.id.alertWebhookRow), scroll = true)
-        onView(withId(R.id.alertWebhookRow)).perform(click())
+        openDialog(withId(R.id.alertWebhookRow))
         waitUntilDisplayed(withId(android.R.id.button2))
         Screengrab.screenshot("7-ConfigureWebhookScreen")
         dismissDialog()
@@ -233,6 +233,25 @@ class ScreenshotCIInstrumentedTest {
         }
         // final attempt — let it throw a meaningful failure if still not there
         onView(matcher).check(matches(isDisplayed()))
+    }
+
+    /**
+     * Tap [target] and wait for the dialog it opens. On a slow runner a tap can be
+     * lost, or Espresso can oversleep between down and up and turn it into a long
+     * press; either way nothing opens. So tap again until a dialog shows.
+     */
+    private fun openDialog(target: Matcher<View>, tap: ViewAction = click()) {
+        val end = System.currentTimeMillis() + 30_000L
+        while (System.currentTimeMillis() < end) {
+            try {
+                onView(target).perform(tap)
+            } catch (_: Throwable) { /* the dialog may already be in front of it */ }
+            val shownBy = System.currentTimeMillis() + 5_000L
+            while (System.currentTimeMillis() < shownBy) {
+                if (isDialogShowing()) return
+                Thread.sleep(250)
+            }
+        }
     }
 
     /**
