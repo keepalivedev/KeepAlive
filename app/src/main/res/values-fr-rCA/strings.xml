@@ -79,7 +79,7 @@
     <string name="hibernation_dialog_message_api_backport"><![CDATA[Android supprime désormais automatiquement les autorisations pour les applications qui n\'ont pas été utilisées récemment. Keep Alive, une fois les paramètres configurés, ne nécessite aucune autre interaction à moins qu\'une alerte ne soit déclenchée.<br/><br/>Pour garantir que les autorisations ne sont pas révoquées, veuillez désactiver l\'option <b>Supprimer les autorisations si l\'appli n\'est pas utilisée</b>.]]></string>
 
     <!-- MainActivity textview and button messages -->
-    <string name="monitoring_active_message">Dernière activité détectée à: %1$s\nProchain enregistrement d\'activité: %2$s</string>
+    <string name="monitoring_active_message">Dernière activité détectée à: %1$s\nProchaine vérification d\'activité dans: %2$s</string>
     <string name="countdown_format_hours_minutes">%1$s h %2$s min</string>
     <string name="countdown_format_minutes">%1$s min</string>
     <string name="monitoring_active_title">Surveillance active</string>
@@ -184,7 +184,7 @@
 
     <!-- rest period dialog strings -->
     <string name="rest_period_dialog_title">Configurer la période de repos</string>
-    <string name="rest_period_dialog_message">Définissez une plage de temps pendant laquelle l\'inactivité ne sera pas comptée. Par exemple, avec des « Heures d\'inactivité » définies sur 6 heures et une Période de repos de 22h00 à 6h00, si l\'appareil est utilisé pour la dernière fois à 18h00, la vérification «Êtes-vous là?» ne sera envoyé qu\'à 8h00.\n\nREMARQUE : Une alerte peut toujours être envoyée pendant une période de repos si le chèque «Êtes-vous là?» a été envoyé AVANT le début d\'une période de repos.</string>
+    <string name="rest_period_dialog_message">Définissez une plage de temps pendant laquelle l\'inactivité ne sera pas comptée. Par exemple, avec des « Heures d\'inactivité » définies sur 6 heures et une Période de repos de 22h00 à 6h00, si l\'appareil est utilisé pour la dernière fois à 18h00, la vérification «Êtes-vous là?» ne sera envoyée qu\'à 8h00.\n\nREMARQUE : Une alerte peut toujours être envoyée pendant une période de repos si la vérification «Êtes-vous là?» a été envoyée AVANT le début d\'une période de repos.</string>
     <string name="rest_period_dialog_time_zone_message"><![CDATA[Les heures utilisent le fuseau horaire par défaut du système: <b>%1$s</b>]]></string>
     <string name="rest_period_not_set_message">Pas encore défini</string>
     <string name="rest_period_start_time">Heure de début</string>
@@ -193,7 +193,7 @@
 
     <!-- Main Settings -->
     <string name="enabled_title">Surveillance activée</string>
-    <string name="auto_restart_title">Surveillance de redémarrage automatique après alerte</string>
+    <string name="auto_restart_title">Redémarrer automatiquement la surveillance après une alerte</string>
     <string name="debug_logging_title">Journalisation de débogage</string>
     <string name="time_period_title">Heures d\'inactivité avant la notification</string>
     <string name="time_period_description">Le nombre d\'heures d\'inactivité avant qu\'une notification «Êtes-vous là?» ne soit affichée.</string>
@@ -215,6 +215,7 @@
 
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Méthode de surveillance</string>
+    <string name="monitored_apps_device_lock_unlock">Verrouillage/déverrouillage de l\'appareil</string>
     <string name="monitored_apps_dialog_title">Sélectionnez 1 ou plusieurs applications sur votre appareil</string>
     <string name="monitored_apps_dialog_message">L\'utilisation des applications sélectionnées sera utilisée pour déterminer la dernière interaction avec votre appareil. Pour revenir au verrouillage/déverrouillage de l\'appareil, appuyez sur \'Supprimer\'.</string>
     <string name="monitored_apps_chosen_title">Application(s) sélectionnée(s)</string>
@@ -318,7 +319,7 @@
     <string name="debug_log_alert_service_stop">Arrêt du service d\'alerte</string>
     <string name="debug_log_alert_service_error">Une erreur s\'est produite dans le service d\'alerte : %1$s</string>
     <string name="debug_log_failed_to_start_alert_service">Échec du démarrage d\'AlertService : %1$s</string>
-    <string name="debug_log_auto_restart_monitoring">La surveillance de redémarrage automatique est activée, redémarrage de l\'alarme…</string>
+    <string name="debug_log_auto_restart_monitoring">Le redémarrage automatique de la surveillance est activé, redémarrage de l\'alarme…</string>
     <string name="debug_log_sending_warning_sms">Envoi d\'un SMS d\'avertissement à %1$s</string>
 
     <!-- AppController.kt -->

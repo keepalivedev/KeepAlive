@@ -79,7 +79,7 @@
         <string name="hibernation_dialog_message_api_backport"><![CDATA[Android ora rimuove automaticamente le autorizzazioni per le app che non sono state utilizzate di recente. Keep Alive, una volta configurato, non richiede ulteriori interazioni a meno che non venga attivato un avviso.<br/><br/>Per garantire che le autorizzazioni non vengano revocate, disattivare l\'opzione <b>Rimuovi le autorizzazioni se l\'app non viene utilizzata</b>.]]></string>  
       
         <!-- MainActivity textview and button messages -->  
-        <string name="monitoring_active_message">Ultima attività rilevata a: %1$s\nProssima registrazione attività: %2$s</string>
+        <string name="monitoring_active_message">Ultima attività rilevata a: %1$s\nProssimo controllo attività tra: %2$s</string>
         <string name="countdown_format_hours_minutes">%1$s h %2$s min</string>
         <string name="countdown_format_minutes">%1$s min</string>
         <string name="monitoring_active_title">Monitoraggio attivo</string>  
@@ -193,7 +193,7 @@
       
         <!-- Main Settings -->  
         <string name="enabled_title">Monitoraggio attivato</string>  
-        <string name="auto_restart_title">Monitoraggio di riavvio automatico dopo l\'avviso</string>  
+        <string name="auto_restart_title">Riavvia automaticamente il monitoraggio dopo un avviso</string>  
     <string name="debug_logging_title">Registrazione di debug</string>
         <string name="time_period_title">Ore di inattività prima della notifica</string>  
         <string name="time_period_description">Il numero di ore di inattività prima di ricevere una notifica "Ci sei?".\n\nNOTA: Questo ritardo non è esatto e il sistema potrebbe ritardare questa notifica fino a un\'ora.</string>  
@@ -215,6 +215,7 @@
       
         <!-- Monitored Apps strings -->  
         <string name="monitored_apps_title">Metodo di monitoraggio</string>  
+        <string name="monitored_apps_device_lock_unlock">Blocco/sblocco del dispositivo</string>
         <string name="monitored_apps_dialog_title">Seleziona 1 o più applicazioni sul tuo dispositivo</string>  
         <string name="monitored_apps_dialog_message">L\'utilizzo dell\'applicazione o delle applicazioni selezionate verrà utilizzato per determinare quando il tuo dispositivo è stato utilizzato l\'ultima volta</string>  
         <string name="monitored_apps_chosen_title">Applicazione selezionata</string>
@@ -318,7 +319,7 @@
         <string name="debug_log_alert_service_stop">Arresto del servizio di avviso</string>  
         <string name="debug_log_alert_service_error">Si è verificato un errore nel servizio di avviso: %1$s</string>
         <string name="debug_log_failed_to_start_alert_service">Impossibile avviare AlertService: %1$s</string>
-        <string name="debug_log_auto_restart_monitoring">Il monitoraggio di riavvio automatico è attivato, riavvio dell\'allarme…</string>
+        <string name="debug_log_auto_restart_monitoring">Il riavvio automatico del monitoraggio è attivato, riavvio dell\'allarme…</string>
         <string name="debug_log_sending_warning_sms">Invio di un SMS di avviso a %1$s</string>  
       
         <!-- AppController.kt -->  

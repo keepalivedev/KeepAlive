@@ -213,6 +213,7 @@
 
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">监测方式</string>
+    <string name="monitored_apps_device_lock_unlock">设备锁定/解锁</string>
     <string name="monitored_apps_dialog_title">选择 1 个或多个App</string>
     <string name="monitored_apps_dialog_message">所选App的使用情况将用于确定您最后一次活动的时间</string>
     <string name="monitored_apps_chosen_title">已选中的App</string>

@@ -216,6 +216,7 @@
 
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Метод мониторинга</string>
+    <string name="monitored_apps_device_lock_unlock">Блокировка/разблокировка устройства</string>
     <string name="monitored_apps_dialog_title">Выберите 1 или несколько приложений на вашем устройстве</string>
     <string name="monitored_apps_dialog_message">Использование выбранных приложений будет учитываться для определения времени последнего взаимодействия с устройством. Чтобы вернуться к блокировке/разблокировке устройства, нажмите \'Удалить\'.</string>
     <string name="monitored_apps_chosen_title">Выбранные приложения</string>

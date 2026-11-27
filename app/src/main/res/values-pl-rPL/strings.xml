@@ -216,6 +216,7 @@
 
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Metoda monitorowania</string>
+    <string name="monitored_apps_device_lock_unlock">Blokada/Odblokowanie Urządzenia</string>
     <string name="monitored_apps_dialog_title">Wybierz 1 lub więcej aplikacji na swoim urządzeniu</string>
     <string name="monitored_apps_dialog_message">Korzystanie z wybranych aplikacji będzie używane do określenia, kiedy ostatnio korzystano z urządzenia. Aby wrócić do blokady/odblokowania urządzenia, naciśnij \'Usuń\'.</string>
     <string name="monitored_apps_chosen_title">Wybrane aplikacje</string>
