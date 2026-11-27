@@ -1,0 +1,6 @@
+* « Êtes-vous toujours là? » sonne comme une alarme jusqu'à la réponse, même en mode silencieux (désactivable)
+* L'invite s'affiche sur l'écran de verrouillage, s'efface pendant les appels, et le déverrouillage compte comme réponse
+* Corriger l'arrêt de la surveillance après une mise à jour et une fausse alerte au redémarrage
+* Corriger l'échec des longues alertes SMS dans certaines langues
+* Avertir si un réglage empêche l'envoi d'une alerte
+* Ajouter des étiquettes aux contacts SMS

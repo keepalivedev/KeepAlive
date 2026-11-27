@@ -1,0 +1,6 @@
+* „Sind Sie noch da?" klingelt jetzt als Alarm, bis geantwortet wird, auch im Lautlos-Modus (abschaltbar)
+* Die Aufforderung erscheint über dem Sperrbildschirm, weicht Anrufen aus, und Entsperren gilt als Antwort
+* Behoben: Überwachung stoppte nach einem App-Update; Fehlalarm nach einem Neustart
+* Behoben: Lange Alarm-SMS schlugen in manchen Sprachen fehl
+* Warnung bei Einstellungen, die einen Alarm verhindern würden
+* Bezeichnungen für SMS-Kontakte hinzufügen

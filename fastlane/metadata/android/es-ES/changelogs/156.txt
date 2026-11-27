@@ -1,0 +1,6 @@
+* «¿Sigues ahí?» ahora suena como una alarma hasta que respondas, también en modo silencio (se puede desactivar)
+* El aviso aparece sobre la pantalla de bloqueo, se aparta durante las llamadas y desbloquear cuenta como respuesta
+* Corregir la detención del monitoreo tras una actualización y una falsa alerta tras un reinicio
+* Corregir el fallo de las alertas SMS largas en algunos idiomas
+* Avisar si un ajuste impide enviar una alerta
+* Añadir etiquetas a los contactos SMS
