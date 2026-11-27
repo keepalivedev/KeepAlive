@@ -6,6 +6,7 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
+import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
@@ -75,6 +76,7 @@ class ScreenshotCIInstrumentedTest {
         // Don't touch the UI until MainActivity is actually resumed — i.e. not
         // behind the keyguard or an ANR dialog on a slow runner.
         waitForResumedActivity()
+        waitForWindowFocus()
 
         Screengrab.screenshot("1-MainScreen")
 
@@ -91,7 +93,7 @@ class ScreenshotCIInstrumentedTest {
         onView(withId(R.id.restPeriodRow)).perform(click())
         waitUntilDisplayed(withId(android.R.id.button2))
         Screengrab.screenshot("3-ConfigureRestPeriodScreen")
-        onView(withId(android.R.id.button2)).perform(click())
+        dismissDialog()
 
         // call phone number dialog
         waitUntilDisplayed(withId(R.id.callPhoneRow))
@@ -99,14 +101,14 @@ class ScreenshotCIInstrumentedTest {
         onView(ViewMatchers.isRoot()).perform(ViewActions.closeSoftKeyboard())
         waitUntilDisplayed(withId(android.R.id.button2))
         Screengrab.screenshot("4-ConfigureCallPhoneNumberScreen")
-        onView(withId(android.R.id.button2)).perform(click())
+        dismissDialog()
 
         // first SMS contact dialog
-        waitUntilDisplayed(withId(R.id.recyclerView))
+        waitUntilDisplayed(withId(R.id.recyclerView), scroll = true)
         onView(withId(R.id.recyclerView)).perform(clickFirstView())
         waitUntilDisplayed(withId(android.R.id.button2))
         Screengrab.screenshot("5-AddSMSPhoneNumberScreen")
-        onView(withId(android.R.id.button2)).perform(click())
+        dismissDialog()
 
         // full-screen "Are you there?" overlay (headline safety feature).
         // SYSTEM_ALERT_WINDOW is an appop, not a runtime permission.
@@ -124,11 +126,11 @@ class ScreenshotCIInstrumentedTest {
         Thread.sleep(1000)
 
         // webhook config dialog
-        waitUntilDisplayed(withId(R.id.alertWebhookRow))
+        waitUntilDisplayed(withId(R.id.alertWebhookRow), scroll = true)
         onView(withId(R.id.alertWebhookRow)).perform(click())
         waitUntilDisplayed(withId(android.R.id.button2))
         Screengrab.screenshot("7-ConfigureWebhookScreen")
-        onView(withId(android.R.id.button2)).perform(click())
+        dismissDialog()
     }
 
     /** Poll until at least one activity is in the RESUMED stage (or time out). */
@@ -145,19 +147,83 @@ class ScreenshotCIInstrumentedTest {
         }
     }
 
-    /** Poll until [matcher] resolves to a displayed view, retrying on a slow runner. */
-    private fun waitUntilDisplayed(matcher: Matcher<View>, timeoutMs: Long = 15_000L) {
+    /**
+     * Poll until the resumed activity's window has focus. RESUMED isn't enough on
+     * a slow runner: a system dialog (e.g. an ANR prompt) can still hold focus,
+     * and Espresso gives up on the first interaction after 10 seconds. Close
+     * system dialogs while waiting, and name the focused window if it never comes.
+     */
+    private fun waitForWindowFocus(timeoutMs: Long = 60_000L) {
+        val end = System.currentTimeMillis() + timeoutMs
+        while (System.currentTimeMillis() < end) {
+            var focused = false
+            InstrumentationRegistry.getInstrumentation().runOnMainSync {
+                focused = ActivityLifecycleMonitorRegistry.getInstance()
+                    .getActivitiesInStage(Stage.RESUMED).any { it.hasWindowFocus() }
+            }
+            if (focused) return
+            cmdExec("am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS")
+            Thread.sleep(1000)
+        }
+        val focus = cmdExec("dumpsys window displays").lineSequence()
+            .filter { it.contains("mCurrentFocus") || it.contains("mFocusedApp") }
+            .joinToString(" | ") { it.trim() }
+        throw AssertionError("MainActivity never got window focus: $focus")
+    }
+
+    /**
+     * Poll until [matcher] resolves to a displayed view, retrying on a slow runner.
+     * With [scroll], a view below the fold is scrolled to first: the settings page
+     * is taller than a landscape tablet's screen.
+     */
+    private fun waitUntilDisplayed(
+        matcher: Matcher<View>,
+        timeoutMs: Long = 15_000L,
+        scroll: Boolean = false
+    ) {
         val end = System.currentTimeMillis() + timeoutMs
         while (System.currentTimeMillis() < end) {
             try {
                 onView(matcher).check(matches(isDisplayed()))
                 return
             } catch (_: Throwable) {
+                if (scroll) {
+                    try {
+                        onView(matcher).perform(ViewActions.scrollTo())
+                    } catch (_: Throwable) { /* not reachable yet — retry */ }
+                }
                 Thread.sleep(250)
             }
         }
         // final attempt — let it throw a meaningful failure if still not there
         onView(matcher).check(matches(isDisplayed()))
+    }
+
+    /**
+     * Dismiss the current dialog. We can't rely on clicking its Cancel button:
+     * a tall dialog (e.g. the rest-period editor with two TimePickers) pushes
+     * the button bar off a short screen, so the button can be ~4% visible and
+     * Espresso refuses to click it. The Back key dismisses a cancelable dialog
+     * regardless. Close the keyboard first (text-field dialogs open it, and it
+     * would eat the first Back), then press Back until the dialog is gone.
+     */
+    private fun dismissDialog() {
+        try {
+            onView(ViewMatchers.isRoot()).perform(ViewActions.closeSoftKeyboard())
+        } catch (_: Throwable) { /* no keyboard up — fine */ }
+        val end = System.currentTimeMillis() + 10_000L
+        while (System.currentTimeMillis() < end && isDialogShowing()) {
+            pressBack()
+            Thread.sleep(500)
+        }
+    }
+
+    /** True while a dialog (its negative button) is on screen, even if clipped. */
+    private fun isDialogShowing(): Boolean = try {
+        onView(withId(android.R.id.button2)).check(matches(isDisplayed()))
+        true
+    } catch (_: Throwable) {
+        false
     }
 
     // click the first child view (as opposed to the item, like with actionOnItemAtPosition())
