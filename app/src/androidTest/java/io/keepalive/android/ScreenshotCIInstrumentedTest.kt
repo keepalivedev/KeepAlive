@@ -78,6 +78,12 @@ class ScreenshotCIInstrumentedTest {
         waitForResumedActivity()
         waitForWindowFocus()
 
+        // the unlock in setUp() is done with key events, which takes the device out of
+        //  touch mode, and the focused page then draws Android's grey focus highlight
+        //  over itself. no one using the app by touch sees that
+        InstrumentationRegistry.getInstrumentation().setInTouchMode(true)
+        waitForScreenDrawn()
+
         Screengrab.screenshot("1-MainScreen")
 
         // overflow menu -> Settings
@@ -169,6 +175,36 @@ class ScreenshotCIInstrumentedTest {
             .filter { it.contains("mCurrentFocus") || it.contains("mFocusedApp") }
             .joinToString(" | ") { it.trim() }
         throw AssertionError("MainActivity never got window focus: $focus")
+    }
+
+    /**
+     * Poll until the screen shows real content and has stopped changing. The first
+     * capture could otherwise land on the blank starting window, or on a frame that
+     * still has the focus highlight from before touch mode was turned on.
+     */
+    private fun waitForScreenDrawn(timeoutMs: Long = 15_000L) {
+        val end = System.currentTimeMillis() + timeoutMs
+        var previous: List<Int>? = null
+        while (System.currentTimeMillis() < end) {
+            val sample = sampleScreen()
+            if (sample != null && sample.toSet().size > 2 && sample == previous) return
+            previous = sample
+            Thread.sleep(250)
+        }
+    }
+
+    /** A coarse grid of pixel colours from below the status bar, or null if nothing was captured. */
+    private fun sampleScreen(): List<Int>? {
+        val shot = InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()
+            ?: return null
+        val pixels = ArrayList<Int>()
+        for (y in shot.height / 16 until shot.height step shot.height / 32) {
+            for (x in 0 until shot.width step shot.width / 32) {
+                pixels.add(shot.getPixel(x, y))
+            }
+        }
+        shot.recycle()
+        return pixels
     }
 
     /**
