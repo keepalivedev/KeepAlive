@@ -226,6 +226,7 @@
 
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Monitoring Method</string>
+    <string name="monitored_apps_device_lock_unlock">Device Lock/Unlock</string>
     <string name="monitored_apps_dialog_title">Select 1 or more apps on your device</string>
     <string name="monitored_apps_dialog_message">Usage of the selected app(s) will be used to determine when your device was last interacted with. To revert to Device Lock/Unlock press \'Delete\'.</string>
     <string name="monitored_apps_chosen_title">Selected App(s)</string>

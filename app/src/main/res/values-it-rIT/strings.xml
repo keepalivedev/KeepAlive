@@ -215,6 +215,7 @@
       
         <!-- Monitored Apps strings -->  
         <string name="monitored_apps_title">Metodo di monitoraggio</string>  
+        <string name="monitored_apps_device_lock_unlock">Blocco/sblocco del dispositivo</string>
         <string name="monitored_apps_dialog_title">Seleziona 1 o più applicazioni sul tuo dispositivo</string>  
         <string name="monitored_apps_dialog_message">L\'utilizzo dell\'applicazione o delle applicazioni selezionate verrà utilizzato per determinare quando il tuo dispositivo è stato utilizzato l\'ultima volta</string>  
         <string name="monitored_apps_chosen_title">Applicazione selezionata</string>

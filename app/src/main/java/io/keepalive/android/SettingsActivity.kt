@@ -331,11 +331,11 @@ class SettingsActivity : AppCompatActivity() {
         } else {
             // if this is API 29 or higher then this is the default behavior
             monitoredAppsValueText = if (Build.VERSION.SDK_INT >= AppController.MIN_API_LEVEL_FOR_DEVICE_LOCK_UNLOCK) {
-                "Device Lock/Unlock"
+                getString(R.string.monitored_apps_device_lock_unlock)
             } else {
                 // if nothing is configured and this is < API 29 then the user has to configure
                 //  them before the app will work
-                "Not Configured"
+                getString(R.string.webhook_not_configured)
             }
         }
         monitoredAppsValueTextView.text = monitoredAppsValueText

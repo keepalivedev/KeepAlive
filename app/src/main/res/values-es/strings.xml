@@ -215,6 +215,7 @@
 
     <!-- Monitored Apps strings -->
     <string name="monitored_apps_title">Método de monitoreo</string>
+    <string name="monitored_apps_device_lock_unlock">Bloqueo/desbloqueo del dispositivo</string>
     <string name="monitored_apps_dialog_title">Selecciona 1 o más apps en tu dispositivo</string>
     <string name="monitored_apps_dialog_message">El uso de la(s) app(s) seleccionada(s) se usará para determinar cuándo se interactuó por última vez con tu dispositivo. Para volver al bloqueo/desbloqueo del dispositivo, presiona \'Eliminar\'.</string>
     <string name="monitored_apps_chosen_title">App(s) seleccionada(s)</string>
